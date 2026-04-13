@@ -1,0 +1,27 @@
+study_area:
+  name: "Delft"
+  bbox_rd: [80000, 447000, 86000, 452000]   # EPSG:28992 [min_x, min_y, max_x, max_y]
+  bbox_wgs: [4.33, 51.98, 4.40, 52.03]      # EPSG:4326  [min_lon, min_lat, max_lon, max_lat]
+  crs: "EPSG:28992"
+
+data_paths:
+  ep_online_csv: "data/raw/v20260401_v4_csv/v20260401_v4_csv.csv"
+  processed_dir: "data/processed"
+  joined_output: "data/processed/bag_3dbag_ep_joined.parquet"
+
+ep_online:
+  postcode_prefix: "26"
+  building_class: "W"
+
+wfs:
+  bag_url: "https://service.pdok.nl/lv/bag/wfs/v2_0"
+  bag_layer: "bag:pand"
+  bag_page_size: 1000
+  bag3d_url: "https://data.3dbag.nl/api/BAG3D/wfs"
+  bag3d_layer: "BAG3D:lod12"
+  bag3d_page_size: 10000
+
+filters:
+  bouwjaar_min: 1800
+  bouwjaar_max: 2026
+  min_buildings: 50
