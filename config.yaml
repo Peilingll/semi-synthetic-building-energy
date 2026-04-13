@@ -8,6 +8,7 @@ data_paths:
   ep_online_csv: "data/raw/v20260401_v4_csv/v20260401_v4_csv.csv"
   processed_dir: "data/processed"
   joined_output: "data/processed/bag_3dbag_ep_joined.parquet"
+  lod2_output: "data/processed/residential_with_3d_features.parquet"
 
 ep_online:
   postcode_prefix: "26"
@@ -20,6 +21,10 @@ wfs:
   bag3d_url: "https://data.3dbag.nl/api/BAG3D/wfs"
   bag3d_layer: "BAG3D:lod12"
   bag3d_page_size: 10000
+
+lod2:
+  rmse_quality_threshold: 1.0
+  floor_height_default: 3.0
 
 filters:
   bouwjaar_min: 1800
