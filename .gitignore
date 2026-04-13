@@ -1,3 +1,7 @@
+# Virtual environment
+.venv/
+__pycache__/
+
 # Spec documents
 spec_doc/
 coding_spec.md
