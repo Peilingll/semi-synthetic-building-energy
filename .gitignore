@@ -7,7 +7,5 @@ doc/
 spec_doc/
 coding_spec.md
 
-# Data (raw downloads + generated outputs)
+# Data (only raw is ignored — large downloads)
 data/raw/
-data/processed/
-data/output/
