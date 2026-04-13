@@ -311,18 +311,18 @@ def join_all_sources(
 # 3.7  Validation & output
 # ---------------------------------------------------------------------------
 
-TABULA_PERIODS = [
-    (0, 1964, "...1964"),
-    (1965, 1974, "1965-1974"),
-    (1975, 1991, "1975-1991"),
-    (1992, 2005, "1992-2005"),
-    (2006, 9999, "2006-..."),
+BUILD_PERIODS = [
+    (0, 1849, "1800-1849"),
+    (1850, 1899, "1850-1899"),
+    (1900, 1949, "1900-1949"),
+    (1950, 1999, "1950-1999"),
+    (2000, 9999, ">2000"),
 ]
 
 
-def classify_tabula_period(year: int) -> str:
-    """Map a construction year to its TABULA NL period label."""
-    for start, end, label in TABULA_PERIODS:
+def classify_build_period(year: int) -> str:
+    """Map a construction year to a 50-year build period label."""
+    for start, end, label in BUILD_PERIODS:
         if start <= year <= end:
             return label
     return "unknown"
@@ -353,14 +353,14 @@ def validate_and_save(
         f"Only {len(label_counts)} unique energy labels, need at least 3"
     )
 
-    # TABULA period coverage
+    # Build period coverage
     gdf = gdf.copy()
-    gdf["tabula_period"] = gdf["bouwjaar"].apply(classify_tabula_period)
-    period_counts = gdf["tabula_period"].value_counts()
+    gdf["build_period"] = gdf["bouwjaar"].apply(classify_build_period)
+    period_counts = gdf["build_period"].value_counts()
     report["unique_periods"] = len(period_counts)
     report["period_distribution"] = period_counts.to_dict()
     assert len(period_counts) >= 3, (
-        f"Only {len(period_counts)} TABULA periods, need at least 3"
+        f"Only {len(period_counts)} build periods, need at least 3"
     )
 
     # Uniqueness
