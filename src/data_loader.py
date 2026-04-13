@@ -304,6 +304,34 @@ def join_all_sources(
     joined = joined.drop_duplicates(subset=["pand_id"])
     logger.info("After filtering & dedup: %d rows", len(joined))
 
+    # Keep only columns needed for analysis
+    keep_cols = [
+        "pand_id",
+        "bouwjaar",
+        "gebruiksdoel",
+        "aantal_verblijfsobjecten",
+        "geometry",
+        # 3D BAG
+        "b3_h_50p",
+        "b3_h_max",
+        "b3_dak_type",
+        "b3_opp_buitenmuur",
+        "b3_opp_dak_plat",
+        "b3_opp_dak_schuin",
+        "b3_opp_grond",
+        "b3_opp_scheidingsmuur",
+        "b3_volume_lod12",
+        "b3_bouwlagen",
+        # EP-Online
+        "Gebouwtype",
+        "Postcode",
+        "Energieklasse",
+        "EnergieIndex",
+    ]
+    keep_cols = [c for c in keep_cols if c in joined.columns]
+    joined = joined[keep_cols]
+    logger.info("Kept %d columns", len(keep_cols))
+
     return joined
 
 
