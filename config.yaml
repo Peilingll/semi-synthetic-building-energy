@@ -9,7 +9,7 @@ data_paths:
   processed_dir: "data/processed"
   joined_output: "data/processed/bag_3dbag_ep_joined.parquet"
   lod2_output: "data/processed/residential_with_3d_features.parquet"
-  tabula_csv: "data/raw/tabula/tabula_nl.csv"
+  tabula_csv: "data/processed/tabula_nl.csv"
   tabula_output: "data/processed/residential_tabula_matched.parquet"
 
 ep_online:
