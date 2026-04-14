@@ -2,11 +2,9 @@
 .venv/
 __pycache__/
 
-# Documentation & specs (local Chinese notes, not tracked)
-spec_doc/
-coding_spec.md
+# Documentation & specs (local notes, not tracked)
 doc_processed/
 
-# Data (only raw and testing images are ignored)
+# Data 
 data/raw/
-data/processed/mvp_testing_data/
+
