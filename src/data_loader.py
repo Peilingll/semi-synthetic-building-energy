@@ -193,16 +193,23 @@ EP_ONLINE_USECOLS = [
 
 def load_ep_online(
     csv_path: str | Path,
-    postcode_prefix: str = "26",
+    postcode_prefix: str | list[str] = "26",
     usecols: list[str] | None = None,
     chunksize: int = 100_000,
 ) -> pd.DataFrame:
-    """Load EP-Online CSV filtered by postcode prefix (e.g. '26' for Delft).
+    """Load EP-Online CSV filtered by postcode prefix(es).
 
-    Uses chunked reading to keep memory usage low on the 1.5 GB file.
+    Accepts a single prefix string ('26' for Delft) or a list of prefixes
+    (['10', '11'] for Amsterdam). Uses chunked reading to keep memory usage
+    low on the 1.5 GB file.
     """
     if usecols is None:
         usecols = EP_ONLINE_USECOLS
+
+    if isinstance(postcode_prefix, str):
+        prefixes: tuple[str, ...] = (postcode_prefix,)
+    else:
+        prefixes = tuple(postcode_prefix)
 
     csv_path = Path(csv_path)
     chunks: list[pd.DataFrame] = []
@@ -215,7 +222,7 @@ def load_ep_online(
         dtype={"BAGPandIDs": str, "Postcode": str, "Status": str, "EnergieIndex": str},
         chunksize=chunksize,
     ):
-        mask = chunk["Postcode"].str.startswith(postcode_prefix, na=False)
+        mask = chunk["Postcode"].str.startswith(prefixes, na=False)
         filtered = chunk[mask]
         if not filtered.empty:
             chunks.append(filtered)
@@ -242,8 +249,8 @@ def load_ep_online(
         .drop_duplicates(subset=["BAGPandIDs"], keep="last")
     )
 
-    logger.info("EP-Online: loaded %d records for postcode prefix '%s'",
-                len(df), postcode_prefix)
+    logger.info("EP-Online: loaded %d records for postcode prefix(es) %s",
+                len(df), list(prefixes))
     return df
 
 
