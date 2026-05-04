@@ -1,0 +1,21 @@
+Loading TABULA CSV from D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\tabula_nl.csv
+TABULA lookup: 24 archetypes
+No LOD2 output (None) ¡X using joined data directly
+Loaded 20060 buildings with 21 columns
+Matching TABULA archetypes
+Unmapped Gebouwtype (1 rows): {'Logieswoning': 1}
+Validating matches
+Match rate: 20059/20060 (100.0%)
+u_wall range: 0.2222 - 5.2632
+u_roof range: 0.1667 - 4.5455
+u_floor range: 0.2857 - 6.6667
+u_window range: 1.8000 - 5.2000
+Spot checks:
+  pand=0344100000049102  bouwjaar=1880  type=Rijwoning tussen¡÷TH  period=NL.01  u_wall=5.2632
+  pand=0344100000022913  bouwjaar=1915  type=Rijwoning tussen¡÷TH  period=NL.01  u_wall=5.2632
+  pand=0344100000054094  bouwjaar=1985  type=Rijwoning tussen¡÷TH  period=NL.03  u_wall=0.7692
+  pand=0344100000053337  bouwjaar=1931  type=Rijwoning tussen¡÷TH  period=NL.01  u_wall=5.2632
+  pand=0344100000003581  bouwjaar=1919  type=Appartement¡÷AB  period=NL.01  u_wall=2.7778
+Dropped 1 unmatched rows
+Saved 20059 matched buildings to D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\utrecht\residential_tabula_matched.parquet
+{'total_buildings': 20060, 'matched': 20059, 'unmatched': 1, 'match_rate_pct': np.float64(100.0), 'u_wall_min': 0.2222, 'u_wall_max': 5.2632, 'u_roof_min': 0.1667, 'u_roof_max': 4.5455, 'u_floor_min': 0.2857, 'u_floor_max': 6.6667, 'u_window_min': 1.8, 'u_window_max': 5.2, 'spot_checks': [{'pand_id': '0344100000049102', 'bouwjaar': 1880, 'Gebouwtype': 'Rijwoning tussen', 'tabula_type': 'TH', 'tabula_period': 'NL.01', 'u_wall': 5.2632}, {'pand_id': '0344100000022913', 'bouwjaar': 1915, 'Gebouwtype': 'Rijwoning tussen', 'tabula_type': 'TH', 'tabula_period': 'NL.01', 'u_wall': 5.2632}, {'pand_id': '0344100000054094', 'bouwjaar': 1985, 'Gebouwtype': 'Rijwoning tussen', 'tabula_type': 'TH', 'tabula_period': 'NL.03', 'u_wall': 0.7692}, {'pand_id': '0344100000053337', 'bouwjaar': 1931, 'Gebouwtype': 'Rijwoning tussen', 'tabula_type': 'TH', 'tabula_period': 'NL.01', 'u_wall': 5.2632}, {'pand_id': '0344100000003581', 'bouwjaar': 1919, 'Gebouwtype': 'Appartement', 'tabula_type': 'AB', 'tabula_period': 'NL.01', 'u_wall': 2.7778}], 'output_path': 'D:\\ITBE\\Thesis\\semi-synthetic-building-energy\\data\\processed\\utrecht\\residential_tabula_matched.parquet'}
