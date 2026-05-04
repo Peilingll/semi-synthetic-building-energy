@@ -149,7 +149,12 @@ def validate_tabula_match(df: pd.DataFrame) -> dict:
 # ---------------------------------------------------------------------------
 
 def run_step3(config: dict | None = None) -> dict:
-    """Run the full Step 3 TABULA matching pipeline."""
+    """Run the full Step 3 TABULA matching pipeline.
+
+    If ``data_paths.lod2_output`` exists on disk, the Step 2 LOD2 features are
+    merged with the joined data (the original 3-way Delft path). Otherwise the
+    joined parquet is used directly (the 2-way BAG+EP path for new cities).
+    """
     if config is None:
         config = load_config()
 
@@ -161,19 +166,25 @@ def run_step3(config: dict | None = None) -> dict:
     tabula_df = load_tabula_csv(tabula_csv_path)
     logger.info("TABULA lookup: %d archetypes", len(tabula_df))
 
-    # Load Step 1 features (need pand_id + geometry features)
-    lod2_path = paths["lod2_output"]
-    logger.info("Loading Step 1 features from %s", lod2_path)
-    features_df = pd.read_parquet(lod2_path)
-    logger.info("Loaded %d buildings with %d columns", len(features_df), len(features_df.columns))
-
-    # Load joined data (need Gebouwtype + bouwjaar)
     joined_path = paths["joined_output"]
-    logger.info("Loading joined data from %s", joined_path)
-    joined_df = pd.read_parquet(joined_path, columns=["pand_id", "Gebouwtype", "bouwjaar"])
+    lod2_path = paths.get("lod2_output")
 
-    # Merge features with Gebouwtype + bouwjaar
-    df = features_df.merge(joined_df, on="pand_id", how="left")
+    if lod2_path and Path(lod2_path).exists():
+        logger.info("Loading Step 2 features from %s", lod2_path)
+        features_df = pd.read_parquet(lod2_path)
+        logger.info("Loaded %d buildings with %d columns",
+                    len(features_df), len(features_df.columns))
+
+        logger.info("Loading joined data from %s", joined_path)
+        joined_df = pd.read_parquet(
+            joined_path, columns=["pand_id", "Gebouwtype", "bouwjaar"]
+        )
+        df = features_df.merge(joined_df, on="pand_id", how="left")
+    else:
+        logger.info("No LOD2 output (%s) — using joined data directly", lod2_path)
+        df = pd.read_parquet(joined_path)
+        logger.info("Loaded %d buildings with %d columns",
+                    len(df), len(df.columns))
 
     # Match TABULA
     logger.info("Matching TABULA archetypes")
@@ -203,10 +214,24 @@ def run_step3(config: dict | None = None) -> dict:
 # CLI entry point
 # ---------------------------------------------------------------------------
 
+def _parse_args() -> "argparse.Namespace":
+    import argparse
+    parser = argparse.ArgumentParser(description="Step 3 TABULA matching pipeline")
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="Path to a YAML config (default: project-root config.yaml)",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(message)s",
     )
-    result = run_step3()
+    args = _parse_args()
+    cfg = load_config(args.config)
+    result = run_step3(cfg)
     print(result)
