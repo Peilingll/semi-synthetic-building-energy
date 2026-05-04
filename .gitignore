@@ -17,6 +17,9 @@ doc_processed/
 doc/research_processed/01_data_exploration_Am.html
 doc/research_processed/01_data_exploration_Ul.html
 
+# Notebook backups (kept locally only)
+*.backup.ipynb
+
 # Data
 data/raw/
 data/openfacades_output/
