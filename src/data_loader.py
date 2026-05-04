@@ -101,6 +101,51 @@ def fetch_bag_pand(
     return result
 
 
+def fetch_bag_pand_tiled(
+    bbox: list[float],
+    tile_size_m: float = 2000,
+    wfs_url: str = "https://service.pdok.nl/lv/bag/wfs/v2_0",
+    layer: str = "bag:pand",
+    crs: str = "EPSG:28992",
+    page_size: int = 1000,
+) -> gpd.GeoDataFrame:
+    """Fetch BAG by splitting the bbox into RD-grid tiles.
+
+    PDOK's BAG WFS rejects pagination past ~51k features per bbox query, so
+    cities larger than Delft must be tiled. Buildings on tile boundaries are
+    deduplicated by `identificatie`.
+    """
+    minx, miny, maxx, maxy = bbox
+    pieces: list[gpd.GeoDataFrame] = []
+    n_tiles = 0
+    x = minx
+    while x < maxx:
+        y = miny
+        while y < maxy:
+            tile = [x, y, min(x + tile_size_m, maxx), min(y + tile_size_m, maxy)]
+            n_tiles += 1
+            logger.info("BAG tile %d: bbox=%s", n_tiles, tile)
+            piece = fetch_bag_pand(
+                bbox=tile, wfs_url=wfs_url, layer=layer, crs=crs, page_size=page_size,
+            )
+            if not piece.empty:
+                pieces.append(piece)
+            y += tile_size_m
+        x += tile_size_m
+
+    if not pieces:
+        return gpd.GeoDataFrame()
+
+    result = pd.concat(pieces, ignore_index=True)
+    n_before = len(result)
+    result = result.drop_duplicates(subset=["identificatie"])
+    logger.info(
+        "BAG tiled: %d unique panden across %d tiles (%d duplicates dropped)",
+        len(result), n_tiles, n_before - len(result),
+    )
+    return gpd.GeoDataFrame(result, geometry="geometry", crs=crs)
+
+
 # ---------------------------------------------------------------------------
 # 3.3  3D BAG WFS
 # ---------------------------------------------------------------------------
