@@ -362,6 +362,49 @@ def join_all_sources(
 
 
 # ---------------------------------------------------------------------------
+# 3.6b  Two-way join (BAG + EP only — for cities without 3D BAG step)
+# ---------------------------------------------------------------------------
+
+def join_bag_ep(
+    bag_gdf: gpd.GeoDataFrame,
+    ep_df: pd.DataFrame,
+    bouwjaar_min: int = 1800,
+    bouwjaar_max: int = 2026,
+) -> gpd.GeoDataFrame:
+    """Inner-join BAG and EP-Online on pand_id (no 3D BAG)."""
+    bag_gdf = prepare_bag_ids(bag_gdf)
+    ep_df = prepare_ep_ids(ep_df)
+
+    logger.info(
+        "Before join — BAG: %d, EP-Online: %d",
+        len(bag_gdf), len(ep_df),
+    )
+
+    joined = bag_gdf.merge(
+        ep_df,
+        on="pand_id",
+        how="inner",
+        suffixes=("", "_ep"),
+    )
+    logger.info("After EP-Online join: %d rows", len(joined))
+
+    # Post-join filters
+    joined = joined[
+        (joined["bouwjaar"] >= bouwjaar_min)
+        & (joined["bouwjaar"] <= bouwjaar_max)
+        & (joined["Energieklasse"].notna())
+        & (joined["Energieklasse"] != "")
+    ]
+
+    joined = joined.drop_duplicates(subset=["pand_id"])
+    logger.info("After filtering & dedup: %d rows", len(joined))
+
+    logger.info("Keeping all %d columns", len(joined.columns))
+
+    return joined
+
+
+# ---------------------------------------------------------------------------
 # 3.7  Validation & output
 # ---------------------------------------------------------------------------
 
@@ -433,8 +476,15 @@ def validate_and_save(
 # Pipeline runner
 # ---------------------------------------------------------------------------
 
+def _get_postcode_prefixes(ep_cfg: dict) -> str | list[str]:
+    """Read postcode prefix(es) from EP-Online config (list or str key)."""
+    if "postcode_prefixes" in ep_cfg:
+        return ep_cfg["postcode_prefixes"]
+    return ep_cfg["postcode_prefix"]
+
+
 def run_step1(config: dict | None = None) -> dict:
-    """Run the full Step 1 data integration pipeline."""
+    """Run the full Step 1 data integration pipeline (BAG + 3D BAG + EP-Online)."""
     if config is None:
         config = load_config()
 
@@ -469,7 +519,7 @@ def run_step1(config: dict | None = None) -> dict:
     logger.info("=== Loading EP-Online data ===")
     ep_df = load_ep_online(
         csv_path=paths["ep_online_csv"],
-        postcode_prefix=ep_cfg["postcode_prefix"],
+        postcode_prefix=_get_postcode_prefixes(ep_cfg),
     )
 
     # Join
@@ -493,12 +543,76 @@ def run_step1(config: dict | None = None) -> dict:
     return report
 
 
+def run_step1_bag_ep(config: dict | None = None) -> dict:
+    """Run Step 1 in BAG+EP mode (skip 3D BAG fetch and 3-way join)."""
+    if config is None:
+        config = load_config()
+
+    bbox = config["study_area"]["bbox_rd"]
+    crs = config["study_area"]["crs"]
+    wfs = config["wfs"]
+    ep_cfg = config["ep_online"]
+    filters = config["filters"]
+    paths = config["data_paths"]
+
+    logger.info("=== Fetching BAG data (tiled) ===")
+    bag_gdf = fetch_bag_pand_tiled(
+        bbox=bbox,
+        tile_size_m=wfs.get("bag_tile_size_m", 2000),
+        wfs_url=wfs["bag_url"],
+        layer=wfs["bag_layer"],
+        crs=crs,
+        page_size=wfs.get("bag_page_size", 1000),
+    )
+
+    logger.info("=== Loading EP-Online data ===")
+    ep_df = load_ep_online(
+        csv_path=paths["ep_online_csv"],
+        postcode_prefix=_get_postcode_prefixes(ep_cfg),
+    )
+
+    logger.info("=== Joining BAG + EP-Online ===")
+    joined = join_bag_ep(
+        bag_gdf=bag_gdf,
+        ep_df=ep_df,
+        bouwjaar_min=filters["bouwjaar_min"],
+        bouwjaar_max=filters["bouwjaar_max"],
+    )
+
+    logger.info("=== Validating and saving ===")
+    report = validate_and_save(
+        gdf=joined,
+        output_path=paths["joined_output"],
+        min_buildings=filters["min_buildings"],
+    )
+
+    return report
+
+
+def _parse_args() -> "argparse.Namespace":
+    import argparse
+    parser = argparse.ArgumentParser(description="Step 1 data integration pipeline")
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="Path to a YAML config (default: project-root config.yaml)",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s  %(name)s  %(levelname)s  %(message)s",
     )
-    report = run_step1()
+    args = _parse_args()
+    cfg = load_config(args.config)
+    use_3dbag = cfg.get("pipeline", {}).get("use_3dbag", True)
+    if use_3dbag:
+        report = run_step1(cfg)
+    else:
+        report = run_step1_bag_ep(cfg)
     print("\n=== Step 1 Report ===")
     for key, value in report.items():
         print(f"  {key}: {value}")
