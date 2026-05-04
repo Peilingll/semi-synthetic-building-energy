@@ -1,0 +1,29 @@
+study_area:
+  name: "Utrecht"
+  bbox_rd:  [126435, 448710, 141834, 461610]   # EPSG:28992 — from PDOK Bestuurlijke Gebieden
+  bbox_wgs: [4.9701, 52.0263, 5.1952, 52.1421] # EPSG:4326
+  crs: "EPSG:28992"
+
+pipeline:
+  use_3dbag: false
+
+data_paths:
+  ep_online_csv: "data/raw/v20260401_v4_csv/v20260401_v4_csv.csv"
+  processed_dir: "data/processed/utrecht"
+  joined_output: "data/processed/utrecht/bag_ep_joined.parquet"
+  tabula_csv:    "data/processed/tabula_nl.csv"
+  tabula_output: "data/processed/utrecht/residential_tabula_matched.parquet"
+
+ep_online:
+  postcode_prefixes: ["35"]
+  building_class: "W"
+
+wfs:
+  bag_url: "https://service.pdok.nl/lv/bag/wfs/v2_0"
+  bag_layer: "bag:pand"
+  bag_page_size: 1000
+
+filters:
+  bouwjaar_min: 1800
+  bouwjaar_max: 2026
+  min_buildings: 50

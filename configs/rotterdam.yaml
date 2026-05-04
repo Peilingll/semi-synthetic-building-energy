@@ -1,0 +1,29 @@
+study_area:
+  name: "Rotterdam"
+  bbox_rd:  [55500, 428647, 101033, 447000]    # EPSG:28992 — from PDOK Bestuurlijke Gebieden (incl. harbour)
+  bbox_wgs: [3.9407, 51.8421, 4.6018, 52.0045] # EPSG:4326
+  crs: "EPSG:28992"
+
+pipeline:
+  use_3dbag: false
+
+data_paths:
+  ep_online_csv: "data/raw/v20260401_v4_csv/v20260401_v4_csv.csv"
+  processed_dir: "data/processed/rotterdam"
+  joined_output: "data/processed/rotterdam/bag_ep_joined.parquet"
+  tabula_csv:    "data/processed/tabula_nl.csv"
+  tabula_output: "data/processed/rotterdam/residential_tabula_matched.parquet"
+
+ep_online:
+  postcode_prefixes: ["30"]
+  building_class: "W"
+
+wfs:
+  bag_url: "https://service.pdok.nl/lv/bag/wfs/v2_0"
+  bag_layer: "bag:pand"
+  bag_page_size: 1000
+
+filters:
+  bouwjaar_min: 1800
+  bouwjaar_max: 2026
+  min_buildings: 50
