@@ -1,0 +1,46 @@
+{
+  "n_predictions": 165,
+  "n_bag_residential": 3495,
+  "coverage_pct": 4.72,
+  "n_eval": 165,
+  "type_residential_accuracy": 0.7364,
+  "type_n_residential_pred": 110,
+  "type_confusion": {
+    "AB": {
+      "AB": 44,
+      "house": 5
+    },
+    "house": {
+      "AB": 24,
+      "house": 37
+    }
+  },
+  "type_non_residential_share": 0.3333,
+  "type_non_residential_breakdown": {
+    "retail": 49,
+    "industrial": 4,
+    "education": 1,
+    "office": 1
+  },
+  "year_n": 165,
+  "year_mae": 48.29,
+  "year_mdae": 25.0,
+  "year_within_10y_pct": 24.85,
+  "year_within_20y_pct": 44.85,
+  "floor_n": 165,
+  "floor_mae": 0.81,
+  "floor_exact_pct": 32.73,
+  "floor_within_1_pct": 89.09,
+  "surface_material_distribution": {
+    "brick": 140,
+    "plaster": 20,
+    "glass": 4,
+    "wood": 1
+  },
+  "n_images_per_pand_id": {
+    "mean": 7.48,
+    "median": 6,
+    "min": 1,
+    "max": 31
+  }
+}
