@@ -68,11 +68,13 @@ def load_dotenv(path: Path) -> dict[str, str]:
 # ---------- patch sanity check ----------
 
 def verify_openfacades_patches(of_repo: Path) -> None:
-    """Refuse to run if any of the 3 patches is missing on disk."""
+    """Refuse to run if any of the patches is missing on disk."""
     run_py = (of_repo / "run.py").read_text(encoding="utf-8")
     if "args.stages" not in run_py:
         sys.exit(f"PATCH MISSING: --stages flag absent in {of_repo}/run.py — re-apply per "
                  f"doc_processed/log/openfacades_patches.md (Patch #3)")
+    if "Patch #5" not in run_py:
+        sys.exit("PATCH MISSING: run.py Patch #5 (empty Mapillary panorama guard)")
     dl = (of_repo / "src/openfacades/footprint/downloader.py").read_text(encoding="utf-8")
     if "tuple(bbox)" not in dl:
         sys.exit("PATCH MISSING: downloader.py Patch #1 (tuple(bbox))")
@@ -278,12 +280,18 @@ def run_one_cell(
     result["stage26_rc"] = r2.returncode
 
     sel = cell_dir / "output" / "02_img" / "individual_building_select.csv"
+    pids_raw = cell_dir / "output" / "01_data" / "pids_urls.csv"
     if r2.returncode == 0 and sel.exists():
         result["status"] = "done"
         try:
             result["n_images_select"] = int(pd.read_csv(sel).shape[0])
         except Exception:
             result["n_images_select"] = -1
+    elif r2.returncode == 0 and not pids_raw.exists():
+        # Patch #5 path: bbox has no 360 panoramas; OpenFacades exited cleanly.
+        # Don't waste retries on this cell.
+        result["status"] = "no_pano_coverage"
+        result["n_images_select"] = 0
     else:
         result["status"] = "failed"
         result["error"] = f"stage2-6 rc={r2.returncode}, select_exists={sel.exists()}"
@@ -336,8 +344,8 @@ def run_all_cells(
     for idx, row in residential_cells.iterrows():
         cell_id = row["cell_id"]
         prev = prog["cells"].get(cell_id)
-        if resume and prev and prev.get("status") == "done":
-            print(f"[{idx+1}/{total}] {cell_id}  SKIP (already done)")
+        if resume and prev and prev.get("status") in ("done", "no_pano_coverage", "skipped_after_filter"):
+            print(f"[{idx+1}/{total}] {cell_id}  SKIP ({prev.get('status')})")
             continue
         attempts = (prev or {}).get("attempts", 0)
         if attempts >= MAX_RETRIES_PER_CELL:
