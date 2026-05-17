@@ -405,8 +405,33 @@ def merge_outputs(output_root: Path) -> None:
 
 # ---------- main ----------
 
+def _apply_city_config(args: argparse.Namespace) -> None:
+    """If --city is set, override default-valued paths from configs/<city>.yaml.
+
+    Explicit user-supplied --bag-geom / --residential / --output-root still win.
+    """
+    if not args.city:
+        return
+    import yaml
+    cfg_path = REPO / "configs" / f"{args.city}.yaml"
+    if not cfg_path.exists():
+        sys.exit(f"configs/{args.city}.yaml not found")
+    cfg = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
+    paths = cfg.get("data_paths", {})
+    if args.bag_geom == DEFAULT_BAG_GEOM and "joined_output" in paths:
+        args.bag_geom = REPO / paths["joined_output"]
+    if args.residential == DEFAULT_RESID and "tabula_output" in paths:
+        args.residential = REPO / paths["tabula_output"]
+    if args.output_root == DEFAULT_OUTPUT_ROOT:
+        args.output_root = REPO / "data" / "openfacades_output" / f"phase_c_{args.city}_grid"
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--city", type=str, default=None,
+                    help="City name (e.g., utrecht). Loads configs/<city>.yaml and "
+                         "derives BAG/residential/output paths automatically. "
+                         "Output goes to data/openfacades_output/phase_c_<city>_grid/.")
     ap.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     ap.add_argument("--bag-geom", type=Path, default=DEFAULT_BAG_GEOM)
     ap.add_argument("--residential", type=Path, default=DEFAULT_RESID)
@@ -423,6 +448,8 @@ def main() -> None:
     ap.add_argument("--merge-only", action="store_true",
                     help="Skip running cells, just merge existing outputs")
     args = ap.parse_args()
+
+    _apply_city_config(args)
 
     # Patch sanity
     verify_openfacades_patches(args.openfacades_repo)
