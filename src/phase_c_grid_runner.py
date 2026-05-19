@@ -41,7 +41,8 @@ DEFAULT_HF_CACHE = Path("D:/hf_cache")
 CELL_SIZE_M = 600.0
 OVERLAP_M = 50.0
 SUBPROCESS_TIMEOUT_S = 3600
-MAX_RETRIES_PER_CELL = 2
+MAX_RETRIES_PER_CELL = 1
+DEFAULT_MIN_RESID_PER_CELL = 0
 
 
 # ---------- env loading ----------
@@ -75,6 +76,8 @@ def verify_openfacades_patches(of_repo: Path) -> None:
                  f"doc_processed/log/openfacades_patches.md (Patch #3)")
     if "Patch #5" not in run_py:
         sys.exit("PATCH MISSING: run.py Patch #5 (empty Mapillary panorama guard)")
+    if "Patch #6" not in run_py:
+        sys.exit("PATCH MISSING: run.py Patch #6 (max_image_per_building=3)")
     dl = (of_repo / "src/openfacades/footprint/downloader.py").read_text(encoding="utf-8")
     if "tuple(bbox)" not in dl:
         sys.exit("PATCH MISSING: downloader.py Patch #1 (tuple(bbox))")
@@ -322,6 +325,7 @@ def run_all_cells(
     hf_cache: Path,
     resume: bool,
     max_cells: int | None,
+    min_residential_per_cell: int = 0,
 ) -> None:
     progress_path = output_root / "progress.json"
     prog = load_progress(progress_path) if resume else {
@@ -329,6 +333,11 @@ def run_all_cells(
     }
 
     residential_cells = grid[grid["status"] == "residential"].copy()
+    n_below_threshold = (residential_cells["n_residential_pand_ids"] < min_residential_per_cell).sum()
+    if min_residential_per_cell > 0:
+        residential_cells = residential_cells[
+            residential_cells["n_residential_pand_ids"] >= min_residential_per_cell
+        ]
     # Sort by residential density desc — high-density first so partial runs are useful
     residential_cells = residential_cells.sort_values(
         "n_residential_pand_ids", ascending=False
@@ -338,8 +347,9 @@ def run_all_cells(
         residential_cells = residential_cells.head(max_cells)
 
     total = len(residential_cells)
-    print(f"[grid] {len(grid)} cells total | {total} residential | "
-          f"{len(grid)-total} empty (skipped)")
+    print(f"[grid] {len(grid)} cells total | {total} residential to run | "
+          f"{len(grid)-total-n_below_threshold} empty (skipped) | "
+          f"{n_below_threshold} below min-residential-per-cell={min_residential_per_cell}")
 
     for idx, row in residential_cells.iterrows():
         cell_id = row["cell_id"]
@@ -451,6 +461,9 @@ def main() -> None:
     ap.add_argument("--no-resume", action="store_true")
     ap.add_argument("--max-cells", type=int, default=None,
                     help="Limit the number of cells to run (for smoke tests)")
+    ap.add_argument("--min-residential-per-cell", type=int, default=DEFAULT_MIN_RESID_PER_CELL,
+                    help="Skip cells with fewer than N residential pand_ids "
+                         "(low-density suburban cells with poor Mapillary yield)")
     ap.add_argument("--build-grid-only", action="store_true",
                     help="Build and save grid.geojson, then exit")
     ap.add_argument("--merge-only", action="store_true",
@@ -508,6 +521,7 @@ def main() -> None:
         hf_cache=args.hf_cache,
         resume=not args.no_resume,
         max_cells=args.max_cells,
+        min_residential_per_cell=args.min_residential_per_cell,
     )
 
     # Merge
