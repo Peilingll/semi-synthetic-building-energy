@@ -40,7 +40,7 @@ DEFAULT_HF_CACHE = Path("D:/hf_cache")
 
 CELL_SIZE_M = 600.0
 OVERLAP_M = 50.0
-SUBPROCESS_TIMEOUT_S = 3600
+SUBPROCESS_TIMEOUT_S = 7200
 MAX_RETRIES_PER_CELL = 1
 DEFAULT_MIN_RESID_PER_CELL = 0
 
@@ -245,10 +245,16 @@ def run_one_cell(
     with log_path.open("w", encoding="utf-8") as f:
         f.write(f"=== {cell_id} bbox_wgs={bbox_str} ===\n")
         f.flush()
-        r1 = subprocess.run(
-            base_cmd + ["--stages=1"],
-            stdout=f, stderr=subprocess.STDOUT, **run_kwargs,
-        )
+        try:
+            r1 = subprocess.run(
+                base_cmd + ["--stages=1"],
+                stdout=f, stderr=subprocess.STDOUT, **run_kwargs,
+            )
+        except subprocess.TimeoutExpired:
+            result["status"] = "failed"
+            result["error"] = f"stage1 timeout after {SUBPROCESS_TIMEOUT_S}s"
+            result["duration_s"] = round(time.time() - t_start, 1)
+            return result
     result["stage1_rc"] = r1.returncode
     if r1.returncode != 0:
         result["status"] = "failed"
@@ -276,10 +282,16 @@ def run_one_cell(
     with log_path.open("a", encoding="utf-8") as f:
         f.write(f"\n=== filtered footprint: {n_before} -> {n_after} ===\n")
         f.flush()
-        r2 = subprocess.run(
-            base_cmd + ["--stages=2-6"],
-            stdout=f, stderr=subprocess.STDOUT, **run_kwargs,
-        )
+        try:
+            r2 = subprocess.run(
+                base_cmd + ["--stages=2-6"],
+                stdout=f, stderr=subprocess.STDOUT, **run_kwargs,
+            )
+        except subprocess.TimeoutExpired:
+            result["status"] = "failed"
+            result["error"] = f"stage2-6 timeout after {SUBPROCESS_TIMEOUT_S}s"
+            result["duration_s"] = round(time.time() - t_start, 1)
+            return result
     result["stage26_rc"] = r2.returncode
 
     sel = cell_dir / "output" / "02_img" / "individual_building_select.csv"
