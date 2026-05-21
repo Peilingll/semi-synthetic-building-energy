@@ -1,5 +1,6 @@
 """Step 2: LOD2 derived geometry features from 3D BAG WFS attributes."""
 
+import argparse
 import logging
 from pathlib import Path
 
@@ -195,5 +196,12 @@ if __name__ == "__main__":
         level=logging.INFO,
         format="%(message)s",
     )
-    result = run_step2()
+    parser = argparse.ArgumentParser(description="Step 2 LOD2 feature extraction")
+    parser.add_argument(
+        "--config", default=None,
+        help="Path to a YAML config (default: project-root config.yaml)",
+    )
+    args = parser.parse_args()
+    cfg = load_config(args.config) if args.config else None
+    result = run_step2(cfg)
     print(result)

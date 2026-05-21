@@ -1,0 +1,1257 @@
+2026-05-21 21:43:18,529  __main__  INFO  === Fetching BAG data ===
+2026-05-21 21:43:18,529  __main__  INFO  BAG tile 1: bbox=[55500, 428647, 57500, 430647]
+2026-05-21 21:43:18,529  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:18,926  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:18,926  __main__  INFO  BAG tile 2: bbox=[55500, 430647, 57500, 432647]
+2026-05-21 21:43:18,926  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:19,231  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:19,231  __main__  INFO  BAG tile 3: bbox=[55500, 432647, 57500, 434647]
+2026-05-21 21:43:19,231  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:19,518  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:19,518  __main__  INFO  BAG tile 4: bbox=[55500, 434647, 57500, 436647]
+2026-05-21 21:43:19,518  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:19,827  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:19,827  __main__  INFO  BAG tile 5: bbox=[55500, 436647, 57500, 438647]
+2026-05-21 21:43:19,827  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:20,107  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:20,108  __main__  INFO  BAG tile 6: bbox=[55500, 438647, 57500, 440647]
+2026-05-21 21:43:20,108  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:20,430  __main__  INFO  BAG: fetched 1 panden
+2026-05-21 21:43:20,430  __main__  INFO  BAG tile 7: bbox=[55500, 440647, 57500, 442647]
+2026-05-21 21:43:20,430  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:20,735  __main__  INFO  BAG: fetched 6 panden
+2026-05-21 21:43:20,735  __main__  INFO  BAG tile 8: bbox=[55500, 442647, 57500, 444647]
+2026-05-21 21:43:20,735  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:21,010  __main__  INFO  BAG: fetched 4 panden
+2026-05-21 21:43:21,010  __main__  INFO  BAG tile 9: bbox=[55500, 444647, 57500, 446647]
+2026-05-21 21:43:21,010  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:21,310  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:21,310  __main__  INFO  BAG tile 10: bbox=[55500, 446647, 57500, 447000]
+2026-05-21 21:43:21,310  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:21,601  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:21,602  __main__  INFO  BAG tile 11: bbox=[57500, 428647, 59500, 430647]
+2026-05-21 21:43:21,602  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:21,901  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:21,901  __main__  INFO  BAG tile 12: bbox=[57500, 430647, 59500, 432647]
+2026-05-21 21:43:21,901  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:22,176  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:22,176  __main__  INFO  BAG tile 13: bbox=[57500, 432647, 59500, 434647]
+2026-05-21 21:43:22,176  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:22,455  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:22,455  __main__  INFO  BAG tile 14: bbox=[57500, 434647, 59500, 436647]
+2026-05-21 21:43:22,455  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:22,763  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:22,763  __main__  INFO  BAG tile 15: bbox=[57500, 436647, 59500, 438647]
+2026-05-21 21:43:22,763  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:23,060  __main__  INFO  BAG: fetched 14 panden
+2026-05-21 21:43:23,060  __main__  INFO  BAG tile 16: bbox=[57500, 438647, 59500, 440647]
+2026-05-21 21:43:23,060  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:23,367  __main__  INFO  BAG: fetched 58 panden
+2026-05-21 21:43:23,367  __main__  INFO  BAG tile 17: bbox=[57500, 440647, 59500, 442647]
+2026-05-21 21:43:23,367  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:23,660  __main__  INFO  BAG: fetched 20 panden
+2026-05-21 21:43:23,660  __main__  INFO  BAG tile 18: bbox=[57500, 442647, 59500, 444647]
+2026-05-21 21:43:23,660  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:23,972  __main__  INFO  BAG: fetched 15 panden
+2026-05-21 21:43:23,972  __main__  INFO  BAG tile 19: bbox=[57500, 444647, 59500, 446647]
+2026-05-21 21:43:23,972  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:24,260  __main__  INFO  BAG: fetched 4 panden
+2026-05-21 21:43:24,261  __main__  INFO  BAG tile 20: bbox=[57500, 446647, 59500, 447000]
+2026-05-21 21:43:24,261  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:24,552  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:24,552  __main__  INFO  BAG tile 21: bbox=[59500, 428647, 61500, 430647]
+2026-05-21 21:43:24,552  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:24,886  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:24,887  __main__  INFO  BAG tile 22: bbox=[59500, 430647, 61500, 432647]
+2026-05-21 21:43:24,887  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:25,202  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:25,202  __main__  INFO  BAG tile 23: bbox=[59500, 432647, 61500, 434647]
+2026-05-21 21:43:25,202  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:25,475  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:25,475  __main__  INFO  BAG tile 24: bbox=[59500, 434647, 61500, 436647]
+2026-05-21 21:43:25,475  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:25,754  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:25,754  __main__  INFO  BAG tile 25: bbox=[59500, 436647, 61500, 438647]
+2026-05-21 21:43:25,754  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:26,056  __main__  INFO  BAG: fetched 14 panden
+2026-05-21 21:43:26,057  __main__  INFO  BAG tile 26: bbox=[59500, 438647, 61500, 440647]
+2026-05-21 21:43:26,057  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:26,342  __main__  INFO  BAG: fetched 59 panden
+2026-05-21 21:43:26,342  __main__  INFO  BAG tile 27: bbox=[59500, 440647, 61500, 442647]
+2026-05-21 21:43:26,342  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:26,674  __main__  INFO  BAG: fetched 90 panden
+2026-05-21 21:43:26,674  __main__  INFO  BAG tile 28: bbox=[59500, 442647, 61500, 444647]
+2026-05-21 21:43:26,674  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:26,981  __main__  INFO  BAG: fetched 58 panden
+2026-05-21 21:43:26,981  __main__  INFO  BAG tile 29: bbox=[59500, 444647, 61500, 446647]
+2026-05-21 21:43:26,981  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:27,256  __main__  INFO  BAG: fetched 11 panden
+2026-05-21 21:43:27,256  __main__  INFO  BAG tile 30: bbox=[59500, 446647, 61500, 447000]
+2026-05-21 21:43:27,256  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:27,534  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:27,534  __main__  INFO  BAG tile 31: bbox=[61500, 428647, 63500, 430647]
+2026-05-21 21:43:27,534  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:27,842  __main__  INFO  BAG: fetched 1 panden
+2026-05-21 21:43:27,842  __main__  INFO  BAG tile 32: bbox=[61500, 430647, 63500, 432647]
+2026-05-21 21:43:27,842  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:28,171  __main__  INFO  BAG: fetched 91 panden
+2026-05-21 21:43:28,171  __main__  INFO  BAG tile 33: bbox=[61500, 432647, 63500, 434647]
+2026-05-21 21:43:28,172  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:28,674  __main__  INFO  BAG: fetched 639 panden
+2026-05-21 21:43:28,674  __main__  INFO  BAG tile 34: bbox=[61500, 434647, 63500, 436647]
+2026-05-21 21:43:28,674  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:28,967  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:28,967  __main__  INFO  BAG tile 35: bbox=[61500, 436647, 63500, 438647]
+2026-05-21 21:43:28,967  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:29,249  __main__  INFO  BAG: fetched 6 panden
+2026-05-21 21:43:29,249  __main__  INFO  BAG tile 36: bbox=[61500, 438647, 63500, 440647]
+2026-05-21 21:43:29,250  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:29,569  __main__  INFO  BAG: fetched 59 panden
+2026-05-21 21:43:29,569  __main__  INFO  BAG tile 37: bbox=[61500, 440647, 63500, 442647]
+2026-05-21 21:43:29,569  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:29,893  __main__  INFO  BAG: fetched 133 panden
+2026-05-21 21:43:29,893  __main__  INFO  BAG tile 38: bbox=[61500, 442647, 63500, 444647]
+2026-05-21 21:43:29,893  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:30,218  __main__  INFO  BAG: fetched 92 panden
+2026-05-21 21:43:30,218  __main__  INFO  BAG tile 39: bbox=[61500, 444647, 63500, 446647]
+2026-05-21 21:43:30,218  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:30,526  __main__  INFO  BAG: fetched 19 panden
+2026-05-21 21:43:30,526  __main__  INFO  BAG tile 40: bbox=[61500, 446647, 63500, 447000]
+2026-05-21 21:43:30,526  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:30,817  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:30,817  __main__  INFO  BAG tile 41: bbox=[63500, 428647, 65500, 430647]
+2026-05-21 21:43:30,817  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:31,337  __main__  INFO  BAG: fetched 915 panden
+2026-05-21 21:43:31,337  __main__  INFO  BAG tile 42: bbox=[63500, 430647, 65500, 432647]
+2026-05-21 21:43:31,337  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:32,270  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:33,017  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:33,577  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:43:34,029  __main__  INFO  BAG: fetched 3547 panden
+2026-05-21 21:43:34,029  __main__  INFO  BAG tile 43: bbox=[63500, 432647, 65500, 434647]
+2026-05-21 21:43:34,029  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:34,589  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:34,912  __main__  INFO  BAG: fetched 1069 panden
+2026-05-21 21:43:34,913  __main__  INFO  BAG tile 44: bbox=[63500, 434647, 65500, 436647]
+2026-05-21 21:43:34,913  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:36,074  __main__  INFO  BAG: fetched 756 panden
+2026-05-21 21:43:36,074  __main__  INFO  BAG tile 45: bbox=[63500, 436647, 65500, 438647]
+2026-05-21 21:43:36,074  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:36,401  __main__  INFO  BAG: fetched 169 panden
+2026-05-21 21:43:36,401  __main__  INFO  BAG tile 46: bbox=[63500, 438647, 65500, 440647]
+2026-05-21 21:43:36,401  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:36,752  __main__  INFO  BAG: fetched 86 panden
+2026-05-21 21:43:36,752  __main__  INFO  BAG tile 47: bbox=[63500, 440647, 65500, 442647]
+2026-05-21 21:43:36,752  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:37,041  __main__  INFO  BAG: fetched 53 panden
+2026-05-21 21:43:37,041  __main__  INFO  BAG tile 48: bbox=[63500, 442647, 65500, 444647]
+2026-05-21 21:43:37,041  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:37,324  __main__  INFO  BAG: fetched 39 panden
+2026-05-21 21:43:37,324  __main__  INFO  BAG tile 49: bbox=[63500, 444647, 65500, 446647]
+2026-05-21 21:43:37,324  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:37,607  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:37,607  __main__  INFO  BAG tile 50: bbox=[63500, 446647, 65500, 447000]
+2026-05-21 21:43:37,607  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:37,888  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:37,888  __main__  INFO  BAG tile 51: bbox=[65500, 428647, 67500, 430647]
+2026-05-21 21:43:37,888  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:38,267  __main__  INFO  BAG: fetched 225 panden
+2026-05-21 21:43:38,267  __main__  INFO  BAG tile 52: bbox=[65500, 430647, 67500, 432647]
+2026-05-21 21:43:38,267  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:38,666  __main__  INFO  BAG: fetched 219 panden
+2026-05-21 21:43:38,666  __main__  INFO  BAG tile 53: bbox=[65500, 432647, 67500, 434647]
+2026-05-21 21:43:38,666  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:39,057  __main__  INFO  BAG: fetched 255 panden
+2026-05-21 21:43:39,057  __main__  INFO  BAG tile 54: bbox=[65500, 434647, 67500, 436647]
+2026-05-21 21:43:39,057  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:39,629  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:40,231  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:40,734  __main__  INFO  BAG: fetched 2516 panden
+2026-05-21 21:43:40,734  __main__  INFO  BAG tile 55: bbox=[65500, 436647, 67500, 438647]
+2026-05-21 21:43:40,734  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:41,360  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:41,936  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:42,509  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:43:42,927  __main__  INFO  BAG: fetched 3329 panden
+2026-05-21 21:43:42,927  __main__  INFO  BAG tile 56: bbox=[65500, 438647, 67500, 440647]
+2026-05-21 21:43:42,927  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:43,263  __main__  INFO  BAG: fetched 145 panden
+2026-05-21 21:43:43,263  __main__  INFO  BAG tile 57: bbox=[65500, 440647, 67500, 442647]
+2026-05-21 21:43:43,264  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:43,583  __main__  INFO  BAG: fetched 147 panden
+2026-05-21 21:43:43,583  __main__  INFO  BAG tile 58: bbox=[65500, 442647, 67500, 444647]
+2026-05-21 21:43:43,583  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:43,860  __main__  INFO  BAG: fetched 20 panden
+2026-05-21 21:43:43,860  __main__  INFO  BAG tile 59: bbox=[65500, 444647, 67500, 446647]
+2026-05-21 21:43:43,860  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:44,181  __main__  INFO  BAG: fetched 102 panden
+2026-05-21 21:43:44,181  __main__  INFO  BAG tile 60: bbox=[65500, 446647, 67500, 447000]
+2026-05-21 21:43:44,181  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:44,455  __main__  INFO  BAG: fetched 0 panden
+2026-05-21 21:43:44,456  __main__  INFO  BAG tile 61: bbox=[67500, 428647, 69500, 430647]
+2026-05-21 21:43:44,456  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:45,063  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:46,148  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:46,671  __main__  INFO  BAG: fetched 2483 panden
+2026-05-21 21:43:46,671  __main__  INFO  BAG tile 62: bbox=[67500, 430647, 69500, 432647]
+2026-05-21 21:43:46,671  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:47,013  __main__  INFO  BAG: fetched 110 panden
+2026-05-21 21:43:47,013  __main__  INFO  BAG tile 63: bbox=[67500, 432647, 69500, 434647]
+2026-05-21 21:43:47,013  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:47,461  __main__  INFO  BAG: fetched 516 panden
+2026-05-21 21:43:47,461  __main__  INFO  BAG tile 64: bbox=[67500, 434647, 69500, 436647]
+2026-05-21 21:43:47,461  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:47,967  __main__  INFO  BAG: fetched 411 panden
+2026-05-21 21:43:47,967  __main__  INFO  BAG tile 65: bbox=[67500, 436647, 69500, 438647]
+2026-05-21 21:43:47,967  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:48,520  __main__  INFO  BAG: fetched 909 panden
+2026-05-21 21:43:48,520  __main__  INFO  BAG tile 66: bbox=[67500, 438647, 69500, 440647]
+2026-05-21 21:43:48,520  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:48,867  __main__  INFO  BAG: fetched 68 panden
+2026-05-21 21:43:48,867  __main__  INFO  BAG tile 67: bbox=[67500, 440647, 69500, 442647]
+2026-05-21 21:43:48,867  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:49,197  __main__  INFO  BAG: fetched 114 panden
+2026-05-21 21:43:49,197  __main__  INFO  BAG tile 68: bbox=[67500, 442647, 69500, 444647]
+2026-05-21 21:43:49,197  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:49,746  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:50,796  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:51,427  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:43:52,027  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:43:52,470  __main__  INFO  BAG: fetched 4424 panden
+2026-05-21 21:43:52,470  __main__  INFO  BAG tile 69: bbox=[67500, 444647, 69500, 446647]
+2026-05-21 21:43:52,470  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:53,024  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:53,568  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:54,129  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:43:54,546  __main__  INFO  BAG: fetched 3247 panden
+2026-05-21 21:43:54,546  __main__  INFO  BAG tile 70: bbox=[67500, 446647, 69500, 447000]
+2026-05-21 21:43:54,546  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:54,863  __main__  INFO  BAG: fetched 100 panden
+2026-05-21 21:43:54,863  __main__  INFO  BAG tile 71: bbox=[69500, 428647, 71500, 430647]
+2026-05-21 21:43:54,863  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:55,441  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:56,070  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:56,663  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:43:57,209  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:43:57,619  __main__  INFO  BAG: fetched 4225 panden
+2026-05-21 21:43:57,619  __main__  INFO  BAG tile 72: bbox=[69500, 430647, 71500, 432647]
+2026-05-21 21:43:57,619  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:58,023  __main__  INFO  BAG: fetched 369 panden
+2026-05-21 21:43:58,023  __main__  INFO  BAG tile 73: bbox=[69500, 432647, 71500, 434647]
+2026-05-21 21:43:58,023  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:43:58,587  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:43:59,124  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:43:59,501  __main__  INFO  BAG: fetched 2277 panden
+2026-05-21 21:43:59,501  __main__  INFO  BAG tile 74: bbox=[69500, 434647, 71500, 436647]
+2026-05-21 21:43:59,501  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:00,076  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:00,629  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:01,156  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:01,716  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:02,422  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:03,024  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:03,405  __main__  INFO  BAG: fetched 6076 panden
+2026-05-21 21:44:03,405  __main__  INFO  BAG tile 75: bbox=[69500, 436647, 71500, 438647]
+2026-05-21 21:44:03,405  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:03,745  __main__  INFO  BAG: fetched 264 panden
+2026-05-21 21:44:03,745  __main__  INFO  BAG tile 76: bbox=[69500, 438647, 71500, 440647]
+2026-05-21 21:44:03,745  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:04,086  __main__  INFO  BAG: fetched 158 panden
+2026-05-21 21:44:04,087  __main__  INFO  BAG tile 77: bbox=[69500, 440647, 71500, 442647]
+2026-05-21 21:44:04,087  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:04,464  __main__  INFO  BAG: fetched 91 panden
+2026-05-21 21:44:04,464  __main__  INFO  BAG tile 78: bbox=[69500, 442647, 71500, 444647]
+2026-05-21 21:44:04,464  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:05,045  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:05,434  __main__  INFO  BAG: fetched 1207 panden
+2026-05-21 21:44:05,434  __main__  INFO  BAG tile 79: bbox=[69500, 444647, 71500, 446647]
+2026-05-21 21:44:05,434  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:06,412  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:07,013  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:07,591  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:08,199  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:08,806  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:09,396  __main__  INFO  BAG: fetched 5990 panden
+2026-05-21 21:44:09,396  __main__  INFO  BAG tile 80: bbox=[69500, 446647, 71500, 447000]
+2026-05-21 21:44:09,396  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:10,009  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:10,534  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:10,974  __main__  INFO  BAG: fetched 2473 panden
+2026-05-21 21:44:10,974  __main__  INFO  BAG tile 81: bbox=[71500, 428647, 73500, 430647]
+2026-05-21 21:44:10,974  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:11,367  __main__  INFO  BAG: fetched 386 panden
+2026-05-21 21:44:11,367  __main__  INFO  BAG tile 82: bbox=[71500, 430647, 73500, 432647]
+2026-05-21 21:44:11,368  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:11,721  __main__  INFO  BAG: fetched 184 panden
+2026-05-21 21:44:11,721  __main__  INFO  BAG tile 83: bbox=[71500, 432647, 73500, 434647]
+2026-05-21 21:44:11,721  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:12,258  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:12,753  __main__  INFO  BAG: fetched 1724 panden
+2026-05-21 21:44:12,753  __main__  INFO  BAG tile 84: bbox=[71500, 434647, 73500, 436647]
+2026-05-21 21:44:12,753  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:13,352  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:13,654  __main__  INFO  BAG: fetched 1053 panden
+2026-05-21 21:44:13,654  __main__  INFO  BAG tile 85: bbox=[71500, 436647, 73500, 438647]
+2026-05-21 21:44:13,654  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:14,037  __main__  INFO  BAG: fetched 269 panden
+2026-05-21 21:44:14,037  __main__  INFO  BAG tile 86: bbox=[71500, 438647, 73500, 440647]
+2026-05-21 21:44:14,037  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:14,348  __main__  INFO  BAG: fetched 74 panden
+2026-05-21 21:44:14,348  __main__  INFO  BAG tile 87: bbox=[71500, 440647, 73500, 442647]
+2026-05-21 21:44:14,348  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:14,709  __main__  INFO  BAG: fetched 241 panden
+2026-05-21 21:44:14,709  __main__  INFO  BAG tile 88: bbox=[71500, 442647, 73500, 444647]
+2026-05-21 21:44:14,709  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:15,339  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:15,791  __main__  INFO  BAG: fetched 1488 panden
+2026-05-21 21:44:15,791  __main__  INFO  BAG tile 89: bbox=[71500, 444647, 73500, 446647]
+2026-05-21 21:44:15,791  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:16,361  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:16,910  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:17,479  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:18,042  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:18,581  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:19,141  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:19,569  __main__  INFO  BAG: fetched 6031 panden
+2026-05-21 21:44:19,569  __main__  INFO  BAG tile 90: bbox=[71500, 446647, 73500, 447000]
+2026-05-21 21:44:19,569  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:20,090  __main__  INFO  BAG: fetched 878 panden
+2026-05-21 21:44:20,090  __main__  INFO  BAG tile 91: bbox=[73500, 428647, 75500, 430647]
+2026-05-21 21:44:20,090  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:20,432  __main__  INFO  BAG: fetched 133 panden
+2026-05-21 21:44:20,432  __main__  INFO  BAG tile 92: bbox=[73500, 430647, 75500, 432647]
+2026-05-21 21:44:20,432  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:20,766  __main__  INFO  BAG: fetched 141 panden
+2026-05-21 21:44:20,766  __main__  INFO  BAG tile 93: bbox=[73500, 432647, 75500, 434647]
+2026-05-21 21:44:20,766  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:22,799  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:24,835  __main__  INFO  BAG: fetched 1762 panden
+2026-05-21 21:44:24,835  __main__  INFO  BAG tile 94: bbox=[73500, 434647, 75500, 436647]
+2026-05-21 21:44:24,835  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:25,621  __main__  INFO  BAG: fetched 691 panden
+2026-05-21 21:44:25,621  __main__  INFO  BAG tile 95: bbox=[73500, 436647, 75500, 438647]
+2026-05-21 21:44:25,621  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:25,969  __main__  INFO  BAG: fetched 167 panden
+2026-05-21 21:44:25,969  __main__  INFO  BAG tile 96: bbox=[73500, 438647, 75500, 440647]
+2026-05-21 21:44:25,969  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:26,499  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:27,112  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:27,666  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:28,256  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:28,613  __main__  INFO  BAG: fetched 3992 panden
+2026-05-21 21:44:28,613  __main__  INFO  BAG tile 97: bbox=[73500, 440647, 75500, 442647]
+2026-05-21 21:44:28,613  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:29,193  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:29,758  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:30,293  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:30,799  __main__  INFO  BAG: fetched 3617 panden
+2026-05-21 21:44:30,799  __main__  INFO  BAG tile 98: bbox=[73500, 442647, 75500, 444647]
+2026-05-21 21:44:30,799  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:31,411  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:31,728  __main__  INFO  BAG: fetched 1047 panden
+2026-05-21 21:44:31,728  __main__  INFO  BAG tile 99: bbox=[73500, 444647, 75500, 446647]
+2026-05-21 21:44:31,728  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:32,382  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:33,015  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:33,686  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:34,302  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:34,889  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:35,526  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:36,110  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:44:36,660  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:44:37,310  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:44:37,903  __main__  INFO  BAG: fetched 9808 panden
+2026-05-21 21:44:37,903  __main__  INFO  BAG tile 100: bbox=[73500, 446647, 75500, 447000]
+2026-05-21 21:44:37,903  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:38,422  __main__  INFO  BAG: fetched 842 panden
+2026-05-21 21:44:38,422  __main__  INFO  BAG tile 101: bbox=[75500, 428647, 77500, 430647]
+2026-05-21 21:44:38,422  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:38,948  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:39,294  __main__  INFO  BAG: fetched 1065 panden
+2026-05-21 21:44:39,294  __main__  INFO  BAG tile 102: bbox=[75500, 430647, 77500, 432647]
+2026-05-21 21:44:39,294  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:39,871  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:41,013  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:41,536  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:41,845  __main__  INFO  BAG: fetched 3010 panden
+2026-05-21 21:44:41,845  __main__  INFO  BAG tile 103: bbox=[75500, 432647, 77500, 434647]
+2026-05-21 21:44:41,845  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:42,232  __main__  INFO  BAG: fetched 392 panden
+2026-05-21 21:44:42,232  __main__  INFO  BAG tile 104: bbox=[75500, 434647, 77500, 436647]
+2026-05-21 21:44:42,232  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:42,773  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:43,359  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:43,895  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:44,445  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:44,981  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:45,541  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:46,068  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:44:46,512  __main__  INFO  BAG: fetched 7497 panden
+2026-05-21 21:44:46,512  __main__  INFO  BAG tile 105: bbox=[75500, 436647, 77500, 438647]
+2026-05-21 21:44:46,512  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:47,081  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:47,648  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:48,204  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:48,756  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:49,298  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:49,875  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:50,422  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:44:51,010  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:44:51,627  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:44:51,997  __main__  INFO  BAG: fetched 8957 panden
+2026-05-21 21:44:51,997  __main__  INFO  BAG tile 106: bbox=[75500, 438647, 77500, 440647]
+2026-05-21 21:44:51,997  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:52,533  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:53,091  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:53,699  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:54,174  __main__  INFO  BAG: fetched 3267 panden
+2026-05-21 21:44:54,174  __main__  INFO  BAG tile 107: bbox=[75500, 440647, 77500, 442647]
+2026-05-21 21:44:54,174  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:54,638  __main__  INFO  BAG: fetched 626 panden
+2026-05-21 21:44:54,638  __main__  INFO  BAG tile 108: bbox=[75500, 442647, 77500, 444647]
+2026-05-21 21:44:54,638  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:55,200  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:44:55,854  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:44:56,436  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:44:57,029  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:44:57,587  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:44:58,128  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:44:58,718  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:44:59,323  __main__  INFO  BAG: fetched 7890 panden
+2026-05-21 21:44:59,323  __main__  INFO  BAG tile 109: bbox=[75500, 444647, 77500, 446647]
+2026-05-21 21:44:59,323  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:44:59,796  __main__  INFO  BAG: fetched 635 panden
+2026-05-21 21:44:59,796  __main__  INFO  BAG tile 110: bbox=[75500, 446647, 77500, 447000]
+2026-05-21 21:44:59,796  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:00,386  __main__  INFO  BAG: fetched 697 panden
+2026-05-21 21:45:00,386  __main__  INFO  BAG tile 111: bbox=[77500, 428647, 79500, 430647]
+2026-05-21 21:45:00,387  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:00,738  __main__  INFO  BAG: fetched 102 panden
+2026-05-21 21:45:00,738  __main__  INFO  BAG tile 112: bbox=[77500, 430647, 79500, 432647]
+2026-05-21 21:45:00,738  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:01,269  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:01,637  __main__  INFO  BAG: fetched 1137 panden
+2026-05-21 21:45:01,637  __main__  INFO  BAG tile 113: bbox=[77500, 432647, 79500, 434647]
+2026-05-21 21:45:01,637  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:02,025  __main__  INFO  BAG: fetched 329 panden
+2026-05-21 21:45:02,025  __main__  INFO  BAG tile 114: bbox=[77500, 434647, 79500, 436647]
+2026-05-21 21:45:02,025  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:02,408  __main__  INFO  BAG: fetched 261 panden
+2026-05-21 21:45:02,408  __main__  INFO  BAG tile 115: bbox=[77500, 436647, 79500, 438647]
+2026-05-21 21:45:02,408  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:03,578  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:04,100  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:04,602  __main__  INFO  BAG: fetched 2682 panden
+2026-05-21 21:45:04,602  __main__  INFO  BAG tile 116: bbox=[77500, 438647, 79500, 440647]
+2026-05-21 21:45:04,602  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:05,169  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:05,714  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:06,268  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:06,722  __main__  INFO  BAG: fetched 3604 panden
+2026-05-21 21:45:06,722  __main__  INFO  BAG tile 117: bbox=[77500, 440647, 79500, 442647]
+2026-05-21 21:45:06,722  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:07,134  __main__  INFO  BAG: fetched 394 panden
+2026-05-21 21:45:07,134  __main__  INFO  BAG tile 118: bbox=[77500, 442647, 79500, 444647]
+2026-05-21 21:45:07,134  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:07,720  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:08,080  __main__  INFO  BAG: fetched 890 panden
+2026-05-21 21:45:08,080  __main__  INFO  BAG tile 119: bbox=[77500, 444647, 79500, 446647]
+2026-05-21 21:45:08,080  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:08,534  __main__  INFO  BAG: fetched 579 panden
+2026-05-21 21:45:08,534  __main__  INFO  BAG tile 120: bbox=[77500, 446647, 79500, 447000]
+2026-05-21 21:45:08,534  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:08,867  __main__  INFO  BAG: fetched 113 panden
+2026-05-21 21:45:08,868  __main__  INFO  BAG tile 121: bbox=[79500, 428647, 81500, 430647]
+2026-05-21 21:45:08,868  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:09,413  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:09,951  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:10,525  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:11,072  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:11,650  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:12,048  __main__  INFO  BAG: fetched 4940 panden
+2026-05-21 21:45:12,048  __main__  INFO  BAG tile 122: bbox=[79500, 430647, 81500, 432647]
+2026-05-21 21:45:12,048  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:12,436  __main__  INFO  BAG: fetched 261 panden
+2026-05-21 21:45:12,436  __main__  INFO  BAG tile 123: bbox=[79500, 432647, 81500, 434647]
+2026-05-21 21:45:12,436  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:12,830  __main__  INFO  BAG: fetched 207 panden
+2026-05-21 21:45:12,830  __main__  INFO  BAG tile 124: bbox=[79500, 434647, 81500, 436647]
+2026-05-21 21:45:12,830  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:13,381  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:13,844  __main__  INFO  BAG: fetched 1540 panden
+2026-05-21 21:45:13,844  __main__  INFO  BAG tile 125: bbox=[79500, 436647, 81500, 438647]
+2026-05-21 21:45:13,844  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:14,347  __main__  INFO  BAG: fetched 750 panden
+2026-05-21 21:45:14,347  __main__  INFO  BAG tile 126: bbox=[79500, 438647, 81500, 440647]
+2026-05-21 21:45:14,347  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:14,647  __main__  INFO  BAG: fetched 69 panden
+2026-05-21 21:45:14,648  __main__  INFO  BAG tile 127: bbox=[79500, 440647, 81500, 442647]
+2026-05-21 21:45:14,648  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:15,023  __main__  INFO  BAG: fetched 262 panden
+2026-05-21 21:45:15,023  __main__  INFO  BAG tile 128: bbox=[79500, 442647, 81500, 444647]
+2026-05-21 21:45:15,023  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:15,563  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:16,090  __main__  INFO  BAG: fetched 1976 panden
+2026-05-21 21:45:16,091  __main__  INFO  BAG tile 129: bbox=[79500, 444647, 81500, 446647]
+2026-05-21 21:45:16,091  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:16,554  __main__  INFO  BAG: fetched 197 panden
+2026-05-21 21:45:16,554  __main__  INFO  BAG tile 130: bbox=[79500, 446647, 81500, 447000]
+2026-05-21 21:45:16,554  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:16,899  __main__  INFO  BAG: fetched 62 panden
+2026-05-21 21:45:16,899  __main__  INFO  BAG tile 131: bbox=[81500, 428647, 83500, 430647]
+2026-05-21 21:45:16,899  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:17,627  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:18,205  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:18,825  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:19,459  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:20,039  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:20,662  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:21,507  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:45:22,089  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:45:22,568  __main__  INFO  BAG: fetched 8143 panden
+2026-05-21 21:45:22,568  __main__  INFO  BAG tile 132: bbox=[81500, 430647, 83500, 432647]
+2026-05-21 21:45:22,568  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:23,106  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:23,648  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:24,054  __main__  INFO  BAG: fetched 2261 panden
+2026-05-21 21:45:24,054  __main__  INFO  BAG tile 133: bbox=[81500, 432647, 83500, 434647]
+2026-05-21 21:45:24,054  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:24,427  __main__  INFO  BAG: fetched 260 panden
+2026-05-21 21:45:24,427  __main__  INFO  BAG tile 134: bbox=[81500, 434647, 83500, 436647]
+2026-05-21 21:45:24,427  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:24,984  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:25,595  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:26,164  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:26,753  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:27,284  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:27,817  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:28,312  __main__  INFO  BAG: fetched 6638 panden
+2026-05-21 21:45:28,312  __main__  INFO  BAG tile 135: bbox=[81500, 436647, 83500, 438647]
+2026-05-21 21:45:28,312  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:28,863  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:29,594  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:30,135  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:30,548  __main__  INFO  BAG: fetched 3371 panden
+2026-05-21 21:45:30,548  __main__  INFO  BAG tile 136: bbox=[81500, 438647, 83500, 440647]
+2026-05-21 21:45:30,548  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:31,106  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:32,036  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:32,573  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:33,012  __main__  INFO  BAG: fetched 3589 panden
+2026-05-21 21:45:33,012  __main__  INFO  BAG tile 137: bbox=[81500, 440647, 83500, 442647]
+2026-05-21 21:45:33,012  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:33,386  __main__  INFO  BAG: fetched 240 panden
+2026-05-21 21:45:33,386  __main__  INFO  BAG tile 138: bbox=[81500, 442647, 83500, 444647]
+2026-05-21 21:45:33,386  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:33,918  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:34,482  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:35,055  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:35,543  __main__  INFO  BAG: fetched 3673 panden
+2026-05-21 21:45:35,543  __main__  INFO  BAG tile 139: bbox=[81500, 444647, 83500, 446647]
+2026-05-21 21:45:35,543  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:36,092  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:36,682  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:37,298  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:37,843  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:38,397  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:38,947  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:39,500  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:45:39,848  __main__  INFO  BAG: fetched 7041 panden
+2026-05-21 21:45:39,848  __main__  INFO  BAG tile 140: bbox=[81500, 446647, 83500, 447000]
+2026-05-21 21:45:39,848  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:40,374  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:40,884  __main__  INFO  BAG: fetched 1943 panden
+2026-05-21 21:45:40,884  __main__  INFO  BAG tile 141: bbox=[83500, 428647, 85500, 430647]
+2026-05-21 21:45:40,884  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:41,416  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:41,958  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:42,502  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:43,095  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:43,606  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:44,124  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:44,664  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:45:45,232  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:45:45,829  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:45:46,363  __main__  INFO  BAG: fetched 9543 panden
+2026-05-21 21:45:46,363  __main__  INFO  BAG tile 142: bbox=[83500, 430647, 85500, 432647]
+2026-05-21 21:45:46,363  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:46,911  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:47,453  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:48,006  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:48,596  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:49,112  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:49,665  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:50,183  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:45:50,725  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:45:51,333  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:45:51,736  __main__  INFO  BAG: fetched 9188 panden
+2026-05-21 21:45:51,736  __main__  INFO  BAG tile 143: bbox=[83500, 432647, 85500, 434647]
+2026-05-21 21:45:51,736  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:52,107  __main__  INFO  BAG: fetched 354 panden
+2026-05-21 21:45:52,107  __main__  INFO  BAG tile 144: bbox=[83500, 434647, 85500, 436647]
+2026-05-21 21:45:52,107  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:52,653  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:53,270  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:53,813  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:54,249  __main__  INFO  BAG: fetched 3255 panden
+2026-05-21 21:45:54,249  __main__  INFO  BAG tile 145: bbox=[83500, 436647, 85500, 438647]
+2026-05-21 21:45:54,249  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:54,779  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:55,331  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:45:55,902  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:45:56,453  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:45:56,977  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:45:57,577  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:45:58,143  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:45:58,615  __main__  INFO  BAG: fetched 7318 panden
+2026-05-21 21:45:58,615  __main__  INFO  BAG tile 146: bbox=[83500, 438647, 85500, 440647]
+2026-05-21 21:45:58,615  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:45:59,124  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:45:59,655  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:00,181  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:00,724  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:01,263  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:01,847  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:46:02,338  __main__  INFO  BAG: fetched 6783 panden
+2026-05-21 21:46:02,338  __main__  INFO  BAG tile 147: bbox=[83500, 440647, 85500, 442647]
+2026-05-21 21:46:02,338  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:02,666  __main__  INFO  BAG: fetched 139 panden
+2026-05-21 21:46:02,666  __main__  INFO  BAG tile 148: bbox=[83500, 442647, 85500, 444647]
+2026-05-21 21:46:02,666  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:03,231  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:03,759  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:04,283  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:04,833  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:05,241  __main__  INFO  BAG: fetched 4423 panden
+2026-05-21 21:46:05,241  __main__  INFO  BAG tile 149: bbox=[83500, 444647, 85500, 446647]
+2026-05-21 21:46:05,241  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:05,828  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:06,398  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:06,946  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:07,842  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:08,413  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:08,767  __main__  INFO  BAG: fetched 4841 panden
+2026-05-21 21:46:08,767  __main__  INFO  BAG tile 150: bbox=[83500, 446647, 85500, 447000]
+2026-05-21 21:46:08,767  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:09,348  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:10,354  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:10,712  __main__  INFO  BAG: fetched 2062 panden
+2026-05-21 21:46:10,712  __main__  INFO  BAG tile 151: bbox=[85500, 428647, 87500, 430647]
+2026-05-21 21:46:10,712  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:11,276  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:11,801  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:12,598  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:13,164  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:13,781  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:14,174  __main__  INFO  BAG: fetched 5175 panden
+2026-05-21 21:46:14,174  __main__  INFO  BAG tile 152: bbox=[85500, 430647, 87500, 432647]
+2026-05-21 21:46:14,174  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:14,725  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:15,233  __main__  INFO  BAG: fetched 1881 panden
+2026-05-21 21:46:15,233  __main__  INFO  BAG tile 153: bbox=[85500, 432647, 87500, 434647]
+2026-05-21 21:46:15,233  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:15,822  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:16,881  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:17,590  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:18,155  __main__  INFO  BAG: fetched 3883 panden
+2026-05-21 21:46:18,155  __main__  INFO  BAG tile 154: bbox=[85500, 434647, 87500, 436647]
+2026-05-21 21:46:18,155  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:18,952  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:19,526  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:20,091  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:20,653  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:21,269  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:21,920  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:46:22,262  __main__  INFO  BAG: fetched 5965 panden
+2026-05-21 21:46:22,262  __main__  INFO  BAG tile 155: bbox=[85500, 436647, 87500, 438647]
+2026-05-21 21:46:22,262  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:23,388  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:23,978  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:24,593  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:25,540  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:26,073  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:26,704  __main__  INFO  BAG: fetched 5577 panden
+2026-05-21 21:46:26,704  __main__  INFO  BAG tile 156: bbox=[85500, 438647, 87500, 440647]
+2026-05-21 21:46:26,704  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:27,269  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:27,858  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:28,446  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:28,992  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:29,438  __main__  INFO  BAG: fetched 4452 panden
+2026-05-21 21:46:29,438  __main__  INFO  BAG tile 157: bbox=[85500, 440647, 87500, 442647]
+2026-05-21 21:46:29,438  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:29,784  __main__  INFO  BAG: fetched 276 panden
+2026-05-21 21:46:29,784  __main__  INFO  BAG tile 158: bbox=[85500, 442647, 87500, 444647]
+2026-05-21 21:46:29,784  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:30,188  __main__  INFO  BAG: fetched 298 panden
+2026-05-21 21:46:30,188  __main__  INFO  BAG tile 159: bbox=[85500, 444647, 87500, 446647]
+2026-05-21 21:46:30,188  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:30,751  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:31,310  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:31,930  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:32,422  __main__  INFO  BAG: fetched 3445 panden
+2026-05-21 21:46:32,422  __main__  INFO  BAG tile 160: bbox=[85500, 446647, 87500, 447000]
+2026-05-21 21:46:32,422  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:32,991  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:33,525  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:33,872  __main__  INFO  BAG: fetched 2138 panden
+2026-05-21 21:46:33,872  __main__  INFO  BAG tile 161: bbox=[87500, 428647, 89500, 430647]
+2026-05-21 21:46:33,872  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:34,408  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:34,971  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:35,540  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:36,123  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:36,695  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:37,082  __main__  INFO  BAG: fetched 5103 panden
+2026-05-21 21:46:37,082  __main__  INFO  BAG tile 162: bbox=[87500, 430647, 89500, 432647]
+2026-05-21 21:46:37,083  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:37,634  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:38,027  __main__  INFO  BAG: fetched 1324 panden
+2026-05-21 21:46:38,027  __main__  INFO  BAG tile 163: bbox=[87500, 432647, 89500, 434647]
+2026-05-21 21:46:38,027  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:38,584  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:39,020  __main__  INFO  BAG: fetched 1560 panden
+2026-05-21 21:46:39,020  __main__  INFO  BAG tile 164: bbox=[87500, 434647, 89500, 436647]
+2026-05-21 21:46:39,020  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:39,616  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:39,926  __main__  INFO  BAG: fetched 1004 panden
+2026-05-21 21:46:39,926  __main__  INFO  BAG tile 165: bbox=[87500, 436647, 89500, 438647]
+2026-05-21 21:46:39,926  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:40,534  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:41,130  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:41,715  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:42,299  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:42,868  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:43,259  __main__  INFO  BAG: fetched 5164 panden
+2026-05-21 21:46:43,259  __main__  INFO  BAG tile 166: bbox=[87500, 438647, 89500, 440647]
+2026-05-21 21:46:43,259  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:43,834  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:44,444  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:45,006  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:45,563  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:46,081  __main__  INFO  BAG: fetched 4603 panden
+2026-05-21 21:46:46,081  __main__  INFO  BAG tile 167: bbox=[87500, 440647, 89500, 442647]
+2026-05-21 21:46:46,081  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:46,412  __main__  INFO  BAG: fetched 159 panden
+2026-05-21 21:46:46,413  __main__  INFO  BAG tile 168: bbox=[87500, 442647, 89500, 444647]
+2026-05-21 21:46:46,413  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:46,815  __main__  INFO  BAG: fetched 415 panden
+2026-05-21 21:46:46,815  __main__  INFO  BAG tile 169: bbox=[87500, 444647, 89500, 446647]
+2026-05-21 21:46:46,815  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:47,257  __main__  INFO  BAG: fetched 400 panden
+2026-05-21 21:46:47,257  __main__  INFO  BAG tile 170: bbox=[87500, 446647, 89500, 447000]
+2026-05-21 21:46:47,257  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:47,597  __main__  INFO  BAG: fetched 154 panden
+2026-05-21 21:46:47,597  __main__  INFO  BAG tile 171: bbox=[89500, 428647, 91500, 430647]
+2026-05-21 21:46:47,597  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:48,029  __main__  INFO  BAG: fetched 421 panden
+2026-05-21 21:46:48,029  __main__  INFO  BAG tile 172: bbox=[89500, 430647, 91500, 432647]
+2026-05-21 21:46:48,029  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:48,619  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:49,201  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:49,581  __main__  INFO  BAG: fetched 2263 panden
+2026-05-21 21:46:49,581  __main__  INFO  BAG tile 173: bbox=[89500, 432647, 91500, 434647]
+2026-05-21 21:46:49,581  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:50,148  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:50,678  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:51,113  __main__  INFO  BAG: fetched 2042 panden
+2026-05-21 21:46:51,113  __main__  INFO  BAG tile 174: bbox=[89500, 434647, 91500, 436647]
+2026-05-21 21:46:51,113  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:51,678  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:52,278  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:52,852  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:53,433  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:53,967  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:54,381  __main__  INFO  BAG: fetched 5381 panden
+2026-05-21 21:46:54,381  __main__  INFO  BAG tile 175: bbox=[89500, 436647, 91500, 438647]
+2026-05-21 21:46:54,381  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:54,930  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:55,488  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:46:56,087  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:46:56,692  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:46:57,305  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:46:57,860  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:46:58,445  __main__  INFO  BAG: fetched 6956 panden
+2026-05-21 21:46:58,445  __main__  INFO  BAG tile 176: bbox=[89500, 438647, 91500, 440647]
+2026-05-21 21:46:58,445  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:46:58,993  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:46:59,531  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:00,053  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:00,593  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:01,137  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:01,701  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:02,023  __main__  INFO  BAG: fetched 5915 panden
+2026-05-21 21:47:02,023  __main__  INFO  BAG tile 177: bbox=[89500, 440647, 91500, 442647]
+2026-05-21 21:47:02,023  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:02,439  __main__  INFO  BAG: fetched 541 panden
+2026-05-21 21:47:02,439  __main__  INFO  BAG tile 178: bbox=[89500, 442647, 91500, 444647]
+2026-05-21 21:47:02,439  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:02,990  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:03,584  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:04,130  __main__  INFO  BAG: fetched 2975 panden
+2026-05-21 21:47:04,130  __main__  INFO  BAG tile 179: bbox=[89500, 444647, 91500, 446647]
+2026-05-21 21:47:04,130  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:04,666  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:05,218  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:05,832  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:06,908  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:07,416  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:07,956  __main__  INFO  BAG: fetched 5355 panden
+2026-05-21 21:47:07,956  __main__  INFO  BAG tile 180: bbox=[89500, 446647, 91500, 447000]
+2026-05-21 21:47:07,956  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:08,540  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:09,040  __main__  INFO  BAG: fetched 1719 panden
+2026-05-21 21:47:09,040  __main__  INFO  BAG tile 181: bbox=[91500, 428647, 93500, 430647]
+2026-05-21 21:47:09,040  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:09,609  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:10,159  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:10,745  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:11,287  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:11,834  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:12,388  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:12,914  __main__  INFO  BAG: fetched 6678 panden
+2026-05-21 21:47:12,914  __main__  INFO  BAG tile 182: bbox=[91500, 430647, 93500, 432647]
+2026-05-21 21:47:12,914  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:13,478  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:14,577  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:15,166  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:15,708  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:16,295  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:16,783  __main__  INFO  BAG: fetched 5500 panden
+2026-05-21 21:47:16,783  __main__  INFO  BAG tile 183: bbox=[91500, 432647, 93500, 434647]
+2026-05-21 21:47:16,783  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:18,419  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:19,032  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:20,028  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:21,105  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:21,716  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:22,504  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:23,118  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:47:23,655  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:47:24,213  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:47:24,685  __main__  INFO  BAG: fetched 9312 panden
+2026-05-21 21:47:24,685  __main__  INFO  BAG tile 184: bbox=[91500, 434647, 93500, 436647]
+2026-05-21 21:47:24,685  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:26,056  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:26,622  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:27,005  __main__  INFO  BAG: fetched 2204 panden
+2026-05-21 21:47:27,005  __main__  INFO  BAG tile 185: bbox=[91500, 436647, 93500, 438647]
+2026-05-21 21:47:27,005  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:27,655  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:28,482  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:29,078  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:29,707  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:30,275  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:30,891  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:31,235  __main__  INFO  BAG: fetched 5983 panden
+2026-05-21 21:47:31,235  __main__  INFO  BAG tile 186: bbox=[91500, 438647, 93500, 440647]
+2026-05-21 21:47:31,235  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:31,839  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:33,306  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:33,890  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:34,510  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:35,172  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:36,008  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:36,562  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:47:37,087  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:47:37,662  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:47:38,121  __main__  INFO  BAG: fetched 9292 panden
+2026-05-21 21:47:38,121  __main__  INFO  BAG tile 187: bbox=[91500, 440647, 93500, 442647]
+2026-05-21 21:47:38,121  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:38,689  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:39,288  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:39,862  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:40,447  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:41,031  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:41,605  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:42,201  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:47:42,695  __main__  INFO  BAG: fetched 7651 panden
+2026-05-21 21:47:42,695  __main__  INFO  BAG tile 188: bbox=[91500, 442647, 93500, 444647]
+2026-05-21 21:47:42,695  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:43,232  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:43,756  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:44,303  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:44,746  __main__  INFO  BAG: fetched 3030 panden
+2026-05-21 21:47:44,746  __main__  INFO  BAG tile 189: bbox=[91500, 444647, 93500, 446647]
+2026-05-21 21:47:44,746  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:45,283  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:45,832  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:46,369  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:46,907  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:47,470  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:48,028  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:48,594  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:47:49,177  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:47:49,716  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:47:50,284  __main__  INFO  BAG WFS request  startIndex=10000
+2026-05-21 21:47:50,727  __main__  INFO  BAG: fetched 10390 panden
+2026-05-21 21:47:50,727  __main__  INFO  BAG tile 190: bbox=[91500, 446647, 93500, 447000]
+2026-05-21 21:47:50,727  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:51,244  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:51,583  __main__  INFO  BAG: fetched 1085 panden
+2026-05-21 21:47:51,583  __main__  INFO  BAG tile 191: bbox=[93500, 428647, 95500, 430647]
+2026-05-21 21:47:51,583  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:52,147  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:52,702  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:53,269  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:47:53,852  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:47:54,423  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:47:54,993  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:47:55,739  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:47:56,444  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:47:57,072  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:47:57,475  __main__  INFO  BAG: fetched 9065 panden
+2026-05-21 21:47:57,475  __main__  INFO  BAG tile 192: bbox=[93500, 430647, 95500, 432647]
+2026-05-21 21:47:57,475  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:47:58,126  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:47:58,809  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:47:59,453  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:00,011  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:00,484  __main__  INFO  BAG: fetched 4413 panden
+2026-05-21 21:48:00,484  __main__  INFO  BAG tile 193: bbox=[93500, 432647, 95500, 434647]
+2026-05-21 21:48:00,484  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:01,082  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:01,658  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:02,248  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:02,850  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:03,515  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:04,103  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:48:04,802  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:48:05,350  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:48:06,206  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:48:06,793  __main__  INFO  BAG WFS request  startIndex=10000
+2026-05-21 21:48:07,372  __main__  INFO  BAG WFS request  startIndex=11000
+2026-05-21 21:48:07,928  __main__  INFO  BAG WFS request  startIndex=12000
+2026-05-21 21:48:08,517  __main__  INFO  BAG WFS request  startIndex=13000
+2026-05-21 21:48:09,124  __main__  INFO  BAG WFS request  startIndex=14000
+2026-05-21 21:48:09,727  __main__  INFO  BAG WFS request  startIndex=15000
+2026-05-21 21:48:10,329  __main__  INFO  BAG WFS request  startIndex=16000
+2026-05-21 21:48:11,367  __main__  INFO  BAG WFS request  startIndex=17000
+2026-05-21 21:48:12,075  __main__  INFO  BAG WFS request  startIndex=18000
+2026-05-21 21:48:12,694  __main__  INFO  BAG: fetched 18677 panden
+2026-05-21 21:48:12,694  __main__  INFO  BAG tile 194: bbox=[93500, 434647, 95500, 436647]
+2026-05-21 21:48:12,694  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:13,335  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:14,615  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:15,145  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:15,717  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:16,211  __main__  INFO  BAG: fetched 4500 panden
+2026-05-21 21:48:16,211  __main__  INFO  BAG tile 195: bbox=[93500, 436647, 95500, 438647]
+2026-05-21 21:48:16,211  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:16,808  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:17,445  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:18,035  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:18,678  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:19,256  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:19,832  __main__  INFO  BAG: fetched 5732 panden
+2026-05-21 21:48:19,832  __main__  INFO  BAG tile 196: bbox=[93500, 438647, 95500, 440647]
+2026-05-21 21:48:19,832  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:20,357  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:21,022  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:21,643  __main__  INFO  BAG: fetched 2010 panden
+2026-05-21 21:48:21,643  __main__  INFO  BAG tile 197: bbox=[93500, 440647, 95500, 442647]
+2026-05-21 21:48:21,643  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:22,199  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:22,792  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:23,478  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:24,033  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:25,012  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:25,614  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:48:26,043  __main__  INFO  BAG: fetched 6290 panden
+2026-05-21 21:48:26,043  __main__  INFO  BAG tile 198: bbox=[93500, 442647, 95500, 444647]
+2026-05-21 21:48:26,043  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:26,559  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:27,085  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:27,661  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:27,983  __main__  INFO  BAG: fetched 3004 panden
+2026-05-21 21:48:27,983  __main__  INFO  BAG tile 199: bbox=[93500, 444647, 95500, 446647]
+2026-05-21 21:48:27,983  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:28,544  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:29,093  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:29,671  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:30,214  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:30,800  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:31,369  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:48:31,899  __main__  INFO  BAG: fetched 6799 panden
+2026-05-21 21:48:31,899  __main__  INFO  BAG tile 200: bbox=[93500, 446647, 95500, 447000]
+2026-05-21 21:48:31,899  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:32,317  __main__  INFO  BAG: fetched 459 panden
+2026-05-21 21:48:32,317  __main__  INFO  BAG tile 201: bbox=[95500, 428647, 97500, 430647]
+2026-05-21 21:48:32,317  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:32,911  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:33,452  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:34,018  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:34,600  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:35,175  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:35,778  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:48:36,370  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:48:36,994  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:48:37,598  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:48:38,231  __main__  INFO  BAG WFS request  startIndex=10000
+2026-05-21 21:48:38,813  __main__  INFO  BAG WFS request  startIndex=11000
+2026-05-21 21:48:39,398  __main__  INFO  BAG WFS request  startIndex=12000
+2026-05-21 21:48:39,984  __main__  INFO  BAG WFS request  startIndex=13000
+2026-05-21 21:48:40,429  __main__  INFO  BAG: fetched 13092 panden
+2026-05-21 21:48:40,430  __main__  INFO  BAG tile 202: bbox=[95500, 430647, 97500, 432647]
+2026-05-21 21:48:40,430  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:41,061  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:41,676  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:42,286  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:42,839  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:43,391  __main__  INFO  BAG: fetched 4753 panden
+2026-05-21 21:48:43,391  __main__  INFO  BAG tile 203: bbox=[95500, 432647, 97500, 434647]
+2026-05-21 21:48:43,391  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:43,942  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:44,487  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:45,245  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:45,762  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:46,323  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:46,737  __main__  INFO  BAG: fetched 5298 panden
+2026-05-21 21:48:46,737  __main__  INFO  BAG tile 204: bbox=[95500, 434647, 97500, 436647]
+2026-05-21 21:48:46,737  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:47,333  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:47,876  __main__  INFO  BAG: fetched 1829 panden
+2026-05-21 21:48:47,876  __main__  INFO  BAG tile 205: bbox=[95500, 436647, 97500, 438647]
+2026-05-21 21:48:47,876  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:48,415  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:49,057  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:49,641  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:50,268  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:50,860  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:51,195  __main__  INFO  BAG: fetched 4995 panden
+2026-05-21 21:48:51,195  __main__  INFO  BAG tile 206: bbox=[95500, 438647, 97500, 440647]
+2026-05-21 21:48:51,195  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:51,712  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:52,312  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:52,907  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:53,381  __main__  INFO  BAG: fetched 3548 panden
+2026-05-21 21:48:53,381  __main__  INFO  BAG tile 207: bbox=[95500, 440647, 97500, 442647]
+2026-05-21 21:48:53,381  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:53,958  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:54,518  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:48:55,107  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:48:55,618  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:48:56,181  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:48:56,739  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:48:57,129  __main__  INFO  BAG: fetched 6167 panden
+2026-05-21 21:48:57,129  __main__  INFO  BAG tile 208: bbox=[95500, 442647, 97500, 444647]
+2026-05-21 21:48:57,129  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:57,586  __main__  INFO  BAG: fetched 602 panden
+2026-05-21 21:48:57,586  __main__  INFO  BAG tile 209: bbox=[95500, 444647, 97500, 446647]
+2026-05-21 21:48:57,586  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:58,126  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:58,441  __main__  INFO  BAG: fetched 1068 panden
+2026-05-21 21:48:58,441  __main__  INFO  BAG tile 210: bbox=[95500, 446647, 97500, 447000]
+2026-05-21 21:48:58,441  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:48:59,004  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:48:59,508  __main__  INFO  BAG: fetched 1650 panden
+2026-05-21 21:48:59,508  __main__  INFO  BAG tile 211: bbox=[97500, 428647, 99500, 430647]
+2026-05-21 21:48:59,508  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:00,125  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:00,615  __main__  INFO  BAG: fetched 1703 panden
+2026-05-21 21:49:00,616  __main__  INFO  BAG tile 212: bbox=[97500, 430647, 99500, 432647]
+2026-05-21 21:49:00,616  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:01,118  __main__  INFO  BAG: fetched 720 panden
+2026-05-21 21:49:01,118  __main__  INFO  BAG tile 213: bbox=[97500, 432647, 99500, 434647]
+2026-05-21 21:49:01,118  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:01,646  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:02,209  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:02,810  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:03,405  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:03,991  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:04,624  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:05,226  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:49:05,855  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:49:06,570  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:49:07,105  __main__  INFO  BAG: fetched 9667 panden
+2026-05-21 21:49:07,105  __main__  INFO  BAG tile 214: bbox=[97500, 434647, 99500, 436647]
+2026-05-21 21:49:07,105  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:07,754  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:08,376  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:08,975  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:09,707  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:10,362  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:10,994  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:11,428  __main__  INFO  BAG: fetched 6252 panden
+2026-05-21 21:49:11,428  __main__  INFO  BAG tile 215: bbox=[97500, 436647, 99500, 438647]
+2026-05-21 21:49:11,428  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:12,085  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:12,641  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:13,251  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:13,821  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:14,459  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:15,106  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:15,978  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:49:16,519  __main__  INFO  BAG: fetched 7726 panden
+2026-05-21 21:49:16,519  __main__  INFO  BAG tile 216: bbox=[97500, 438647, 99500, 440647]
+2026-05-21 21:49:16,519  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:17,679  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:18,244  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:20,951  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:21,527  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:22,142  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:22,728  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:23,338  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:49:23,884  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:49:24,417  __main__  INFO  BAG: fetched 8688 panden
+2026-05-21 21:49:24,417  __main__  INFO  BAG tile 217: bbox=[97500, 440647, 99500, 442647]
+2026-05-21 21:49:24,417  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:24,995  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:25,596  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:26,250  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:28,244  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:29,766  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:30,329  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:30,893  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:49:31,447  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 21:49:32,077  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 21:49:32,481  __main__  INFO  BAG: fetched 9194 panden
+2026-05-21 21:49:32,481  __main__  INFO  BAG tile 218: bbox=[97500, 442647, 99500, 444647]
+2026-05-21 21:49:32,481  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:33,032  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:33,585  __main__  INFO  BAG: fetched 1752 panden
+2026-05-21 21:49:33,585  __main__  INFO  BAG tile 219: bbox=[97500, 444647, 99500, 446647]
+2026-05-21 21:49:33,585  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:33,878  __main__  INFO  BAG: fetched 53 panden
+2026-05-21 21:49:33,878  __main__  INFO  BAG tile 220: bbox=[97500, 446647, 99500, 447000]
+2026-05-21 21:49:33,878  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:34,207  __main__  INFO  BAG: fetched 145 panden
+2026-05-21 21:49:34,207  __main__  INFO  BAG tile 221: bbox=[99500, 428647, 101033, 430647]
+2026-05-21 21:49:34,207  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:34,782  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:35,680  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:36,099  __main__  INFO  BAG: fetched 2352 panden
+2026-05-21 21:49:36,099  __main__  INFO  BAG tile 222: bbox=[99500, 430647, 101033, 432647]
+2026-05-21 21:49:36,099  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:36,720  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:37,318  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:37,909  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:38,471  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:39,020  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:39,511  __main__  INFO  BAG: fetched 5512 panden
+2026-05-21 21:49:39,511  __main__  INFO  BAG tile 223: bbox=[99500, 432647, 101033, 434647]
+2026-05-21 21:49:39,511  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:40,102  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:40,683  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:41,145  __main__  INFO  BAG: fetched 2402 panden
+2026-05-21 21:49:41,145  __main__  INFO  BAG tile 224: bbox=[99500, 434647, 101033, 436647]
+2026-05-21 21:49:41,145  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:41,726  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:42,343  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:42,919  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:43,476  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:44,182  __main__  INFO  BAG: fetched 4798 panden
+2026-05-21 21:49:44,182  __main__  INFO  BAG tile 225: bbox=[99500, 436647, 101033, 438647]
+2026-05-21 21:49:44,182  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:45,100  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:46,357  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:47,085  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:47,758  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:48,520  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:49:49,231  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:49:49,904  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 21:49:50,536  __main__  INFO  BAG: fetched 7558 panden
+2026-05-21 21:49:50,536  __main__  INFO  BAG tile 226: bbox=[99500, 438647, 101033, 440647]
+2026-05-21 21:49:50,536  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:51,252  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:51,941  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:52,626  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:53,118  __main__  INFO  BAG: fetched 3328 panden
+2026-05-21 21:49:53,118  __main__  INFO  BAG tile 227: bbox=[99500, 440647, 101033, 442647]
+2026-05-21 21:49:53,118  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:53,775  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:54,525  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:55,205  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:56,080  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:56,520  __main__  INFO  BAG: fetched 4119 panden
+2026-05-21 21:49:56,520  __main__  INFO  BAG tile 228: bbox=[99500, 442647, 101033, 444647]
+2026-05-21 21:49:56,520  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:49:57,242  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:49:57,930  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 21:49:58,615  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 21:49:59,234  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 21:49:59,833  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 21:50:00,424  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 21:50:00,762  __main__  INFO  BAG: fetched 6020 panden
+2026-05-21 21:50:00,763  __main__  INFO  BAG tile 229: bbox=[99500, 444647, 101033, 446647]
+2026-05-21 21:50:00,763  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:50:01,336  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:50:01,770  __main__  INFO  BAG: fetched 1462 panden
+2026-05-21 21:50:01,770  __main__  INFO  BAG tile 230: bbox=[99500, 446647, 101033, 447000]
+2026-05-21 21:50:01,770  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 21:50:02,297  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 21:50:02,852  __main__  INFO  BAG: fetched 1941 panden
+2026-05-21 21:50:03,174  __main__  INFO  BAG tiled: 555878 unique panden across 230 tiles (5616 duplicates dropped)
+2026-05-21 21:50:03,192  __main__  INFO  === Fetching 3D BAG data ===
+2026-05-21 21:50:03,192  __main__  INFO  3D BAG WFS request  startIndex=0
+2026-05-21 21:50:11,888  __main__  INFO  3D BAG WFS request  startIndex=10000
+2026-05-21 21:50:20,445  __main__  INFO  3D BAG WFS request  startIndex=20000
+2026-05-21 21:50:29,423  __main__  INFO  3D BAG WFS request  startIndex=30000
+2026-05-21 21:50:38,941  __main__  INFO  3D BAG WFS request  startIndex=40000
+2026-05-21 21:50:48,048  __main__  INFO  3D BAG WFS request  startIndex=50000
+2026-05-21 21:50:57,278  __main__  INFO  3D BAG WFS request  startIndex=60000
+2026-05-21 21:51:06,764  __main__  INFO  3D BAG WFS request  startIndex=70000
+2026-05-21 21:51:16,201  __main__  INFO  3D BAG WFS request  startIndex=80000
+2026-05-21 21:51:25,572  __main__  INFO  3D BAG WFS request  startIndex=90000
+2026-05-21 21:51:34,648  __main__  INFO  3D BAG WFS request  startIndex=100000
+2026-05-21 21:51:44,804  __main__  INFO  3D BAG WFS request  startIndex=110000
+2026-05-21 21:51:54,110  __main__  INFO  3D BAG WFS request  startIndex=120000
+2026-05-21 21:52:03,143  __main__  INFO  3D BAG WFS request  startIndex=130000
+2026-05-21 21:52:13,439  __main__  INFO  3D BAG WFS request  startIndex=140000
+2026-05-21 21:52:23,243  __main__  INFO  3D BAG WFS request  startIndex=150000
+2026-05-21 21:52:32,888  __main__  INFO  3D BAG WFS request  startIndex=160000
+2026-05-21 21:52:42,147  __main__  INFO  3D BAG WFS request  startIndex=170000
+2026-05-21 21:52:51,833  __main__  INFO  3D BAG WFS request  startIndex=180000
+2026-05-21 21:53:01,823  __main__  INFO  3D BAG WFS request  startIndex=190000
+2026-05-21 21:53:11,508  __main__  INFO  3D BAG WFS request  startIndex=200000
+2026-05-21 21:53:20,842  __main__  INFO  3D BAG WFS request  startIndex=210000
+2026-05-21 21:53:30,245  __main__  INFO  3D BAG WFS request  startIndex=220000
+2026-05-21 21:53:40,058  __main__  INFO  3D BAG WFS request  startIndex=230000
+2026-05-21 21:53:50,096  __main__  INFO  3D BAG WFS request  startIndex=240000
+2026-05-21 21:54:03,824  __main__  INFO  3D BAG WFS request  startIndex=250000
+2026-05-21 21:54:14,365  __main__  INFO  3D BAG WFS request  startIndex=260000
+2026-05-21 21:54:34,031  __main__  INFO  3D BAG WFS request  startIndex=270000
+2026-05-21 21:54:44,626  __main__  INFO  3D BAG WFS request  startIndex=280000
+2026-05-21 21:55:08,105  __main__  INFO  3D BAG WFS request  startIndex=290000
+2026-05-21 21:55:20,838  __main__  INFO  3D BAG WFS request  startIndex=300000
+2026-05-21 21:55:33,940  __main__  INFO  3D BAG WFS request  startIndex=310000
+2026-05-21 21:55:56,848  __main__  INFO  3D BAG WFS request  startIndex=320000
+2026-05-21 21:56:14,270  __main__  INFO  3D BAG WFS request  startIndex=330000
+2026-05-21 21:56:25,284  __main__  INFO  3D BAG WFS request  startIndex=340000
+2026-05-21 21:56:38,070  __main__  INFO  3D BAG WFS request  startIndex=350000
+2026-05-21 21:56:53,447  __main__  INFO  3D BAG WFS request  startIndex=360000
+2026-05-21 21:57:12,447  __main__  INFO  3D BAG WFS request  startIndex=370000
+2026-05-21 21:57:23,525  __main__  INFO  3D BAG WFS request  startIndex=380000
+2026-05-21 21:57:45,936  __main__  INFO  3D BAG WFS request  startIndex=390000
+2026-05-21 21:58:09,471  __main__  INFO  3D BAG WFS request  startIndex=400000
+2026-05-21 21:58:20,405  __main__  INFO  3D BAG WFS request  startIndex=410000
+2026-05-21 21:58:31,581  __main__  INFO  3D BAG WFS request  startIndex=420000
+2026-05-21 21:58:50,697  __main__  INFO  3D BAG WFS request  startIndex=430000
+2026-05-21 21:59:09,239  __main__  INFO  3D BAG WFS request  startIndex=440000
+2026-05-21 21:59:20,402  __main__  INFO  3D BAG WFS request  startIndex=450000
+2026-05-21 21:59:31,457  __main__  INFO  3D BAG WFS request  startIndex=460000
+2026-05-21 21:59:42,499  __main__  INFO  3D BAG WFS request  startIndex=470000
+2026-05-21 21:59:56,354  __main__  INFO  3D BAG WFS request  startIndex=480000
+2026-05-21 22:00:07,799  __main__  INFO  3D BAG WFS request  startIndex=490000
+2026-05-21 22:00:19,050  __main__  INFO  3D BAG WFS request  startIndex=500000
+2026-05-21 22:00:30,192  __main__  INFO  3D BAG WFS request  startIndex=510000
+2026-05-21 22:00:41,489  __main__  INFO  3D BAG WFS request  startIndex=520000
+2026-05-21 22:00:53,521  __main__  INFO  3D BAG: fetched 529880 features
+2026-05-21 22:00:53,521  __main__  INFO  === Loading EP-Online data ===
+2026-05-21 22:01:15,983  __main__  INFO  EP-Online: loaded 38167 records for postcode prefix(es) ['30']
+2026-05-21 22:01:15,985  __main__  INFO  === Joining data sources ===
+2026-05-21 22:01:17,146  __main__  INFO  Before join ¡X BAG: 555878, 3D BAG: 529880, EP-Online: 38450
+2026-05-21 22:01:17,980  __main__  INFO  After BAG + 3D BAG join: 526667 rows
+2026-05-21 22:01:18,145  __main__  INFO  After EP-Online join: 38372 rows
+2026-05-21 22:01:18,208  __main__  INFO  After filtering & dedup: 38024 rows
+2026-05-21 22:01:18,208  __main__  INFO  Keeping all 85 columns
+2026-05-21 22:01:18,295  __main__  INFO  === Validating and saving ===
+2026-05-21 22:01:19,591  __main__  INFO  Validation passed. Saved 38024 buildings to D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\rotterdam\bag_3dbag_ep_joined.parquet
+
+=== Step 1 Report ===
+  total_buildings: 38024
+  unique_labels: 11
+  label_distribution: {'C': 10520, 'A': 9164, 'B': 7270, 'D': 3708, 'E': 2260, 'A+': 1585, 'F': 1398, 'G': 1272, 'A++': 608, 'A+++': 196, 'A++++': 43}
+  unique_periods: 5
+  period_distribution: {'1900-1949': 18733, '1950-1999': 14831, '>2000': 2459, '1850-1899': 1997, '1800-1849': 4}
+  output_path: D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\rotterdam\bag_3dbag_ep_joined.parquet

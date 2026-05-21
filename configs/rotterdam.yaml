@@ -5,12 +5,13 @@ study_area:
   crs: "EPSG:28992"
 
 pipeline:
-  use_3dbag: false
+  use_3dbag: true
 
 data_paths:
   ep_online_csv: "data/raw/v20260401_v4_csv/v20260401_v4_csv.csv"
   processed_dir: "data/processed/rotterdam"
-  joined_output: "data/processed/rotterdam/bag_ep_joined.parquet"
+  joined_output: "data/processed/rotterdam/bag_3dbag_ep_joined.parquet"
+  lod2_output:   "data/processed/rotterdam/residential_with_3d_features.parquet"
   tabula_csv:    "data/processed/tabula_nl.csv"
   tabula_output: "data/processed/rotterdam/residential_tabula_matched.parquet"
 
@@ -22,6 +23,13 @@ wfs:
   bag_url: "https://service.pdok.nl/lv/bag/wfs/v2_0"
   bag_layer: "bag:pand"
   bag_page_size: 1000
+  bag3d_url: "https://data.3dbag.nl/api/BAG3D/wfs"
+  bag3d_layer: "BAG3D:lod12"
+  bag3d_page_size: 10000
+
+lod2:
+  rmse_quality_threshold: 1.0
+  floor_height_default: 3.0
 
 filters:
   bouwjaar_min: 1800

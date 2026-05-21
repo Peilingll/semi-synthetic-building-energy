@@ -1,0 +1,97 @@
+2026-05-21 20:49:53,300  __main__  INFO  === Fetching BAG data ===
+2026-05-21 20:49:53,300  __main__  INFO  BAG WFS request  startIndex=0
+2026-05-21 20:49:54,293  __main__  INFO  BAG WFS request  startIndex=1000
+2026-05-21 20:49:55,122  __main__  INFO  BAG WFS request  startIndex=2000
+2026-05-21 20:49:55,946  __main__  INFO  BAG WFS request  startIndex=3000
+2026-05-21 20:49:56,703  __main__  INFO  BAG WFS request  startIndex=4000
+2026-05-21 20:49:57,479  __main__  INFO  BAG WFS request  startIndex=5000
+2026-05-21 20:49:58,290  __main__  INFO  BAG WFS request  startIndex=6000
+2026-05-21 20:49:59,046  __main__  INFO  BAG WFS request  startIndex=7000
+2026-05-21 20:49:59,846  __main__  INFO  BAG WFS request  startIndex=8000
+2026-05-21 20:50:00,611  __main__  INFO  BAG WFS request  startIndex=9000
+2026-05-21 20:50:01,423  __main__  INFO  BAG WFS request  startIndex=10000
+2026-05-21 20:50:02,600  __main__  INFO  BAG WFS request  startIndex=11000
+2026-05-21 20:50:03,379  __main__  INFO  BAG WFS request  startIndex=12000
+2026-05-21 20:50:04,183  __main__  INFO  BAG WFS request  startIndex=13000
+2026-05-21 20:50:04,983  __main__  INFO  BAG WFS request  startIndex=14000
+2026-05-21 20:50:05,835  __main__  INFO  BAG WFS request  startIndex=15000
+2026-05-21 20:50:06,725  __main__  INFO  BAG WFS request  startIndex=16000
+2026-05-21 20:50:07,506  __main__  INFO  BAG WFS request  startIndex=17000
+2026-05-21 20:50:08,378  __main__  INFO  BAG WFS request  startIndex=18000
+2026-05-21 20:50:09,217  __main__  INFO  BAG WFS request  startIndex=19000
+2026-05-21 20:50:10,001  __main__  INFO  BAG WFS request  startIndex=20000
+2026-05-21 20:50:10,823  __main__  INFO  BAG WFS request  startIndex=21000
+2026-05-21 20:50:11,645  __main__  INFO  BAG WFS request  startIndex=22000
+2026-05-21 20:50:12,491  __main__  INFO  BAG WFS request  startIndex=23000
+2026-05-21 20:50:13,373  __main__  INFO  BAG WFS request  startIndex=24000
+2026-05-21 20:50:14,263  __main__  INFO  BAG WFS request  startIndex=25000
+2026-05-21 20:50:15,122  __main__  INFO  BAG WFS request  startIndex=26000
+2026-05-21 20:50:16,014  __main__  INFO  BAG WFS request  startIndex=27000
+2026-05-21 20:50:16,863  __main__  INFO  BAG WFS request  startIndex=28000
+2026-05-21 20:50:17,758  __main__  INFO  BAG WFS request  startIndex=29000
+2026-05-21 20:50:18,611  __main__  INFO  BAG WFS request  startIndex=30000
+2026-05-21 20:50:19,498  __main__  INFO  BAG WFS request  startIndex=31000
+2026-05-21 20:50:20,732  __main__  INFO  BAG WFS request  startIndex=32000
+2026-05-21 20:50:21,586  __main__  INFO  BAG WFS request  startIndex=33000
+2026-05-21 20:50:24,598  __main__  INFO  BAG WFS request  startIndex=34000
+2026-05-21 20:50:26,251  __main__  INFO  BAG WFS request  startIndex=35000
+2026-05-21 20:50:27,098  __main__  INFO  BAG WFS request  startIndex=36000
+2026-05-21 20:50:27,998  __main__  INFO  BAG WFS request  startIndex=37000
+2026-05-21 20:50:28,874  __main__  INFO  BAG WFS request  startIndex=38000
+2026-05-21 20:50:29,738  __main__  INFO  BAG WFS request  startIndex=39000
+2026-05-21 20:50:30,695  __main__  INFO  BAG WFS request  startIndex=40000
+2026-05-21 20:50:31,627  __main__  INFO  BAG WFS request  startIndex=41000
+2026-05-21 20:50:32,521  __main__  INFO  BAG WFS request  startIndex=42000
+2026-05-21 20:50:33,492  __main__  INFO  BAG WFS request  startIndex=43000
+2026-05-21 20:50:34,409  __main__  INFO  BAG WFS request  startIndex=44000
+2026-05-21 20:50:35,452  __main__  INFO  BAG WFS request  startIndex=45000
+2026-05-21 20:50:36,403  __main__  INFO  BAG WFS request  startIndex=46000
+2026-05-21 20:50:37,354  __main__  INFO  BAG WFS request  startIndex=47000
+2026-05-21 20:50:38,368  __main__  INFO  BAG WFS request  startIndex=48000
+2026-05-21 20:50:39,290  __main__  INFO  BAG WFS request  startIndex=49000
+2026-05-21 20:50:40,277  __main__  INFO  BAG WFS request  startIndex=50000
+2026-05-21 20:50:41,244  __main__  INFO  BAG WFS request  startIndex=51000
+2026-05-21 20:50:41,507  __main__  WARNING  BAG WFS returned error at startIndex=51000 ¡X stopping pagination
+2026-05-21 20:50:41,519  __main__  INFO  BAG: fetched 50791 panden
+2026-05-21 20:50:41,520  __main__  INFO  === Fetching 3D BAG data ===
+2026-05-21 20:50:41,520  __main__  INFO  3D BAG WFS request  startIndex=0
+2026-05-21 20:50:48,678  __main__  INFO  3D BAG WFS request  startIndex=10000
+2026-05-21 20:50:54,811  __main__  INFO  3D BAG WFS request  startIndex=20000
+2026-05-21 20:51:00,828  __main__  INFO  3D BAG WFS request  startIndex=30000
+2026-05-21 20:51:07,126  __main__  INFO  3D BAG WFS request  startIndex=40000
+2026-05-21 20:51:13,642  __main__  INFO  3D BAG WFS request  startIndex=50000
+2026-05-21 20:51:19,648  __main__  INFO  3D BAG WFS request  startIndex=60000
+2026-05-21 20:51:26,403  __main__  INFO  3D BAG WFS request  startIndex=70000
+2026-05-21 20:51:33,423  __main__  INFO  3D BAG WFS request  startIndex=80000
+2026-05-21 20:51:40,637  __main__  INFO  3D BAG WFS request  startIndex=90000
+2026-05-21 20:51:47,861  __main__  INFO  3D BAG WFS request  startIndex=100000
+2026-05-21 20:51:55,166  __main__  INFO  3D BAG WFS request  startIndex=110000
+2026-05-21 20:52:02,442  __main__  INFO  3D BAG WFS request  startIndex=120000
+2026-05-21 20:52:09,786  __main__  INFO  3D BAG WFS request  startIndex=130000
+2026-05-21 20:52:16,967  __main__  INFO  3D BAG WFS request  startIndex=140000
+2026-05-21 20:52:24,328  __main__  INFO  3D BAG WFS request  startIndex=150000
+2026-05-21 20:52:31,118  __main__  INFO  3D BAG WFS request  startIndex=160000
+2026-05-21 20:52:37,772  __main__  INFO  3D BAG WFS request  startIndex=170000
+2026-05-21 20:52:44,682  __main__  INFO  3D BAG WFS request  startIndex=180000
+2026-05-21 20:52:51,863  __main__  INFO  3D BAG WFS request  startIndex=190000
+2026-05-21 20:52:59,063  __main__  INFO  3D BAG WFS request  startIndex=200000
+2026-05-21 20:53:06,295  __main__  INFO  3D BAG WFS request  startIndex=210000
+2026-05-21 20:53:13,890  __main__  INFO  3D BAG: fetched 219984 features
+2026-05-21 20:53:13,890  __main__  INFO  === Loading EP-Online data ===
+2026-05-21 20:53:25,200  __main__  INFO  EP-Online: loaded 20541 records for postcode prefix(es) ['35']
+2026-05-21 20:53:25,203  __main__  INFO  === Joining data sources ===
+2026-05-21 20:53:25,448  __main__  INFO  Before join ¡X BAG: 50791, 3D BAG: 219984, EP-Online: 20563
+2026-05-21 20:53:25,525  __main__  INFO  After BAG + 3D BAG join: 50592 rows
+2026-05-21 20:53:25,537  __main__  INFO  After EP-Online join: 1775 rows
+2026-05-21 20:53:25,541  __main__  INFO  After filtering & dedup: 1733 rows
+2026-05-21 20:53:25,541  __main__  INFO  Keeping all 85 columns
+2026-05-21 20:53:25,551  __main__  INFO  === Validating and saving ===
+2026-05-21 20:53:25,587  __main__  INFO  Validation passed. Saved 1733 buildings to D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\utrecht\bag_3dbag_ep_joined.parquet
+
+=== Step 1 Report ===
+  total_buildings: 1733
+  unique_labels: 11
+  label_distribution: {'C': 502, 'A': 375, 'B': 275, 'D': 208, 'A+': 128, 'E': 103, 'G': 56, 'F': 43, 'A++': 30, 'A+++': 12, 'A++++': 1}
+  unique_periods: 5
+  period_distribution: {'1900-1949': 938, '1950-1999': 552, '>2000': 147, '1850-1899': 89, '1800-1849': 7}
+  output_path: D:\ITBE\Thesis\semi-synthetic-building-energy\data\processed\utrecht\bag_3dbag_ep_joined.parquet

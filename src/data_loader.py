@@ -463,6 +463,15 @@ def validate_and_save(
     # Uniqueness
     assert gdf["pand_id"].is_unique, "Duplicate pand_id found"
 
+    # Coerce object columns with mixed inner types to str — different BAG WFS
+    # tiles can return columns like `documentdatum` as int in some tiles and
+    # str in others; pyarrow rejects the mixed-type object on save.
+    for col in gdf.columns:
+        if col == "geometry":
+            continue
+        if gdf[col].dtype == "object":
+            gdf[col] = gdf[col].astype(str).where(gdf[col].notna(), None)
+
     # Save
     gdf.to_parquet(output_path, index=False)
     report["output_path"] = str(output_path)
@@ -497,12 +506,13 @@ def run_step1(config: dict | None = None) -> dict:
 
     # Fetch BAG
     logger.info("=== Fetching BAG data ===")
-    bag_gdf = fetch_bag_pand(
+    bag_gdf = fetch_bag_pand_tiled(
         bbox=bbox,
         wfs_url=wfs["bag_url"],
         layer=wfs["bag_layer"],
         crs=crs,
         page_size=wfs.get("bag_page_size", 1000),
+        tile_size_m=wfs.get("bag_tile_size_m", 2000),
     )
 
     # Fetch 3D BAG
