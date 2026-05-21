@@ -28,3 +28,9 @@ data/output/
 # osmnx / zensvi default cache dir (created when scripts run from repo root)
 cache/
 
+# Model checkpoints (large binary, regeneratable from train.py)
+models/
+
+# Editable install metadata (created by pip install -e)
+src/*.egg-info/
+

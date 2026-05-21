@@ -1,0 +1,73 @@
+{
+  "n_eval": 34,
+  "type_acc": 0.6765,
+  "type_macro_f1": 0.3333,
+  "type_per_class": {
+    "SFH": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 5
+    },
+    "TH": {
+      "precision": 0.3571,
+      "recall": 0.7143,
+      "f1": 0.4762,
+      "support": 7
+    },
+    "MFH": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 0
+    },
+    "AB": {
+      "precision": 0.9,
+      "recall": 0.8182,
+      "f1": 0.8571,
+      "support": 22
+    }
+  },
+  "type_confusion_matrix": {
+    "labels": [
+      "SFH",
+      "TH",
+      "MFH",
+      "AB"
+    ],
+    "matrix": [
+      [
+        0,
+        5,
+        0,
+        0
+      ],
+      [
+        0,
+        5,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        18
+      ]
+    ]
+  },
+  "year_mae": 32.69,
+  "year_rmse": 48.87,
+  "year_mdae": 15.67,
+  "year_within_10y_pct": 35.29,
+  "year_within_20y_pct": 55.88,
+  "floors_mae": 0.539,
+  "floors_exact_pct": 58.82,
+  "floors_within_1_pct": 97.06
+}
