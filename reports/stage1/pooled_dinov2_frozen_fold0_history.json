@@ -1,0 +1,39 @@
+{
+  "fold": 0,
+  "best_epoch": 1,
+  "best_val_macro_f1": 0.5588084240073273,
+  "total_sec": 406.0,
+  "vram_peak_mb": 3138.0,
+  "history": [
+    {
+      "epoch": 1,
+      "epoch_sec": 405.6,
+      "lr": 0.0,
+      "train_loss": 1.7756894798444305,
+      "train_ce": 0.8056484760978032,
+      "train_year_mse": 0.47972868296580673,
+      "train_floors_mse": 0.4903123221938219,
+      "train_type_acc": 0.8308026030368764,
+      "train_type_macro_f1": 0.43326372817129893,
+      "val_loss": 1.4506139736045545,
+      "val_ce": 0.6702183829955156,
+      "val_year_mse": 0.40401326416261135,
+      "val_floors_mse": 0.37638233157043266,
+      "val_type_acc": 0.838909541511772,
+      "val_type_macro_f1": 0.5588084240073273
+    }
+  ],
+  "args": {
+    "model": "dinov2_frozen",
+    "fold": 0,
+    "all_folds": false,
+    "epochs": 1,
+    "batch_size": 32,
+    "lr": 0.0005,
+    "weight_decay": 0.01,
+    "patience": 10,
+    "num_workers": 2,
+    "no_amp": false,
+    "out_dir": null
+  }
+}

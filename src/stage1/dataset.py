@@ -1,15 +1,18 @@
-"""Streaming PIL dataset for Stage 1.
+"""Streaming PIL dataset for Stage 1 Phase B.
 
-One __getitem__ returns one building (pand_id) with up to MAX_IMAGES images,
-padded to a fixed length with a mask. Transforms follow spec §3.2.4 (random
-resized crop + horizontal flip + color jitter, no vertical flip).
+Schema (one __getitem__ returns one building):
+- Reads svi_manifest.parquet (4 cities), stage1_gt.parquet (4 cities concat),
+  and either dev_fold_indices.parquet (split='train'/'val') or
+  holdout_test_pand_ids.parquet (split='holdout').
+- Pads to MAX_IMAGES with zeros + valid_mask so the model can mask-pool.
+- Transforms follow spec section 3.2.4: RandomResizedCrop + HorizontalFlip +
+  ColorJitter for train; deterministic Resize/CenterCrop for val/holdout.
 """
 
 import logging
 from pathlib import Path
 from typing import Literal
 
-import numpy as np
 import pandas as pd
 import torch
 from PIL import Image
@@ -27,7 +30,7 @@ BUILDING_TYPE_TO_IDX = {"SFH": 0, "TH": 1, "MFH": 2, "AB": 3}
 IDX_TO_BUILDING_TYPE = {v: k for k, v in BUILDING_TYPE_TO_IDX.items()}
 
 
-def build_transforms(split: Literal["train", "val"]) -> transforms.Compose:
+def build_transforms(split: Literal["train", "val", "holdout"]) -> transforms.Compose:
     if split == "train":
         return transforms.Compose([
             transforms.RandomResizedCrop(IMG_SIZE, scale=(0.7, 1.0)),
@@ -45,16 +48,16 @@ def build_transforms(split: Literal["train", "val"]) -> transforms.Compose:
 
 
 class Stage1ImageDataset(Dataset):
-    """Dataset of buildings; each sample is one pand_id with up to 8 images."""
+    """Stage 1 Phase B four-city dataset."""
 
     def __init__(
         self,
         manifest_path: Path,
         gt_path: Path,
-        fold_indices_path: Path,
-        city: str,
-        split: Literal["train", "val"],
-        fold: int,
+        split: Literal["train", "val", "holdout"],
+        dev_fold_indices_path: Path | None = None,
+        holdout_pand_ids_path: Path | None = None,
+        fold: int | None = None,
         year_mean: float | None = None,
         year_std: float | None = None,
         floors_mean: float | None = None,
@@ -64,15 +67,29 @@ class Stage1ImageDataset(Dataset):
         self.transform = build_transforms(split)
 
         manifest = pd.read_parquet(manifest_path)
-        manifest = manifest[manifest["city"] == city].copy()
         gt = pd.read_parquet(gt_path)
-        folds = pd.read_parquet(fold_indices_path)
 
-        if split == "train":
-            keep_pids = folds.loc[folds["fold"] != fold, "pand_id"]
+        if split == "holdout":
+            assert holdout_pand_ids_path is not None, "holdout split needs holdout_pand_ids_path"
+            holdout = pd.read_parquet(holdout_pand_ids_path)
+            keep_pids = set(holdout["pand_id"].astype(str))
         else:
-            keep_pids = folds.loc[folds["fold"] == fold, "pand_id"]
+            assert dev_fold_indices_path is not None and fold is not None, \
+                "train/val splits need dev_fold_indices_path and fold"
+            dev = pd.read_parquet(dev_fold_indices_path)
+            assert "fold" in dev.columns
+            if split == "train":
+                keep_pids = set(dev.loc[dev["fold"] != fold, "pand_id"].astype(str))
+            else:
+                keep_pids = set(dev.loc[dev["fold"] == fold, "pand_id"].astype(str))
 
+            if holdout_pand_ids_path is not None and holdout_pand_ids_path.exists():
+                holdout_pids = set(pd.read_parquet(holdout_pand_ids_path)["pand_id"].astype(str))
+                leak = keep_pids & holdout_pids
+                assert not leak, f"hold-out leak: {len(leak)} pand_ids in {split} split"
+
+        gt["pand_id"] = gt["pand_id"].astype(str)
+        manifest["pand_id"] = manifest["pand_id"].astype(str)
         gt_sub = gt[gt["pand_id"].isin(keep_pids)].copy()
         manifest_sub = manifest[manifest["pand_id"].isin(keep_pids)].copy()
 
@@ -97,10 +114,21 @@ class Stage1ImageDataset(Dataset):
             self.floors_std = floors_std
 
         logger.info(
-            "Stage1ImageDataset[%s fold=%d split=%s]: %d buildings, %d images total",
-            city, fold, split, len(self.gt),
+            "Stage1ImageDataset[split=%s fold=%s]: %d buildings, %d images total, cities=%s",
+            split, fold, len(self.gt),
             sum(len(v) for v in self.images_by_pand.values()),
+            self.gt["city"].value_counts().to_dict(),
         )
+
+    def class_weights(self) -> torch.Tensor:
+        """Inverse-frequency weights for the 4 building_type classes."""
+        counts = self.gt["building_type"].value_counts()
+        weights = torch.tensor(
+            [1.0 / max(int(counts.get(label, 0)), 1) for label in ["SFH", "TH", "MFH", "AB"]],
+            dtype=torch.float32,
+        )
+        weights = weights / weights.sum() * len(weights)
+        return weights
 
     def __len__(self) -> int:
         return len(self.gt)
@@ -131,6 +159,7 @@ class Stage1ImageDataset(Dataset):
             "bouwjaar": torch.tensor(row["bouwjaar"], dtype=torch.float32),
             "num_floors": torch.tensor(row["num_floors"], dtype=torch.float32),
             "pand_id": pand_id,
+            "city": row["city"],
             "n_images": n,
         }
 
@@ -145,5 +174,6 @@ def collate_fn(batch: list[dict]) -> dict:
         "bouwjaar": torch.stack([b["bouwjaar"] for b in batch]),
         "num_floors": torch.stack([b["num_floors"] for b in batch]),
         "pand_id": [b["pand_id"] for b in batch],
+        "city": [b["city"] for b in batch],
         "n_images": torch.tensor([b["n_images"] for b in batch], dtype=torch.long),
     }

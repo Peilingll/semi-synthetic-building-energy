@@ -1,7 +1,9 @@
-"""Stage 1 training loop (single fold).
+"""Stage 1 Phase B training loop.
 
-Usage:
-    python -m src.stage1.train --city delft --fold 0 --epochs 30
+Reads four-city manifest + stage1_gt.parquet + dev_fold_indices.parquet.
+Supports --fold N (single fold) or --all-folds (sequential 0..4).
+Class-weighted CE, regularised AdamW, cosine schedule, AMP fp16,
+EarlyStopping on val macro-F1.
 """
 
 import argparse
@@ -27,9 +29,7 @@ from src.stage1.models import build_model
 logger = logging.getLogger(__name__)
 
 
-def run_epoch(
-    model, loader, optimizer, scaler, device, train: bool,
-) -> dict:
+def run_epoch(model, loader, optimizer, scaler, device, train: bool, class_weights: torch.Tensor) -> dict:
     model.train(train)
     total_loss = 0.0
     total_ce = 0.0
@@ -48,7 +48,7 @@ def run_epoch(
 
         with torch.autocast(device_type="cuda", dtype=torch.float16, enabled=(scaler is not None)):
             out = model(images, mask)
-            loss_ce = F.cross_entropy(out["logits_type"], t_type)
+            loss_ce = F.cross_entropy(out["logits_type"], t_type, weight=class_weights)
             loss_year = F.mse_loss(out["pred_year_norm"], t_year)
             loss_floors = F.mse_loss(out["pred_floors_norm"], t_floors)
             loss = loss_ce + loss_year + loss_floors
@@ -105,6 +105,7 @@ def predict(model, loader, device, year_mean, year_std, floors_mean, floors_std)
             for i, pid in enumerate(batch["pand_id"]):
                 rows.append({
                     "pand_id": pid,
+                    "city": batch["city"][i],
                     "pred_type_idx": int(pred_type[i]),
                     "pred_type": IDX_TO_BUILDING_TYPE[int(pred_type[i])],
                     "pred_year": float(pred_year[i]),
@@ -116,40 +117,23 @@ def predict(model, loader, device, year_mean, year_std, floors_mean, floors_std)
     return pd.DataFrame(rows)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--city", required=True, choices=["delft", "utrecht", "rotterdam", "amsterdam"])
-    parser.add_argument("--fold", type=int, default=0)
-    parser.add_argument("--model", default="dinov2_frozen")
-    parser.add_argument("--epochs", type=int, default=30)
-    parser.add_argument("--batch-size", type=int, default=16)
-    parser.add_argument("--lr", type=float, default=5e-4)
-    parser.add_argument("--patience", type=int, default=5)
-    parser.add_argument("--num-workers", type=int, default=2)
-    parser.add_argument("--no-amp", action="store_true")
-    parser.add_argument("--out-dir", default=None)
-    args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
+def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled") -> dict:
     repo_root = Path(__file__).resolve().parents[2]
-    manifest_path = repo_root / "data" / "processed" / "svi_manifest.parquet"
-    gt_path = repo_root / "data" / "processed" / f"stage1_gt_{args.city}.parquet"
-    folds_path = repo_root / "data" / "processed" / f"fold_indices_{args.city}.parquet"
-
     out_dir = Path(args.out_dir) if args.out_dir else repo_root / "reports" / "stage1"
     out_dir.mkdir(parents=True, exist_ok=True)
     ckpt_dir = repo_root / "models" / "stage1"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-    run_tag = f"{args.city}_{args.model}_fold{args.fold}"
+    run_tag = f"{run_tag_prefix}_{args.model}_fold{fold}"
     ckpt_path = ckpt_dir / f"{run_tag}.pt"
     preds_path = out_dir / f"{run_tag}_val_preds.parquet"
     history_path = out_dir / f"{run_tag}_history.json"
 
     common = dict(
-        manifest_path=manifest_path, gt_path=gt_path, fold_indices_path=folds_path,
-        city=args.city, fold=args.fold,
+        manifest_path=paths["manifest"], gt_path=paths["gt"],
+        dev_fold_indices_path=paths["dev_folds"],
+        holdout_pand_ids_path=paths["holdout"],
+        fold=fold,
     )
     train_ds = Stage1ImageDataset(split="train", **common)
     val_ds = Stage1ImageDataset(
@@ -170,24 +154,39 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = build_model(args.model).to(device)
-    optimizer = torch.optim.AdamW(model.trainable_parameters(), lr=args.lr)
+    optimizer = torch.optim.AdamW(
+        model.trainable_parameters(),
+        lr=args.lr,
+        weight_decay=args.weight_decay,
+    )
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     scaler = torch.amp.GradScaler("cuda") if (device == "cuda" and not args.no_amp) else None
+
+    class_weights = train_ds.class_weights().to(device)
+    logger.info("class_weights (SFH/TH/MFH/AB): %s", class_weights.tolist())
 
     best_f1 = -1.0
     best_epoch = -1
     epochs_since_best = 0
     history = []
 
-    logger.info("device=%s amp=%s lr=%g batch=%d", device, scaler is not None, args.lr, args.batch_size)
-    logger.info("year_mean=%.2f year_std=%.2f floors_mean=%.2f floors_std=%.2f",
-                train_ds.year_mean, train_ds.year_std, train_ds.floors_mean, train_ds.floors_std)
+    logger.info(
+        "fold=%d device=%s amp=%s lr=%g wd=%g batch=%d patience=%d",
+        fold, device, scaler is not None, args.lr, args.weight_decay,
+        args.batch_size, args.patience,
+    )
+    logger.info(
+        "year_mean=%.2f year_std=%.2f floors_mean=%.2f floors_std=%.2f",
+        train_ds.year_mean, train_ds.year_std,
+        train_ds.floors_mean, train_ds.floors_std,
+    )
 
+    torch.cuda.reset_peak_memory_stats() if device == "cuda" else None
     t0 = time.time()
     for epoch in range(1, args.epochs + 1):
         epoch_t0 = time.time()
-        tr = run_epoch(model, train_loader, optimizer, scaler, device, train=True)
-        va = run_epoch(model, val_loader, None, None, device, train=False)
+        tr = run_epoch(model, train_loader, optimizer, scaler, device, True, class_weights)
+        va = run_epoch(model, val_loader, None, None, device, False, class_weights)
         scheduler.step()
         epoch_dt = time.time() - epoch_t0
 
@@ -199,8 +198,8 @@ def main():
         }
         history.append(record)
         logger.info(
-            "epoch %d/%d  %.1fs  tr_loss=%.4f tr_f1=%.3f tr_acc=%.3f  va_loss=%.4f va_f1=%.3f va_acc=%.3f",
-            epoch, args.epochs, epoch_dt,
+            "fold %d epoch %d/%d %.1fs  tr_loss=%.4f tr_f1=%.3f tr_acc=%.3f  va_loss=%.4f va_f1=%.3f va_acc=%.3f",
+            fold, epoch, args.epochs, epoch_dt,
             tr["loss"], tr["type_macro_f1"], tr["type_acc"],
             va["loss"], va["type_macro_f1"], va["type_acc"],
         )
@@ -213,16 +212,20 @@ def main():
                 "epoch": epoch, "model_state": model.state_dict(),
                 "year_mean": train_ds.year_mean, "year_std": train_ds.year_std,
                 "floors_mean": train_ds.floors_mean, "floors_std": train_ds.floors_std,
+                "class_weights": class_weights.cpu().tolist(),
                 "val_macro_f1": va["type_macro_f1"], "args": vars(args),
+                "fold": fold,
             }, ckpt_path)
         else:
             epochs_since_best += 1
             if epochs_since_best >= args.patience:
-                logger.info("early stopping at epoch %d (best epoch %d, val_f1=%.3f)", epoch, best_epoch, best_f1)
+                logger.info("fold %d early stop at epoch %d (best %d, val_f1=%.3f)",
+                            fold, epoch, best_epoch, best_f1)
                 break
 
     total_dt = time.time() - t0
-    logger.info("done. total %.1fs. best epoch %d val_f1=%.3f. ckpt: %s", total_dt, best_epoch, best_f1, ckpt_path)
+    logger.info("fold %d done. total %.1fs. best epoch %d val_f1=%.3f.",
+                fold, total_dt, best_epoch, best_f1)
 
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
@@ -230,16 +233,66 @@ def main():
                     train_ds.year_mean, train_ds.year_std,
                     train_ds.floors_mean, train_ds.floors_std)
     preds.to_parquet(preds_path, index=False)
-    logger.info("wrote %s (%d rows)", preds_path, len(preds))
+    logger.info("fold %d wrote %s (%d rows)", fold, preds_path, len(preds))
 
-    with open(history_path, "w") as f:
-        json.dump({
-            "args": vars(args), "best_epoch": best_epoch, "best_val_macro_f1": best_f1,
-            "total_sec": round(total_dt, 1),
-            "vram_peak_mb": round(torch.cuda.max_memory_allocated() / 1024**2, 1) if device == "cuda" else None,
-            "history": history,
-        }, f, indent=2)
-    logger.info("wrote %s", history_path)
+    summary = {
+        "fold": fold,
+        "best_epoch": best_epoch,
+        "best_val_macro_f1": best_f1,
+        "total_sec": round(total_dt, 1),
+        "vram_peak_mb": round(torch.cuda.max_memory_allocated() / 1024**2, 1) if device == "cuda" else None,
+        "history": history,
+        "args": vars(args),
+    }
+    history_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    logger.info("fold %d wrote %s", fold, history_path)
+    return summary
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", default="dinov2_frozen")
+    parser.add_argument("--fold", type=int, default=None, help="single fold (0-4); ignored if --all-folds")
+    parser.add_argument("--all-folds", action="store_true", help="run folds 0..4 sequentially")
+    parser.add_argument("--epochs", type=int, default=30)
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--lr", type=float, default=5e-4)
+    parser.add_argument("--weight-decay", type=float, default=0.01)
+    parser.add_argument("--patience", type=int, default=10)
+    parser.add_argument("--num-workers", type=int, default=2)
+    parser.add_argument("--no-amp", action="store_true")
+    parser.add_argument("--out-dir", default=None)
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    repo_root = Path(__file__).resolve().parents[2]
+    paths = {
+        "manifest": repo_root / "data" / "processed" / "svi_manifest.parquet",
+        "gt": repo_root / "data" / "processed" / "stage1_gt.parquet",
+        "dev_folds": repo_root / "data" / "processed" / "dev_fold_indices.parquet",
+        "holdout": repo_root / "data" / "processed" / "holdout_test_pand_ids.parquet",
+    }
+    for k, p in paths.items():
+        assert p.exists(), f"missing input: {k} = {p}"
+
+    if args.all_folds:
+        folds = list(range(5))
+    else:
+        assert args.fold is not None, "must pass --fold N or --all-folds"
+        folds = [args.fold]
+
+    all_summaries = []
+    t0 = time.time()
+    for fold in folds:
+        summary = train_one_fold(args, fold, paths)
+        all_summaries.append(summary)
+
+    if len(folds) > 1:
+        logger.info("===== ALL FOLDS DONE in %.1f min =====", (time.time() - t0) / 60)
+        f1s = [s["best_val_macro_f1"] for s in all_summaries]
+        logger.info("per-fold best val_f1: %s", [round(x, 3) for x in f1s])
+        logger.info("mean ± std: %.3f ± %.3f", float(np.mean(f1s)), float(np.std(f1s)))
 
 
 if __name__ == "__main__":

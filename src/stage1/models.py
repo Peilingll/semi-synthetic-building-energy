@@ -23,7 +23,7 @@ DINOV2_MODEL_NAME = "vit_base_patch14_dinov2.lvd142m"
 class DINOv2FrozenMLP(nn.Module):
     """Frozen DINOv2 backbone + small MLP with 3 heads."""
 
-    def __init__(self, num_type_classes: int = NUM_TYPE_CLASSES, dropout: float = 0.2):
+    def __init__(self, num_type_classes: int = NUM_TYPE_CLASSES, dropout: float = 0.3):
         super().__init__()
 
         self.backbone = timm.create_model(
