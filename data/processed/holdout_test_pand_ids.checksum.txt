@@ -1,0 +1,6 @@
+sha256_prefix: 7b877c7d4c066832
+n_buildings:   2018
+random_state:  42
+n_splits:      5
+strata_keys:   city,Gebouwtype,Energieklasse,tabula_period
+created_with:  src/stage1/splits.py
