@@ -42,35 +42,38 @@ DEFAULT_MODEL = "OpenGVLab/InternVL3-2B"
 CHECKPOINT_EVERY = 100
 TOP_K_IMAGES = 3
 
-PROMPT = """Look at this Dutch building street-view photo. Identify its physical \
-characteristics for a building-energy classification task.
+PROMPT = """Look at this Dutch building street-view photo. Identify its physical characteristics for a building-energy classification task.
 
-Respond with EXACTLY one JSON object, no markdown fences, no extra text.
+Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide values for ALL fields. NEVER return null.
 
 Required keys:
-- "building_type": one of (Dutch housing typology):
-    "SFH" = single-family detached or semi-detached
-            (Dutch: Vrijstaande woning / Twee-onder-een-kap)
-    "TH"  = terraced / row house, mid or end unit
-            (Dutch: Rijwoning tussen / Rijwoning hoek)
-    "MFH" = small multi-family, 2-4 units, often converted house
-            (Dutch: Woongebouw met niet-zelfstandige woonruimte)
-    "AB"  = apartment building, 4+ dwellings, usually 3+ floors
-            (Dutch: Appartement)
-- "construction_year": integer 1800-2025
-- "construction_period": one of (Dutch TABULA periods):
+
+- "building_type": one of:
+    "SFH" = Single Family House: detached or semi-detached, standalone with garden
+    "TH"  = Terraced House: shares side walls with neighbors in a row
+    "AB"  = Apartment Block: building containing multiple SELF-CONTAINED apartments
+            with shared main entrance, often long linear or block-shaped facade.
+            DEFAULT for any multi-unit residential building.
+    "MFH" = Multi Family House: rare collective housing where units share NO
+            self-contained dwellings (rooming houses, student dormitories,
+            elderly care).
+
+- "construction_year": integer 1800-2025. Estimate from facade style, materials,
+  window patterns. Do NOT default to period boundary years (1964, 1975, 1991,
+  1992, 2005, 2014).
+
+- "construction_period": one of (must match construction_year):
     "NL.01" = up to 1964      "NL.02" = 1965-1974
     "NL.03" = 1975-1991       "NL.04" = 1992-2005
     "NL.05" = 2006-2014       "NL.06" = 2015 and later
+
 - "num_floors": integer 1-30 (visible storeys above ground)
-- "facade_material": one of "brick", "concrete", "wood", "stucco", \
-"metal", "stone", "mixed", "other"
-- "wwr": float 0.0-1.0 (window-to-wall area ratio)
+
+- "facade_material": one of "brick", "concrete", "wood", "stucco", "metal",
+  "stone", "mixed", "other"
 
 Example:
-{"building_type": "TH", "construction_year": 1965, \
-"construction_period": "NL.02", "num_floors": 3, \
-"facade_material": "brick", "wwr": 0.25}"""
+{"building_type": "AB", "construction_year": 1968, "construction_period": "NL.02", "num_floors": 4, "facade_material": "brick"}"""
 
 
 class InternVLChat:
@@ -189,7 +192,6 @@ def run(args: argparse.Namespace) -> None:
             "pred_period": None,
             "pred_floors": None,
             "pred_material": None,
-            "pred_wwr": None,
             "year_period_consistent": None,
             "parse_error": None,
         }
@@ -197,7 +199,7 @@ def run(args: argparse.Namespace) -> None:
             parsed = parse_response(raw)
             out_row.update({k: parsed[k] for k in (
                 "parse_ok", "pred_type", "pred_year", "pred_period",
-                "pred_floors", "pred_material", "pred_wwr",
+                "pred_floors", "pred_material",
                 "year_period_consistent", "parse_error",
             )})
             if parsed["parse_ok"]:
@@ -205,10 +207,10 @@ def run(args: argparse.Namespace) -> None:
 
         new_rows.append(out_row)
         logger.info(
-            "[%d/%d] %.1fs  ok=%s  type=%s  y=%s  p=%s  fl=%s  mat=%s  wwr=%s",
+            "[%d/%d] %.1fs  ok=%s  type=%s  y=%s  p=%s  fl=%s  mat=%s",
             i + 1, len(todo), dt, out_row["parse_ok"],
             out_row["pred_type"], out_row["pred_year"], out_row["pred_period"],
-            out_row["pred_floors"], out_row["pred_material"], out_row["pred_wwr"],
+            out_row["pred_floors"], out_row["pred_material"],
         )
 
         if (i + 1) % CHECKPOINT_EVERY == 0:

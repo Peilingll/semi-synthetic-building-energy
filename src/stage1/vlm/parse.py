@@ -78,7 +78,6 @@ def parse_response(raw: str) -> dict:
         "pred_period": None,
         "pred_floors": None,
         "pred_material": None,
-        "pred_wwr": None,
         "year_period_consistent": None,
         "parse_error": None,
     }
@@ -117,14 +116,12 @@ def parse_response(raw: str) -> dict:
     if isinstance(raw_material, str) and raw_material.lower() in MATERIAL_WHITELIST:
         out["pred_material"] = raw_material.lower()
 
-    out["pred_wwr"] = _safe_float(obj.get("wwr"), 0.0, 1.0)
-
     if out["pred_year"] is not None and out["pred_period"] is not None:
         lo, hi = PERIOD_RANGES[out["pred_period"]]
         out["year_period_consistent"] = bool(lo <= out["pred_year"] <= hi)
 
     required = ["pred_type", "pred_year", "pred_period", "pred_floors",
-                "pred_material", "pred_wwr"]
+                "pred_material"]
     missing = [k for k in required if out[k] is None]
     if missing:
         out["parse_error"] = "missing_or_invalid:" + ",".join(missing)
@@ -139,22 +136,22 @@ if __name__ == "__main__":
     samples = [
         ('{"building_type": "TH", "construction_year": 1965, '
          '"construction_period": "NL.02", "num_floors": 3, '
-         '"facade_material": "brick", "wwr": 0.25}'),
+         '"facade_material": "brick"}'),
         ('```json\n{"building_type": "AB", "construction_year": 1980, '
          '"construction_period": "NL.03", "num_floors": 5, '
-         '"facade_material": "concrete", "wwr": 0.3}\n```'),
+         '"facade_material": "concrete"}\n```'),
         ('Sure! Here is the answer:\n'
          '{"building_type": "SFH", "construction_year": 1925, '
          '"construction_period": "NL.01", "num_floors": 2, '
-         '"facade_material": "brick", "wwr": 0.18}'),
+         '"facade_material": "brick"}'),
         # year/period inconsistent
         ('{"building_type": "TH", "construction_year": 1972, '
          '"construction_period": "NL.01", "num_floors": 3, '
-         '"facade_material": "brick", "wwr": 0.22}'),
+         '"facade_material": "brick"}'),
         # invalid type
         ('{"building_type": "office", "construction_year": 1990, '
          '"construction_period": "NL.03", "num_floors": 4, '
-         '"facade_material": "glass", "wwr": 0.4}'),
+         '"facade_material": "glass"}'),
         # malformed
         ("not a json at all"),
     ]

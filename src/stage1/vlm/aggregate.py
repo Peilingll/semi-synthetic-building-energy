@@ -65,7 +65,6 @@ def aggregate(per_image: pd.DataFrame, gt: pd.DataFrame) -> pd.DataFrame:
         pred_material, material_vs = _mode_with_share(g_parsed["pred_material"])
         pred_year_median = _median_or_nan(g_parsed["pred_year"])
         pred_floors_median = _median_or_nan(g_parsed["pred_floors"])
-        pred_wwr = _median_or_nan(g_parsed["pred_wwr"])
         n_year_period_consistent = int(g_parsed["year_period_consistent"].fillna(False).sum())
 
         pred_floors_int = int(round(pred_floors_median)) if not np.isnan(pred_floors_median) else None
@@ -84,7 +83,6 @@ def aggregate(per_image: pd.DataFrame, gt: pd.DataFrame) -> pd.DataFrame:
             "pred_floors_median_raw": float(pred_floors_median) if not np.isnan(pred_floors_median) else None,
             "pred_material": pred_material,
             "pred_material_vote_share": material_vs,
-            "pred_wwr": float(pred_wwr) if not np.isnan(pred_wwr) else None,
             "n_year_period_consistent": n_year_period_consistent,
         })
 
