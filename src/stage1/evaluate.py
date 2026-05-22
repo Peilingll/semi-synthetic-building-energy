@@ -113,6 +113,13 @@ def evaluate_predictions(preds: pd.DataFrame, with_ci: bool = True) -> dict:
     report["floors_exact_pct"] = round(100 * float((floors_err_round == 0).mean()), 2)
     report["floors_within_1_pct"] = round(100 * float((floors_err_round <= 1).mean()), 2)
 
+    if "pred_period" in preds.columns and "true_tabula_period" in preds.columns:
+        period_valid = preds[["pred_period", "true_tabula_period"]].dropna()
+        if len(period_valid):
+            period_correct = (period_valid["pred_period"] == period_valid["true_tabula_period"]).mean()
+            report["period_acc"] = round(float(period_correct), 4)
+            report["period_n_eval"] = int(len(period_valid))
+
     if with_ci:
         report["bootstrap_95ci"] = {
             "type_acc": bootstrap_ci(preds, type_accuracy),
