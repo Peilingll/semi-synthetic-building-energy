@@ -1,0 +1,156 @@
+{
+  "n_eval": 2018,
+  "type_acc": 0.9014,
+  "type_macro_f1": 0.5197,
+  "type_per_class": {
+    "SFH": {
+      "precision": 0.4242,
+      "recall": 0.5385,
+      "f1": 0.4746,
+      "support": 26
+    },
+    "TH": {
+      "precision": 0.5643,
+      "recall": 0.7745,
+      "f1": 0.6529,
+      "support": 204
+    },
+    "MFH": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 12
+    },
+    "AB": {
+      "precision": 0.9763,
+      "recall": 0.9274,
+      "f1": 0.9512,
+      "support": 1776
+    }
+  },
+  "type_confusion_matrix": {
+    "labels": [
+      "SFH",
+      "TH",
+      "MFH",
+      "AB"
+    ],
+    "matrix": [
+      [
+        14,
+        12,
+        0,
+        0
+      ],
+      [
+        16,
+        158,
+        0,
+        30
+      ],
+      [
+        0,
+        2,
+        0,
+        10
+      ],
+      [
+        3,
+        108,
+        18,
+        1647
+      ]
+    ]
+  },
+  "year_mae": 9.45,
+  "year_rmse": 17.03,
+  "year_mdae": 4.53,
+  "year_within_10y_pct": 74.58,
+  "year_within_20y_pct": 87.91,
+  "floors_mae": 0.377,
+  "floors_exact_pct": 76.51,
+  "floors_within_1_pct": 97.27,
+  "bootstrap_95ci": {
+    "type_acc": {
+      "mean": 0.90151189296333,
+      "lo": 0.889,
+      "hi": 0.9143,
+      "n_boot_valid": 1000
+    },
+    "type_macro_f1": {
+      "mean": 0.5189831804143133,
+      "lo": 0.4732,
+      "hi": 0.5611,
+      "n_boot_valid": 1000
+    },
+    "year_mae": {
+      "mean": 9.4530598975674,
+      "lo": 8.8266,
+      "hi": 10.0557,
+      "n_boot_valid": 1000
+    },
+    "floors_mae": {
+      "mean": 0.3773106000831035,
+      "lo": 0.354,
+      "hi": 0.4042,
+      "n_boot_valid": 1000
+    }
+  },
+  "per_city": {
+    "amsterdam": {
+      "n": 1595,
+      "type_acc": 0.9386,
+      "type_macro_f1": 0.4872,
+      "year_mae": 7.94,
+      "floors_mae": 0.296
+    },
+    "delft": {
+      "n": 34,
+      "type_acc": 0.6471,
+      "type_macro_f1": 0.4896,
+      "year_mae": 22.53,
+      "floors_mae": 0.493
+    },
+    "rotterdam": {
+      "n": 286,
+      "type_acc": 0.8392,
+      "type_macro_f1": 0.5401,
+      "year_mae": 14.02,
+      "floors_mae": 0.696
+    },
+    "utrecht": {
+      "n": 103,
+      "type_acc": 0.5825,
+      "type_macro_f1": 0.3623,
+      "year_mae": 15.79,
+      "floors_mae": 0.712
+    }
+  },
+  "per_class_year_floors": {
+    "SFH": {
+      "n": 26,
+      "year_mae": 15.58,
+      "floors_mae": 0.657
+    },
+    "TH": {
+      "n": 204,
+      "year_mae": 13.13,
+      "floors_mae": 0.45
+    },
+    "MFH": {
+      "n": 12,
+      "year_mae": 17.29,
+      "floors_mae": 0.664
+    },
+    "AB": {
+      "n": 1776,
+      "year_mae": 8.88,
+      "floors_mae": 0.363
+    }
+  },
+  "source_checkpoint": {
+    "path": "D:\\ITBE\\Thesis\\semi-synthetic-building-energy\\models\\stage1\\pooled_dinov2_frozen_fold4.pt",
+    "fold": 4,
+    "dev_val_macro_f1": 0.6667372147438246
+  }
+}
