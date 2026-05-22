@@ -1,0 +1,151 @@
+{
+  "n_eval": 1614,
+  "type_acc": 0.9071,
+  "type_macro_f1": 0.6386,
+  "type_per_class": {
+    "SFH": {
+      "precision": 0.875,
+      "recall": 0.6667,
+      "f1": 0.7568,
+      "support": 21
+    },
+    "TH": {
+      "precision": 0.5435,
+      "recall": 0.8013,
+      "f1": 0.6477,
+      "support": 156
+    },
+    "MFH": {
+      "precision": 0.1538,
+      "recall": 0.2857,
+      "f1": 0.2,
+      "support": 7
+    },
+    "AB": {
+      "precision": 0.9764,
+      "recall": 0.9252,
+      "f1": 0.9501,
+      "support": 1430
+    }
+  },
+  "type_confusion_matrix": {
+    "labels": [
+      "SFH",
+      "TH",
+      "MFH",
+      "AB"
+    ],
+    "matrix": [
+      [
+        14,
+        7,
+        0,
+        0
+      ],
+      [
+        2,
+        125,
+        0,
+        29
+      ],
+      [
+        0,
+        2,
+        2,
+        3
+      ],
+      [
+        0,
+        96,
+        11,
+        1323
+      ]
+    ]
+  },
+  "year_mae": 9.74,
+  "year_rmse": 18.36,
+  "year_mdae": 4.22,
+  "year_within_10y_pct": 76.02,
+  "year_within_20y_pct": 86.68,
+  "floors_mae": 0.353,
+  "floors_exact_pct": 77.76,
+  "floors_within_1_pct": 97.58,
+  "bootstrap_95ci": {
+    "type_acc": {
+      "mean": 0.907275092936803,
+      "lo": 0.8928,
+      "hi": 0.9207,
+      "n_boot_valid": 1000
+    },
+    "type_macro_f1": {
+      "mean": 0.634423993826517,
+      "lo": 0.5618,
+      "hi": 0.7092,
+      "n_boot_valid": 1000
+    },
+    "year_mae": {
+      "mean": 9.721983274098221,
+      "lo": 8.9692,
+      "hi": 10.4609,
+      "n_boot_valid": 1000
+    },
+    "floors_mae": {
+      "mean": 0.3537366704663084,
+      "lo": 0.3292,
+      "hi": 0.3798,
+      "n_boot_valid": 1000
+    }
+  },
+  "per_city": {
+    "amsterdam": {
+      "n": 1279,
+      "type_acc": 0.9375,
+      "type_macro_f1": 0.6458,
+      "year_mae": 8.1,
+      "floors_mae": 0.284
+    },
+    "delft": {
+      "n": 35,
+      "type_acc": 0.6857,
+      "type_macro_f1": 0.5881,
+      "year_mae": 32.87,
+      "floors_mae": 0.577
+    },
+    "rotterdam": {
+      "n": 222,
+      "type_acc": 0.8559,
+      "type_macro_f1": 0.5921,
+      "year_mae": 12.95,
+      "floors_mae": 0.639
+    },
+    "utrecht": {
+      "n": 78,
+      "type_acc": 0.6538,
+      "type_macro_f1": 0.4977,
+      "year_mae": 17.17,
+      "floors_mae": 0.58
+    }
+  },
+  "per_class_year_floors": {
+    "SFH": {
+      "n": 21,
+      "year_mae": 20.84,
+      "floors_mae": 0.516
+    },
+    "TH": {
+      "n": 156,
+      "year_mae": 11.58,
+      "floors_mae": 0.421
+    },
+    "MFH": {
+      "n": 7,
+      "year_mae": 26.15,
+      "floors_mae": 0.718
+    },
+    "AB": {
+      "n": 1430,
+      "year_mae": 9.29,
+      "floors_mae": 0.342
+    }
+  }
+}

@@ -31,6 +31,9 @@ cache/
 # Model checkpoints (large binary, regeneratable from train.py)
 models/
 
+# Background training stdout/stderr logs
+logs/
+
 # Editable install metadata (created by pip install -e)
 src/*.egg-info/
 
