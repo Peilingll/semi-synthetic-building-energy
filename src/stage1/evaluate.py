@@ -80,8 +80,15 @@ def bootstrap_ci(
 
 
 def evaluate_predictions(preds: pd.DataFrame, with_ci: bool = True) -> dict:
+    n_input = len(preds)
+    required_cols = ["pred_type", "pred_year", "pred_floors", "true_type",
+                     "true_bouwjaar", "true_num_floors"]
+    preds = preds.dropna(subset=required_cols).reset_index(drop=True)
+    n_dropped = n_input - len(preds)
+
     report: dict = {
         "n_eval": len(preds),
+        "n_dropped_missing_preds": n_dropped,
     }
 
     report["type_acc"] = round(type_accuracy(preds), 4)
@@ -188,9 +195,17 @@ def main():
     else:
         raise SystemExit("must pass --preds or --aggregate")
 
-    report = evaluate_predictions(preds, with_ci=not args.no_ci)
-    report["per_city"] = per_city_breakdown(preds)
-    report["per_class_year_floors"] = per_class_year_floor_breakdown(preds)
+    required_cols = ["pred_type", "pred_year", "pred_floors", "true_type",
+                     "true_bouwjaar", "true_num_floors"]
+    n_input = len(preds)
+    preds_clean = preds.dropna(subset=required_cols).reset_index(drop=True)
+    if n_input != len(preds_clean):
+        logger.info("dropped %d / %d rows with missing predictions",
+                    n_input - len(preds_clean), n_input)
+
+    report = evaluate_predictions(preds_clean, with_ci=not args.no_ci)
+    report["per_city"] = per_city_breakdown(preds_clean)
+    report["per_class_year_floors"] = per_class_year_floor_breakdown(preds_clean)
 
     out_path = args.out if args.out else (
         (args.preds.parent if args.preds else Path("reports/stage1")) / default_out_name
