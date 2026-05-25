@@ -1,0 +1,2 @@
+n_eval,type_acc,type_acc_lo,type_acc_hi,macro_f1,macro_f1_lo,macro_f1_hi,year_mae,year_mae_lo,year_mae_hi,year_within_10y_pct,floors_mae,floors_mae_lo,floors_mae_hi,floors_exact_pct
+2012,0.7744,0.7555,0.7922,0.2723,0.2571,0.2882,61.49,60.4169,62.6228,6.31,0.734,0.6943,0.7769,39.02
