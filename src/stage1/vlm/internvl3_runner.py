@@ -1,13 +1,20 @@
-"""Stage 1 VLM inference runner: original InternVL3-2B + 6-field prompt.
+"""Stage 1 VLM inference runner: original InternVL3-2B + 3-field prompt (v3).
 
 Loads `OpenGVLab/InternVL3-2B` (NOT the OpenFACADES fine-tune, per
-spec §3.2.1), iterates over hold-out top-3 images (or a smaller sample
-for smoke), and writes one per-image row to a parquet file. Saves a
-partial parquet every CHECKPOINT_EVERY images so a crash never loses more
-than that many.
+spec §3.2.1), iterates over top-3 images of the chosen split, and writes
+one per-image row to a parquet file. Saves a partial parquet every
+CHECKPOINT_EVERY images so a crash never loses more than that many.
+
+Prompt v3 (2026.06.05 plan): drops construction_period (TABULA boundary
+years in the prompt anchored year predictions onto 1975/1991/1992),
+drops facade_material (no GT), removes the AB-default instruction
+(88% of v2 predictions were AB), adds a TH-vs-AB front-door test.
 
 Usage:
-    # default: full hold-out, ~6000 images, ~4-5 hr
+    # prompt iteration on the frozen dev sample (run dev_sample.py first)
+    python -m src.stage1.vlm.internvl3_runner --split dev_iter --resume
+
+    # final: full hold-out, ~5300 images, ~7 hr
     python -m src.stage1.vlm.internvl3_runner --split holdout --resume
 
     # smoke: first 20 images only
@@ -41,39 +48,34 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_MODEL = "OpenGVLab/InternVL3-2B"
 CHECKPOINT_EVERY = 100
 TOP_K_IMAGES = 3
+PROMPT_VERSION = "v3"
 
-PROMPT = """Look at this Dutch building street-view photo. Identify its physical characteristics for a building-energy classification task.
+PROMPT = """Look at this Dutch residential building street-view photo. Estimate three physical attributes of the main building in view.
 
 Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide values for ALL fields. NEVER return null.
 
 Required keys:
 
-- "building_type": one of:
-    "SFH" = Single Family House: detached or semi-detached, standalone with garden
-    "TH"  = Terraced House: shares side walls with neighbors in a row
-    "AB"  = Apartment Block: building containing multiple SELF-CONTAINED apartments
-            with shared main entrance, often long linear or block-shaped facade.
-            DEFAULT for any multi-unit residential building.
-    "MFH" = Multi Family House: rare collective housing where units share NO
-            self-contained dwellings (rooming houses, student dormitories,
-            elderly care).
+- "building_type": one of
+    "SFH" = single-family house standing alone or semi-detached, with its
+            own garden/driveway, not part of a continuous row
+    "TH"  = terraced / row house: a narrow dwelling sharing side walls in a
+            continuous row; EACH unit has its OWN front door at street level
+            (Dutch canal houses and row houses are TH)
+    "AB"  = apartment block: multiple dwellings STACKED in one building with
+            a SHARED main entrance (look for one entrance with many
+            doorbells/mailboxes, gallery or staircase access)
+    "MFH" = collective housing without self-contained dwellings (student
+            dormitory, rooming house, elderly care home)
+  Key test: a row of identical narrow facades, each with its own street-level
+  front door, is TH - not AB.
 
-- "construction_year": integer 1800-2025. Estimate from facade style, materials,
-  window patterns. Do NOT default to period boundary years (1964, 1975, 1991,
-  1992, 2005, 2014).
+- "construction_year": integer 1800-2025. Estimate from visible evidence:
+  facade style, brickwork, window shapes, roof form, detailing.
 
-- "construction_period": one of (must match construction_year):
-    "NL.01" = up to 1964      "NL.02" = 1965-1974
-    "NL.03" = 1975-1991       "NL.04" = 1992-2005
-    "NL.05" = 2006-2014       "NL.06" = 2015 and later
+- "num_floors": integer 1-30, visible storeys above ground (count window rows).
 
-- "num_floors": integer 1-30 (visible storeys above ground)
-
-- "facade_material": one of "brick", "concrete", "wood", "stucco", "metal",
-  "stone", "mixed", "other"
-
-Example:
-{"building_type": "AB", "construction_year": 1968, "construction_period": "NL.02", "num_floors": 4, "facade_material": "brick"}"""
+Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}"""
 
 
 class InternVLChat:
@@ -135,12 +137,17 @@ def run(args: argparse.Namespace) -> None:
     manifest_path = REPO_ROOT / "data" / "processed" / "svi_manifest.parquet"
     if args.split == "holdout":
         split_path = REPO_ROOT / "data" / "processed" / "holdout_test_pand_ids.parquet"
+    elif args.split == "dev_iter":
+        split_path = REPO_ROOT / "reports" / "stage1" / "vlm" / "dev_prompt_iter_pand_ids.parquet"
+        assert split_path.exists(), "run `python -m src.stage1.vlm.dev_sample` first"
     else:
         raise SystemExit(f"unsupported split: {args.split}")
 
     out_dir = REPO_ROOT / "reports" / "stage1" / "vlm"
     out_dir.mkdir(parents=True, exist_ok=True)
-    tag = f"internvl3_{args.split}_per_image"
+    # versioned tag: v2 (6-field prompt) artifacts are kept as the prompt-
+    # ablation baseline and must not be overwritten
+    tag = f"internvl3_{PROMPT_VERSION}_{args.split}_per_image"
     if args.sample is not None:
         tag = f"{tag}_sample{args.sample}"
     partial_path = out_dir / f"{tag}.partial.parquet"
@@ -189,28 +196,23 @@ def run(args: argparse.Namespace) -> None:
             "parse_ok": False,
             "pred_type": None,
             "pred_year": None,
-            "pred_period": None,
             "pred_floors": None,
-            "pred_material": None,
-            "year_period_consistent": None,
             "parse_error": None,
         }
         if raw is not None:
             parsed = parse_response(raw)
             out_row.update({k: parsed[k] for k in (
-                "parse_ok", "pred_type", "pred_year", "pred_period",
-                "pred_floors", "pred_material",
-                "year_period_consistent", "parse_error",
+                "parse_ok", "pred_type", "pred_year", "pred_floors",
+                "parse_error",
             )})
             if parsed["parse_ok"]:
                 n_parse_ok += 1
 
         new_rows.append(out_row)
         logger.info(
-            "[%d/%d] %.1fs  ok=%s  type=%s  y=%s  p=%s  fl=%s  mat=%s",
+            "[%d/%d] %.1fs  ok=%s  type=%s  y=%s  fl=%s",
             i + 1, len(todo), dt, out_row["parse_ok"],
-            out_row["pred_type"], out_row["pred_year"], out_row["pred_period"],
-            out_row["pred_floors"], out_row["pred_material"],
+            out_row["pred_type"], out_row["pred_year"], out_row["pred_floors"],
         )
 
         if (i + 1) % CHECKPOINT_EVERY == 0:
@@ -237,7 +239,7 @@ def run(args: argparse.Namespace) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--split", default="holdout", choices=["holdout"])
+    parser.add_argument("--split", default="holdout", choices=["holdout", "dev_iter"])
     parser.add_argument("--sample", type=int, default=None, help="run first N images only")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--resume", action="store_true",
