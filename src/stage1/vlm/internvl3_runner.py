@@ -75,6 +75,9 @@ Required keys:
 
 - "num_floors": integer 1-30, visible storeys above ground (count window rows).
 
+Your JSON object must contain ALL three keys, in this order. If uncertain,
+give your best single estimate - never omit a key.
+
 Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}"""
 
 
