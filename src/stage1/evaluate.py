@@ -204,6 +204,9 @@ def main():
                     n_input - len(preds_clean), n_input)
 
     report = evaluate_predictions(preds_clean, with_ci=not args.no_ci)
+    # evaluate_predictions only sees the pre-filtered frame, so its own
+    # dropna counts 0 — report the true count from the raw input instead.
+    report["n_dropped_missing_preds"] = n_input - len(preds_clean)
     report["per_city"] = per_city_breakdown(preds_clean)
     report["per_class_year_floors"] = per_class_year_floor_breakdown(preds_clean)
 

@@ -1,13 +1,16 @@
 """Aggregate per-image VLM predictions into one row per pand_id.
 
 For each building:
-- pred_type / pred_period / pred_material: mode across the top-3 images,
-  with vote_share = mode_count / n_parsed as a confidence indicator.
-- pred_year / pred_wwr: median (numeric central tendency).
+- pred_type: mode across the top-3 images, with
+  vote_share = mode_count / n_parsed as a confidence indicator.
+- pred_year: median (numeric central tendency).
 - pred_floors: rounded median (kept as int so the metric matches the
   DINOv2 path's `floors_exact_pct` calculation, per the plan's Floors
   rounding decision).
-- n_year_period_consistent: diagnostic sum of per-image flags.
+- pred_period: derived from the median year via
+  src.tabula_matcher.classify_period (prompt v3 no longer asks the VLM
+  for a period — the same year->period mapping is applied to predictions
+  and GT, per the spec's period-accuracy definition).
 
 Schema aligns with `src/stage1/evaluate.py::evaluate_predictions` so the
 output parquet can be evaluated with no further changes.
@@ -21,6 +24,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from src.tabula_matcher import classify_period
 
 logger = logging.getLogger(__name__)
 
@@ -61,13 +66,14 @@ def aggregate(per_image: pd.DataFrame, gt: pd.DataFrame) -> pd.DataFrame:
         city = g["city"].iloc[0]
 
         pred_type, type_vs = _mode_with_share(g_parsed["pred_type"])
-        pred_period, period_vs = _mode_with_share(g_parsed["pred_period"])
-        pred_material, material_vs = _mode_with_share(g_parsed["pred_material"])
         pred_year_median = _median_or_nan(g_parsed["pred_year"])
         pred_floors_median = _median_or_nan(g_parsed["pred_floors"])
-        n_year_period_consistent = int(g_parsed["year_period_consistent"].fillna(False).sum())
 
         pred_floors_int = int(round(pred_floors_median)) if not np.isnan(pred_floors_median) else None
+        pred_period = (
+            classify_period(int(round(pred_year_median)))
+            if not np.isnan(pred_year_median) else None
+        )
 
         rows.append({
             "pand_id": str(pand_id),
@@ -78,16 +84,13 @@ def aggregate(per_image: pd.DataFrame, gt: pd.DataFrame) -> pd.DataFrame:
             "pred_type_vote_share": type_vs,
             "pred_year": float(pred_year_median) if not np.isnan(pred_year_median) else None,
             "pred_period": pred_period,
-            "pred_period_vote_share": period_vs,
             "pred_floors": pred_floors_int,
             "pred_floors_median_raw": float(pred_floors_median) if not np.isnan(pred_floors_median) else None,
-            "pred_material": pred_material,
-            "pred_material_vote_share": material_vs,
-            "n_year_period_consistent": n_year_period_consistent,
         })
 
     agg = pd.DataFrame(rows)
-    logger.info("aggregated %d buildings", len(agg))
+    n_unparsed = int((agg["n_parsed"] == 0).sum())
+    logger.info("aggregated %d buildings (%d with zero parsed images)", len(agg), n_unparsed)
 
     gt = gt.copy()
     gt["pand_id"] = gt["pand_id"].astype(str)
@@ -133,8 +136,6 @@ def main():
         share_with_pred = (out["n_parsed"] > 0).mean()
         logger.info("buildings with >=1 parsed image: %.3f", share_with_pred)
         logger.info("type vote_share mean: %.3f", out["pred_type_vote_share"].mean())
-        logger.info("n_year_period_consistent / n_parsed mean: %.3f",
-                    (out["n_year_period_consistent"] / out["n_parsed"].clip(lower=1)).mean())
 
 
 if __name__ == "__main__":
