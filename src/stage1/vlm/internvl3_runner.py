@@ -57,18 +57,21 @@ Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUS
 Required keys:
 
 - "building_type": one of
-    "SFH" = single-family house standing alone or semi-detached, with its
-            own garden/driveway, not part of a continuous row
-    "TH"  = terraced / row house: a narrow dwelling sharing side walls in a
-            continuous row; EACH unit has its OWN front door at street level
-            (Dutch canal houses and row houses are TH)
-    "AB"  = apartment block: multiple dwellings STACKED in one building with
-            a SHARED main entrance (look for one entrance with many
-            doorbells/mailboxes, gallery or staircase access)
+    "SFH" = single-family house, FREE-STANDING: open space visible on at
+            least one side. A building sharing BOTH side walls in a
+            continuous row is NEVER SFH.
+    "TH"  = terraced / row house: a dwelling in a continuous row of similar
+            houses, typically 2-3 storeys, in a residential street
+    "AB"  = apartment block: multiple dwellings stacked in one building.
+            Cues: a shared entrance with many doorbells/mailboxes, external
+            access galleries, a wide flat repetitive facade, OR a narrow
+            historic building of 3+ storeys in a dense city-centre street
+            (these are usually subdivided into stacked apartments)
     "MFH" = collective housing without self-contained dwellings (student
             dormitory, rooming house, elderly care home)
-  Key test: a row of identical narrow facades, each with its own street-level
-  front door, is TH - not AB.
+  If unsure between TH and AB: a 2-3 storey row house in a quiet residential
+  street is TH; 4+ storeys, shops at ground level, or a dense city-centre
+  street means AB.
 
 - "construction_year": integer 1800-2025. Estimate from visible evidence:
   facade style, brickwork, window shapes, roof form, detailing.
