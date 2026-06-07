@@ -146,7 +146,7 @@ def compute_locked_limits() -> dict:
 
     return {
         "year_scatter": (1850, 2030),
-        "year_mae_bar": (0.0, math.ceil(year_max + 1)),
+        "year_mae_bar": (0.0, math.ceil(year_max * 1.15 + 1)),  # headroom for value labels
         "floors_mae_bar": (0.0, math.ceil(floors_max * 10) / 10 + 0.1),
         "type_acc_bar": (0.0, 1.0),
     }

@@ -1,2 +1,2 @@
-n_image,n_pand_id,parse_ok_pct,inference_sec_median,year_period_consistent_pct
-5261,2018,99.05,3.83,91.54
+n_image,n_pand_id,parse_ok_pct,inference_sec_median
+5261,2018,99.96,2.95
