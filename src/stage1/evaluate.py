@@ -8,9 +8,9 @@ Reads one or more `*_val_preds.parquet` files (per fold) and produces:
 
 Usage:
     # single fold metrics
-    python -m src.stage1.evaluate --preds reports/stage1/pooled_dinov2_frozen_fold0_val_preds.parquet
+    python -m src.stage1.evaluate --preds reports/stage1/dinov2_frozen/pooled_fold0_val_preds.parquet
     # aggregate across all 5 folds (concat val_preds, treat as one pooled-CV report)
-    python -m src.stage1.evaluate --aggregate "reports/stage1/pooled_dinov2_frozen_fold*_val_preds.parquet"
+    python -m src.stage1.evaluate --aggregate "reports/stage1/dinov2_frozen/pooled_fold*_val_preds.parquet"
 """
 
 import argparse
@@ -173,7 +173,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--preds", type=Path, default=None, help="single val_preds.parquet")
     parser.add_argument("--aggregate", type=str, default=None,
-                        help="glob pattern, e.g. 'reports/stage1/pooled_dinov2_frozen_fold*_val_preds.parquet'")
+                        help="glob pattern, e.g. 'reports/stage1/dinov2_frozen/pooled_fold*_val_preds.parquet'")
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--n-bootstrap", type=int, default=N_BOOTSTRAP)
     parser.add_argument("--no-ci", action="store_true", help="skip bootstrap CI (faster)")

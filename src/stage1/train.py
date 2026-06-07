@@ -119,15 +119,16 @@ def predict(model, loader, device, year_mean, year_std, floors_mean, floors_std)
 
 def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled") -> dict:
     repo_root = Path(__file__).resolve().parents[2]
-    out_dir = Path(args.out_dir) if args.out_dir else repo_root / "reports" / "stage1"
+    out_dir = Path(args.out_dir) if args.out_dir else repo_root / "reports" / "stage1" / args.model
     out_dir.mkdir(parents=True, exist_ok=True)
     ckpt_dir = repo_root / "models" / "stage1"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-    run_tag = f"{run_tag_prefix}_{args.model}_fold{fold}"
+    run_tag = f"{run_tag_prefix}_{args.model}_fold{fold}"  # checkpoint name keeps the model
+    report_tag = f"{run_tag_prefix}_fold{fold}"  # report folder already carries it
     ckpt_path = ckpt_dir / f"{run_tag}.pt"
-    preds_path = out_dir / f"{run_tag}_val_preds.parquet"
-    history_path = out_dir / f"{run_tag}_history.json"
+    preds_path = out_dir / f"{report_tag}_val_preds.parquet"
+    history_path = out_dir / f"{report_tag}_history.json"
 
     common = dict(
         manifest_path=paths["manifest"], gt_path=paths["gt"],

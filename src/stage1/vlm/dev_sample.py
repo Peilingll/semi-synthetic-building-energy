@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEV_FOLDS_PATH = REPO_ROOT / "data" / "processed" / "dev_fold_indices.parquet"
-OUT_PATH = REPO_ROOT / "reports" / "stage1" / "vlm" / "dev_prompt_iter_pand_ids.parquet"
+OUT_PATH = REPO_ROOT / "reports" / "stage1" / "vlm_internvl3" / "dev_prompt_iter_pand_ids.parquet"
 
 SEED = 42
 TYPE_QUOTAS = {"AB": 80, "TH": 60, "SFH": 40, "MFH": 20}

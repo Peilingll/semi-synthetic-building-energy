@@ -144,16 +144,16 @@ def run(args: argparse.Namespace) -> None:
     if args.split == "holdout":
         split_path = REPO_ROOT / "data" / "processed" / "holdout_test_pand_ids.parquet"
     elif args.split == "dev_iter":
-        split_path = REPO_ROOT / "reports" / "stage1" / "vlm" / "dev_prompt_iter_pand_ids.parquet"
+        split_path = REPO_ROOT / "reports" / "stage1" / "vlm_internvl3" / "dev_prompt_iter_pand_ids.parquet"
         assert split_path.exists(), "run `python -m src.stage1.vlm.dev_sample` first"
     else:
         raise SystemExit(f"unsupported split: {args.split}")
 
-    out_dir = REPO_ROOT / "reports" / "stage1" / "vlm"
+    out_dir = REPO_ROOT / "reports" / "stage1" / "vlm_internvl3"
     out_dir.mkdir(parents=True, exist_ok=True)
     # versioned tag: v2 (6-field prompt) artifacts are kept as the prompt-
     # ablation baseline and must not be overwritten
-    tag = f"internvl3_{PROMPT_VERSION}_{args.split}_per_image"
+    tag = f"{PROMPT_VERSION}_{args.split}_per_image"
     if args.sample is not None:
         tag = f"{tag}_sample{args.sample}"
     partial_path = out_dir / f"{tag}.partial.parquet"

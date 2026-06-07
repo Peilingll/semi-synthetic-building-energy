@@ -96,9 +96,9 @@ def main():
         ckpt["year_mean"], ckpt["year_std"],
         ckpt["floors_mean"], ckpt["floors_std"],
     )
-    out_dir = (args.out.parent if args.out else repo / "reports" / "stage1")
+    out_dir = (args.out.parent if args.out else repo / "reports" / "stage1" / args.model)
     out_dir.mkdir(parents=True, exist_ok=True)
-    preds_path = out_dir / f"holdout_test_{args.model}_preds.parquet"
+    preds_path = out_dir / "holdout_preds.parquet"
     preds.to_parquet(preds_path, index=False)
     logger.info("wrote %s (%d rows)", preds_path, len(preds))
 
@@ -111,7 +111,7 @@ def main():
         "dev_val_macro_f1": float(best_f1),
     }
 
-    out_path = args.out if args.out else out_dir / f"holdout_test_{args.model}_metrics.json"
+    out_path = args.out if args.out else out_dir / "holdout_metrics.json"
     out_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     logger.info("wrote %s", out_path)
 

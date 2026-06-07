@@ -132,8 +132,8 @@ def compute_locked_limits() -> dict:
          "type_acc_bar": (0, 1)}
     """
     candidates = [
-        REPORTS_DIR / "holdout_test_dinov2_frozen_metrics.json",
-        REPORTS_DIR / "vlm" / "internvl3_holdout_metrics.json",
+        REPORTS_DIR / "dinov2_frozen" / "holdout_metrics.json",
+        REPORTS_DIR / "vlm_internvl3" / "v3_holdout_metrics.json",
     ]
     metrics_list = _load_metrics(*candidates)
 
