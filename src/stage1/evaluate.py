@@ -28,6 +28,8 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
 )
 
+from src.tabula_matcher import classify_period
+
 logger = logging.getLogger(__name__)
 
 TYPE_LABELS = ["SFH", "TH", "MFH", "AB"]
@@ -120,12 +122,16 @@ def evaluate_predictions(preds: pd.DataFrame, with_ci: bool = True) -> dict:
     report["floors_exact_pct"] = round(100 * float((floors_err_round == 0).mean()), 2)
     report["floors_within_1_pct"] = round(100 * float((floors_err_round <= 1).mean()), 2)
 
-    if "pred_period" in preds.columns and "true_tabula_period" in preds.columns:
-        period_valid = preds[["pred_period", "true_tabula_period"]].dropna()
-        if len(period_valid):
-            period_correct = (period_valid["pred_period"] == period_valid["true_tabula_period"]).mean()
-            report["period_acc"] = round(float(period_correct), 4)
-            report["period_n_eval"] = int(len(period_valid))
+    # period accuracy (spec definition): map predicted and true years through
+    # the same TABULA year->period function and compare. Derived from years so
+    # every model gets the same definition regardless of its output columns.
+    pred_period = preds["pred_year"].round().astype(int).map(classify_period)
+    true_period = preds["true_bouwjaar"].round().astype(int).map(classify_period)
+    period_valid = pred_period.notna() & true_period.notna()
+    if period_valid.any():
+        period_correct = (pred_period[period_valid] == true_period[period_valid]).mean()
+        report["period_acc"] = round(float(period_correct), 4)
+        report["period_n_eval"] = int(period_valid.sum())
 
     if with_ci:
         report["bootstrap_95ci"] = {

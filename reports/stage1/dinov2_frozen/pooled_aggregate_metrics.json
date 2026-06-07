@@ -1,5 +1,6 @@
 {
   "n_eval": 8068,
+  "n_dropped_missing_preds": 0,
   "type_acc": 0.91,
   "type_macro_f1": 0.6147,
   "type_per_class": {
@@ -70,6 +71,8 @@
   "floors_mae": 0.356,
   "floors_exact_pct": 77.9,
   "floors_within_1_pct": 97.57,
+  "period_acc": 0.8965,
+  "period_n_eval": 8068,
   "bootstrap_95ci": {
     "type_acc": {
       "mean": 0.9100199553792762,
