@@ -128,6 +128,35 @@ cells = [
         "save_fig(fig, 'F1_cv_val_curves', 'dinov2')",
         "plt.show()",
     ),
+    # 4b
+    md(
+        "### Loss curves (training diagnostics)",
+        "",
+        "Total loss = class-weighted CE (type) + MSE (standardized year) + MSE (standardized floors), equal weights (`src/stage1/train.py`). Dashed = train, solid = val.",
+        "",
+        "Checkpoint selection uses **val macro-F1**, not val loss: with 88% AB the total loss is dominated by the majority class and the regression terms, so its minimum need not coincide with the best 4-class operating point. Loss curves are kept as a sanity diagnostic (no divergence / no NaN).",
+    ),
+    # 4c
+    code(
+        "fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharex=True)",
+        "panels = [('loss',       'total loss (CE + year MSE + floors MSE)'),",
+        "          ('ce',         'type cross-entropy (class-weighted)'),",
+        "          ('year_mse',   'year MSE (standardized units)'),",
+        "          ('floors_mse', 'floors MSE (standardized units)')]",
+        "fold_colors = dict(zip(range(5), plt.rcParams['axes.prop_cycle'].by_key()['color']))",
+        "for ax, (key, title) in zip(axes.flat, panels):",
+        "    for f, sub in history.groupby('fold'):",
+        "        ax.plot(sub['epoch'], sub[f'train_{key}'], lw=0.9, alpha=0.4, linestyle='--', color=fold_colors[f])",
+        "        ax.plot(sub['epoch'], sub[f'val_{key}'],   lw=1.6, alpha=0.9, color=fold_colors[f], label=f'fold {f}')",
+        "    ax.set_title(title)",
+        "axes[1, 0].set_xlabel('epoch'); axes[1, 1].set_xlabel('epoch')",
+        "axes[0, 0].legend(frameon=False, ncol=2, fontsize=8)",
+        "axes[0, 0].text(0.98, 0.97, 'dashed = train, solid = val',",
+        "                transform=axes[0, 0].transAxes, ha='right', va='top', fontsize=8)",
+        "fig.tight_layout()",
+        "save_fig(fig, 'F4_dinov2_loss_components', 'dinov2')",
+        "plt.show()",
+    ),
     # 5
     code(
         "rows = []",
