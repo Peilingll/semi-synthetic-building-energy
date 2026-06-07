@@ -155,11 +155,19 @@ def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = build_model(args.model).to(device)
-    optimizer = torch.optim.AdamW(
-        model.trainable_parameters(),
-        lr=args.lr,
-        weight_decay=args.weight_decay,
-    )
+    if args.head_lr is not None and hasattr(model, "param_groups"):
+        # discriminative lr: pretrained backbone at --lr, randomly initialised
+        # trunk/heads at --head-lr (norm/bias excluded from weight decay)
+        optimizer = torch.optim.AdamW(
+            model.param_groups(args.lr, args.head_lr, args.weight_decay),
+        )
+        logger.info("param groups: backbone lr=%g head lr=%g", args.lr, args.head_lr)
+    else:
+        optimizer = torch.optim.AdamW(
+            model.trainable_parameters(),
+            lr=args.lr,
+            weight_decay=args.weight_decay,
+        )
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     scaler = torch.amp.GradScaler("cuda") if (device == "cuda" and not args.no_amp) else None
 
@@ -253,11 +261,15 @@ def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled")
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="dinov2_frozen")
-    parser.add_argument("--fold", type=int, default=None, help="single fold (0-4); ignored if --all-folds")
+    parser.add_argument("--fold", type=int, default=None, help="single fold (0-4); ignored if --all-folds/--folds")
     parser.add_argument("--all-folds", action="store_true", help="run folds 0..4 sequentially")
+    parser.add_argument("--folds", type=str, default=None,
+                        help="comma-separated fold list, e.g. '1,2,3,4' (skip an already-run fold)")
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=5e-4)
+    parser.add_argument("--head-lr", type=float, default=None,
+                        help="separate lr for trunk+heads (models exposing param_groups); None = uniform --lr")
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--num-workers", type=int, default=2)
@@ -279,8 +291,11 @@ def main():
 
     if args.all_folds:
         folds = list(range(5))
+    elif args.folds:
+        folds = [int(f) for f in args.folds.split(",")]
+        assert all(0 <= f <= 4 for f in folds), f"folds out of range: {folds}"
     else:
-        assert args.fold is not None, "must pass --fold N or --all-folds"
+        assert args.fold is not None, "must pass --fold N, --folds list or --all-folds"
         folds = [args.fold]
 
     all_summaries = []
