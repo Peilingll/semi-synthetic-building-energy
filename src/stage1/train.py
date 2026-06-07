@@ -46,7 +46,11 @@ def run_epoch(model, loader, optimizer, scaler, device, train: bool, class_weigh
         t_year = batch["target_year_norm"].to(device, non_blocking=True)
         t_floors = batch["target_floors_norm"].to(device, non_blocking=True)
 
-        with torch.autocast(device_type="cuda", dtype=torch.float16, enabled=(scaler is not None)):
+        # validation must not build the autograd graph: for full-fine-tune
+        # models a fp32 val batch with graph exceeds the fp16 train peak and
+        # spills into WDDM shared memory (harmless for frozen-backbone path)
+        with torch.set_grad_enabled(train), \
+             torch.autocast(device_type="cuda", dtype=torch.float16, enabled=(scaler is not None)):
             out = model(images, mask)
             loss_ce = F.cross_entropy(out["logits_type"], t_type, weight=class_weights)
             loss_year = F.mse_loss(out["pred_year_norm"], t_year)
