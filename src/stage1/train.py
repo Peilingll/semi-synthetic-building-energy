@@ -201,6 +201,11 @@ def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled")
         tr = run_epoch(model, train_loader, optimizer, scaler, device, True, class_weights)
         va = run_epoch(model, val_loader, None, None, device, False, class_weights)
         scheduler.step()
+        # release cached-but-unused blocks each epoch: the packed forward
+        # allocates variable-size batches, and on an 8 GB WDDM GPU the
+        # accumulated fragmentation otherwise triggers a late-run OOM
+        if device == "cuda":
+            torch.cuda.empty_cache()
         epoch_dt = time.time() - epoch_t0
 
         record = {
