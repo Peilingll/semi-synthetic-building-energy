@@ -1,0 +1,128 @@
+{
+  "n_eval": 1613,
+  "n_dropped_missing_preds": 0,
+  "type_acc": 0.9188,
+  "type_macro_f1": 0.5898,
+  "type_per_class": {
+    "SFH": {
+      "precision": 0.4444,
+      "recall": 0.6316,
+      "f1": 0.5217,
+      "support": 19
+    },
+    "TH": {
+      "precision": 0.6162,
+      "recall": 0.6994,
+      "f1": 0.6552,
+      "support": 163
+    },
+    "MFH": {
+      "precision": 0.25,
+      "recall": 0.2,
+      "f1": 0.2222,
+      "support": 5
+    },
+    "AB": {
+      "precision": 0.9699,
+      "recall": 0.9502,
+      "f1": 0.96,
+      "support": 1426
+    }
+  },
+  "type_confusion_matrix": {
+    "labels": [
+      "SFH",
+      "TH",
+      "MFH",
+      "AB"
+    ],
+    "matrix": [
+      [
+        12,
+        6,
+        0,
+        1
+      ],
+      [
+        11,
+        114,
+        0,
+        38
+      ],
+      [
+        0,
+        1,
+        1,
+        3
+      ],
+      [
+        4,
+        64,
+        3,
+        1355
+      ]
+    ]
+  },
+  "year_mae": 11.65,
+  "year_rmse": 20.35,
+  "year_mdae": 5.37,
+  "year_within_10y_pct": 68.13,
+  "year_within_20y_pct": 83.51,
+  "floors_mae": 0.399,
+  "floors_exact_pct": 71.48,
+  "floors_within_1_pct": 97.4,
+  "period_acc": 0.8896,
+  "period_n_eval": 1613,
+  "per_city": {
+    "amsterdam": {
+      "n": 1285,
+      "type_acc": 0.9533,
+      "type_macro_f1": 0.5127,
+      "year_mae": 9.52,
+      "floors_mae": 0.33
+    },
+    "delft": {
+      "n": 29,
+      "type_acc": 0.6552,
+      "type_macro_f1": 0.3277,
+      "year_mae": 34.28,
+      "floors_mae": 0.543
+    },
+    "rotterdam": {
+      "n": 223,
+      "type_acc": 0.8565,
+      "type_macro_f1": 0.5868,
+      "year_mae": 17.66,
+      "floors_mae": 0.697
+    },
+    "utrecht": {
+      "n": 76,
+      "type_acc": 0.6184,
+      "type_macro_f1": 0.3983,
+      "year_mae": 21.46,
+      "floors_mae": 0.643
+    }
+  },
+  "per_class_year_floors": {
+    "SFH": {
+      "n": 19,
+      "year_mae": 19.52,
+      "floors_mae": 0.553
+    },
+    "TH": {
+      "n": 163,
+      "year_mae": 18.4,
+      "floors_mae": 0.483
+    },
+    "MFH": {
+      "n": 5,
+      "year_mae": 24.96,
+      "floors_mae": 0.643
+    },
+    "AB": {
+      "n": 1426,
+      "year_mae": 10.73,
+      "floors_mae": 0.387
+    }
+  }
+}
