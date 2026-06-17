@@ -6,6 +6,7 @@ requires-python = ">=3.13"
 dependencies = [
     "folium>=0.20.0",
     "geopandas>=0.14",
+    "lightgbm>=4.6.0",
     "mapclassify>=2.10.0",
     "matplotlib>=3.7",
     "numpy>=1.24",
