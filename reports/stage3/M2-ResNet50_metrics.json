@@ -1,0 +1,144 @@
+{
+  "n_eval": 2016,
+  "macro_f1": 0.2014,
+  "quadratic_kappa": 0.1879,
+  "accuracy": 0.2634,
+  "per_class": {
+    "A": {
+      "precision": 0.3612,
+      "recall": 0.4298,
+      "f1": 0.3925,
+      "support": 463
+    },
+    "B": {
+      "precision": 0.2288,
+      "recall": 0.1896,
+      "f1": 0.2074,
+      "support": 327
+    },
+    "C": {
+      "precision": 0.3916,
+      "recall": 0.2544,
+      "f1": 0.3084,
+      "support": 625
+    },
+    "D": {
+      "precision": 0.18,
+      "recall": 0.2562,
+      "f1": 0.2115,
+      "support": 281
+    },
+    "E": {
+      "precision": 0.113,
+      "recall": 0.1742,
+      "f1": 0.1371,
+      "support": 155
+    },
+    "F": {
+      "precision": 0.1159,
+      "recall": 0.0909,
+      "f1": 0.1019,
+      "support": 88
+    },
+    "G": {
+      "precision": 0.05,
+      "recall": 0.0519,
+      "f1": 0.051,
+      "support": 77
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        199,
+        68,
+        69,
+        52,
+        41,
+        12,
+        22
+      ],
+      [
+        97,
+        62,
+        58,
+        65,
+        27,
+        7,
+        11
+      ],
+      [
+        132,
+        91,
+        159,
+        125,
+        82,
+        18,
+        18
+      ],
+      [
+        58,
+        22,
+        65,
+        72,
+        38,
+        10,
+        16
+      ],
+      [
+        31,
+        14,
+        28,
+        45,
+        27,
+        8,
+        2
+      ],
+      [
+        15,
+        9,
+        16,
+        22,
+        11,
+        8,
+        7
+      ],
+      [
+        19,
+        5,
+        11,
+        19,
+        13,
+        6,
+        4
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.20116463909810522,
+      "lo": 0.1829,
+      "hi": 0.219,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.1869599362498783,
+      "lo": 0.1416,
+      "hi": 0.2348,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-ResNet50-aligned",
+  "source_fold": 1,
+  "dev_val_macro_f1": 0.20995763746102,
+  "note": "full fine-tune end-to-end (Stage 1 ResNet recipe)"
+}
