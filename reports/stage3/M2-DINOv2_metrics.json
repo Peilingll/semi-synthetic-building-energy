@@ -1,0 +1,144 @@
+{
+  "n_eval": 2016,
+  "macro_f1": 0.2131,
+  "quadratic_kappa": 0.2355,
+  "accuracy": 0.2664,
+  "per_class": {
+    "A": {
+      "precision": 0.4004,
+      "recall": 0.473,
+      "f1": 0.4337,
+      "support": 463
+    },
+    "B": {
+      "precision": 0.2705,
+      "recall": 0.1713,
+      "f1": 0.2097,
+      "support": 327
+    },
+    "C": {
+      "precision": 0.4059,
+      "recall": 0.2208,
+      "f1": 0.286,
+      "support": 625
+    },
+    "D": {
+      "precision": 0.1983,
+      "recall": 0.2491,
+      "f1": 0.2208,
+      "support": 281
+    },
+    "E": {
+      "precision": 0.1255,
+      "recall": 0.1935,
+      "f1": 0.1523,
+      "support": 155
+    },
+    "F": {
+      "precision": 0.0865,
+      "recall": 0.1818,
+      "f1": 0.1172,
+      "support": 88
+    },
+    "G": {
+      "precision": 0.0552,
+      "recall": 0.1039,
+      "f1": 0.0721,
+      "support": 77
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        219,
+        42,
+        56,
+        51,
+        32,
+        33,
+        30
+      ],
+      [
+        102,
+        56,
+        56,
+        45,
+        31,
+        22,
+        15
+      ],
+      [
+        128,
+        62,
+        138,
+        126,
+        83,
+        49,
+        39
+      ],
+      [
+        48,
+        28,
+        41,
+        70,
+        37,
+        32,
+        25
+      ],
+      [
+        20,
+        10,
+        23,
+        37,
+        30,
+        19,
+        16
+      ],
+      [
+        14,
+        7,
+        16,
+        12,
+        11,
+        16,
+        12
+      ],
+      [
+        16,
+        2,
+        10,
+        12,
+        15,
+        14,
+        8
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.21264172337120982,
+      "lo": 0.1942,
+      "hi": 0.23,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.23583346699839114,
+      "lo": 0.1906,
+      "hi": 0.2762,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-DINOv2-aligned-cached",
+  "source_fold": 2,
+  "dev_val_macro_f1": 0.22380560674102723,
+  "note": "frozen DINOv2 cached embeddings + Stage1-style neural head; no train-time augmentation"
+}

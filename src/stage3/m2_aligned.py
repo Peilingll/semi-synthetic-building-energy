@@ -186,8 +186,134 @@ def evaluate_holdout(args, device):
     print(f"M2(aligned) - M1 : mF1 {rep['macro_f1']-m1m['macro_f1']:+.4f}  kappa {rep['quadratic_kappa']-m1m['quadratic_kappa']:+.4f}")
 
 
+# ---------------------------------------------------------------------------
+# Cached-embedding mode: frozen backbone is re-run once (extract_embeddings),
+# then the SAME neural head (trunk 768->256 + GELU + Dropout + 7-class) is
+# trained on cached embeddings. Identical architecture + CE + AdamW + cosine +
+# early-stop recipe as the full path; the ONLY deviation from Stage 1 is no
+# train-time augmentation (frozen backbone => augmentation effect is marginal).
+# ~seconds vs ~10 h, because the backbone is not re-forwarded every epoch.
+# ---------------------------------------------------------------------------
+
+EMB_COLS = [f"e{i}" for i in range(768)]
+
+
+class EnergyHead(torch.nn.Module):
+    """trunk + head, identical to DINOv2FrozenEnergy's trunk + head_energy."""
+
+    def __init__(self, in_dim=768, hidden=256, n=N_ENERGY, dropout=0.3):
+        super().__init__()
+        self.trunk = torch.nn.Sequential(
+            torch.nn.Linear(in_dim, hidden), torch.nn.GELU(), torch.nn.Dropout(dropout))
+        self.head = torch.nn.Linear(hidden, n)
+
+    def forward(self, x):
+        return self.head(self.trunk(x))
+
+
+def _cw_from_labels(y: np.ndarray) -> torch.Tensor:
+    counts = np.bincount(y, minlength=N_ENERGY).astype(np.float64)
+    w = 1.0 / np.clip(counts, 1, None)
+    return torch.tensor(w / w.sum() * N_ENERGY, dtype=torch.float32)
+
+
+def _train_head_cached(Xtr, ytr, Xva, yva, args, device):
+    head = EnergyHead().to(device)
+    opt = torch.optim.AdamW(head.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=args.epochs)
+    cw = _cw_from_labels(ytr).to(device)
+    Xtr_t = torch.tensor(Xtr, dtype=torch.float32, device=device)
+    ytr_t = torch.tensor(ytr, dtype=torch.long, device=device)
+    Xva_t = torch.tensor(Xva, dtype=torch.float32, device=device)
+    n, bs = len(Xtr_t), 256
+    best_f1, best_state, since = -1.0, None, 0
+    for ep in range(1, args.epochs + 1):
+        head.train()
+        perm = torch.randperm(n, device=device)
+        for i in range(0, n, bs):
+            idx = perm[i:i + bs]
+            opt.zero_grad()
+            F.cross_entropy(head(Xtr_t[idx]), ytr_t[idx], weight=cw).backward()
+            opt.step()
+        sch.step()
+        head.eval()
+        with torch.no_grad():
+            vp = head(Xva_t).argmax(-1).cpu().numpy()
+        f1 = f1_score(yva, vp, labels=list(range(N_ENERGY)), average="macro", zero_division=0)
+        if f1 > best_f1:
+            best_f1, since = f1, 0
+            best_state = {k: v.cpu().clone() for k, v in head.state_dict().items()}
+        else:
+            since += 1
+            if since >= args.patience:
+                break
+    return best_f1, best_state
+
+
+def main_cached(args, device):
+    gt = pd.read_parquet(PROC / "stage1_gt.parquet")
+    gt["pand_id"] = gt["pand_id"].astype(str)
+    lab = {p: energy_to_idx(e) for p, e in zip(gt["pand_id"], gt["Energieklasse"])}
+    folds = pd.read_parquet(PROC / "dev_fold_indices.parquet")
+    folds["pand_id"] = folds["pand_id"].astype(str)
+    fold_map = dict(zip(folds["pand_id"], folds["fold"]))
+
+    dev = pd.read_parquet(REPORTS / "embeddings_dev.parquet")
+    dev["pand_id"] = dev["pand_id"].astype(str)
+    dev["fold"] = dev["pand_id"].map(fold_map)
+    dev["y"] = dev["pand_id"].map(lab)
+    ho = pd.read_parquet(REPORTS / "embeddings_holdout.parquet")
+    ho["pand_id"] = ho["pand_id"].astype(str)
+    ho["y"] = ho["pand_id"].map(lab)
+
+    states, f1s = {}, {}
+    for f in range(5):
+        tr, va = dev[dev["fold"] != f], dev[dev["fold"] == f]
+        f1, st = _train_head_cached(tr[EMB_COLS].values, tr["y"].values.astype(int),
+                                    va[EMB_COLS].values, va["y"].values.astype(int), args, device)
+        states[f], f1s[f] = st, f1
+        logger.info("cached fold %d val energy macro-F1=%.4f", f, f1)
+
+    best = max(f1s, key=f1s.get)
+    logger.info("best fold %d (val f1=%.4f)", best, f1s[best])
+    head = EnergyHead().to(device)
+    head.load_state_dict(states[best])
+    head.eval()
+    with torch.no_grad():
+        ho_pred = head(torch.tensor(ho[EMB_COLS].values, dtype=torch.float32, device=device)).argmax(-1).cpu().numpy()
+
+    preds = pd.DataFrame({
+        "pand_id": ho["pand_id"].values,
+        "true": [IDX_TO_ENERGY[i] for i in ho["y"].values.astype(int)],
+        "pred": [IDX_TO_ENERGY[i] for i in ho_pred],
+    })
+    m1 = pd.read_parquet(REPORTS / "M1_holdout_preds.parquet")
+    common = set(m1["pand_id"].astype(str))
+    preds = preds[preds["pand_id"].isin(common)].reset_index(drop=True)
+
+    rep = evaluate(preds[["true", "pred"]], with_ci=True)
+    rep["route"] = "M2-DINOv2-aligned-cached"
+    rep["source_fold"] = int(best)
+    rep["dev_val_macro_f1"] = float(f1s[best])
+    rep["note"] = "frozen DINOv2 cached embeddings + Stage1-style neural head; no train-time augmentation"
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    preds.to_parquet(REPORTS / "M2-DINOv2_holdout_preds.parquet", index=False)
+    (REPORTS / "M2-DINOv2_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    def load(r):
+        return json.load(open(REPORTS / f"{r}_metrics.json"))
+    m1m, m3m = load("M1"), load("M3-DINOv2")
+    print(f"\n{'route':24s} {'macroF1':>8s} {'kappa':>7s} {'acc':>7s}")
+    for nm, r in [("M1 (GT)", m1m), ("M3-DINOv2 (decomp)", m3m), ("M2-DINOv2 (aligned)", rep)]:
+        print(f"{nm:24s} {r['macro_f1']:8.4f} {r['quadratic_kappa']:7.4f} {r['accuracy']:7.4f}")
+    print(f"\nM2 - M3 : mF1 {rep['macro_f1']-m3m['macro_f1']:+.4f}  kappa {rep['quadratic_kappa']-m3m['quadratic_kappa']:+.4f}")
+    print(f"M2 - M1 : mF1 {rep['macro_f1']-m1m['macro_f1']:+.4f}  kappa {rep['quadratic_kappa']-m1m['quadratic_kappa']:+.4f}")
+
+
 def main():
     p = argparse.ArgumentParser()
+    p.add_argument("--cached", action="store_true",
+                   help="train neural head on cached embeddings (fast; no augmentation)")
     p.add_argument("--all-folds", action="store_true")
     p.add_argument("--fold", type=int, default=None)
     p.add_argument("--epochs", type=int, default=30)
@@ -201,6 +327,10 @@ def main():
     args = p.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    if args.cached:
+        main_cached(args, device)
+        return
 
     if not args.holdout_only:
         folds = list(range(5)) if args.all_folds else [args.fold]
