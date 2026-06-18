@@ -91,6 +91,62 @@ class DINOv2FrozenMLP(nn.Module):
         )
 
 
+class DINOv2FrozenEnergy(nn.Module):
+    """Aligned M2: frozen DINOv2 backbone + trunk + single 7-class energy head.
+
+    Architecturally identical to `DINOv2FrozenMLP` (same frozen backbone, same
+    trunk) so that M2 (image -> energy label, end-to-end) vs M3 (image -> 3
+    attributes -> TABULA -> LightGBM) isolates "end-to-end vs decomposed" rather
+    than a head/architecture change. Only the output head differs: one 7-way
+    Energieklasse head instead of the three attribute heads.
+    """
+
+    def __init__(self, num_energy_classes: int = 7, dropout: float = 0.3):
+        super().__init__()
+
+        self.backbone = timm.create_model(
+            DINOV2_MODEL_NAME,
+            pretrained=True,
+            num_classes=0,
+            img_size=224,
+            dynamic_img_size=True,
+        )
+        for p in self.backbone.parameters():
+            p.requires_grad = False
+        self.backbone.eval()
+
+        feat_dim = DINOV2_FEAT_DIM
+        hidden = 256
+        self.trunk = nn.Sequential(
+            nn.Linear(feat_dim, hidden),
+            nn.GELU(),
+            nn.Dropout(dropout),
+        )
+        self.head_energy = nn.Linear(hidden, num_energy_classes)
+
+    def train(self, mode: bool = True):
+        super().train(mode)
+        self.backbone.eval()
+        return self
+
+    def forward(self, images: torch.Tensor, valid_mask: torch.Tensor) -> dict:
+        B, K, C, H, W = images.shape
+        flat = images.view(B * K, C, H, W)
+        with torch.no_grad():
+            feats = self.backbone(flat)
+        feats = feats.view(B, K, -1)
+
+        mask = valid_mask.unsqueeze(-1).float()
+        n_valid = mask.sum(dim=1).clamp(min=1.0)
+        pooled = (feats * mask).sum(dim=1) / n_valid
+
+        trunk = self.trunk(pooled)
+        return {"logits_energy": self.head_energy(trunk)}
+
+    def trainable_parameters(self):
+        return list(self.trunk.parameters()) + list(self.head_energy.parameters())
+
+
 class ResNet50FT(nn.Module):
     """ResNet-50 full fine-tune + small MLP with 3 heads.
 
@@ -203,6 +259,8 @@ def build_model(name: str) -> nn.Module:
         return DINOv2FrozenMLP()
     if name == "resnet50_ft":
         return ResNet50FT()
+    if name == "dinov2_energy":
+        return DINOv2FrozenEnergy()
     if name == "swin_t_ft":
         raise NotImplementedError("swin_t_ft reserved for a later phase")
     raise ValueError(f"unknown model name: {name}")

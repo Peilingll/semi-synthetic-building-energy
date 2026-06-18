@@ -29,6 +29,18 @@ IMAGENET_STD = (0.229, 0.224, 0.225)
 BUILDING_TYPE_TO_IDX = {"SFH": 0, "TH": 1, "MFH": 2, "AB": 3}
 IDX_TO_BUILDING_TYPE = {v: k for k, v in BUILDING_TYPE_TO_IDX.items()}
 
+# Energieklasse target for the aligned M2 (A+..A++++ merged into A).
+ENERGY_LABELS = ["A", "B", "C", "D", "E", "F", "G"]
+ENERGY_TO_IDX = {lab: i for i, lab in enumerate(ENERGY_LABELS)}
+IDX_TO_ENERGY = {i: lab for lab, i in ENERGY_TO_IDX.items()}
+
+
+def energy_to_idx(energieklasse) -> int:
+    s = str(energieklasse).strip()
+    if s.startswith("A"):
+        s = "A"
+    return ENERGY_TO_IDX.get(s, -1)
+
 
 def build_transforms(split: Literal["train", "val", "holdout"]) -> transforms.Compose:
     if split == "train":
@@ -62,9 +74,11 @@ class Stage1ImageDataset(Dataset):
         year_std: float | None = None,
         floors_mean: float | None = None,
         floors_std: float | None = None,
+        energy_target: bool = False,
     ):
         self.split = split
         self.transform = build_transforms(split)
+        self.energy_target = energy_target
 
         manifest = pd.read_parquet(manifest_path)
         gt = pd.read_parquet(gt_path)
@@ -150,7 +164,7 @@ class Stage1ImageDataset(Dataset):
         target_year_norm = (row["bouwjaar"] - self.year_mean) / self.year_std
         target_floors_norm = (row["num_floors"] - self.floors_mean) / self.floors_std
 
-        return {
+        out = {
             "images": imgs,
             "valid_mask": mask,
             "target_type": torch.tensor(target_type, dtype=torch.long),
@@ -162,10 +176,13 @@ class Stage1ImageDataset(Dataset):
             "city": row["city"],
             "n_images": n,
         }
+        if self.energy_target:
+            out["target_energy"] = torch.tensor(energy_to_idx(row["Energieklasse"]), dtype=torch.long)
+        return out
 
 
 def collate_fn(batch: list[dict]) -> dict:
-    return {
+    out = {
         "images": torch.stack([b["images"] for b in batch]),
         "valid_mask": torch.stack([b["valid_mask"] for b in batch]),
         "target_type": torch.stack([b["target_type"] for b in batch]),
@@ -177,3 +194,6 @@ def collate_fn(batch: list[dict]) -> dict:
         "city": [b["city"] for b in batch],
         "n_images": torch.tensor([b["n_images"] for b in batch], dtype=torch.long),
     }
+    if "target_energy" in batch[0]:
+        out["target_energy"] = torch.stack([b["target_energy"] for b in batch])
+    return out
