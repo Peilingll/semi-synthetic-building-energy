@@ -42,6 +42,7 @@ REPORTS = REPO / "reports" / "stage3"
 CKPT_DIR = REPO / "models" / "stage3"
 N_ENERGY = 7
 MODEL = "dinov2_energy"
+ROUTE_TAG = {"dinov2_energy": "M2-DINOv2", "resnet50_energy": "M2-ResNet50"}
 
 
 def energy_class_weights(ds: Stage1ImageDataset) -> torch.Tensor:
@@ -119,14 +120,18 @@ def train_one_fold(args, fold, device) -> dict:
     train_ds, train_dl = loaders("train", fold, args)
     _, val_dl = loaders("val", fold, args)
 
-    model = build_model(MODEL).to(device)
-    optimizer = torch.optim.AdamW(model.trainable_parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    model = build_model(args.model).to(device)
+    if args.head_lr is not None and hasattr(model, "param_groups"):
+        optimizer = torch.optim.AdamW(model.param_groups(args.lr, args.head_lr, args.weight_decay))
+        logger.info("discriminative lr: backbone=%g head=%g", args.lr, args.head_lr)
+    else:
+        optimizer = torch.optim.AdamW(model.trainable_parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
     scaler = torch.amp.GradScaler("cuda") if (device == "cuda" and not args.no_amp) else None
     cw = energy_class_weights(train_ds).to(device)
     logger.info("fold %d energy class_weights: %s", fold, [round(x, 2) for x in cw.tolist()])
 
-    ckpt_path = CKPT_DIR / f"pooled_{MODEL}_fold{fold}.pt"
+    ckpt_path = CKPT_DIR / f"pooled_{args.model}_fold{fold}.pt"
     best_f1, best_epoch, since = -1.0, -1, 0
     t0 = time.time()
     for epoch in range(1, args.epochs + 1):
@@ -151,12 +156,14 @@ def train_one_fold(args, fold, device) -> dict:
 
 
 def evaluate_holdout(args, device):
+    tag = ROUTE_TAG[args.model]          # e.g. "M2-ResNet50"
+    m3_route = tag.replace("M2-", "M3-")  # corresponding decomposed route
     # best fold by val energy macro-F1 (same protocol as eval_holdout.py)
     best = max(range(5), key=lambda f: torch.load(
-        CKPT_DIR / f"pooled_{MODEL}_fold{f}.pt", map_location="cpu", weights_only=False)["val_macro_f1"])
-    ckpt = torch.load(CKPT_DIR / f"pooled_{MODEL}_fold{best}.pt", map_location=device, weights_only=False)
+        CKPT_DIR / f"pooled_{args.model}_fold{f}.pt", map_location="cpu", weights_only=False)["val_macro_f1"])
+    ckpt = torch.load(CKPT_DIR / f"pooled_{args.model}_fold{best}.pt", map_location=device, weights_only=False)
     logger.info("holdout: best fold %d val_f1=%.3f", best, ckpt["val_macro_f1"])
-    model = build_model(MODEL).to(device)
+    model = build_model(args.model).to(device)
     model.load_state_dict(ckpt["model_state"])
 
     _, ho_dl = loaders("holdout", None, args)
@@ -169,18 +176,19 @@ def evaluate_holdout(args, device):
     preds = preds[preds["pand_id"].isin(common)].reset_index(drop=True)
 
     rep = evaluate(preds[["true", "pred"]], with_ci=True)
-    rep["route"] = "M2-DINOv2-aligned"
+    rep["route"] = f"{tag}-aligned"
     rep["source_fold"] = int(best)
     rep["dev_val_macro_f1"] = float(ckpt["val_macro_f1"])
+    rep["note"] = "full fine-tune end-to-end (Stage 1 ResNet recipe)" if args.model == "resnet50_energy" else "aligned"
     REPORTS.mkdir(parents=True, exist_ok=True)
-    preds.to_parquet(REPORTS / "M2-DINOv2_holdout_preds.parquet", index=False)
-    (REPORTS / "M2-DINOv2_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+    preds.to_parquet(REPORTS / f"{tag}_holdout_preds.parquet", index=False)
+    (REPORTS / f"{tag}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def load(r):
         return json.load(open(REPORTS / f"{r}_metrics.json"))
-    m1m, m3m = load("M1"), load("M3-DINOv2")
+    m1m, m3m = load("M1"), load(m3_route)
     print(f"\n{'route':22s} {'macroF1':>8s} {'kappa':>7s} {'acc':>7s}")
-    for nm, r in [("M1 (GT)", m1m), ("M3-DINOv2 (decomp)", m3m), ("M2-DINOv2 (aligned)", rep)]:
+    for nm, r in [("M1 (GT)", m1m), (f"{m3_route} (decomp)", m3m), (f"{tag} (aligned)", rep)]:
         print(f"{nm:22s} {r['macro_f1']:8.4f} {r['quadratic_kappa']:7.4f} {r['accuracy']:7.4f}")
     print(f"\nM2(aligned) - M3 : mF1 {rep['macro_f1']-m3m['macro_f1']:+.4f}  kappa {rep['quadratic_kappa']-m3m['quadratic_kappa']:+.4f}")
     print(f"M2(aligned) - M1 : mF1 {rep['macro_f1']-m1m['macro_f1']:+.4f}  kappa {rep['quadratic_kappa']-m1m['quadratic_kappa']:+.4f}")
@@ -312,8 +320,12 @@ def main_cached(args, device):
 
 def main():
     p = argparse.ArgumentParser()
+    p.add_argument("--model", default="dinov2_energy",
+                   help="dinov2_energy (cached/frozen) or resnet50_energy (full fine-tune)")
+    p.add_argument("--head-lr", type=float, default=None,
+                   help="separate lr for trunk+head (models with param_groups, e.g. resnet50_energy)")
     p.add_argument("--cached", action="store_true",
-                   help="train neural head on cached embeddings (fast; no augmentation)")
+                   help="train neural head on cached embeddings (fast; no augmentation; dinov2 only)")
     p.add_argument("--all-folds", action="store_true")
     p.add_argument("--fold", type=int, default=None)
     p.add_argument("--epochs", type=int, default=30)

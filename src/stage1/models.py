@@ -254,6 +254,78 @@ class ResNet50FT(nn.Module):
         ]
 
 
+class ResNet50Energy(nn.Module):
+    """Aligned M2 for ResNet-50: full fine-tune backbone + trunk + single 7-class
+    energy head. Mirrors `ResNet50FT` (packed forward over valid images, BN-safe,
+    discriminative lr via param_groups) so M2-ResNet50 (end-to-end -> energy) vs
+    M3-ResNet50 (-> attributes -> TABULA -> LightGBM) isolates end-to-end vs
+    decomposed for the same full-fine-tune ResNet paradigm.
+    """
+
+    RESNET_FEAT_DIM = 2048
+
+    def __init__(self, num_energy_classes: int = 7, dropout: float = 0.3):
+        super().__init__()
+        self.backbone = timm.create_model("resnet50", pretrained=True, num_classes=0)
+        hidden = 256
+        self.trunk = nn.Sequential(
+            nn.Linear(self.RESNET_FEAT_DIM, hidden), nn.GELU(), nn.Dropout(dropout))
+        self.head_energy = nn.Linear(hidden, num_energy_classes)
+        self._bn_eval = False
+
+    def set_bn_eval(self, enabled: bool = True):
+        self._bn_eval = enabled
+        if enabled:
+            self._apply_bn_eval()
+        return self
+
+    def _apply_bn_eval(self):
+        for m in self.backbone.modules():
+            if isinstance(m, nn.modules.batchnorm._BatchNorm):
+                m.eval()
+
+    def train(self, mode: bool = True):
+        super().train(mode)
+        if mode and self._bn_eval:
+            self._apply_bn_eval()
+        return self
+
+    def forward(self, images: torch.Tensor, valid_mask: torch.Tensor) -> dict:
+        B, K, C, H, W = images.shape
+        flat_mask = valid_mask.reshape(B * K)
+        packed = images.reshape(B * K, C, H, W)[flat_mask]
+        packed_feats = self.backbone(packed)
+        feats = packed_feats.new_zeros(B * K, packed_feats.shape[-1])
+        feats[flat_mask] = packed_feats
+        feats = feats.view(B, K, -1)
+        mask = valid_mask.unsqueeze(-1).float()
+        n_valid = mask.sum(dim=1).clamp(min=1.0)
+        pooled = (feats * mask).sum(dim=1) / n_valid
+        trunk = self.trunk(pooled)
+        return {"logits_energy": self.head_energy(trunk)}
+
+    def trainable_parameters(self):
+        return list(self.parameters())
+
+    def param_groups(self, backbone_lr: float, head_lr: float, weight_decay: float) -> list[dict]:
+        head_modules = [self.trunk, self.head_energy]
+        head_param_ids = {id(p) for m in head_modules for p in m.parameters()}
+        groups = {"backbone_decay": [], "backbone_no_decay": [],
+                  "head_decay": [], "head_no_decay": []}
+        for _, p in self.named_parameters():
+            if not p.requires_grad:
+                continue
+            part = "head" if id(p) in head_param_ids else "backbone"
+            decay = "no_decay" if p.ndim <= 1 else "decay"
+            groups[f"{part}_{decay}"].append(p)
+        return [
+            {"params": groups["backbone_decay"], "lr": backbone_lr, "weight_decay": weight_decay},
+            {"params": groups["backbone_no_decay"], "lr": backbone_lr, "weight_decay": 0.0},
+            {"params": groups["head_decay"], "lr": head_lr, "weight_decay": weight_decay},
+            {"params": groups["head_no_decay"], "lr": head_lr, "weight_decay": 0.0},
+        ]
+
+
 def build_model(name: str) -> nn.Module:
     if name == "dinov2_frozen":
         return DINOv2FrozenMLP()
@@ -261,6 +333,8 @@ def build_model(name: str) -> nn.Module:
         return ResNet50FT()
     if name == "dinov2_energy":
         return DINOv2FrozenEnergy()
+    if name == "resnet50_energy":
+        return ResNet50Energy()
     if name == "swin_t_ft":
         raise NotImplementedError("swin_t_ft reserved for a later phase")
     raise ValueError(f"unknown model name: {name}")
