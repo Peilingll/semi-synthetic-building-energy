@@ -1,0 +1,141 @@
+{
+  "n_eval": 2016,
+  "macro_f1": 0.0676,
+  "quadratic_kappa": 0.0,
+  "accuracy": 0.31,
+  "per_class": {
+    "A": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 463
+    },
+    "B": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 327
+    },
+    "C": {
+      "precision": 0.31,
+      "recall": 1.0,
+      "f1": 0.4733,
+      "support": 625
+    },
+    "D": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 281
+    },
+    "E": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 155
+    },
+    "F": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 88
+    },
+    "G": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 77
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        0,
+        0,
+        463,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        327,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        625,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        281,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        155,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        88,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        77,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.06760810964233598,
+      "lo": 0.0644,
+      "hi": 0.0709,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M0"
+}
