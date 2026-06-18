@@ -7,4 +7,9 @@
 | M3-DINOv2 | 0.1500 | [0.135, 0.164] | 0.0825 | 0.2917 | -0.0220 | -0.1505 |
 | M3-ResNet50 | 0.1490 | [0.134, 0.165] | 0.0913 | 0.2817 | -0.0230 | -0.1417 |
 | M3-VLMv3 | 0.1370 | [0.125, 0.150] | 0.0408 | 0.2783 | -0.0350 | -0.1922 |
-| M2-DINOv2 (logreg head) | 0.1868 | [0.170, 0.204] | 0.1759 | 0.2857 | +0.0148 | -0.0571 |
+| M2-DINOv2 (frozen-probe **SMOKE**, logreg head) | 0.1868 | [0.170, 0.204] | 0.1759 | 0.2857 | +0.0148 | -0.0571 |
+
+> ⚠️ The M2 row is a **smoke test / preview**: frozen DINOv2 embedding +
+> LightGBM/LR head, NOT aligned with Stage 1's neural-head + training recipe.
+> The paper uses the **aligned M2** (Stage 1 head architecture + training, energy
+> output) — see `doc_processed/plan/2026.06.18_stage3_m2_aligned.md`.
