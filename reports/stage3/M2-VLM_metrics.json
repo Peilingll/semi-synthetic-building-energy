@@ -1,0 +1,151 @@
+{
+  "n_eval": 2016,
+  "macro_f1": 0.0154,
+  "quadratic_kappa": 0.0063,
+  "accuracy": 0.0456,
+  "per_class": {
+    "A": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 463
+    },
+    "B": {
+      "precision": 0.1905,
+      "recall": 0.0122,
+      "f1": 0.023,
+      "support": 327
+    },
+    "C": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 625
+    },
+    "D": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 281
+    },
+    "E": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 155
+    },
+    "F": {
+      "precision": 0.0442,
+      "recall": 1.0,
+      "f1": 0.0846,
+      "support": 88
+    },
+    "G": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 77
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        0,
+        11,
+        0,
+        0,
+        0,
+        452,
+        0
+      ],
+      [
+        0,
+        4,
+        1,
+        0,
+        0,
+        321,
+        1
+      ],
+      [
+        0,
+        2,
+        0,
+        0,
+        0,
+        622,
+        1
+      ],
+      [
+        0,
+        3,
+        0,
+        0,
+        0,
+        278,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        155,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        88,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        76,
+        0
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.015439904453943654,
+      "lo": 0.0118,
+      "hi": 0.0197,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.00634884995553434,
+      "lo": 0.0008,
+      "hi": 0.0117,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-VLMv1-zeroshot",
+  "n": 2016,
+  "pred_distribution": {
+    "A": 0,
+    "B": 21,
+    "C": 1,
+    "D": 0,
+    "E": 0,
+    "F": 1992,
+    "G": 2
+  }
+}
