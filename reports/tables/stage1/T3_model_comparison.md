@@ -1,0 +1,5 @@
+| model | type_acc | type_macro_f1 | year_mae | period_acc | floors_mae |
+| --- | --- | --- | --- | --- | --- |
+| DINOv2 frozen | 0.9014 | 0.5197 | 9.4500 | 0.9009 | 0.3770 |
+| ResNet-50 ft | 0.9148 | 0.4919 | 11.8200 | 0.8915 | 0.4280 |
+| InternVL3 (ZS) | 0.4945 | 0.2458 | 30.6500 | 0.7688 | 0.7080 |
