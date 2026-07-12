@@ -27,12 +27,13 @@ from src.stage1.train import predict
 logger = logging.getLogger(__name__)
 
 
-def find_best_fold_checkpoint(ckpt_dir: Path, model_name: str, n_folds: int = 5) -> tuple[Path, float, int]:
+def find_best_fold_checkpoint(ckpt_dir: Path, model_name: str, n_folds: int = 5,
+                              run_tag: str = "pooled") -> tuple[Path, float, int]:
     best_ckpt: Path | None = None
     best_f1 = -1.0
     best_fold = -1
     for f in range(n_folds):
-        path = ckpt_dir / f"pooled_{model_name}_fold{f}.pt"
+        path = ckpt_dir / f"{run_tag}_{model_name}_fold{f}.pt"
         if not path.exists():
             logger.warning("missing checkpoint: %s", path)
             continue
@@ -57,6 +58,10 @@ def main():
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--n-bootstrap", type=int, default=1000)
     parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument("--holdout", type=Path, default=None,
+                        help="override holdout_test_pand_ids.parquet path (e.g. LOCO splits)")
+    parser.add_argument("--run-tag", default="pooled",
+                        help="checkpoint prefix to load; non-pooled tags also prefix the outputs")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -70,7 +75,8 @@ def main():
         best_fold = ckpt.get("fold", -1)
         best_f1 = ckpt.get("val_macro_f1", -1.0)
     else:
-        ckpt_path, best_f1, best_fold = find_best_fold_checkpoint(ckpt_dir, args.model)
+        ckpt_path, best_f1, best_fold = find_best_fold_checkpoint(ckpt_dir, args.model,
+                                                                  run_tag=args.run_tag)
         ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -78,11 +84,12 @@ def main():
     model.load_state_dict(ckpt["model_state"])
     model.eval()
 
+    holdout_path = args.holdout if args.holdout else repo / "data/processed/holdout_test_pand_ids.parquet"
     holdout_ds = Stage1ImageDataset(
         manifest_path=repo / "data/processed/svi_manifest.parquet",
         gt_path=repo / "data/processed/stage1_gt.parquet",
         split="holdout",
-        holdout_pand_ids_path=repo / "data/processed/holdout_test_pand_ids.parquet",
+        holdout_pand_ids_path=holdout_path,
         year_mean=ckpt["year_mean"], year_std=ckpt["year_std"],
         floors_mean=ckpt["floors_mean"], floors_std=ckpt["floors_std"],
     )
@@ -98,7 +105,8 @@ def main():
     )
     out_dir = (args.out.parent if args.out else repo / "reports" / "stage1" / args.model)
     out_dir.mkdir(parents=True, exist_ok=True)
-    preds_path = out_dir / "holdout_preds.parquet"
+    out_prefix = "" if args.run_tag == "pooled" else f"{args.run_tag}_"
+    preds_path = out_dir / f"{out_prefix}holdout_preds.parquet"
     preds.to_parquet(preds_path, index=False)
     logger.info("wrote %s (%d rows)", preds_path, len(preds))
 
@@ -111,7 +119,7 @@ def main():
         "dev_val_macro_f1": float(best_f1),
     }
 
-    out_path = args.out if args.out else out_dir / "holdout_metrics.json"
+    out_path = args.out if args.out else out_dir / f"{out_prefix}holdout_metrics.json"
     out_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     logger.info("wrote %s", out_path)
 

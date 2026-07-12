@@ -284,6 +284,12 @@ def main():
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--no-amp", action="store_true")
     parser.add_argument("--out-dir", default=None)
+    parser.add_argument("--dev-folds", default=None,
+                        help="override dev_fold_indices.parquet path (e.g. LOCO splits)")
+    parser.add_argument("--holdout", default=None,
+                        help="override holdout_test_pand_ids.parquet path")
+    parser.add_argument("--run-tag", default="pooled",
+                        help="checkpoint/report filename prefix (e.g. loco_amsterdam)")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -292,8 +298,10 @@ def main():
     paths = {
         "manifest": repo_root / "data" / "processed" / "svi_manifest.parquet",
         "gt": repo_root / "data" / "processed" / "stage1_gt.parquet",
-        "dev_folds": repo_root / "data" / "processed" / "dev_fold_indices.parquet",
-        "holdout": repo_root / "data" / "processed" / "holdout_test_pand_ids.parquet",
+        "dev_folds": Path(args.dev_folds) if args.dev_folds else
+            repo_root / "data" / "processed" / "dev_fold_indices.parquet",
+        "holdout": Path(args.holdout) if args.holdout else
+            repo_root / "data" / "processed" / "holdout_test_pand_ids.parquet",
     }
     for k, p in paths.items():
         assert p.exists(), f"missing input: {k} = {p}"
@@ -310,7 +318,7 @@ def main():
     all_summaries = []
     t0 = time.time()
     for fold in folds:
-        summary = train_one_fold(args, fold, paths)
+        summary = train_one_fold(args, fold, paths, run_tag_prefix=args.run_tag)
         all_summaries.append(summary)
 
     if len(folds) > 1:
