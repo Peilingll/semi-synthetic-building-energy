@@ -1,0 +1,7 @@
+sha256_prefix: bfec437e4d0ddf2c
+n_buildings:   8011
+holdout_city:  amsterdam
+random_state:  42
+n_splits:      5
+strata_keys:   city,Gebouwtype,Energieklasse,tabula_period (dev folds only)
+created_with:  src/stage1/loco_splits.py
