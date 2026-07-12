@@ -29,7 +29,29 @@ from src.stage1.models import build_model
 logger = logging.getLogger(__name__)
 
 
-def run_epoch(model, loader, optimizer, scaler, device, train: bool, class_weights: torch.Tensor) -> dict:
+def make_year_weight_fn(train_gt: pd.DataFrame):
+    """Inverse TABULA-period frequency weights for the year MSE (balanced-year
+    variant, #8): counters the regression-to-the-mean pull toward the dominant
+    period. Weights normalised to mean 1 over the training pool."""
+    from src.tabula_matcher import classify_period
+
+    periods = train_gt["bouwjaar"].astype(int).map(classify_period)
+    freq = periods.value_counts(normalize=True)
+    raw = {p: 1.0 / max(f, 1e-6) for p, f in freq.items()}
+    mean_w = float(np.mean([raw[p] for p in periods]))
+    weights = {p: v / mean_w for p, v in raw.items()}
+    logger.info("balanced-year period weights: %s",
+                {p: round(v, 2) for p, v in weights.items()})
+
+    def fn(bouwjaar: torch.Tensor) -> torch.Tensor:
+        vals = [weights.get(classify_period(int(round(b))), 1.0) for b in bouwjaar.tolist()]
+        return torch.tensor(vals, dtype=torch.float32)
+
+    return fn
+
+
+def run_epoch(model, loader, optimizer, scaler, device, train: bool, class_weights: torch.Tensor,
+              year_weight_fn=None) -> dict:
     model.train(train)
     total_loss = 0.0
     total_ce = 0.0
@@ -53,7 +75,11 @@ def run_epoch(model, loader, optimizer, scaler, device, train: bool, class_weigh
              torch.autocast(device_type="cuda", dtype=torch.float16, enabled=(scaler is not None)):
             out = model(images, mask)
             loss_ce = F.cross_entropy(out["logits_type"], t_type, weight=class_weights)
-            loss_year = F.mse_loss(out["pred_year_norm"], t_year)
+            if year_weight_fn is None:
+                loss_year = F.mse_loss(out["pred_year_norm"], t_year)
+            else:
+                w = year_weight_fn(batch["bouwjaar"]).to(device)
+                loss_year = ((out["pred_year_norm"] - t_year) ** 2 * w).sum() / w.sum()
             loss_floors = F.mse_loss(out["pred_floors_norm"], t_floors)
             loss = loss_ce + loss_year + loss_floors
 
@@ -177,6 +203,7 @@ def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled")
 
     class_weights = train_ds.class_weights().to(device)
     logger.info("class_weights (SFH/TH/MFH/AB): %s", class_weights.tolist())
+    year_weight_fn = make_year_weight_fn(train_ds.gt) if getattr(args, "balanced_year", False) else None
 
     best_f1 = -1.0
     best_epoch = -1
@@ -198,7 +225,8 @@ def train_one_fold(args, fold: int, paths: dict, run_tag_prefix: str = "pooled")
     t0 = time.time()
     for epoch in range(1, args.epochs + 1):
         epoch_t0 = time.time()
-        tr = run_epoch(model, train_loader, optimizer, scaler, device, True, class_weights)
+        tr = run_epoch(model, train_loader, optimizer, scaler, device, True, class_weights,
+                       year_weight_fn=year_weight_fn)
         va = run_epoch(model, val_loader, None, None, device, False, class_weights)
         scheduler.step()
         # release cached-but-unused blocks each epoch: the packed forward
@@ -290,6 +318,8 @@ def main():
                         help="override holdout_test_pand_ids.parquet path")
     parser.add_argument("--run-tag", default="pooled",
                         help="checkpoint/report filename prefix (e.g. loco_amsterdam)")
+    parser.add_argument("--balanced-year", action="store_true",
+                        help="weight the year MSE by inverse TABULA-period frequency (#8 variant)")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
