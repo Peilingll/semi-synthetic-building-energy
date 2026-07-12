@@ -31,31 +31,32 @@ logger = logging.getLogger(__name__)
 REPO = Path(__file__).resolve().parents[2]
 OUT = REPO / "reports" / "tables" / "stage1" / "T4_joint_cell.md"
 
+# (path, zero_shot) — zero-shot models have split-independent predictions, so
+# their pooled files may be reused for other run tags; trained models MUST have
+# a tagged prediction file or they are skipped (a pooled-trained model has seen
+# the LOCO test city — falling back would contaminate the evaluation).
 MODELS = {
-    "DINOv2 frozen": REPO / "reports/stage1/dinov2_frozen/holdout_preds.parquet",
-    "ResNet-50 ft": REPO / "reports/stage1/resnet50_ft/holdout_preds.parquet",
-    "InternVL3 (ZS)": REPO / "reports/stage1/vlm_internvl3/v3_holdout_per_pand_id.parquet",
+    "DINOv2 frozen": (REPO / "reports/stage1/dinov2_frozen/holdout_preds.parquet", False),
+    "ResNet-50 ft": (REPO / "reports/stage1/resnet50_ft/holdout_preds.parquet", False),
+    "InternVL3 (ZS)": (REPO / "reports/stage1/vlm_internvl3/v3_holdout_per_pand_id.parquet", True),
 }
 
 
 def resolve_models(run_tag: str) -> dict[str, Path]:
-    """Per-model prediction paths for a run tag.
-
-    Non-pooled tags look for '<tag>_' prefixed files; a model without a tagged
-    file falls back to its pooled predictions (valid for zero-shot paradigms
-    whose predictions do not depend on the training split — combine with
-    --restrict so the evaluation pool still matches).
-    """
+    """Per-model prediction paths for a run tag (see MODELS zero-shot note)."""
     if run_tag == "pooled":
-        return dict(MODELS)
+        return {name: path for name, (path, _) in MODELS.items()}
     resolved = {}
-    for name, path in MODELS.items():
+    for name, (path, zero_shot) in MODELS.items():
         tagged = path.with_name(f"{run_tag}_{path.name}")
         if tagged.exists():
             resolved[name] = tagged
-        else:
-            logger.warning("%s: no %s file, falling back to pooled %s", name, tagged.name, path.name)
+        elif zero_shot:
+            logger.warning("%s: zero-shot, reusing pooled %s", name, path.name)
             resolved[name] = path
+        else:
+            logger.warning("%s: no %s and model is trained — SKIPPED "
+                           "(pooled fallback would leak the held-out city)", name, tagged.name)
     return resolved
 
 

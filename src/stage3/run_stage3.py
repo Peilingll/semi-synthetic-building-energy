@@ -32,12 +32,14 @@ M3_PREDS = {
     "M3-ResNet50": "reports/stage1/resnet50_ft/holdout_preds.parquet",
     "M3-VLMv3": "reports/stage1/vlm_internvl3/v3_holdout_per_pand_id.parquet",
 }
+ZERO_SHOT = {"M3-VLMv3"}
 
 
 def resolve_m3_preds(run_tag: str, models: list[str]) -> dict[str, Path]:
-    """Per-model Stage 1 prediction paths for a run tag; non-pooled tags look
-    for '<tag>_' prefixed files and fall back to pooled (valid for zero-shot
-    paradigms — the hold-out label join restricts the pool)."""
+    """Per-model Stage 1 prediction paths for a run tag. Only zero-shot models
+    (split-independent predictions) may fall back to their pooled file; trained
+    models without a tagged file are skipped — a pooled-trained model has seen
+    the LOCO test city and would contaminate the evaluation."""
     out = {}
     for name in models:
         path = REPO_ROOT / M3_PREDS[name]
@@ -45,9 +47,11 @@ def resolve_m3_preds(run_tag: str, models: list[str]) -> dict[str, Path]:
             tagged = path.with_name(f"{run_tag}_{path.name}")
             if tagged.exists():
                 path = tagged
+            elif name in ZERO_SHOT:
+                logger.warning("%s: zero-shot, reusing pooled %s", name, path.name)
             else:
-                logger.warning("%s: no %s, falling back to pooled %s",
-                               name, tagged.name, path.name)
+                logger.warning("%s: no %s and model is trained — SKIPPED", name, tagged.name)
+                continue
         out[name] = path
     return out
 
