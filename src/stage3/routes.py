@@ -3,6 +3,7 @@ M1 (GT features) and each M3 instance (vision features). M0 = dev majority.
 """
 
 import logging
+from pathlib import Path
 
 import pandas as pd
 from lightgbm import LGBMClassifier
@@ -14,12 +15,13 @@ from src.stage3.features import to_X
 logger = logging.getLogger(__name__)
 
 
-def train_m1_model() -> tuple[LGBMClassifier, dict, str]:
+def train_m1_model(dev_path: Path | None = None) -> tuple[LGBMClassifier, dict, str]:
     """Train the shared LightGBM on the full dev set (GT S_full features).
 
+    dev_path overrides the pooled dev_fold_indices.parquet (e.g. LOCO splits).
     Returns (model, category dtypes, dev majority class).
     """
-    master = build_master_table()
+    master = build_master_table(dev_path=dev_path)
     X, cat = feature_matrix(master, "S_full")
     y = master["energy_class"]
     cat_dtypes = {c: X[c].cat.categories for c in CATEGORICAL if c in X.columns}

@@ -42,11 +42,11 @@ def _add_uvalues(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def load_holdout_labels() -> pd.DataFrame:
+def load_holdout_labels(holdout_path: str | Path | None = None) -> pd.DataFrame:
     """GT attributes + energy label for the hold-out buildings (from stage1_gt)."""
     gt = pd.read_parquet(PROCESSED / "stage1_gt.parquet")
     gt["pand_id"] = gt["pand_id"].astype(str)
-    ho = pd.read_parquet(PROCESSED / "holdout_test_pand_ids.parquet")
+    ho = pd.read_parquet(holdout_path or PROCESSED / "holdout_test_pand_ids.parquet")
     ho["pand_id"] = ho["pand_id"].astype(str)
     g = gt[gt["pand_id"].isin(set(ho["pand_id"]))].copy()
     g["energy_class"] = merge_energy_class(g["Energieklasse"])
@@ -54,9 +54,9 @@ def load_holdout_labels() -> pd.DataFrame:
     return g
 
 
-def build_m1_holdout() -> pd.DataFrame:
+def build_m1_holdout(holdout_path: str | Path | None = None) -> pd.DataFrame:
     """M1: GT type/year/floor → S_full features + true label."""
-    g = load_holdout_labels()
+    g = load_holdout_labels(holdout_path)
     df = pd.DataFrame({
         "pand_id": g["pand_id"].values,
         "building_type": g["building_type"].astype(str).values,
@@ -69,12 +69,13 @@ def build_m1_holdout() -> pd.DataFrame:
     return _add_uvalues(df)
 
 
-def build_m3_holdout(pred_path: str | Path) -> pd.DataFrame:
+def build_m3_holdout(pred_path: str | Path,
+                     holdout_path: str | Path | None = None) -> pd.DataFrame:
     """M3: vision-predicted type/year/floor → S_full features + true label."""
     pred = pd.read_parquet(pred_path)
     pred["pand_id"] = pred["pand_id"].astype(str)
-    labels = load_holdout_labels()[["pand_id", "energy_class",
-                                    "building_type", "bouwjaar"]].rename(
+    labels = load_holdout_labels(holdout_path)[["pand_id", "energy_class",
+                                                "building_type", "bouwjaar"]].rename(
         columns={"building_type": "true_type", "bouwjaar": "true_bouwjaar"})
 
     df = pred[["pand_id", "city", "pred_type", "pred_year", "pred_floors"]].merge(

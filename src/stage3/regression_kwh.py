@@ -12,6 +12,7 @@ hold-out common set as the classification Stage 3.
 Usage: uv run python -m src.stage3.regression_kwh
 """
 
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -27,7 +28,7 @@ from src.stage2.features import (
 )
 from src.stage2.metrics import evaluate
 from src.stage3.features import build_m1_holdout, build_m3_holdout
-from src.stage3.run_stage3 import M3_PREDS
+from src.stage3.run_stage3 import M3_PREDS, resolve_m3_preds
 
 logger = logging.getLogger(__name__)
 REPORTS = REPO_ROOT / "reports" / "stage3"
@@ -74,11 +75,22 @@ def _Xho(df, cat_dtypes):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-tag", default="pooled")
+    parser.add_argument("--dev-folds", type=Path, default=None)
+    parser.add_argument("--holdout", type=Path, default=None)
+    parser.add_argument("--models", default=",".join(M3_PREDS))
+    parser.add_argument("--out-suffix", default="")
+    args = parser.parse_args()
+    models = [m.strip() for m in args.models.split(",") if m.strip()]
+    tag = "" if args.run_tag == "pooled" else f"_{args.run_tag}"
+    tag += args.out_suffix
+
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     kwh = load_kwh()
 
     # --- train regressor on dev GT features -> pf_kwh ---
-    master = build_master_table()
+    master = build_master_table(dev_path=args.dev_folds)
     master["pf"] = master["pand_id"].astype(str).map(kwh)
     n0 = len(master)
     master = master[master["pf"].notna()].reset_index(drop=True)
@@ -90,9 +102,9 @@ def main():
     cat_dtypes = _cats(master)
 
     # --- common hold-out set (same as classification Stage 3) + true labels/kWh ---
-    m1 = build_m1_holdout()
+    m1 = build_m1_holdout(args.holdout)
     m1["pf"] = m1["pand_id"].astype(str).map(kwh)
-    common = set(pd.read_parquet(REPORTS / "M1_holdout_preds.parquet")["pand_id"].astype(str))
+    common = set(pd.read_parquet(REPORTS / f"M1{tag}_holdout_preds.parquet")["pand_id"].astype(str))
 
     def reg_eval(df, name):
         d = df[df["pand_id"].astype(str).isin(common) & df["pf"].notna()].copy()
@@ -104,14 +116,14 @@ def main():
         rep = evaluate(pd.DataFrame({"true": true_lab, "pred": pred_lab}), with_ci=True)
         rep.update({"route": name, "n": int(len(d)), "kwh_mae": round(float(mae), 2),
                     "kwh_r2": round(float(r2), 4)})
-        (REPORTS / f"{name}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+        (REPORTS / f"{name}{tag}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
         logger.info("%s: MAE=%.1f R2=%.3f macroF1=%.4f kappa=%.4f acc=%.4f",
                     name, mae, r2, rep["macro_f1"], rep["quadratic_kappa"], rep["accuracy"])
         return rep
 
     results = {"M1-reg": reg_eval(m1, "M1-reg")}
-    for route, path in M3_PREDS.items():
-        d = build_m3_holdout(path)
+    for route, path in resolve_m3_preds(args.run_tag, models).items():
+        d = build_m3_holdout(path, args.holdout)
         d["energy_class"] = d["pand_id"].astype(str).map(
             dict(zip(m1["pand_id"].astype(str), m1["energy_class"])))
         d["pf"] = d["pand_id"].astype(str).map(kwh)
@@ -119,15 +131,15 @@ def main():
 
     # --- table: regression vs classification ---
     def load_cls(n):
-        return json.load(open(REPORTS / f"{n}_metrics.json"))
-    cls = {n: load_cls(n) for n in ["M1", "M3-DINOv2", "M3-ResNet50", "M3-VLMv3"]}
+        return json.load(open(REPORTS / f"{n}{tag}_metrics.json"))
+    cls = {n: load_cls(n) for n in ["M1"] + models}
 
-    L = ["# Table 3-reg — regression-to-kWh vs direct classification (hold-out)",
+    split_name = "hold-out" if args.run_tag == "pooled" else args.run_tag
+    L = [f"# Table 3-reg — regression-to-kWh vs direct classification ({split_name})",
          "",
          "| Route | kWh MAE | kWh R² | macro-F1 (reg→bin) | κ (reg→bin) | macro-F1 (cls) | κ (cls) |",
          "|---|---:|---:|---:|---:|---:|---:|"]
-    pairs = [("M1-reg", "M1"), ("M3-DINOv2-reg", "M3-DINOv2"),
-             ("M3-ResNet50-reg", "M3-ResNet50"), ("M3-VLMv3-reg", "M3-VLMv3")]
+    pairs = [("M1-reg", "M1")] + [(f"{m}-reg", m) for m in models]
     for rn, cn in pairs:
         r, c = results[rn], cls[cn]
         L.append(f"| {rn} | {r['kwh_mae']:.1f} | {r['kwh_r2']:.3f} | {r['macro_f1']:.4f} | "
@@ -135,7 +147,7 @@ def main():
     L += ["", "Boundaries: official NTA8800 residential (A≤160 B≤190 C≤250 D≤290 E≤335 F≤380 G>380 kWh/m²·yr).",
           "regression objective = L1 (MAE) on PrimaireFossieleEnergie."]
     TABLES.mkdir(parents=True, exist_ok=True)
-    (TABLES / "T3reg_regression_vs_classification.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+    (TABLES / f"T3reg_regression_vs_classification{tag}.md").write_text("\n".join(L) + "\n", encoding="utf-8")
     for rn, cn in pairs:
         r, c = results[rn], cls[cn]
         print(f"{rn:18s} MAE={r['kwh_mae']:6.1f} R2={r['kwh_r2']:+.3f} "
