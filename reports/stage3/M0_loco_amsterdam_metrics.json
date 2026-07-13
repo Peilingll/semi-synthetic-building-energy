@@ -1,0 +1,141 @@
+{
+  "n_eval": 8011,
+  "macro_f1": 0.0503,
+  "quadratic_kappa": 0.0,
+  "accuracy": 0.2138,
+  "per_class": {
+    "A": {
+      "precision": 0.2138,
+      "recall": 1.0,
+      "f1": 0.3523,
+      "support": 1713
+    },
+    "B": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 1308
+    },
+    "C": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 2546
+    },
+    "D": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 1136
+    },
+    "E": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 613
+    },
+    "F": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 359
+    },
+    "G": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 336
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        1713,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1308,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2546,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1136,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        613,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        359,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        336,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.05030841228885626,
+      "lo": 0.0486,
+      "hi": 0.0521,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M0"
+}

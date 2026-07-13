@@ -1,0 +1,138 @@
+{
+  "n_eval": 8011,
+  "n_dropped_missing_preds": 0,
+  "type_acc": 0.8325,
+  "type_macro_f1": 0.3206,
+  "type_per_class": {
+    "SFH": {
+      "precision": 0.0377,
+      "recall": 0.1176,
+      "f1": 0.0571,
+      "support": 17
+    },
+    "TH": {
+      "precision": 0.2022,
+      "recall": 0.7437,
+      "f1": 0.318,
+      "support": 394
+    },
+    "MFH": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 41
+    },
+    "AB": {
+      "precision": 0.9818,
+      "recall": 0.8432,
+      "f1": 0.9073,
+      "support": 7559
+    }
+  },
+  "type_confusion_matrix": {
+    "labels": [
+      "SFH",
+      "TH",
+      "MFH",
+      "AB"
+    ],
+    "matrix": [
+      [
+        2,
+        14,
+        0,
+        1
+      ],
+      [
+        20,
+        293,
+        0,
+        81
+      ],
+      [
+        0,
+        5,
+        0,
+        36
+      ],
+      [
+        31,
+        1137,
+        17,
+        6374
+      ]
+    ]
+  },
+  "year_mae": 19.17,
+  "year_rmse": 26.54,
+  "year_mdae": 14.08,
+  "year_within_10y_pct": 37.74,
+  "year_within_20y_pct": 64.61,
+  "floors_mae": 0.813,
+  "floors_exact_pct": 34.04,
+  "floors_within_1_pct": 88.03,
+  "period_acc": 0.8835,
+  "period_n_eval": 8011,
+  "bootstrap_95ci": {
+    "type_acc": {
+      "mean": 0.8324718512045938,
+      "lo": 0.8241,
+      "hi": 0.8406,
+      "n_boot_valid": 1000
+    },
+    "type_macro_f1": {
+      "mean": 0.32038615084556105,
+      "lo": 0.3025,
+      "hi": 0.3438,
+      "n_boot_valid": 1000
+    },
+    "year_mae": {
+      "mean": 19.168844729442455,
+      "lo": 18.7695,
+      "hi": 19.5667,
+      "n_boot_valid": 1000
+    },
+    "floors_mae": {
+      "mean": 0.8132148483058752,
+      "lo": 0.801,
+      "hi": 0.8261,
+      "n_boot_valid": 1000
+    }
+  },
+  "per_city": {
+    "amsterdam": {
+      "n": 8011,
+      "type_acc": 0.8325,
+      "type_macro_f1": 0.3206,
+      "year_mae": 19.17,
+      "floors_mae": 0.813
+    }
+  },
+  "per_class_year_floors": {
+    "SFH": {
+      "n": 17,
+      "year_mae": 26.8,
+      "floors_mae": 1.297
+    },
+    "TH": {
+      "n": 394,
+      "year_mae": 34.99,
+      "floors_mae": 0.764
+    },
+    "MFH": {
+      "n": 41,
+      "year_mae": 32.2,
+      "floors_mae": 0.892
+    },
+    "AB": {
+      "n": 7559,
+      "year_mae": 18.25,
+      "floors_mae": 0.814
+    }
+  },
+  "source_checkpoint": {
+    "path": "D:\\ITBE\\Thesis\\semi-synthetic-building-energy\\models\\stage1\\loco_amsterdam_resnet50_ft_fold0.pt",
+    "fold": 0,
+    "dev_val_macro_f1": 0.5419969168569392
+  }
+}
