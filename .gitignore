@@ -40,3 +40,6 @@ src/*.egg-info/
 
 # Derived EP-Online slice (regenerate with src.audit.ep_raw; source is data/raw/)
 data/interim/
+
+# MVP-era Gemini VLM test set (92 MB of Delft PNGs); the Gemini path is archived
+data/processed/mvp_vlm_testing_data_gmini/
