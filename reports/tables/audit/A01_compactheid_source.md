@@ -83,11 +83,11 @@ Same protocol as the 2026.06.26 ablation (dev pool, 5-fold OOF LightGBM, fixed H
 
 | added feature | provenance | macro-F1 | quad. kappa | acc | d macro-F1 |
 |---|---|---:|---:|---:|---:|
-| — (S_full base) | — | 0.1804 | 0.1865 | 0.3488 | — |
-| `ep_compactheid` | **EP-Online certificate** (leak) | 0.2629 | 0.3571 | 0.3677 | +0.0825 |
-| `shape_factor` | 3DBAG envelope/volume (clean) | 0.2078 | 0.2151 | 0.3325 | +0.0274 |
-| `ep_floor_area` | **EP-Online certificate** (leak) | 0.2210 | 0.2420 | 0.3444 | +0.0406 |
-| `floor_area_estimated` | 3DBAG grond x floors (clean) | 0.2084 | 0.2259 | 0.3359 | +0.0280 |
-| `volume` | 3DBAG lod22 (clean) | 0.2037 | 0.2136 | 0.3286 | +0.0233 |
-| `shared_ratio` | 3DBAG party-wall frac (clean) | 0.2095 | 0.1954 | 0.3339 | +0.0291 |
-| all four clean 3DBAG features | 3DBAG only | 0.2169 | 0.2400 | 0.3339 | +0.0365 |
+| — (S_full base) | — | 0.1808 | 0.1915 | 0.3487 | — |
+| `ep_compactheid` | **EP-Online certificate** (leak) | 0.2640 | 0.3579 | 0.3680 | +0.0832 |
+| `shape_factor` | 3DBAG envelope/volume (clean) | 0.2058 | 0.2094 | 0.3335 | +0.0250 |
+| `ep_floor_area` | **EP-Online certificate** (leak) | 0.2212 | 0.2445 | 0.3436 | +0.0404 |
+| `floor_area_estimated` | 3DBAG grond x floors (clean) | 0.2060 | 0.2195 | 0.3342 | +0.0252 |
+| `volume` | 3DBAG lod22 (clean) | 0.2031 | 0.2199 | 0.3247 | +0.0223 |
+| `shared_ratio` | 3DBAG party-wall frac (clean) | 0.2084 | 0.1999 | 0.3327 | +0.0276 |
+| all four clean 3DBAG features | 3DBAG only | 0.2193 | 0.2464 | 0.3355 | +0.0385 |
