@@ -43,3 +43,6 @@ data/interim/
 
 # MVP-era Gemini VLM test set (92 MB of Delft PNGs); the Gemini path is archived
 data/processed/mvp_vlm_testing_data_gmini/
+
+# OpenFACADES Phase 2 VLM inference outputs; that branch is not part of the thesis
+data/processed/phase_2_openfacade_vlm_pipeline/
