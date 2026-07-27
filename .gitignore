@@ -37,3 +37,6 @@ logs/
 # Editable install metadata (created by pip install -e)
 src/*.egg-info/
 
+
+# Derived EP-Online slice (regenerate with src.audit.ep_raw; source is data/raw/)
+data/interim/
