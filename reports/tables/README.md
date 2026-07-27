@@ -38,6 +38,7 @@ conda `stage1-gpu` for anything that trains a vision model.
 | `stage3/T3reg_regression_vs_classification` | `src/stage3/regression_kwh.py` | kWh regression vs direct classification |
 | `stage3/T3_full_comparison` | `notebooks/figs_stage3_routes.py` | all routes, one table |
 | `stage3/T6_degradation_pooled_vs_loco` | **no script yet** | pooled vs LOCO-Amsterdam degradation |
+| `stage3/T7_htr_instrument` | `src/stage3/htr_instrument.py` | the only downstream readout that resolves Stage-1 quality: 3.2x separation vs 1.09x on the EPC label |
 
 ## Audit (0.x) — does the data mean what the experiments assume?
 
