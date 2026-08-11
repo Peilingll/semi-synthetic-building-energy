@@ -36,9 +36,9 @@ from lightgbm import LGBMClassifier
 from shapely import wkb
 from sklearn.model_selection import StratifiedKFold
 
-from src.stage2.features import REPO_ROOT, merge_energy_class
+from src.stage2.features import REPO_ROOT, merge_energy_class, target_col, to_binary
 from src.stage2.metrics import evaluate
-from src.stage2.train_eval import FIXED_PARAMS, N_FOLDS
+from src.stage2.train_eval import N_FOLDS, params_for, task_suffix
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +61,18 @@ BASE_FEATURES = [
     "compactheid", "floor_area", "shared_ratio",
     "b3_volume_lod22", "b3_h_max", "aantal_verblijfsobjecten",
 ]
+
+# --clean: audit A01 showed `compactheid` and `floor_area` are EP-Online
+# CERTIFICATE columns, per dwelling unit, and NTA 8800 calculation inputs — so
+# they correlate with the label by construction and do not exist for any
+# building without a certificate, which is the whole target population. Their
+# genuine 3DBAG counterparts are `shape_factor` (envelope/volume) and
+# `floor_area_estimated` (footprint x floors). The other 12 features were always
+# clean. Use this variant for any number quoted as a registry-only reference.
+LEAKED = ["compactheid", "floor_area"]
+CLEAN_SUBSTITUTES = ["shape_factor", "floor_area_estimated"]
+CLEAN_FEATURES = [c for c in BASE_FEATURES if c not in LEAKED] + CLEAN_SUBSTITUTES
+
 TIER_C = ["buurt_woz", "buurt_koop_pct"]
 CAT_FEATURES = ["building_type", "city"]
 
@@ -154,6 +166,27 @@ def load_city_geometry() -> gpd.GeoDataFrame:
     return gdf
 
 
+def load_clean_geometry() -> pd.DataFrame:
+    """3DBAG shape_factor / floor_area_estimated, the honest counterparts of the
+    two leaked EP certificate columns. Plausibility bounds and their rationale
+    are the same as `src/audit/a01_compactheid_source.py`: the LOD2 output holds
+    a volume of 4.3e21 m3 and non-positive envelope areas."""
+    frames = []
+    for city in CITIES:
+        f = pd.read_parquet(PROCESSED / city / "residential_with_3d_features.parquet",
+                            columns=["pand_id", "shape_factor", "floor_area_estimated"])
+        frames.append(f)
+    g = pd.concat(frames, ignore_index=True)
+    g["pand_id"] = g["pand_id"].astype(str).str.zfill(16)
+    g = g.drop_duplicates("pand_id")
+    g.loc[~g["shape_factor"].between(0.05, 5), "shape_factor"] = np.nan
+    g.loc[~g["floor_area_estimated"].between(10, 1e5), "floor_area_estimated"] = np.nan
+    logger.info("clean geometry: %d pands | shape_factor %.1f%% | floor_area_est %.1f%%",
+                len(g), 100 * g["shape_factor"].notna().mean(),
+                100 * g["floor_area_estimated"].notna().mean())
+    return g
+
+
 def _num(x):
     """Parse a Dutch decimal-comma number ('2,53') to float; NaN on failure."""
     x = (x or "").strip().replace(",", ".")
@@ -210,6 +243,7 @@ def build_master(skip_fetch: bool) -> pd.DataFrame:
         bboxes[city] = (b[0] - 500, b[1] - 500, b[2] + 500, b[3] + 500)
     gt = gt.merge(geo.drop(columns=["geometry", "geo_city"]), on="pand_id", how="left")
     gt = gt.merge(load_ep_features(), on="pand_id", how="left")
+    gt = gt.merge(load_clean_geometry(), on="pand_id", how="left")
 
     buurten = load_buurten(skip_fetch, bboxes)
     pts = gpd.GeoDataFrame(gt[["pand_id"]], geometry=gt["centroid"], crs="EPSG:28992")
@@ -223,6 +257,7 @@ def build_master(skip_fetch: bool) -> pd.DataFrame:
 
     gt["energy_class"] = merge_energy_class(gt["Energieklasse"])
     gt = gt.dropna(subset=["energy_class", "u_wall"]).reset_index(drop=True)
+    gt["energy_binary"] = to_binary(gt["energy_class"])
     logger.info("master: %d rows | buurt match %.1f%% | woz coverage %.1f%%",
                 len(gt), 100 * gt["buurtcode"].notna().mean(),
                 100 * gt["buurt_woz"].notna().mean())
@@ -233,58 +268,84 @@ def build_master(skip_fetch: bool) -> pd.DataFrame:
 # OOF evaluation
 # ---------------------------------------------------------------------------
 
-def run_oof(master: pd.DataFrame, features: list[str], run: str) -> dict:
+def run_oof(master: pd.DataFrame, features: list[str], run: str,
+            task: str = "7class") -> dict:
     X = master[features].copy()
     for c in CAT_FEATURES:
         X[c] = X[c].astype("category")
-    y = master["energy_class"]
+    y = master[target_col(task)]
 
     skf = StratifiedKFold(n_splits=N_FOLDS, shuffle=True, random_state=42)
     oof_pred = np.empty(len(master), dtype=object)
     for f, (tr, va) in enumerate(skf.split(X, y)):
-        clf = LGBMClassifier(**FIXED_PARAMS)
+        clf = LGBMClassifier(**params_for(task))
         clf.fit(X.iloc[tr], y.iloc[tr])
         oof_pred[va] = clf.predict(X.iloc[va])
         logger.info("[%s] fold %d done (train=%d val=%d)", run, f, len(tr), len(va))
 
     oof = pd.DataFrame({"pand_id": master["pand_id"], "true": y, "pred": oof_pred})
-    report = evaluate(oof, with_ci=False)
+    report = evaluate(oof, with_ci=False, task=task)
     report["run"] = run
     report["n_features"] = len(features)
     return report
 
 
-def main(skip_fetch: bool) -> None:
+def main(skip_fetch: bool, clean: bool = False, task: str = "7class") -> None:
     master = build_master(skip_fetch)
 
+    base = CLEAN_FEATURES if clean else BASE_FEATURES
     runs = {
-        "E6_base": BASE_FEATURES,
-        "+woz": BASE_FEATURES + ["buurt_woz"],
-        "+koop": BASE_FEATURES + ["buurt_koop_pct"],
-        "M1_plus": BASE_FEATURES + TIER_C,
+        "E6_base": base,
+        "+woz": base + ["buurt_woz"],
+        "+koop": base + ["buurt_koop_pct"],
+        "M1_plus": base + TIER_C,
     }
-    reports = {name: run_oof(master, feats, name) for name, feats in runs.items()}
+    reports = {name: run_oof(master, feats, name, task)
+               for name, feats in runs.items()}
 
+    sfx = ("_clean" if clean else "") + task_suffix(task)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    with open(REPORTS_DIR / "m1_plus_fullstock.json", "w") as f:
+    with open(REPORTS_DIR / f"m1_plus_fullstock{sfx}.json", "w") as f:
         json.dump(reports, f, indent=2)
 
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    task_name = "A-G 7-class" if task == "7class" else "binary A-C | D-G"
     lines = [
-        "# Table 2e — M1+ upper-envelope arm on the full-stock pool",
+        f"# Table 2e — M1+ upper-envelope arm on the full-stock pool "
+        f"({'clean 3DBAG geometry' if clean else 'as originally run'}, {task_name})",
         "",
         f"n = {len(master):,} buildings (4 cities, registry pool, no image requirement).",
         "Protocol identical to E6 (fixed-HP LightGBM, 5-fold OOF, class_weight=None).",
         "Tier C = CBS buurt 2023: avg WOZ value + owner-occupied share (PDOK wijkenbuurten).",
-        "E6 reference (log 2026.06.27): macro-F1 0.349 / kappa 0.560 / acc 0.510.",
         "",
-        "| run | features | macro-F1 | quadratic kappa | accuracy |",
-        "|---|---:|---:|---:|---:|",
     ]
+    if clean:
+        lines += [
+            "**Clean variant.** The two EP-Online certificate columns `compactheid` and "
+            "`floor_area` (audit A01: per dwelling unit, NTA 8800 calculation inputs, "
+            "absent for any building without a certificate) are replaced by their 3DBAG "
+            "counterparts `shape_factor` and `floor_area_estimated`. **This is the "
+            "variant to quote as a registry-only reference**; the original run below is "
+            "an 'if you already hold the certificate' figure and is not reachable for "
+            "the population the method targets.",
+            "",
+            "Original (leaked) run for comparison: macro-F1 0.3513 / kappa 0.5636 / "
+            "acc 0.5101 at 14 features (7-class).",
+            "",
+        ]
+    else:
+        lines += ["E6 reference (log 2026.06.27): macro-F1 0.349 / kappa 0.560 / acc 0.510.",
+                  "",
+                  "**Warning**: `compactheid` and `floor_area` here are EP-Online "
+                  "certificate columns, not geometry — see audit A01 and the `_clean` "
+                  "variant of this table.",
+                  ""]
+    lines += ["| run | features | macro-F1 | quadratic kappa | accuracy |",
+              "|---|---:|---:|---:|---:|"]
     for name, rep in reports.items():
         lines.append(f"| {name} | {rep['n_features']} | {rep['macro_f1']:.4f} "
                      f"| {rep['quadratic_kappa']:.4f} | {rep['accuracy']:.4f} |")
-    out = TABLES_DIR / "T2e_m1plus_fullstock.md"
+    out = TABLES_DIR / f"T2e_m1plus_fullstock{sfx}.md"
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     logger.info("wrote %s", out)
     for name, rep in reports.items():
@@ -297,5 +358,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skip-fetch", action="store_true",
                         help="reuse cached CBS buurten parquet")
+    parser.add_argument("--clean", action="store_true",
+                        help="swap the two leaked EP columns for their 3DBAG "
+                             "counterparts (audit A01); use for any registry-only figure")
+    parser.add_argument("--task", default="7class", choices=["7class", "binary"])
     args = parser.parse_args()
-    main(args.skip_fetch)
+    main(args.skip_fetch, args.clean, args.task)
