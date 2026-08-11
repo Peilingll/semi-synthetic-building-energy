@@ -34,11 +34,29 @@ ENERGY_LABELS = ["A", "B", "C", "D", "E", "F", "G"]
 ENERGY_TO_IDX = {lab: i for i, lab in enumerate(ENERGY_LABELS)}
 IDX_TO_ENERGY = {i: lab for lab, i in ENERGY_TO_IDX.items()}
 
+# Binary task (2026-08-10): Sun 2026 cut A-C | D-G. Kept in sync with
+# src.stage2.features.BINARY_LABELS — mirrored here rather than imported so the
+# GPU training path stays independent of the LightGBM stack.
+BINARY_ENERGY_LABELS = ["A-C", "D-G"]
+LABELS_BY_TASK = {"7class": ENERGY_LABELS, "binary": BINARY_ENERGY_LABELS}
 
-def energy_to_idx(energieklasse) -> int:
+
+def n_energy_classes(task: str = "7class") -> int:
+    return len(LABELS_BY_TASK[task])
+
+
+def idx_to_energy(task: str = "7class") -> dict[int, str]:
+    return {i: lab for i, lab in enumerate(LABELS_BY_TASK[task])}
+
+
+def energy_to_idx(energieklasse, task: str = "7class") -> int:
     s = str(energieklasse).strip()
     if s.startswith("A"):
         s = "A"
+    if task == "binary":
+        if s not in ENERGY_TO_IDX:
+            return -1
+        return 0 if s in ("A", "B", "C") else 1
     return ENERGY_TO_IDX.get(s, -1)
 
 
@@ -75,10 +93,12 @@ class Stage1ImageDataset(Dataset):
         floors_mean: float | None = None,
         floors_std: float | None = None,
         energy_target: bool = False,
+        energy_task: str = "7class",
     ):
         self.split = split
         self.transform = build_transforms(split)
         self.energy_target = energy_target
+        self.energy_task = energy_task
 
         manifest = pd.read_parquet(manifest_path)
         gt = pd.read_parquet(gt_path)
@@ -177,7 +197,8 @@ class Stage1ImageDataset(Dataset):
             "n_images": n,
         }
         if self.energy_target:
-            out["target_energy"] = torch.tensor(energy_to_idx(row["Energieklasse"]), dtype=torch.long)
+            out["target_energy"] = torch.tensor(
+                energy_to_idx(row["Energieklasse"], self.energy_task), dtype=torch.long)
         return out
 
 

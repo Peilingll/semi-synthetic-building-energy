@@ -326,15 +326,16 @@ class ResNet50Energy(nn.Module):
         ]
 
 
-def build_model(name: str) -> nn.Module:
+def build_model(name: str, num_energy_classes: int = 7) -> nn.Module:
+    """num_energy_classes only affects the M2 energy models (7-class or binary)."""
     if name == "dinov2_frozen":
         return DINOv2FrozenMLP()
     if name == "resnet50_ft":
         return ResNet50FT()
     if name == "dinov2_energy":
-        return DINOv2FrozenEnergy()
+        return DINOv2FrozenEnergy(num_energy_classes=num_energy_classes)
     if name == "resnet50_energy":
-        return ResNet50Energy()
+        return ResNet50Energy(num_energy_classes=num_energy_classes)
     if name == "swin_t_ft":
         raise NotImplementedError("swin_t_ft reserved for a later phase")
     raise ValueError(f"unknown model name: {name}")

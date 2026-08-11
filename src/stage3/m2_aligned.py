@@ -25,11 +25,11 @@ from sklearn.metrics import f1_score
 from torch.utils.data import DataLoader
 
 from src.stage1.dataset import (
-    ENERGY_LABELS,
-    IDX_TO_ENERGY,
     Stage1ImageDataset,
     collate_fn,
     energy_to_idx,
+    idx_to_energy,
+    n_energy_classes,
 )
 from src.stage1.models import build_model
 from src.stage2.metrics import evaluate
@@ -40,19 +40,23 @@ REPO = Path(__file__).resolve().parents[2]
 PROC = REPO / "data" / "processed"
 REPORTS = REPO / "reports" / "stage3"
 CKPT_DIR = REPO / "models" / "stage3"
-N_ENERGY = 7
 MODEL = "dinov2_energy"
 ROUTE_TAG = {"dinov2_energy": "M2-DINOv2", "resnet50_energy": "M2-ResNet50"}
 
 
+def task_suffix(task: str) -> str:
+    return "" if task == "7class" else f"_{task}"
+
+
 def energy_class_weights(ds: Stage1ImageDataset) -> torch.Tensor:
-    counts = np.zeros(N_ENERGY, dtype=np.float64)
+    n_cls = n_energy_classes(ds.energy_task)
+    counts = np.zeros(n_cls, dtype=np.float64)
     for ek in ds.gt["Energieklasse"]:
-        i = energy_to_idx(ek)
+        i = energy_to_idx(ek, ds.energy_task)
         if i >= 0:
             counts[i] += 1
     w = 1.0 / np.clip(counts, 1, None)
-    w = w / w.sum() * N_ENERGY
+    w = w / w.sum() * n_cls
     return torch.tensor(w, dtype=torch.float32)
 
 
@@ -80,25 +84,31 @@ def run_epoch(model, loader, optimizer, scaler, device, train, class_weights) ->
         preds.append(out["logits_energy"].argmax(-1).detach().cpu().numpy())
         targets.append(t.detach().cpu().numpy())
     p, y = np.concatenate(preds), np.concatenate(targets)
+    n_cls = class_weights.numel()
     return {
         "loss": total_loss / n,
-        "macro_f1": float(f1_score(y, p, labels=list(range(N_ENERGY)), average="macro", zero_division=0)),
+        "macro_f1": float(f1_score(y, p, labels=list(range(n_cls)), average="macro", zero_division=0)),
         "acc": float((p == y).mean()),
     }
 
 
 @torch.no_grad()
-def predict_energy(model, loader, device) -> pd.DataFrame:
+def predict_energy(model, loader, device, task: str = "7class") -> pd.DataFrame:
     model.eval()
+    i2e = idx_to_energy(task)
     rows = []
     for batch in loader:
         out = model(batch["images"].to(device), batch["valid_mask"].to(device))
-        pred = out["logits_energy"].argmax(-1).cpu().numpy()
+        logits = out["logits_energy"]
+        pred = logits.argmax(-1).cpu().numpy()
+        # P(positive class) for the binary ROC/PR curves; unused for 7-class.
+        proba = torch.softmax(logits.float(), dim=-1)[:, -1].cpu().numpy()
         for i, pid in enumerate(batch["pand_id"]):
             rows.append({
                 "pand_id": pid, "city": batch["city"][i],
-                "pred": IDX_TO_ENERGY[int(pred[i])],
-                "true": IDX_TO_ENERGY[int(batch["target_energy"][i])],
+                "pred": i2e[int(pred[i])],
+                "true": i2e[int(batch["target_energy"][i])],
+                "proba": float(proba[i]),
             })
     return pd.DataFrame(rows)
 
@@ -108,7 +118,7 @@ def loaders(split, fold, args, **stats):
         manifest_path=PROC / "svi_manifest.parquet", gt_path=PROC / "stage1_gt.parquet",
         split=split, dev_fold_indices_path=PROC / "dev_fold_indices.parquet",
         holdout_pand_ids_path=PROC / "holdout_test_pand_ids.parquet",
-        fold=fold, energy_target=True, **stats,
+        fold=fold, energy_target=True, energy_task=args.task, **stats,
     )
     dl = DataLoader(ds, batch_size=args.batch_size, shuffle=(split == "train"),
                     collate_fn=collate_fn, num_workers=args.num_workers, pin_memory=True)
@@ -120,7 +130,7 @@ def train_one_fold(args, fold, device) -> dict:
     train_ds, train_dl = loaders("train", fold, args)
     _, val_dl = loaders("val", fold, args)
 
-    model = build_model(args.model).to(device)
+    model = build_model(args.model, n_energy_classes(args.task)).to(device)
     if args.head_lr is not None and hasattr(model, "param_groups"):
         optimizer = torch.optim.AdamW(model.param_groups(args.lr, args.head_lr, args.weight_decay))
         logger.info("discriminative lr: backbone=%g head=%g", args.lr, args.head_lr)
@@ -131,7 +141,7 @@ def train_one_fold(args, fold, device) -> dict:
     cw = energy_class_weights(train_ds).to(device)
     logger.info("fold %d energy class_weights: %s", fold, [round(x, 2) for x in cw.tolist()])
 
-    ckpt_path = CKPT_DIR / f"pooled_{args.model}_fold{fold}.pt"
+    ckpt_path = CKPT_DIR / f"pooled_{args.model}{task_suffix(args.task)}_fold{fold}.pt"
     best_f1, best_epoch, since = -1.0, -1, 0
     t0 = time.time()
     for epoch in range(1, args.epochs + 1):
@@ -158,34 +168,51 @@ def train_one_fold(args, fold, device) -> dict:
 def evaluate_holdout(args, device):
     tag = ROUTE_TAG[args.model]          # e.g. "M2-ResNet50"
     m3_route = tag.replace("M2-", "M3-")  # corresponding decomposed route
-    # best fold by val energy macro-F1 (same protocol as eval_holdout.py)
-    best = max(range(5), key=lambda f: torch.load(
-        CKPT_DIR / f"pooled_{args.model}_fold{f}.pt", map_location="cpu", weights_only=False)["val_macro_f1"])
-    ckpt = torch.load(CKPT_DIR / f"pooled_{args.model}_fold{best}.pt", map_location=device, weights_only=False)
+    sfx = task_suffix(args.task)
+
+    def ckpt_path(f):
+        return CKPT_DIR / f"pooled_{args.model}{sfx}_fold{f}.pt"
+
+    # best fold by val energy macro-F1 (same protocol as eval_holdout.py).
+    # --eval-folds narrows the candidate set when a run was interrupted; the
+    # result is then a deviation from the 5-fold protocol and is written under a
+    # _provisional name so it cannot be mistaken for the real one.
+    folds = ([int(f) for f in args.eval_folds.split(",")] if args.eval_folds
+             else list(range(5)))
+    out_sfx = sfx  # sfx keeps naming the INPUTS (checkpoints, M1 preds)
+    if sorted(folds) != list(range(5)):
+        out_sfx += "_provisional"
+        logger.warning("evaluating best-of-%d folds %s, NOT the 5-fold protocol",
+                       len(folds), folds)
+    best = max(folds, key=lambda f: torch.load(
+        ckpt_path(f), map_location="cpu", weights_only=False)["val_macro_f1"])
+    ckpt = torch.load(ckpt_path(best), map_location=device, weights_only=False)
     logger.info("holdout: best fold %d val_f1=%.3f", best, ckpt["val_macro_f1"])
-    model = build_model(args.model).to(device)
+    model = build_model(args.model, n_energy_classes(args.task)).to(device)
     model.load_state_dict(ckpt["model_state"])
 
     _, ho_dl = loaders("holdout", None, args)
-    preds = predict_energy(model, ho_dl, device)
+    preds = predict_energy(model, ho_dl, device, args.task)
 
     # restrict to the same common set as Stage 3 M1/M3
-    m1 = pd.read_parquet(REPORTS / "M1_holdout_preds.parquet")
+    m1 = pd.read_parquet(REPORTS / f"M1{sfx}_holdout_preds.parquet")
     common = set(m1["pand_id"].astype(str))
     preds["pand_id"] = preds["pand_id"].astype(str)
     preds = preds[preds["pand_id"].isin(common)].reset_index(drop=True)
 
-    rep = evaluate(preds[["true", "pred"]], with_ci=True)
+    proba = preds["proba"] if args.task == "binary" else None
+    rep = evaluate(preds[["true", "pred"]], with_ci=True, task=args.task, proba=proba)
     rep["route"] = f"{tag}-aligned"
     rep["source_fold"] = int(best)
     rep["dev_val_macro_f1"] = float(ckpt["val_macro_f1"])
     rep["note"] = "full fine-tune end-to-end (Stage 1 ResNet recipe)" if args.model == "resnet50_energy" else "aligned"
+    rep["eval_folds"] = folds
     REPORTS.mkdir(parents=True, exist_ok=True)
-    preds.to_parquet(REPORTS / f"{tag}_holdout_preds.parquet", index=False)
-    (REPORTS / f"{tag}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+    preds.to_parquet(REPORTS / f"{tag}{out_sfx}_holdout_preds.parquet", index=False)
+    (REPORTS / f"{tag}{out_sfx}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def load(r):
-        return json.load(open(REPORTS / f"{r}_metrics.json"))
+        return json.load(open(REPORTS / f"{r}{sfx}_metrics.json"))
     m1m, m3m = load("M1"), load(m3_route)
     print(f"\n{'route':22s} {'macroF1':>8s} {'kappa':>7s} {'acc':>7s}")
     for nm, r in [("M1 (GT)", m1m), (f"{m3_route} (decomp)", m3m), (f"{tag} (aligned)", rep)]:
@@ -209,7 +236,7 @@ EMB_COLS = [f"e{i}" for i in range(768)]
 class EnergyHead(torch.nn.Module):
     """trunk + head, identical to DINOv2FrozenEnergy's trunk + head_energy."""
 
-    def __init__(self, in_dim=768, hidden=256, n=N_ENERGY, dropout=0.3):
+    def __init__(self, in_dim=768, hidden=256, n=7, dropout=0.3):
         super().__init__()
         self.trunk = torch.nn.Sequential(
             torch.nn.Linear(in_dim, hidden), torch.nn.GELU(), torch.nn.Dropout(dropout))
@@ -219,17 +246,18 @@ class EnergyHead(torch.nn.Module):
         return self.head(self.trunk(x))
 
 
-def _cw_from_labels(y: np.ndarray) -> torch.Tensor:
-    counts = np.bincount(y, minlength=N_ENERGY).astype(np.float64)
+def _cw_from_labels(y: np.ndarray, n_cls: int) -> torch.Tensor:
+    counts = np.bincount(y, minlength=n_cls).astype(np.float64)
     w = 1.0 / np.clip(counts, 1, None)
-    return torch.tensor(w / w.sum() * N_ENERGY, dtype=torch.float32)
+    return torch.tensor(w / w.sum() * n_cls, dtype=torch.float32)
 
 
 def _train_head_cached(Xtr, ytr, Xva, yva, args, device):
-    head = EnergyHead().to(device)
+    n_cls = n_energy_classes(args.task)
+    head = EnergyHead(n=n_cls).to(device)
     opt = torch.optim.AdamW(head.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=args.epochs)
-    cw = _cw_from_labels(ytr).to(device)
+    cw = _cw_from_labels(ytr, n_cls).to(device)
     Xtr_t = torch.tensor(Xtr, dtype=torch.float32, device=device)
     ytr_t = torch.tensor(ytr, dtype=torch.long, device=device)
     Xva_t = torch.tensor(Xva, dtype=torch.float32, device=device)
@@ -247,7 +275,7 @@ def _train_head_cached(Xtr, ytr, Xva, yva, args, device):
         head.eval()
         with torch.no_grad():
             vp = head(Xva_t).argmax(-1).cpu().numpy()
-        f1 = f1_score(yva, vp, labels=list(range(N_ENERGY)), average="macro", zero_division=0)
+        f1 = f1_score(yva, vp, labels=list(range(n_cls)), average="macro", zero_division=0)
         if f1 > best_f1:
             best_f1, since = f1, 0
             best_state = {k: v.cpu().clone() for k, v in head.state_dict().items()}
@@ -259,9 +287,10 @@ def _train_head_cached(Xtr, ytr, Xva, yva, args, device):
 
 
 def main_cached(args, device):
+    sfx = task_suffix(args.task)
     gt = pd.read_parquet(PROC / "stage1_gt.parquet")
     gt["pand_id"] = gt["pand_id"].astype(str)
-    lab = {p: energy_to_idx(e) for p, e in zip(gt["pand_id"], gt["Energieklasse"])}
+    lab = {p: energy_to_idx(e, args.task) for p, e in zip(gt["pand_id"], gt["Energieklasse"])}
     folds = pd.read_parquet(PROC / "dev_fold_indices.parquet")
     folds["pand_id"] = folds["pand_id"].astype(str)
     fold_map = dict(zip(folds["pand_id"], folds["fold"]))
@@ -284,32 +313,37 @@ def main_cached(args, device):
 
     best = max(f1s, key=f1s.get)
     logger.info("best fold %d (val f1=%.4f)", best, f1s[best])
-    head = EnergyHead().to(device)
+    i2e = idx_to_energy(args.task)
+    head = EnergyHead(n=n_energy_classes(args.task)).to(device)
     head.load_state_dict(states[best])
     head.eval()
     with torch.no_grad():
-        ho_pred = head(torch.tensor(ho[EMB_COLS].values, dtype=torch.float32, device=device)).argmax(-1).cpu().numpy()
+        ho_logits = head(torch.tensor(ho[EMB_COLS].values, dtype=torch.float32, device=device))
+        ho_pred = ho_logits.argmax(-1).cpu().numpy()
+        ho_proba = torch.softmax(ho_logits.float(), dim=-1)[:, -1].cpu().numpy()
 
     preds = pd.DataFrame({
         "pand_id": ho["pand_id"].values,
-        "true": [IDX_TO_ENERGY[i] for i in ho["y"].values.astype(int)],
-        "pred": [IDX_TO_ENERGY[i] for i in ho_pred],
+        "true": [i2e[i] for i in ho["y"].values.astype(int)],
+        "pred": [i2e[i] for i in ho_pred],
+        "proba": ho_proba,
     })
-    m1 = pd.read_parquet(REPORTS / "M1_holdout_preds.parquet")
+    m1 = pd.read_parquet(REPORTS / f"M1{sfx}_holdout_preds.parquet")
     common = set(m1["pand_id"].astype(str))
     preds = preds[preds["pand_id"].isin(common)].reset_index(drop=True)
 
-    rep = evaluate(preds[["true", "pred"]], with_ci=True)
+    proba = preds["proba"] if args.task == "binary" else None
+    rep = evaluate(preds[["true", "pred"]], with_ci=True, task=args.task, proba=proba)
     rep["route"] = "M2-DINOv2-aligned-cached"
     rep["source_fold"] = int(best)
     rep["dev_val_macro_f1"] = float(f1s[best])
     rep["note"] = "frozen DINOv2 cached embeddings + Stage1-style neural head; no train-time augmentation"
     REPORTS.mkdir(parents=True, exist_ok=True)
-    preds.to_parquet(REPORTS / "M2-DINOv2_holdout_preds.parquet", index=False)
-    (REPORTS / "M2-DINOv2_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+    preds.to_parquet(REPORTS / f"M2-DINOv2{sfx}_holdout_preds.parquet", index=False)
+    (REPORTS / f"M2-DINOv2{sfx}_metrics.json").write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def load(r):
-        return json.load(open(REPORTS / f"{r}_metrics.json"))
+        return json.load(open(REPORTS / f"{r}{sfx}_metrics.json"))
     m1m, m3m = load("M1"), load("M3-DINOv2")
     print(f"\n{'route':24s} {'macroF1':>8s} {'kappa':>7s} {'acc':>7s}")
     for nm, r in [("M1 (GT)", m1m), ("M3-DINOv2 (decomp)", m3m), ("M2-DINOv2 (aligned)", rep)]:
@@ -322,6 +356,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="dinov2_energy",
                    help="dinov2_energy (cached/frozen) or resnet50_energy (full fine-tune)")
+    p.add_argument("--task", default="7class", choices=["7class", "binary"],
+                   help="7-class A-G (original) or binary A-C | D-G (Sun cut)")
     p.add_argument("--head-lr", type=float, default=None,
                    help="separate lr for trunk+head (models with param_groups, e.g. resnet50_energy)")
     p.add_argument("--cached", action="store_true",
@@ -336,6 +372,9 @@ def main():
     p.add_argument("--num-workers", type=int, default=2)
     p.add_argument("--no-amp", action="store_true")
     p.add_argument("--holdout-only", action="store_true", help="skip training, just eval existing ckpts")
+    p.add_argument("--eval-folds", default=None,
+                   help="comma list of folds to select the hold-out model from "
+                        "(default all 5; anything else writes a _provisional result)")
     args = p.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     device = "cuda" if torch.cuda.is_available() else "cpu"

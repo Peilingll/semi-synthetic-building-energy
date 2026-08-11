@@ -16,10 +16,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.stage2.features import REPO_ROOT
+from src.stage2.features import REPO_ROOT, to_binary
 from src.stage2.metrics import evaluate
+from src.stage2.train_eval import task_suffix
 from src.stage3.features import build_m1_holdout, build_m3_holdout
-from src.stage3.routes import predict_route, train_m1_model
+from src.stage3.routes import predict_proba_route, predict_route, train_m1_model
 from src.tabula_matcher import classify_period
 
 logger = logging.getLogger(__name__)
@@ -89,17 +90,22 @@ def main():
                         help="comma list of M3 routes to include")
     parser.add_argument("--out-suffix", default="",
                         help="extra suffix for output filenames (e.g. _vlmsubset)")
+    parser.add_argument("--task", default="7class", choices=["7class", "binary"],
+                        help="7-class A-G (original) or binary A-C | D-G (Sun cut)")
     args = parser.parse_args()
     models = [m.strip() for m in args.models.split(",") if m.strip()]
     assert all(m in M3_PREDS for m in models), f"unknown model in {models}"
-    tag = "" if args.run_tag == "pooled" else f"_{args.run_tag}"
+    # task suffix first so filenames read M1_binary_loco_amsterdam_*
+    tag = task_suffix(args.task)
+    tag += "" if args.run_tag == "pooled" else f"_{args.run_tag}"
     tag += args.out_suffix
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     REPORTS.mkdir(parents=True, exist_ok=True)
     TABLES.mkdir(parents=True, exist_ok=True)
 
-    clf, cat_dtypes, majority = train_m1_model(dev_path=args.dev_folds)
+    clf, cat_dtypes, majority = train_m1_model(dev_path=args.dev_folds, task=args.task)
+    binary = args.task == "binary"
 
     # Build each route's hold-out frame (pand_id, true label, pred label).
     m1 = build_m1_holdout(args.holdout)
@@ -112,31 +118,44 @@ def main():
         m3_frames[name] = df
         m3_preds[name] = predict_route(clf, df, cat_dtypes)
 
+    # P(D-G) for the ROC/PR readouts; the label columns are unaffected.
+    m1_proba = predict_proba_route(clf, m1, cat_dtypes) if binary else None
+    m3_probas = ({n: predict_proba_route(clf, m3_frames[n], cat_dtypes) for n in m3_frames}
+                 if binary else {})
+
     # Common building set across all routes for strictly comparable M3-M1.
     common = set(m1["pand_id"])
     for df in m3_frames.values():
         common &= set(df["pand_id"])
     logger.info("common hold-out buildings across all routes: %d", len(common))
 
-    def route_df(frame, pred):
+    def route_df(frame, pred, proba=None):
         m = frame["pand_id"].isin(common)
-        return pd.DataFrame({
+        true = frame.loc[m, "energy_class"]
+        out = pd.DataFrame({
             "pand_id": frame.loc[m, "pand_id"].values,
-            "true": frame.loc[m, "energy_class"].values,
+            "true": to_binary(true).values if binary else true.values,
             "pred": pred[m].values,
-        }).sort_values("pand_id").reset_index(drop=True)
+        })
+        if proba is not None:
+            out["proba"] = proba[m].values
+        return out.sort_values("pand_id").reset_index(drop=True)
 
     routes = {}
-    routes["M1"] = route_df(m1, m1_pred)
+    routes["M1"] = route_df(m1, m1_pred, m1_proba)
     for name in models:
-        routes[name] = route_df(m3_frames[name], m3_preds[name])
+        routes[name] = route_df(m3_frames[name], m3_preds[name], m3_probas.get(name))
     # M0: dev-majority for every common building (use M1's true labels/ids).
+    # A constant prediction carries no ranking, so its score is the base rate.
     routes["M0"] = routes["M1"].assign(pred=majority)
+    if binary:
+        routes["M0"] = routes["M0"].assign(proba=(routes["M1"]["true"] == "D-G").mean())
 
     # Evaluate.
     reports = {}
     for name, df in routes.items():
-        rep = evaluate(df, with_ci=True)
+        rep = evaluate(df, with_ci=True, task=args.task,
+                       proba=df["proba"] if "proba" in df.columns else None)
         rep["route"] = name
         reports[name] = rep
         df.to_parquet(REPORTS / f"{name}{tag}_holdout_preds.parquet", index=False)
@@ -149,28 +168,45 @@ def main():
     # Table 3.
     order = ["M0", "M1"] + models
     split_name = "hold-out" if args.run_tag == "pooled" else args.run_tag
+    task_name = "A-G 7-class" if args.task == "7class" else "binary A-C | D-G"
+    hx = " bal.acc | MCC | ROC-AUC |" if binary else ""
+    hy = "---:|---:|---:|" if binary else ""
     lines = [
-        f"# Table 3 — Stage 3 pipeline comparison ({split_name}, n={len(common)})",
+        f"# Table 3 — Stage 3 pipeline comparison ({task_name}, {split_name}, n={len(common)})",
         "",
-        "| Route | macro-F1 | 95% CI | κ | acc | M3−M1 mF1 | M3−M1 κ |",
-        "|---|---:|---|---:|---:|---:|---:|",
+        "| Route | macro-F1 | 95% CI | κ | acc |" + hx + " M3−M1 mF1 | M3−M1 κ |",
+        "|---|---:|---|---:|---:|" + hy + "---:|---:|",
     ]
     for name in order:
         r = reports[name]
         ci = r["bootstrap_95ci"]["macro_f1"]
         gap_f1 = "" if name in ("M0", "M1") else f"{r['macro_f1'] - m1_f1:+.4f}"
         gap_k = "" if name in ("M0", "M1") else f"{r['quadratic_kappa'] - m1_k:+.4f}"
+        extra = (f" {r['balanced_accuracy']:.4f} | {r['mcc']:.4f} | {r['roc_auc']:.4f} |"
+                 if binary else "")
         lines.append(f"| {name} | {r['macro_f1']:.4f} | [{ci['lo']:.3f}, {ci['hi']:.3f}] | "
-                     f"{r['quadratic_kappa']:.4f} | {r['accuracy']:.4f} | {gap_f1} | {gap_k} |")
+                     f"{r['quadratic_kappa']:.4f} | {r['accuracy']:.4f} |" + extra
+                     + f" {gap_f1} | {gap_k} |")
+    if binary:
+        m0 = reports["M0"]
+        lines += ["", f"The pool is {100 * (routes['M1']['true'] == 'D-G').mean():.1f}% D-G, so M0 "
+                  f"(constant A-C) already scores acc {m0['accuracy']:.4f}. Read accuracy only "
+                  "against M0; macro-F1, balanced accuracy and ROC-AUC are the informative columns."]
     (TABLES / f"T3_main{tag}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # Error propagation for the best M3 (highest macro-F1).
-    best = max(models, key=lambda n: reports[n]["macro_f1"])
+    # Rank by ROC-AUC in the binary task: macro-F1 at a fixed 0.5 threshold
+    # rewards whichever route happens to predict the minority class more often,
+    # which is an operating-point artefact rather than skill (M3-VLMv3 tops
+    # macro-F1 while holding the worst AUC).
+    key = "roc_auc" if binary else "macro_f1"
+    best = max(models, key=lambda n: reports[n][key])
     m = m3_frames[best]["pand_id"].isin(common)
+    true_labels = m3_frames[best].loc[m, "energy_class"]
     ep = error_propagation(
         m3_frames[best][m].reset_index(drop=True),
         m3_preds[best][m].reset_index(drop=True),
-        pd.Series(m3_frames[best].loc[m, "energy_class"].values),
+        pd.Series((to_binary(true_labels) if binary else true_labels).values),
     )
     ep["best_m3"] = best
     (REPORTS / f"error_propagation{tag}.json").write_text(

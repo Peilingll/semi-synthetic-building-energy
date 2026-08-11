@@ -29,6 +29,38 @@ PROCESSED = REPO_ROOT / "data" / "processed"
 # Ordinal energy classes (A best ... G worst) — order matters for quadratic kappa.
 ENERGY_LABELS = ["A", "B", "C", "D", "E", "F", "G"]
 
+# Binary task (decision 2026-08-10): the Sun et al. 2026 cut, A-C vs D-G, which
+# falls on the NTA 8800 boundary C <= 250 kWh/m2.yr. Positive class = D-G, the
+# side that needs retrofit, so precision/recall/AUC read the way policy does.
+# ASCII labels on purpose — these reach the Windows console via run_stage3.
+BINARY_LABELS = ["A-C", "D-G"]
+BINARY_POSITIVE = "D-G"
+BINARY_CUT_KWH = 250.0  # EP2 upper bound of class C
+
+TASKS = ("7class", "binary")
+TARGET_COL = {"7class": "energy_class", "binary": "energy_binary"}
+
+
+def labels_for(task: str) -> list[str]:
+    if task not in TASKS:
+        raise KeyError(f"unknown task {task!r}; valid: {list(TASKS)}")
+    return ENERGY_LABELS if task == "7class" else BINARY_LABELS
+
+
+def target_col(task: str) -> str:
+    if task not in TASKS:
+        raise KeyError(f"unknown task {task!r}; valid: {list(TASKS)}")
+    return TARGET_COL[task]
+
+
+def to_binary(energy_class: pd.Series) -> pd.Series:
+    """Collapse 7-class A..G to the Sun cut: A/B/C -> 'A-C', D/E/F/G -> 'D-G'."""
+    return pd.Series(
+        [BINARY_LABELS[0] if str(c) in ("A", "B", "C") else BINARY_LABELS[1]
+         for c in energy_class],
+        index=energy_class.index, dtype=object,
+    )
+
 U_COLS = ["u_wall", "u_roof", "u_floor", "u_window"]
 CATEGORICAL = ["building_type", "city"]
 
@@ -99,9 +131,11 @@ def build_master_table(
         raise ValueError(f"{bad.sum()} rows have unexpected energy_class: "
                          f"{df.loc[bad, 'energy_class'].unique().tolist()}")
 
+    df["energy_binary"] = to_binary(df["energy_class"])
+
     out = df[[
         "pand_id", "fold", "city", "building_type", "bouwjaar",
-        "num_floors", *U_COLS, "energy_class",
+        "num_floors", *U_COLS, "energy_class", "energy_binary",
     ]].copy()
 
     # Cast categoricals so LightGBM picks them up natively.
