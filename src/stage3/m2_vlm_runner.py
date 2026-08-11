@@ -32,14 +32,22 @@ from src.stage1.vlm.internvl3_runner import (
 logger = logging.getLogger(__name__)
 
 ENERGY_WHITELIST = {"A", "B", "C", "D", "E", "F", "G"}
+BINARY_WHITELIST = {"A-C", "D-G"}
 
-PROMPT = """Look at this Dutch residential building street-view photo. Estimate the building's official Dutch energy label (energielabel, NTA 8800), which rates a home's primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
-
-Judge ONLY from visible evidence in the photo:
+# Shared evidence block, so the two prompts differ ONLY in the answer space.
+# That is the whole point of the binary variant: the 7-class run collapsed to
+# 99% "F", and we need to know whether that was the model having no usable EPC
+# knowledge or simply the seven-way choice being too fine. Any wording change
+# beyond the answer options would confound the comparison.
+_EVIDENCE = """Judge ONLY from visible evidence in the photo:
 - window glazing: single-pane (older, less efficient) vs double / HR++ glazing
 - solar panels on the roof
 - signs of recent renovation or added wall insulation (new render, cladding, modern detailing)
-- general age and upkeep of the facade and roof
+- general age and upkeep of the facade and roof"""
+
+PROMPT = f"""Look at this Dutch residential building street-view photo. Estimate the building's official Dutch energy label (energielabel, NTA 8800), which rates a home's primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
+
+{_EVIDENCE}
 Buildings that look newly built or recently renovated, with modern glazing or solar panels, tend toward A-B. Old, un-renovated buildings with single glazing and worn facades tend toward F-G. Most ordinary housing falls in the middle.
 
 Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide a value. NEVER return null.
@@ -47,10 +55,36 @@ Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUS
 Required key:
 - "energy_label": exactly one of "A", "B", "C", "D", "E", "F", "G"
 
-Example: {"energy_label": "C"}"""
+Example: {{"energy_label": "C"}}"""
+
+BINARY_PROMPT = f"""Look at this Dutch residential building street-view photo. Dutch homes carry an official energy label (energielabel, NTA 8800) rating primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
+
+Decide which of two bands this building falls into:
+- "A-C": the more energy-efficient band
+- "D-G": the less energy-efficient band
+
+{_EVIDENCE}
+Buildings that look newly built or recently renovated, with modern glazing or solar panels, tend toward A-C. Old, un-renovated buildings with single glazing and worn facades tend toward D-G.
+
+Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide a value. NEVER return null.
+
+Required key:
+- "energy_band": exactly one of "A-C", "D-G"
+
+Example: {{"energy_band": "A-C"}}"""
+
+PROMPTS = {"7class": PROMPT, "binary": BINARY_PROMPT}
+ANSWER_KEY = {"7class": "energy_label", "binary": "energy_band"}
 
 
-def parse_energy(raw: str | None) -> dict:
+def _normalise_band(s: str) -> str:
+    """Accept en-dashes, spaces and 'A to C' style answers as the band labels."""
+    s = s.strip().upper().replace("–", "-").replace("—", "-")
+    s = re.sub(r"\s*(?:-|TO|THROUGH)\s*", "-", s)
+    return s
+
+
+def parse_energy(raw: str | None, task: str = "7class") -> dict:
     out = {"parse_ok": False, "pred_label": None, "parse_error": None}
     if raw is None:
         out["parse_error"] = "no_response"
@@ -66,9 +100,16 @@ def parse_energy(raw: str | None) -> dict:
     except json.JSONDecodeError as exc:
         out["parse_error"] = f"json_decode:{exc.msg}"
         return out
-    val = obj.get("energy_label")
-    if isinstance(val, str) and val.strip().upper() in ENERGY_WHITELIST:
-        out["pred_label"] = val.strip().upper()
+    val = obj.get(ANSWER_KEY[task])
+    if not isinstance(val, str):
+        out["parse_error"] = f"invalid_label:{val!r}"
+        return out
+    if task == "binary":
+        cand, allowed = _normalise_band(val), BINARY_WHITELIST
+    else:
+        cand, allowed = val.strip().upper(), ENERGY_WHITELIST
+    if cand in allowed:
+        out["pred_label"] = cand
         out["parse_ok"] = True
     else:
         out["parse_error"] = f"invalid_label:{val!r}"
@@ -81,7 +122,10 @@ def run(args: argparse.Namespace) -> None:
     out_dir = REPO_ROOT / "reports" / "stage3"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    tag = f"m2vlm_{args.split}_per_image"
+    tag = f"m2vlm_{args.split}"
+    if args.task != "7class":
+        tag = f"{tag}_{args.task}"
+    tag = f"{tag}_per_image"
     if args.sample is not None:
         tag = f"{tag}_sample{args.sample}"
     partial_path = out_dir / f"{tag}.partial.parquet"
@@ -116,12 +160,12 @@ def run(args: argparse.Namespace) -> None:
         fp = str(row["file_path"])
         t1 = time.time()
         try:
-            raw = proc.process_image(fp, PROMPT)
+            raw = proc.process_image(fp, PROMPTS[args.task])
             err = None
         except Exception as exc:  # noqa: BLE001
             raw, err = None, f"inference:{type(exc).__name__}:{exc}"
         dt = time.time() - t1
-        p = parse_energy(raw)
+        p = parse_energy(raw, args.task)
         if p["parse_ok"]:
             n_ok += 1
         new_rows.append({
@@ -148,6 +192,9 @@ def run(args: argparse.Namespace) -> None:
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--split", default="holdout", choices=["holdout"])
+    p.add_argument("--task", default="7class", choices=["7class", "binary"],
+                   help="7class asks for a letter A-G; binary asks directly for "
+                        "the A-C | D-G band (same evidence wording)")
     p.add_argument("--sample", type=int, default=None)
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--resume", action="store_true")
