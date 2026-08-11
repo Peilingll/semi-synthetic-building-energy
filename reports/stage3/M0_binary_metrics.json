@@ -1,0 +1,68 @@
+{
+  "task": "binary",
+  "n_eval": 2016,
+  "macro_f1": 0.4124,
+  "quadratic_kappa": 0.0,
+  "accuracy": 0.7019,
+  "balanced_accuracy": 0.5,
+  "mcc": 0.0,
+  "roc_auc": 0.5,
+  "pr_auc": 0.2981,
+  "per_class": {
+    "A-C": {
+      "precision": 0.7019,
+      "recall": 1.0,
+      "f1": 0.8248,
+      "support": 1415
+    },
+    "D-G": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 601
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        1415,
+        0
+      ],
+      [
+        601,
+        0
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.4124174623443072,
+      "lo": 0.4055,
+      "hi": 0.4195,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.5,
+      "lo": 0.5,
+      "hi": 0.5,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.5,
+      "lo": 0.5,
+      "hi": 0.5,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M0"
+}

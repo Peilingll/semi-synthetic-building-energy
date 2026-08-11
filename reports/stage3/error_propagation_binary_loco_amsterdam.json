@@ -1,0 +1,10 @@
+{
+  "n_total": 8011,
+  "n_misclassified": 2885,
+  "type_wrong": 495,
+  "period_wrong": 199,
+  "both_wrong": 53,
+  "vision_attr_error": 641,
+  "attrs_correct_downstream_error": 2244,
+  "best_m3": "M3-ResNet50"
+}

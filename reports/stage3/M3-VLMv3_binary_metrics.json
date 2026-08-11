@@ -1,0 +1,68 @@
+{
+  "task": "binary",
+  "n_eval": 2016,
+  "macro_f1": 0.5276,
+  "quadratic_kappa": 0.0558,
+  "accuracy": 0.5967,
+  "balanced_accuracy": 0.5285,
+  "mcc": 0.0558,
+  "roc_auc": 0.5346,
+  "pr_auc": 0.322,
+  "per_class": {
+    "A-C": {
+      "precision": 0.7194,
+      "recall": 0.6975,
+      "f1": 0.7083,
+      "support": 1415
+    },
+    "D-G": {
+      "precision": 0.3354,
+      "recall": 0.3594,
+      "f1": 0.347,
+      "support": 601
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        987,
+        428
+      ],
+      [
+        385,
+        216
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.527576206460413,
+      "lo": 0.5056,
+      "hi": 0.5501,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.05589291084316727,
+      "lo": 0.0122,
+      "hi": 0.1002,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.528546279182815,
+      "lo": 0.5063,
+      "hi": 0.5513,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.534934447793907,
+      "lo": 0.5066,
+      "hi": 0.5621,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M3-VLMv3"
+}

@@ -1,0 +1,66 @@
+{
+  "task": "binary",
+  "n_eval": 2016,
+  "macro_f1": 0.2426,
+  "quadratic_kappa": 0.0036,
+  "accuracy": 0.3051,
+  "balanced_accuracy": 0.503,
+  "mcc": 0.0267,
+  "per_class": {
+    "A-C": {
+      "precision": 0.8182,
+      "recall": 0.0127,
+      "f1": 0.0251,
+      "support": 1415
+    },
+    "D-G": {
+      "precision": 0.2994,
+      "recall": 0.9933,
+      "f1": 0.4601,
+      "support": 601
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        18,
+        1397
+      ],
+      [
+        4,
+        597
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.24259433709412737,
+      "lo": 0.2286,
+      "hi": 0.2565,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.0037384091211029266,
+      "lo": -0.0015,
+      "hi": 0.0089,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.5031126213479044,
+      "lo": 0.4988,
+      "hi": 0.5073,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-VLMv1-zeroshot",
+  "n": 2016,
+  "pred_distribution": {
+    "A-C": 22,
+    "D-G": 1994
+  },
+  "note": "A-G zero-shot answers collapsed to the Sun cut; not retrained and not re-prompted, so no probability and no AUC"
+}

@@ -1,0 +1,68 @@
+{
+  "task": "binary",
+  "n_eval": 8068,
+  "macro_f1": 0.448,
+  "quadratic_kappa": 0.0337,
+  "accuracy": 0.7053,
+  "balanced_accuracy": 0.5123,
+  "mcc": 0.079,
+  "roc_auc": 0.62,
+  "pr_auc": 0.3773,
+  "per_class": {
+    "A-C": {
+      "precision": 0.7086,
+      "recall": 0.9866,
+      "f1": 0.8248,
+      "support": 5675
+    },
+    "D-G": {
+      "precision": 0.5449,
+      "recall": 0.038,
+      "f1": 0.0711,
+      "support": 2393
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        5599,
+        76
+      ],
+      [
+        2302,
+        91
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.447914391097312,
+      "lo": 0.4399,
+      "hi": 0.4566,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.03376618862249073,
+      "lo": 0.0237,
+      "hi": 0.045,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.5123482997319447,
+      "lo": 0.5086,
+      "hi": 0.5165,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.6201021129141151,
+      "lo": 0.6065,
+      "hi": 0.6333,
+      "n_boot_valid": 1000
+    }
+  },
+  "run": "S_full-year"
+}

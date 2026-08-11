@@ -1,0 +1,71 @@
+{
+  "task": "binary",
+  "n_eval": 2013,
+  "macro_f1": 0.4793,
+  "quadratic_kappa": 0.0654,
+  "accuracy": 0.7049,
+  "balanced_accuracy": 0.5247,
+  "mcc": 0.1103,
+  "roc_auc": 0.6512,
+  "pr_auc": 0.42,
+  "per_class": {
+    "A-C": {
+      "precision": 0.7127,
+      "recall": 0.971,
+      "f1": 0.822,
+      "support": 1413
+    },
+    "D-G": {
+      "precision": 0.5341,
+      "recall": 0.0783,
+      "f1": 0.1366,
+      "support": 600
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        1372,
+        41
+      ],
+      [
+        553,
+        47
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.47956762779673395,
+      "lo": 0.4607,
+      "hi": 0.501,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.06566908891100695,
+      "lo": 0.0375,
+      "hi": 0.0973,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.524783774661952,
+      "lo": 0.5142,
+      "hi": 0.5366,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.65096480516553,
+      "lo": 0.6257,
+      "hi": 0.6753,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M1-reg",
+  "n": 2013,
+  "kwh_mae": 53.74,
+  "kwh_r2": 0.1207
+}

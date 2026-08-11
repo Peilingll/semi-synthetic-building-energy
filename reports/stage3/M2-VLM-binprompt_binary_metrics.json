@@ -1,0 +1,66 @@
+{
+  "task": "binary",
+  "n_eval": 2016,
+  "macro_f1": 0.2297,
+  "quadratic_kappa": 0.0,
+  "accuracy": 0.2981,
+  "balanced_accuracy": 0.5,
+  "mcc": 0.0,
+  "per_class": {
+    "A-C": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 1415
+    },
+    "D-G": {
+      "precision": 0.2981,
+      "recall": 1.0,
+      "f1": 0.4593,
+      "support": 601
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        0,
+        1415
+      ],
+      [
+        0,
+        601
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.229564614952555,
+      "lo": 0.2171,
+      "hi": 0.2413,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.5,
+      "lo": 0.5,
+      "hi": 0.5,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-VLM-binprompt-zeroshot",
+  "n": 2016,
+  "pred_distribution": {
+    "A-C": 0,
+    "D-G": 2016
+  },
+  "note": "asked the A-C | D-G question directly (separate zero-shot run, same evidence wording as the A-G prompt); zero-shot, so no probability and no AUC"
+}

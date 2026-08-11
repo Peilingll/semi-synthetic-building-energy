@@ -1,0 +1,71 @@
+{
+  "task": "binary",
+  "n_eval": 2016,
+  "macro_f1": 0.5971,
+  "quadratic_kappa": 0.195,
+  "accuracy": 0.6533,
+  "balanced_accuracy": 0.6003,
+  "mcc": 0.1955,
+  "roc_auc": 0.6614,
+  "pr_auc": 0.4311,
+  "per_class": {
+    "A-C": {
+      "precision": 0.7644,
+      "recall": 0.7314,
+      "f1": 0.7476,
+      "support": 1415
+    },
+    "D-G": {
+      "precision": 0.426,
+      "recall": 0.4692,
+      "f1": 0.4466,
+      "support": 601
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        1035,
+        380
+      ],
+      [
+        319,
+        282
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.5970221887311632,
+      "lo": 0.5739,
+      "hi": 0.6207,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.1951316825852187,
+      "lo": 0.149,
+      "hi": 0.2419,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.6005858456385426,
+      "lo": 0.5771,
+      "hi": 0.6243,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.66144659428253,
+      "lo": 0.6355,
+      "hi": 0.6881,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-DINOv2-aligned-cached",
+  "source_fold": 2,
+  "dev_val_macro_f1": 0.6042440924871291,
+  "note": "frozen DINOv2 cached embeddings + Stage1-style neural head; no train-time augmentation"
+}

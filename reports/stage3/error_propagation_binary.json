@@ -1,0 +1,10 @@
+{
+  "n_total": 2016,
+  "n_misclassified": 626,
+  "type_wrong": 57,
+  "period_wrong": 24,
+  "both_wrong": 6,
+  "vision_attr_error": 75,
+  "attrs_correct_downstream_error": 551,
+  "best_m3": "M3-DINOv2"
+}
