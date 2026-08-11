@@ -1,0 +1,28 @@
+{
+  "A_loco": {
+    "n": 1595,
+    "type_acc": 0.9435736677115988,
+    "type_macro_f1": 0.39719783983057,
+    "year_mae": 18.128521441516458,
+    "period_acc": 0.8764890282131661,
+    "joint_acc": 0.8407523510971787,
+    "majority_cell": 0.8658307210031349,
+    "macro_cell_recall": 0.14757420729625934,
+    "cells": 13,
+    "val_type_macro_f1": 0.5802796528447445,
+    "train_composition": "AB 65.4% / NL.01 76.6% / Amsterdam 0.0%"
+  },
+  "B_matched": {
+    "n": 1595,
+    "type_acc": 0.967398119122257,
+    "type_macro_f1": 0.5250884228577553,
+    "year_mae": 8.167203036221592,
+    "period_acc": 0.9335423197492163,
+    "joint_acc": 0.9053291536050156,
+    "majority_cell": 0.8658307210031349,
+    "macro_cell_recall": 0.19527651260342177,
+    "cells": 13,
+    "val_type_macro_f1": 0.5734961555857078,
+    "train_composition": "AB 88.0% / NL.01 88.7% / Amsterdam 74.9%"
+  }
+}
