@@ -1,0 +1,72 @@
+{
+  "task": "binary",
+  "n_eval": 8011,
+  "macro_f1": 0.4991,
+  "quadratic_kappa": 0.0219,
+  "accuracy": 0.6359,
+  "balanced_accuracy": 0.5096,
+  "mcc": 0.0235,
+  "roc_auc": 0.5279,
+  "pr_auc": 0.3211,
+  "per_class": {
+    "A-C": {
+      "precision": 0.6998,
+      "recall": 0.8335,
+      "f1": 0.7608,
+      "support": 5567
+    },
+    "D-G": {
+      "precision": 0.3287,
+      "recall": 0.1858,
+      "f1": 0.2374,
+      "support": 2444
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A-C",
+      "D-G"
+    ],
+    "matrix": [
+      [
+        4640,
+        927
+      ],
+      [
+        1990,
+        454
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.4990360225553187,
+      "lo": 0.4879,
+      "hi": 0.5101,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.021771453145444902,
+      "lo": 0.0007,
+      "hi": 0.0429,
+      "n_boot_valid": 1000
+    },
+    "balanced_accuracy": {
+      "mean": 0.5095585722692499,
+      "lo": 0.5003,
+      "hi": 0.5189,
+      "n_boot_valid": 1000
+    },
+    "roc_auc": {
+      "mean": 0.5278719026272565,
+      "lo": 0.5134,
+      "hi": 0.5428,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-DINOv2-aligned-cached",
+  "run_tag": "loco_amsterdam",
+  "source_fold": 0,
+  "dev_val_macro_f1": 0.6040076335877862,
+  "note": "frozen DINOv2 cached embeddings + Stage1-style neural head; LOCO split (train=source cities, test=held-out city)"
+}

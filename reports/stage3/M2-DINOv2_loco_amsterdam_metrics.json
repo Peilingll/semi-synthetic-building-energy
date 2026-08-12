@@ -1,0 +1,146 @@
+{
+  "task": "7class",
+  "n_eval": 8011,
+  "macro_f1": 0.1395,
+  "quadratic_kappa": 0.0497,
+  "accuracy": 0.1842,
+  "per_class": {
+    "A": {
+      "precision": 0.2439,
+      "recall": 0.2376,
+      "f1": 0.2407,
+      "support": 1713
+    },
+    "B": {
+      "precision": 0.1496,
+      "recall": 0.305,
+      "f1": 0.2008,
+      "support": 1308
+    },
+    "C": {
+      "precision": 0.3473,
+      "recall": 0.1269,
+      "f1": 0.1858,
+      "support": 2546
+    },
+    "D": {
+      "precision": 0.1477,
+      "recall": 0.243,
+      "f1": 0.1837,
+      "support": 1136
+    },
+    "E": {
+      "precision": 0.0919,
+      "recall": 0.0848,
+      "f1": 0.0882,
+      "support": 613
+    },
+    "F": {
+      "precision": 0.0359,
+      "recall": 0.0167,
+      "f1": 0.0228,
+      "support": 359
+    },
+    "G": {
+      "precision": 0.0909,
+      "recall": 0.0387,
+      "f1": 0.0543,
+      "support": 336
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "matrix": [
+      [
+        407,
+        528,
+        198,
+        405,
+        97,
+        48,
+        30
+      ],
+      [
+        313,
+        399,
+        154,
+        311,
+        86,
+        30,
+        15
+      ],
+      [
+        554,
+        853,
+        323,
+        554,
+        188,
+        38,
+        36
+      ],
+      [
+        175,
+        412,
+        139,
+        276,
+        88,
+        22,
+        24
+      ],
+      [
+        128,
+        209,
+        55,
+        141,
+        52,
+        11,
+        17
+      ],
+      [
+        53,
+        139,
+        29,
+        92,
+        32,
+        6,
+        8
+      ],
+      [
+        39,
+        127,
+        32,
+        90,
+        23,
+        12,
+        13
+      ]
+    ]
+  },
+  "bootstrap_95ci": {
+    "macro_f1": {
+      "mean": 0.13919226780152516,
+      "lo": 0.1312,
+      "hi": 0.1471,
+      "n_boot_valid": 1000
+    },
+    "quadratic_kappa": {
+      "mean": 0.04929333697085627,
+      "lo": 0.0272,
+      "hi": 0.0713,
+      "n_boot_valid": 1000
+    }
+  },
+  "route": "M2-DINOv2-aligned-cached",
+  "run_tag": "loco_amsterdam",
+  "source_fold": 1,
+  "dev_val_macro_f1": 0.24639605074986665,
+  "note": "frozen DINOv2 cached embeddings + Stage1-style neural head; LOCO split (train=source cities, test=held-out city)"
+}
