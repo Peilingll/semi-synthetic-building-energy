@@ -1,0 +1,139 @@
+{
+  "lightgbm": {
+    "task": "binary",
+    "n_eval": 2016,
+    "macro_f1": 0.5275,
+    "quadratic_kappa": 0.125,
+    "accuracy": 0.7118,
+    "balanced_accuracy": 0.5492,
+    "mcc": 0.1684,
+    "roc_auc": 0.6608,
+    "pr_auc": 0.4678,
+    "per_class": {
+      "A-C": {
+        "precision": 0.7242,
+        "recall": 0.9519,
+        "f1": 0.8226,
+        "support": 1415
+      },
+      "D-G": {
+        "precision": 0.5641,
+        "recall": 0.1464,
+        "f1": 0.2325,
+        "support": 601
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "A-C",
+        "D-G"
+      ],
+      "matrix": [
+        [
+          1347,
+          68
+        ],
+        [
+          513,
+          88
+        ]
+      ]
+    },
+    "bootstrap_95ci": {
+      "macro_f1": {
+        "mean": 0.5275893066055612,
+        "lo": 0.504,
+        "hi": 0.5505,
+        "n_boot_valid": 1000
+      },
+      "quadratic_kappa": {
+        "mean": 0.12500389110164745,
+        "lo": 0.0868,
+        "hi": 0.1627,
+        "n_boot_valid": 1000
+      },
+      "balanced_accuracy": {
+        "mean": 0.54922388211523,
+        "lo": 0.5344,
+        "hi": 0.5643,
+        "n_boot_valid": 1000
+      },
+      "roc_auc": {
+        "mean": 0.6606156971958864,
+        "lo": 0.6336,
+        "hi": 0.6844,
+        "n_boot_valid": 1000
+      }
+    },
+    "head": "lightgbm"
+  },
+  "logreg": {
+    "task": "binary",
+    "n_eval": 2016,
+    "macro_f1": 0.5678,
+    "quadratic_kappa": 0.1604,
+    "accuracy": 0.6974,
+    "balanced_accuracy": 0.5691,
+    "mcc": 0.175,
+    "roc_auc": 0.638,
+    "pr_auc": 0.4284,
+    "per_class": {
+      "A-C": {
+        "precision": 0.7361,
+        "recall": 0.8869,
+        "f1": 0.8045,
+        "support": 1415
+      },
+      "D-G": {
+        "precision": 0.4855,
+        "recall": 0.2512,
+        "f1": 0.3311,
+        "support": 601
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "A-C",
+        "D-G"
+      ],
+      "matrix": [
+        [
+          1255,
+          160
+        ],
+        [
+          450,
+          151
+        ]
+      ]
+    },
+    "bootstrap_95ci": {
+      "macro_f1": {
+        "mean": 0.567623388718674,
+        "lo": 0.5444,
+        "hi": 0.5918,
+        "n_boot_valid": 1000
+      },
+      "quadratic_kappa": {
+        "mean": 0.1600542899204958,
+        "lo": 0.1172,
+        "hi": 0.2038,
+        "n_boot_valid": 1000
+      },
+      "balanced_accuracy": {
+        "mean": 0.5689924919621422,
+        "lo": 0.5505,
+        "hi": 0.5885,
+        "n_boot_valid": 1000
+      },
+      "roc_auc": {
+        "mean": 0.6380710993900236,
+        "lo": 0.6109,
+        "hi": 0.6657,
+        "n_boot_valid": 1000
+      }
+    },
+    "head": "logreg",
+    "primary_head": "logreg"
+  }
+}
