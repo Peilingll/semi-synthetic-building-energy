@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dataset SVI examples: 4 cities x 4 TABULA size classes</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 24px; }
+  table.matrix { border-collapse: collapse; margin: 0 auto; }
+  table.matrix th, table.matrix td { border: 1px solid #999; padding: 6px 8px;
+         text-align: center; vertical-align: middle; }
+  table.matrix thead th { background: #efefef; font-size: 13px; }
+  .citycol { font-weight: 600; font-size: 13px; background: #efefef; white-space: nowrap; }
+  .citycol .n { font-weight: 400; font-size: 11px; color: #444; display: block; }
+  td.cell { width: 190px; height: 140px; background: #fafafa; }
+  td.cell img { max-width: 180px; max-height: 130px; width: auto; height: auto; }
+  td.cell.empty { color: #888; font-size: 11px; }
+  .caption { max-width: 900px; margin: 14px auto 0; font-size: 12px; color: #333; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<table class="matrix">
+  <thead>
+    <tr>
+      <th>City</th>
+      <th>SFH<br>Single-Family House</th>
+      <th>TH<br>Terraced House</th>
+      <th>MFH<br>Multi-Family House</th>
+      <th>AB<br>Apartment Block</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="citycol">Amsterdam <span class="n">8,019 bld / 36,569 img</span></td>
+      <td class="cell"><img src="svi_examples/amsterdam_sfh.png"></td>
+      <td class="cell"><img src="svi_examples/amsterdam_th.png"></td>
+      <td class="cell"><img src="svi_examples/amsterdam_mfh.png"></td>
+      <td class="cell"><img src="svi_examples/amsterdam_ab.png"></td>
+    </tr>
+    <tr>
+      <td class="citycol">Rotterdam <span class="n">1,424 bld / 7,366 img</span></td>
+      <td class="cell"><img src="svi_examples/rotterdam_sfh.png"></td>
+      <td class="cell"><img src="svi_examples/rotterdam_th.png"></td>
+      <td class="cell"><img src="svi_examples/rotterdam_mfh.png"></td>
+      <td class="cell"><img src="svi_examples/rotterdam_ab.png"></td>
+    </tr>
+    <tr>
+      <td class="citycol">Utrecht <span class="n">488 bld / 2,233 img</span></td>
+      <td class="cell"><img src="svi_examples/utrecht_sfh.png"></td>
+      <td class="cell"><img src="svi_examples/utrecht_th.png"></td>
+      <td class="cell"><img src="svi_examples/utrecht_mfh.png"></td>
+      <td class="cell"><img src="svi_examples/utrecht_ab.png"></td>
+    </tr>
+    <tr>
+      <td class="citycol">Delft <span class="n">173 bld / 1,070 img</span></td>
+      <td class="cell"><img src="svi_examples/delft_sfh.png"></td>
+      <td class="cell"><img src="svi_examples/delft_th.png"></td>
+      <td class="cell empty">no MFH in the<br>Delft subset</td>
+      <td class="cell"><img src="svi_examples/delft_ab.png"></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="caption">
+<b>Example street-view crops from the dataset</b>, one per city &times; TABULA size class.
+Images are per-building crops produced by the OpenFACADES-based acquisition pipeline
+(Mapillary panorama &rarr; isovist pairing &rarr; detection &rarr; perspective reprojection &rarr;
+quality filter; &sect;3.2.2); size-class labels are registry ground truth (EP-Online
+<i>Gebouwtype</i> mapped per Table&nbsp;3.5), not model predictions. The montage also
+illustrates dataset skew: the pool is AB-dominated (94% of Amsterdam images), MFH is rare
+(243 images across three cities, none in Delft), and crop quality varies with camera distance and
+viewing angle (e.g., the Utrecht MFH example is the best available view of that class in
+that city). Imagery &copy; Mapillary contributors (CC&nbsp;BY-SA&nbsp;4.0).
+</p>
+
+</body>
+</html>

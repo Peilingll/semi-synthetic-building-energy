@@ -1,0 +1,16 @@
+figure_cell,city,panorama_id,bdid,pand_id,tabula_type,gebouwtype,tabula_period,source_cell
+amsterdam_sfh,amsterdam,1771706806346836,276849709,0363100012139054,SFH,Vrijstaande woning,NL.01,cell_0614
+amsterdam_th,amsterdam,460538068354526,279736446,0363100012124635,TH,Rijwoning hoek,NL.01,cell_0464
+amsterdam_mfh,amsterdam,806944813578395,269085022,0363100012173745,MFH,Woongebouw met niet-zelfstandige woonruimte,NL.04,cell_0777
+amsterdam_ab,amsterdam,304186921081190,276273611,0363100012082890,AB,Appartement,NL.04,cell_0776
+rotterdam_sfh,rotterdam,243616035503793,277662046,0599100000236639,SFH,Twee-onder-één-kap,NL.01,cell_0395
+rotterdam_th,rotterdam,453320597510843,255342331,0599100000677116,TH,Rijwoning tussen,NL.01,cell_0271
+rotterdam_mfh,rotterdam,1351938006714617,255341729,0599100000671899,MFH,Woongebouw met niet-zelfstandige woonruimte,NL.01,cell_0273
+rotterdam_ab,rotterdam,2181774158912970,255337487,0599100000684742,AB,Appartement,NL.03,cell_0202
+utrecht_sfh,utrecht,786820797347055,300232177,0344100000001079,SFH,Vrijstaande woning,NL.01,cell_0251
+utrecht_th,utrecht,964475608220036,261141542,0344100000075029,TH,Rijwoning tussen,NL.01,cell_0153
+utrecht_mfh,utrecht,772019243457918,260177438,0344100000080492,MFH,Woongebouw met niet-zelfstandige woonruimte,NL.01,cell_0151
+utrecht_ab,utrecht,303772856091674,55311022,0344100000018339,AB,Appartement,NL.03,cell_0090
+delft_sfh,delft,368755184542183,267820901,1842100000002754,SFH,Vrijstaande woning,NL.03,cell_0000
+delft_th,delft,1456425682622254,254138032,0503100000002257,TH,Rijwoning tussen,NL.01,cell_0007
+delft_ab,delft,1454357248555244,253798098,0503100000025316,AB,Appartement,NL.04,cell_0027
