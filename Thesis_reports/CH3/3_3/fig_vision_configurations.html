@@ -5,22 +5,20 @@
 <title>Fig 3.5 - Vision inference configurations</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 24px; }
-  .figwrap { max-width: 1200px; margin: 0 auto; }
+  .figwrap { max-width: 1050px; margin: 0 auto; }
   svg { width: 100%; height: auto; }
-  .caption { max-width: 1000px; margin: 16px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
+  .caption { max-width: 940px; margin: 16px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
 
   .t-colhd  { font: 600 10px "Segoe UI", Arial, sans-serif; fill: #555; letter-spacing: .4px; }
   .t-lane   { font: 600 11.5px "Segoe UI", Arial, sans-serif; fill: #222; }
-  .t-lanesub{ font: italic 9.4px "Segoe UI", Arial, sans-serif; fill: #666; }
   .t-comp   { font: 600 10.2px "Segoe UI", Arial, sans-serif; fill: #111; }
   .t-cs     { font: 8.8px "Segoe UI", Arial, sans-serif; fill: #444; }
   .t-cs-i   { font: italic 8.8px "Segoe UI", Arial, sans-serif; fill: #555; }
   .t-tag    { font: 600 8px "Segoe UI", Arial, sans-serif; }
-  .t-panel  { font: 600 11.5px "Segoe UI", Arial, sans-serif; }
-  .t-ps     { font: 9.2px "Segoe UI", Arial, sans-serif; fill: #333; }
-  .t-ps-i   { font: italic 9.2px "Segoe UI", Arial, sans-serif; fill: #555; }
-  .t-foot   { font: 9.4px "Segoe UI", Arial, sans-serif; fill: #444; }
-  .t-legend { font: 9.4px "Segoe UI", Arial, sans-serif; fill: #555; }
+  .t-out    { font: 600 10.2px "Segoe UI", Arial, sans-serif; fill: #111; }
+  .t-outs   { font: 8.8px "Segoe UI", Arial, sans-serif; fill: #444; }
+  .t-foot   { font: 9.2px "Segoe UI", Arial, sans-serif; fill: #444; }
+  .t-legend { font: 9.2px "Segoe UI", Arial, sans-serif; fill: #555; }
   .mono     { font-family: Consolas, "Courier New", monospace; }
 
   .lane     { fill: #fafafa; stroke: #d5d5d5; stroke-width: 1; }
@@ -29,204 +27,184 @@
   .comp-n   { fill: #fff;    stroke: #666; stroke-width: 1.1; }
   .tag-upd  { fill: #222;    stroke: none; }
   .tag-frz  { fill: #fff;    stroke: #8a8a8a; stroke-width: .9; }
-  .tag-fus  { fill: #b03a3a; stroke: none; }
+  .tag-fus  { fill: #3070B3; stroke: none; }
   .thumb    { fill: #fff; stroke: #777; stroke-width: 1; }
-  .panel-m3 { fill: #f5f9fd; stroke: #3f6390; stroke-width: 1.6; }
-  .panel-m2 { fill: #fbf0e6; stroke: #a86a2b; stroke-width: 1.6; }
+  .outbox   { fill: #f4f4f4; stroke: #333; stroke-width: 1.5; }
   .footbox  { fill: #f7f7f7; stroke: #999; stroke-width: 1; stroke-dasharray: 5 3; }
   .arr      { stroke: #333; stroke-width: 1.6; fill: none; marker-end: url(#arrK); }
   .bus      { stroke: #333; stroke-width: 1.6; fill: none; }
+  .hair     { stroke: #bbb; stroke-width: 1; }
 </style>
 </head>
 <body>
 <div class="figwrap">
 
-<svg viewBox="0 0 1200 566" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="Three vision inference configurations and their training scope">
+<svg viewBox="0 0 1050 540" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three vision inference configurations and the scope of training in each">
   <defs>
     <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
   </defs>
 
   <!-- ============ column headers ============ -->
-  <text class="t-colhd" x="97"  y="74" text-anchor="middle">INPUT IMAGES</text>
-  <text class="t-colhd" x="263" y="74" text-anchor="middle">VISION MODEL</text>
-  <text class="t-colhd" x="553" y="74" text-anchor="middle">FROM IMAGE LEVEL TO BUILDING LEVEL</text>
-  <text class="t-colhd" x="990" y="74" text-anchor="middle">PREDICTION HEADS AND PROMPTS</text>
-  <line x1="376" y1="80" x2="730" y2="80" stroke="#ccc" stroke-width="1"/>
+  <text class="t-colhd" x="97"  y="70" text-anchor="middle">INPUT IMAGES</text>
+  <text class="t-colhd" x="263" y="70" text-anchor="middle">VISION MODEL</text>
+  <text class="t-colhd" x="553" y="70" text-anchor="middle">MULTI-IMAGE AGGREGATION</text>
+  <text class="t-colhd" x="910" y="70" text-anchor="middle">PREDICTION HEAD</text>
+  <line class="hair" x1="376" y1="76" x2="730" y2="76"/>
 
   <!-- ================= LANE 1 : ResNet-50 ================= -->
-  <rect class="lane" x="30" y="90" width="715" height="110" rx="4"/>
-  <text class="t-lane"    x="42" y="106">ResNet-50 &#183; full fine-tuning</text>
-  <text class="t-lanesub" x="212" y="106">every parameter is updated on the development set</text>
+  <rect class="lane" x="30" y="88" width="715" height="104" rx="4"/>
+  <text class="t-lane" x="42" y="104">ResNet-50 &#183; full fine-tuning</text>
 
-  <rect class="thumb" x="52" y="120" width="46" height="46" rx="2"/>
-  <rect class="thumb" x="60" y="126" width="46" height="46" rx="2"/>
-  <rect class="thumb" x="68" y="132" width="46" height="46" rx="2"/>
-  <text class="t-cs" x="97" y="188" text-anchor="middle">&#8804; 8 images, 224 &#215; 224 px</text>
+  <rect class="thumb" x="52" y="118" width="44" height="44" rx="2"/>
+  <rect class="thumb" x="60" y="124" width="44" height="44" rx="2"/>
+  <rect class="thumb" x="68" y="130" width="44" height="44" rx="2"/>
+  <text class="t-cs" x="97" y="185" text-anchor="middle">&#8804; 8 images, 224 &#215; 224 px</text>
 
-  <rect class="comp-upd" x="176" y="112" width="174" height="78" rx="4"/>
-  <rect class="tag-upd"  x="186" y="120" width="52" height="13" rx="6.5"/>
-  <text class="t-tag" x="212" y="130" text-anchor="middle" fill="#fff">trainable</text>
+  <rect class="comp-upd" x="176" y="110" width="174" height="78" rx="4"/>
+  <rect class="tag-upd"  x="186" y="118" width="52" height="13" rx="6.5"/>
+  <text class="t-tag" x="212" y="128" text-anchor="middle" fill="#fff">trainable</text>
   <text class="t-comp" x="186" y="152">ResNet-50</text>
-  <text class="t-cs"   x="186" y="167">ImageNet pre-trained</text>
-  <text class="t-cs"   x="186" y="181">backbone + trunk + heads updated</text>
+  <text class="t-cs"   x="186" y="168">ImageNet pre-trained</text>
 
-  <rect class="comp-n" x="376" y="112" width="168" height="78" rx="4"/>
-  <rect class="tag-fus" x="386" y="120" width="66" height="13" rx="6.5"/>
-  <text class="t-tag" x="419" y="130" text-anchor="middle" fill="#fff">fusion point</text>
+  <rect class="comp-n" x="376" y="110" width="168" height="78" rx="4"/>
+  <rect class="tag-fus" x="386" y="118" width="70" height="13" rx="6.5"/>
+  <text class="t-tag" x="421" y="128" text-anchor="middle" fill="#fff">feature-level</text>
   <text class="t-comp" x="386" y="152">Mean of image features</text>
-  <text class="t-cs"   x="386" y="167">arithmetic mean over the crops</text>
-  <text class="t-cs"   x="386" y="181">&#8594; one feature vector per building</text>
+  <text class="t-cs"   x="386" y="168">one vector per building</text>
 
-  <rect class="comp-upd" x="570" y="112" width="160" height="78" rx="4"/>
-  <rect class="tag-upd"  x="580" y="120" width="52" height="13" rx="6.5"/>
-  <text class="t-tag" x="606" y="130" text-anchor="middle" fill="#fff">trainable</text>
+  <rect class="comp-upd" x="570" y="110" width="160" height="78" rx="4"/>
+  <rect class="tag-upd"  x="580" y="118" width="52" height="13" rx="6.5"/>
+  <text class="t-tag" x="606" y="128" text-anchor="middle" fill="#fff">trainable</text>
   <text class="t-comp" x="580" y="152">Shared MLP, 256-d</text>
-  <text class="t-cs"   x="580" y="167">one trunk feeding all heads</text>
+  <text class="t-cs"   x="580" y="168">shared by all heads</text>
 
   <g class="arr">
-    <path d="M126,151 L170,151"/>
-    <path d="M350,151 L370,151"/>
-    <path d="M544,151 L564,151"/>
+    <path d="M124,149 L170,149"/>
+    <path d="M350,149 L370,149"/>
+    <path d="M544,149 L564,149"/>
   </g>
 
   <!-- ================= LANE 2 : DINOv2 ================= -->
-  <rect class="lane" x="30" y="214" width="715" height="110" rx="4"/>
-  <text class="t-lane"    x="42" y="230">DINOv2 ViT-B/14 &#183; frozen backbone, trained head</text>
-  <text class="t-lanesub" x="352" y="230">only the trunk and the heads are updated</text>
+  <rect class="lane" x="30" y="204" width="715" height="104" rx="4"/>
+  <text class="t-lane" x="42" y="220">DINOv2 ViT-B/14 &#183; frozen backbone, trained head</text>
 
-  <rect class="thumb" x="52" y="244" width="46" height="46" rx="2"/>
-  <rect class="thumb" x="60" y="250" width="46" height="46" rx="2"/>
-  <rect class="thumb" x="68" y="256" width="46" height="46" rx="2"/>
-  <text class="t-cs" x="97" y="312" text-anchor="middle">&#8804; 8 images, 224 &#215; 224 px</text>
+  <rect class="thumb" x="52" y="234" width="44" height="44" rx="2"/>
+  <rect class="thumb" x="60" y="240" width="44" height="44" rx="2"/>
+  <rect class="thumb" x="68" y="246" width="44" height="44" rx="2"/>
+  <text class="t-cs" x="97" y="301" text-anchor="middle">&#8804; 8 images, 224 &#215; 224 px</text>
 
-  <rect class="comp-frz" x="176" y="236" width="174" height="78" rx="4"/>
-  <rect class="tag-frz"  x="186" y="244" width="44" height="13" rx="6.5"/>
-  <text class="t-tag" x="208" y="254" text-anchor="middle" fill="#555">frozen</text>
-  <text class="t-comp" x="186" y="276">DINOv2 ViT-B/14</text>
-  <text class="t-cs mono" x="186" y="291">vit_base_patch14_dinov2</text>
-  <text class="t-cs"   x="186" y="305">no parameter is updated</text>
+  <rect class="comp-frz" x="176" y="226" width="174" height="78" rx="4"/>
+  <rect class="tag-frz"  x="186" y="234" width="44" height="13" rx="6.5"/>
+  <text class="t-tag" x="208" y="244" text-anchor="middle" fill="#555">frozen</text>
+  <text class="t-comp" x="186" y="268">DINOv2 ViT-B/14</text>
+  <text class="t-cs mono" x="186" y="284">vit_base_patch14_dinov2</text>
 
-  <rect class="comp-n" x="376" y="236" width="168" height="78" rx="4"/>
-  <rect class="tag-fus" x="386" y="244" width="66" height="13" rx="6.5"/>
-  <text class="t-tag" x="419" y="254" text-anchor="middle" fill="#fff">fusion point</text>
-  <text class="t-comp" x="386" y="276">Mean of image features</text>
-  <text class="t-cs"   x="386" y="291">&#8594; one feature vector per building</text>
-  <text class="t-cs-i" x="386" y="305">extracted once and cached</text>
+  <rect class="comp-n" x="376" y="226" width="168" height="78" rx="4"/>
+  <rect class="tag-fus" x="386" y="234" width="70" height="13" rx="6.5"/>
+  <text class="t-tag" x="421" y="244" text-anchor="middle" fill="#fff">feature-level</text>
+  <text class="t-comp" x="386" y="268">Mean of image features</text>
+  <text class="t-cs"   x="386" y="284">one vector per building</text>
 
-  <rect class="comp-upd" x="570" y="236" width="160" height="78" rx="4"/>
-  <rect class="tag-upd"  x="580" y="244" width="52" height="13" rx="6.5"/>
-  <text class="t-tag" x="606" y="254" text-anchor="middle" fill="#fff">trainable</text>
-  <text class="t-comp" x="580" y="276">Shared MLP, 256-d</text>
-  <text class="t-cs"   x="580" y="291">the only trained component</text>
+  <rect class="comp-upd" x="570" y="226" width="160" height="78" rx="4"/>
+  <rect class="tag-upd"  x="580" y="234" width="52" height="13" rx="6.5"/>
+  <text class="t-tag" x="606" y="244" text-anchor="middle" fill="#fff">trainable</text>
+  <text class="t-comp" x="580" y="268">Shared MLP, 256-d</text>
+  <text class="t-cs"   x="580" y="284">shared by all heads</text>
 
   <g class="arr">
-    <path d="M126,275 L170,275"/>
-    <path d="M350,275 L370,275"/>
-    <path d="M544,275 L564,275"/>
+    <path d="M124,265 L170,265"/>
+    <path d="M350,265 L370,265"/>
+    <path d="M544,265 L564,265"/>
   </g>
 
   <!-- ================= LANE 3 : InternVL3 ================= -->
-  <rect class="lane" x="30" y="338" width="715" height="110" rx="4"/>
-  <text class="t-lane"    x="42" y="354">InternVL3-2B &#183; no parameter update</text>
-  <text class="t-lanesub" x="272" y="354">the model is prompted, never trained</text>
+  <rect class="lane" x="30" y="320" width="715" height="104" rx="4"/>
+  <text class="t-lane" x="42" y="336">InternVL3-2B &#183; no parameter update</text>
 
-  <rect class="thumb" x="56" y="368" width="46" height="46" rx="2"/>
-  <rect class="thumb" x="64" y="374" width="46" height="46" rx="2"/>
-  <text class="t-cs" x="97" y="430" text-anchor="middle">&#8804; 3 top-ranked images</text>
+  <rect class="thumb" x="56" y="350" width="44" height="44" rx="2"/>
+  <rect class="thumb" x="64" y="356" width="44" height="44" rx="2"/>
+  <text class="t-cs" x="97" y="417" text-anchor="middle">&#8804; 3 top-ranked images</text>
 
-  <rect class="comp-frz" x="176" y="360" width="174" height="78" rx="4"/>
-  <rect class="tag-frz"  x="186" y="368" width="44" height="13" rx="6.5"/>
-  <text class="t-tag" x="208" y="378" text-anchor="middle" fill="#555">frozen</text>
-  <text class="t-comp" x="186" y="400">InternVL3-2B</text>
-  <text class="t-cs mono" x="186" y="415">OpenGVLab/InternVL3-2B</text>
-  <text class="t-cs"   x="186" y="429">deterministic decoding</text>
+  <rect class="comp-frz" x="176" y="342" width="174" height="78" rx="4"/>
+  <rect class="tag-frz"  x="186" y="350" width="44" height="13" rx="6.5"/>
+  <text class="t-tag" x="208" y="360" text-anchor="middle" fill="#555">frozen</text>
+  <text class="t-comp" x="186" y="384">InternVL3-2B</text>
+  <text class="t-cs mono" x="186" y="400">OpenGVLab/InternVL3-2B</text>
+  <text class="t-cs"   x="186" y="413">deterministic decoding</text>
 
-  <rect class="comp-n" x="376" y="360" width="168" height="78" rx="4"/>
-  <text class="t-comp" x="386" y="380">One answer per image</text>
-  <text class="t-cs mono" x="386" y="396">{building_type,</text>
-  <text class="t-cs mono" x="386" y="409">construction_year,</text>
-  <text class="t-cs mono" x="386" y="422">num_floors}</text>
+  <rect class="comp-n" x="376" y="342" width="168" height="78" rx="4"/>
+  <text class="t-comp" x="386" y="366">One answer per image</text>
+  <text class="t-cs mono" x="386" y="384">{building_type,</text>
+  <text class="t-cs mono" x="386" y="397">construction_year,</text>
+  <text class="t-cs mono" x="386" y="410">num_floors}</text>
 
-  <rect class="comp-n" x="570" y="360" width="160" height="78" rx="4"/>
-  <rect class="tag-fus" x="580" y="368" width="66" height="13" rx="6.5"/>
-  <text class="t-tag" x="613" y="378" text-anchor="middle" fill="#fff">fusion point</text>
-  <text class="t-comp" x="580" y="400">Vote over answers</text>
-  <text class="t-cs"   x="580" y="414">mode (type), median (year),</text>
-  <text class="t-cs"   x="580" y="427">median + rounding (floor)</text>
+  <rect class="comp-n" x="570" y="342" width="160" height="78" rx="4"/>
+  <rect class="tag-fus" x="580" y="350" width="74" height="13" rx="6.5"/>
+  <text class="t-tag" x="617" y="360" text-anchor="middle" fill="#fff">decision-level</text>
+  <text class="t-comp" x="580" y="384">Vote over answers</text>
+  <text class="t-cs"   x="580" y="400">mode (type), median (year),</text>
+  <text class="t-cs"   x="580" y="413">median + rounding (floor)</text>
 
   <g class="arr">
-    <path d="M122,399 L170,399"/>
-    <path d="M350,399 L370,399"/>
-    <path d="M544,399 L564,399"/>
+    <path d="M112,381 L170,381"/>
+    <path d="M350,381 L370,381"/>
+    <path d="M544,381 L564,381"/>
   </g>
 
-  <!-- ================= bus to the output panels ================= -->
+  <!-- ================= bus to the single prediction head ================= -->
   <g class="arr">
-    <path d="M730,151 L770,151"/>
-    <path d="M730,275 L770,275"/>
-    <path d="M730,399 L770,399"/>
+    <path d="M730,149 L760,149"/>
+    <path d="M730,265 L760,265"/>
+    <path d="M730,381 L760,381"/>
   </g>
-  <path class="bus" d="M770,151 L770,399"/>
-  <path class="arr" d="M770,190 L806,190"/>
-  <path class="arr" d="M770,370 L806,370"/>
+  <path class="bus" d="M765,149 L765,381"/>
+  <path class="arr" d="M765,265 L786,265"/>
 
-  <!-- ================= M3 panel ================= -->
-  <rect class="panel-m3" x="810" y="110" width="360" height="152" rx="5"/>
-  <text class="t-panel" x="824" y="130" fill="#26456b">M3 &#183; three attribute heads</text>
-  <text class="t-ps" x="824" y="148">type &#8212; 4-way softmax; cross-entropy weighted by the inverse</text>
-  <text class="t-ps" x="824" y="161">class frequency of the development training fold</text>
-  <text class="t-ps" x="824" y="177">year, floor &#8212; mean squared error on values standardised with</text>
-  <text class="t-ps" x="824" y="190">that fold&#8217;s mean and standard deviation</text>
-  <text class="t-ps" x="824" y="207" font-weight="600">L = CE(type) + MSE(year) + MSE(floor), equal weights</text>
-  <text class="t-ps-i" x="824" y="228">InternVL3 has no head: a JSON attribute prompt, designed on a</text>
-  <text class="t-ps-i" x="824" y="241">fixed class-balanced 200-building development subset and frozen</text>
-  <text class="t-ps-i" x="824" y="254">before hold-out; unparsable or out-of-range answers are dropped</text>
+  <!-- ================= prediction head ================= -->
+  <rect class="outbox" x="790" y="197" width="240" height="136" rx="5"/>
+  <text class="t-out"  x="804" y="222">M2 (end-to-end) &#8212; energy class</text>
+  <text class="t-outs" x="804" y="238">one classifier</text>
+  <text class="t-outs" x="804" y="250">7-class and binary trained separately</text>
+  <text class="t-out"  x="804" y="278">M3 (decomposed) &#8212; type &#183; year &#183; floor</text>
+  <text class="t-outs" x="804" y="294">three attribute heads</text>
+  <text class="t-outs" x="804" y="306">type &#183; classification</text>
+  <text class="t-outs" x="804" y="318">year, floor &#183; regression</text>
 
-  <!-- ================= M2 panel ================= -->
-  <rect class="panel-m2" x="810" y="290" width="360" height="158" rx="5"/>
-  <text class="t-panel" x="824" y="310" fill="#7d4d16">M2 &#183; one energy head instead</text>
-  <text class="t-ps" x="824" y="328">the three attribute heads are replaced by a single classifier;</text>
-  <text class="t-ps" x="824" y="341">7-class and binary A&#8211;C | D&#8211;G are trained separately, again with</text>
-  <text class="t-ps" x="824" y="354">inverse-frequency weighted cross-entropy</text>
-  <text class="t-ps" x="824" y="374">ResNet-50 &#8212; full fine-tuning, as in the lane above</text>
-  <text class="t-ps" x="824" y="390">DINOv2 &#8212; only the classifier is trained, on the cached</text>
-  <text class="t-ps" x="824" y="403">building-level features</text>
-  <text class="t-ps" x="824" y="419">InternVL3 &#8212; a direct EPC prompt instead: one class per image,</text>
-  <text class="t-ps" x="824" y="432">then a building-level majority vote</text>
-
-  <!-- ================= footer note ================= -->
-  <rect class="footbox" x="30" y="470" width="1140" height="46" rx="4"/>
-  <text class="t-foot" x="44" y="489">Selection protocol, identical for both trained configurations: five-fold training inside the development set, early stopping on the validation</text>
-  <text class="t-foot" x="44" y="505">Gebouwtype macro-F1 (energy-label macro-F1 for M2), the best fold checkpoint carried forward, and the hold-out set evaluated once.</text>
+  <!-- ================= development-set usage ================= -->
+  <rect class="footbox" x="30" y="440" width="990" height="66" rx="4"/>
+  <text class="t-foot" x="44" y="460" font-weight="600">Use of the development set</text>
+  <text class="t-foot" x="44" y="477">ResNet-50 and DINOv2 &#8212; five-fold training inside the development set; early stopping and fold selection on the validation Gebouwtype macro-F1; the hold-out set is evaluated once.</text>
+  <text class="t-foot" x="44" y="494">InternVL3 &#8212; no parameter is updated, but the prompt was designed on a fixed, class-balanced 200-building subset and frozen before hold-out; invalid answers are excluded from the vote.</text>
 
   <!-- ================= legend ================= -->
-  <rect class="comp-upd" x="30" y="534" width="16" height="12" rx="2"/>
-  <text class="t-legend" x="54" y="544">trainable on the development set</text>
-  <rect class="comp-frz" x="272" y="534" width="16" height="12" rx="2"/>
-  <text class="t-legend" x="296" y="544">frozen &#8212; no parameter updated</text>
-  <rect class="tag-fus" x="512" y="534" width="16" height="12" rx="2"/>
-  <text class="t-legend" x="536" y="544">where the multiple images of one building are combined</text>
+  <rect class="comp-upd" x="30" y="522" width="16" height="12" rx="2"/>
+  <text class="t-legend" x="54" y="532">trainable on the development set</text>
+  <rect class="comp-frz" x="250" y="522" width="16" height="12" rx="2"/>
+  <text class="t-legend" x="274" y="532">frozen &#8212; no parameter updated</text>
+  <rect class="tag-fus" x="480" y="522" width="16" height="12" rx="2"/>
+  <text class="t-legend" x="504" y="532">where the images of one building are combined: feature-level = early fusion, decision-level = late fusion</text>
 </svg>
 
 <p class="caption">
 <b>Fig. 3.5 &mdash; The three vision inference configurations and the scope of training in each.</b>
-All three lanes take the same per-building street-view crops and end at the same prediction
-positions, but they differ in two respects that the configuration table cannot show. The first is
-the <b>extent of the trained region</b>: ResNet-50 updates the backbone, the shared trunk and the
-heads; DINOv2 leaves the backbone frozen and trains only the trunk and heads; InternVL3-2B updates
-nothing and is prompted instead. The second is <b>where the multiple images of one building are
-combined</b> (red markers): the two trained configurations fuse early, averaging the per-image
-feature vectors before any prediction is made, whereas the VLM fuses late, producing one answer per
-image and reducing them by mode and median at building level, with unparsable or out-of-range
-answers excluded. The right-hand panels show that M3 and M2 share the same trunk and differ only in
-the head: three attribute heads with the equally weighted composite loss for M3, a single energy
-classifier for M2, with the 7-class and binary tasks trained separately. For the VLM the same
-substitution is made in the prompt rather than in a head. &ldquo;Zero-shot&rdquo; here means only that no
-model parameter is trained on the study data: the prompt wording was designed on a fixed,
-class-balanced 200-building development subset and frozen before hold-out evaluation, so development
-labels do enter the analysis. Configuration details are listed in Table&nbsp;3.3.
+All three lanes take the same per-building street-view crops and end at the same prediction head, so
+the figure isolates what actually differs between the configurations. The first difference is the
+<b>extent of the trained region</b>: ResNet-50 updates the backbone, the shared trunk and the heads;
+DINOv2 leaves the backbone frozen and trains only the trunk and heads; InternVL3-2B updates nothing
+and is prompted instead. The second is <b>where the several images of one building are combined</b>
+(blue markers). The two trained configurations aggregate at feature level, averaging the per-image
+feature vectors before any prediction is made (early fusion), so evidence from different views is
+pooled before a decision. The VLM aggregates at decision level, producing one answer per image and
+reducing the answers by mode and median at building level (late fusion), so each view must commit to
+a decision on its own. The prediction head is shared: a single energy classifier for M2, with the
+7-class and binary tasks trained separately, or three attribute heads for M3, with type predicted by
+classification and year and floor by regression; for the VLM the same substitution is made in the
+prompt rather than in a head. &ldquo;Zero-shot&rdquo; therefore means only
+that no model parameter is trained on the study data &mdash; development labels still enter through the
+prompt design. Loss terms, weighting and further configuration details are given in the text and in
+Table&nbsp;3.3.
 </p>
 
 </div>

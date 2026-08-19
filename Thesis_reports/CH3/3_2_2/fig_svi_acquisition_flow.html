@@ -2,168 +2,196 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Fig 3.3 - SVI acquisition, image-building pairing and quality filtering</title>
+<title>Fig 3.3 - SVI acquisition, pairing, cropping and building-level aggregation</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 24px; }
   .figwrap { max-width: 1180px; margin: 0 auto; }
   svg { width: 100%; height: auto; }
   .caption { max-width: 1000px; margin: 16px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
 
-  .t-stage   { font: 600 11.5px "Segoe UI", Arial, sans-serif; letter-spacing: .3px; }
-  .t-stagesub{ font: italic 9.2px "Segoe UI", Arial, sans-serif; fill: #555; }
+  .example-strip { margin: 16px 30px 0; padding: 14px 16px 12px; border: 1px solid #aaa; background: #fafafa; }
+  .example-head { margin: 0 0 10px; font-size: 11.5px; font-weight: 600; color: #222; letter-spacing: .25px; }
+  .example-grid { display: grid; grid-template-columns: minmax(0, 3.5fr) 96px minmax(160px, 1fr); gap: 14px; align-items: center; }
+  .example-panel { margin: 0; }
+  .example-panel svg { display: block; border: 1px solid #777; background: #fff; }
+  .example-panel.target svg { border: 2px solid #55a875; }
+  .example-panel figcaption { margin-top: 6px; font-size: 9.7px; color: #444; text-align: center; }
+  .example-arrow { text-align: center; color: #3070B3; font-size: 27px; font-weight: 600; line-height: 1; }
+  .example-arrow span { display: block; margin-top: 7px; font-size: 9px; line-height: 1.25; font-weight: 500; color: #444; }
+  .example-note { margin: 9px 0 0; font-size: 9.5px; color: #555; line-height: 1.4; }
+
+  .t-stage   { font: 600 11.5px "Segoe UI", Arial, sans-serif; fill: #333; letter-spacing: .3px; }
   .t-title   { font: 600 10.8px "Segoe UI", Arial, sans-serif; fill: #111; }
   .t-sub     { font: 9.2px "Segoe UI", Arial, sans-serif; fill: #444; }
-  .t-badge   { font: 600 8.2px "Segoe UI", Arial, sans-serif; fill: #26456b; }
-  .t-note    { font: italic 9.2px "Segoe UI", Arial, sans-serif; fill: #3d3d3d; }
-  .t-notehd  { font: 600 10px "Segoe UI", Arial, sans-serif; fill: #333; }
+  .t-unit    { font: italic 8.4px "Segoe UI", Arial, sans-serif; fill: #666; }
   .t-legend  { font: 9.6px "Segoe UI", Arial, sans-serif; fill: #555; }
   .t-attrib  { font: italic 10px "Segoe UI", Arial, sans-serif; fill: #444; }
   .mono      { font-family: Consolas, "Courier New", monospace; }
 
   .band   { fill: #efefef; stroke: #bbb; stroke-width: 1; }
-  .band-s { fill: #dce7f4; stroke: #3f6390; stroke-width: 1; }
-  .box    { fill: #fff; stroke: #333; stroke-width: 1.3; }
-  .box-s  { fill: #eaf0f8; stroke: #3f6390; stroke-width: 1.6; }
-  .badge  { fill: #dce7f4; stroke: #3f6390; stroke-width: .9; }
-  .notebox{ fill: #fafafa; stroke: #999; stroke-width: 1; stroke-dasharray: 4 3; }
+  .box    { fill: #fff;    stroke: #333;    stroke-width: 1.3; }
+  .box-s  { fill: #E6EEF6; stroke: #3070B3; stroke-width: 1.8; }
   .arr    { stroke: #333; stroke-width: 1.6; fill: none; marker-end: url(#arrK); }
 </style>
 </head>
 <body>
 <div class="figwrap">
 
-<svg viewBox="0 0 1180 556" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="SVI acquisition, image to building pairing and quality filtering workflow">
+<svg viewBox="0 0 1180 590" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="SVI acquisition, image-building pairing, cropping and building-level aggregation workflow">
   <defs>
-    <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+    <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
   </defs>
 
   <!-- ============ stage header bands ============ -->
-  <rect class="band" x="30" y="44" width="340" height="32" rx="3"/>
-  <text class="t-stage"    x="44" y="59">STAGE 1 &#183; FOOTPRINT ACQUISITION</text>
-  <text class="t-stagesub" x="44" y="71">OpenFACADES, with the residential pre-filter inserted</text>
+  <rect class="band" x="30" y="44" width="340" height="26" rx="3"/>
+  <text class="t-stage" x="44" y="62">STAGE 1 &#183; FOOTPRINT ACQUISITION</text>
 
-  <rect class="band" x="420" y="44" width="340" height="32" rx="3"/>
-  <text class="t-stage"    x="434" y="59">STAGE 2 &#183; IMAGE ACQUISITION AND PROCESSING</text>
-  <text class="t-stagesub" x="434" y="71">OpenFACADES, applied as published</text>
+  <rect class="band" x="420" y="44" width="340" height="26" rx="3"/>
+  <text class="t-stage" x="434" y="62">STAGE 2 &#183; IMAGE ACQUISITION AND PROCESSING</text>
 
-  <rect class="band-s" x="810" y="44" width="340" height="32" rx="3"/>
-  <text class="t-stage"    x="824" y="59" fill="#26456b">STAGE 3 &#183; KEY MAPPING AND OUTPUT</text>
-  <text class="t-stagesub" x="824" y="71">introduced by this study</text>
+  <rect class="band" x="810" y="44" width="340" height="26" rx="3"/>
+  <text class="t-stage" x="824" y="62">STAGE 3 &#183; KEY MAPPING AND OUTPUT</text>
 
   <!-- ============ column 1 ============ -->
-  <rect class="box" x="30" y="90" width="340" height="46" rx="4"/>
-  <text class="t-title" x="44" y="109">OSM and Overture Maps building footprints</text>
-  <text class="t-sub"   x="44" y="126">fetched and integrated by the OpenFACADES framework</text>
+  <rect class="box" x="30" y="84" width="340" height="46" rx="4"/>
+  <text class="t-title" x="44" y="103">OSM and Overture Maps building footprints</text>
+  <text class="t-sub"   x="44" y="120">fetched and integrated by the OpenFACADES framework</text>
 
-  <rect class="box-s" x="30" y="150" width="340" height="58" rx="4"/>
-  <rect class="badge" x="284" y="157" width="72" height="14" rx="7"/>
-  <text class="t-badge" x="320" y="167" text-anchor="middle">this study</text>
-  <text class="t-title" x="44" y="169">BAG residential pre-filter</text>
-  <text class="t-sub"   x="44" y="185">footprints and BAG polygons reprojected to EPSG:28992;</text>
-  <text class="t-sub"   x="44" y="199">kept only if the centroid falls inside a BAG residential polygon</text>
+  <rect class="box-s" x="30" y="144" width="340" height="58" rx="4"/>
+  <text class="t-title" x="44" y="164">BAG residential pre-filter</text>
+  <text class="t-sub"   x="44" y="180">footprints and BAG polygons reprojected to EPSG:28992;</text>
+  <text class="t-sub"   x="44" y="194">kept only if the centroid falls inside a BAG residential polygon</text>
 
-  <rect class="box" x="30" y="222" width="340" height="46" rx="4"/>
-  <text class="t-title" x="44" y="241">Retained residential footprints</text>
-  <text class="t-sub"   x="44" y="258">non-residential buildings never enter image processing</text>
+  <rect class="box" x="30" y="216" width="340" height="46" rx="4"/>
+  <text class="t-title" x="44" y="235">Retained residential footprints</text>
+  <text class="t-sub"   x="44" y="252">non-residential buildings never enter image processing</text>
+  <text class="t-unit"  x="356" y="252" text-anchor="end">unit: footprint</text>
 
   <g class="arr">
-    <path d="M200,136 L200,146"/>
-    <path d="M200,208 L200,218"/>
+    <path d="M200,130 L200,144"/>
+    <path d="M200,202 L200,216"/>
   </g>
 
-  <!-- column 1 -> column 2 -->
-  <path class="arr" d="M370,245 L395,245 L395,113 L416,113"/>
+  <!-- retained footprints merge with panorama metadata at isovist pairing -->
+  <path class="arr" d="M370,239 L395,239 L395,157 L420,157"/>
 
   <!-- ============ column 2 ============ -->
-  <rect class="box" x="420" y="90" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="109">Mapillary 360&#176; panorama metadata</text>
-  <text class="t-sub"   x="434" y="126">retrieved for the study extent</text>
+  <rect class="box" x="420" y="84" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="103">Mapillary 360&#176; panorama metadata</text>
+  <text class="t-sub"   x="434" y="120">retrieved for the study extent</text>
 
-  <rect class="box" x="420" y="150" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="169">Isovist pairing, 30 m search radius</text>
-  <text class="t-sub"   x="434" y="186">candidate panorama&#8211;building pairs with clear sight line</text>
+  <rect class="box" x="420" y="136" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="154">Isovist pairing, 30 m search radius</text>
+  <text class="t-sub"   x="434" y="170">sight line not blocked by other building footprints</text>
 
-  <rect class="box" x="420" y="210" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="229">Angle-of-view (AoV) screening</text>
-  <text class="t-sub"   x="434" y="246">discards views that are too distant or too oblique</text>
+  <rect class="box" x="420" y="188" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="206">Angle-of-view (AoV) screening</text>
+  <text class="t-sub"   x="434" y="222">10&#176; &lt; AoV &lt; 130&#176;; removes too-small or extreme views</text>
 
-  <rect class="box" x="420" y="270" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="289">Panorama download</text>
-  <text class="t-sub"   x="434" y="306">2,048-pixel resolution</text>
+  <rect class="box" x="420" y="240" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="258">Per-footprint image selection</text>
+  <text class="t-sub"   x="434" y="274">retain at most three panoramas with the largest AoV</text>
 
-  <rect class="box" x="420" y="330" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="349">GroundingDINO detection</text>
-  <text class="t-sub"   x="434" y="366">locates the target building inside the panorama</text>
+  <rect class="box" x="420" y="292" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="310">Panorama download</text>
+  <text class="t-sub"   x="434" y="326">2,048-pixel resolution</text>
 
-  <rect class="box" x="420" y="390" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="409">Perspective reprojection and cropping</text>
-  <text class="t-sub"   x="434" y="426">one rectified facade image per building</text>
+  <rect class="box" x="420" y="344" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="362">GroundingDINO detection</text>
+  <text class="t-sub"   x="434" y="378">locates the target building inside the panorama</text>
 
-  <rect class="box" x="420" y="450" width="340" height="46" rx="4"/>
-  <text class="t-title" x="434" y="469">Image quality filter</text>
-  <text class="t-sub"   x="434" y="486">building share, occlusion, blur and file-size thresholds</text>
+  <rect class="box" x="420" y="396" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="414">Perspective reprojection and cropping</text>
+  <text class="t-sub"   x="434" y="430">one rectified crop per retained panorama&#8211;building pair</text>
+
+  <rect class="box" x="420" y="448" width="340" height="42" rx="4"/>
+  <text class="t-title" x="434" y="466">Image quality filter</text>
+  <text class="t-sub"   x="434" y="482">semantic shares, blur, file size and outdoor-scene check</text>
+  <text class="t-unit"  x="746" y="482" text-anchor="end">unit: crop</text>
 
   <g class="arr">
-    <path d="M590,136 L590,146"/>
-    <path d="M590,196 L590,206"/>
-    <path d="M590,256 L590,266"/>
-    <path d="M590,316 L590,326"/>
-    <path d="M590,376 L590,386"/>
-    <path d="M590,436 L590,446"/>
+    <path d="M590,126 L590,136"/>
+    <path d="M590,178 L590,188"/>
+    <path d="M590,230 L590,240"/>
+    <path d="M590,282 L590,292"/>
+    <path d="M590,334 L590,344"/>
+    <path d="M590,386 L590,396"/>
+    <path d="M590,438 L590,448"/>
   </g>
 
   <!-- column 2 -> column 3 -->
-  <path class="arr" d="M760,473 L785,473 L785,121 L806,121"/>
+  <path class="arr" d="M760,469 L785,469 L785,115 L810,115"/>
 
   <!-- ============ column 3 ============ -->
-  <rect class="box-s" x="810" y="90" width="340" height="62" rx="4"/>
-  <rect class="badge" x="1064" y="97" width="72" height="14" rx="7"/>
-  <text class="t-badge" x="1100" y="107" text-anchor="middle">this study</text>
-  <text class="t-title" x="824" y="110">OpenFACADES <tspan class="mono">building_id</tspan> &#8594; BAG <tspan class="mono">pand_id</tspan></text>
-  <text class="t-sub"   x="824" y="127">the same centroid rule, applied after image processing,</text>
-  <text class="t-sub"   x="824" y="141">as a formal lookup; unmatched images are excluded</text>
+  <rect class="box-s" x="810" y="84" width="340" height="62" rx="4"/>
+  <text class="t-title" x="824" y="105">OpenFACADES <tspan class="mono">building_id</tspan> &#8594; BAG <tspan class="mono">pand_id</tspan></text>
+  <text class="t-sub"   x="824" y="121">the same centroid rule, applied after image processing,</text>
+  <text class="t-sub"   x="824" y="135">as a formal lookup; unmatched images are excluded</text>
 
-  <rect class="box" x="810" y="166" width="340" height="46" rx="4"/>
-  <text class="t-title" x="824" y="185">Per-building SVI manifest</text>
-  <text class="t-sub"   x="824" y="202">keyed by <tspan class="mono">pand_id</tspan>; step-wise counts in Table 3.2</text>
+  <rect class="box-s" x="810" y="160" width="340" height="58" rx="4"/>
+  <text class="t-title" x="824" y="180">Building-level aggregation and image cap</text>
+  <text class="t-sub"   x="824" y="196">rank by AoV, then camera distance; retain at most</text>
+  <text class="t-sub"   x="824" y="210">eight crops per BAG <tspan class="mono">pand_id</tspan></text>
 
-  <path class="arr" d="M980,152 L980,162"/>
+  <path class="arr" d="M980,146 L980,160"/>
 
-  <rect class="notebox" x="810" y="240" width="340" height="76" rx="4"/>
-  <text class="t-notehd" x="824" y="260">Why the second mapping is needed</text>
-  <text class="t-note"   x="824" y="277">OpenFACADES keys every crop by its own <tspan class="mono">building_id</tspan>,</text>
-  <text class="t-note"   x="824" y="291">whereas all reference attributes and EPC labels in this</text>
-  <text class="t-note"   x="824" y="305">study are keyed by the BAG <tspan class="mono">pand_id</tspan>.</text>
+  <rect class="box" x="810" y="232" width="340" height="58" rx="4"/>
+  <text class="t-title" x="824" y="252">Per-building SVI manifest</text>
+  <text class="t-sub"   x="824" y="269">10,104 buildings &#183; 47,238 crops; keyed by <tspan class="mono">pand_id</tspan></text>
+  <text class="t-unit"  x="1136" y="282" text-anchor="end">units: BAG building + crop</text>
+
+  <path class="arr" d="M980,218 L980,232"/>
+
+  <rect x="810" y="310" width="340" height="60" rx="4" fill="#fafafa" stroke="#999" stroke-width="1" stroke-dasharray="4 3"/>
+  <text class="t-title" x="824" y="330">Outside this acquisition workflow</text>
+  <text class="t-sub"   x="824" y="347">join to the building-level reference table &#8594; experimental set</text>
+  <text class="t-sub"   x="824" y="361">10,086 buildings &#183; 47,150 crops (&#167;3.2.2)</text>
+
+  <path d="M980,290 L980,310" stroke="#777" stroke-width="1.4" fill="none" stroke-dasharray="4 3" marker-end="url(#arrK)"/>
 
   <!-- ============ legend and attribution ============ -->
-  <rect class="box"   x="30" y="516" width="16" height="12" rx="2"/>
-  <text class="t-legend" x="54" y="526">OpenFACADES step (Liang et al., 2025)</text>
-  <rect class="box-s" x="320" y="516" width="16" height="12" rx="2"/>
-  <text class="t-legend" x="344" y="526">step introduced or formalised by this study</text>
-  <text class="t-attrib" x="700" y="526">Adapted from OpenFACADES (Liang et al., 2025).</text>
+  <rect class="box"   x="30" y="536" width="16" height="12" rx="2"/>
+  <text class="t-legend" x="54" y="546">OpenFACADES processing sequence</text>
+  <rect class="box-s" x="290" y="536" width="16" height="12" rx="2"/>
+  <text class="t-legend" x="314" y="546">step introduced or formalised in this study</text>
+  <text class="t-attrib" x="700" y="546">Adapted from OpenFACADES (Liang et al., 2025).</text>
 </svg>
 
+<div class="example-strip" role="group" aria-label="Illustrative panorama-to-crop transformation">
+  <div class="example-head">ILLUSTRATIVE IMAGE TRANSFORMATION &#183; one retained panorama&#8211;building pair</div>
+  <div class="example-grid">
+    <figure class="example-panel">
+      <svg viewBox="0 0 1900 700" role="img" aria-label="Mapillary panorama with detected buildings">
+        <image href="svi_processing_example.png" x="0" y="0" width="2394" height="1231"/>
+      </svg>
+      <figcaption>360&#176; panorama with candidate building detections</figcaption>
+    </figure>
+    <div class="example-arrow">&#8594;<span>detection + perspective<br>reprojection</span></div>
+    <figure class="example-panel target">
+      <svg viewBox="1940 615 430 585" role="img" aria-label="Rectified crop of the selected building">
+        <image href="svi_processing_example.png" x="0" y="0" width="2394" height="1231"/>
+      </svg>
+      <figcaption>selected green detection &#8594; one rectified facade crop</figcaption>
+    </figure>
+  </div>
+  <p class="example-note">The raster example is illustrative; one crop is generated per retained panorama&#8211;building pair, and several crops may therefore be associated with the same BAG building.</p>
+</div>
+
 <p class="caption">
-<b>Fig. 3.3 &mdash; SVI acquisition, image&ndash;building pairing and quality filtering.</b>
-The workflow is the OpenFACADES framework (Liang et al., 2025) with two local adaptations, shown in
-blue. First, the published pipeline is split into a footprint-acquisition stage and an
-image-processing stage so that a <b>BAG residential pre-filter</b> can be inserted between them:
-OpenFACADES footprints and BAG polygons are reprojected to EPSG:28992 and a footprint is retained
-only when its centroid falls inside a BAG residential building polygon, so buildings outside the
-target residential stock never enter image processing. Second, because OpenFACADES keys every crop
-by its own <span class="mono">building_id</span> while all reference attributes and EPC labels in
-this study are keyed by the BAG <span class="mono">pand_id</span>, the same centroid rule is applied
-again after image processing to build a formal <span class="mono">building_id</span> &rarr;
-<span class="mono">pand_id</span> lookup table; crops for which no BAG match can be established are
-excluded. The intermediate stage is applied as published: Mapillary 360&deg; panorama metadata are
-retrieved for the study extent, isovist analysis with a 30&nbsp;m search radius establishes candidate
-panorama&ndash;building pairs, candidates are screened by angle of view, retained panoramas are
-downloaded at 2,048-pixel resolution, GroundingDINO locates the target building, and the detection is
-reprojected to a perspective view, cropped to a single building and passed through the image quality
-filter. The numeric thresholds of the AoV and quality filters, and the number of buildings and images
-surviving each step, are given in Table&nbsp;3.2.
+<b>Fig. 3.3 &mdash; SVI acquisition, image&ndash;building pairing, cropping and building-level aggregation.</b>
+The workflow follows the OpenFACADES processing sequence (Liang et al., 2025), with steps introduced
+or formalised in this study shown in blue. A BAG residential pre-filter is inserted before image
+processing; after cropping, a formal <span class="mono">building_id</span> &rarr;
+<span class="mono">pand_id</span> lookup and building-level image cap produce the SVI manifest.
+Retained residential footprints and Mapillary panorama metadata jointly enter the 30&nbsp;m isovist
+pairing step. Candidate views are screened by AoV, limited to three panoramas per OpenFACADES
+footprint, downloaded, detected, reprojected, cropped and quality filtered. Crops are then linked to
+BAG buildings and limited to eight per <span class="mono">pand_id</span>. The illustrative image strip
+shows one panorama&ndash;building pair and its resulting facade crop; numeric filtering thresholds and
+step-wise counts are reported in Table&nbsp;3.2. Imagery &copy; Mapillary contributors
+(CC&nbsp;BY-SA&nbsp;4.0).
 </p>
 
 </div>
