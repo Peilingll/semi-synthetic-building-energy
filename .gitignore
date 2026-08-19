@@ -2,8 +2,9 @@
 .venv/
 __pycache__/
 
-# Claude Code local state
+# Local agent/tool state
 .claude/
+.codex/
 
 # Secrets / API keys
 .env
