@@ -1,0 +1,33 @@
+{
+  "pooled_holdout": {
+    "n": 2018,
+    "seven_class": {
+      "accuracy": 0.1429,
+      "macro_f1": 0.1274,
+      "within_1_accuracy": 0.3903
+    },
+    "binary": {
+      "accuracy_at_0.5": 0.5,
+      "macro_f1_at_0.5": 0.4787,
+      "macro_f1_at_rate": 0.5,
+      "roc_auc": 0.5,
+      "positive_prevalence": 0.2978
+    }
+  },
+  "loco_amsterdam": {
+    "n": 8011,
+    "seven_class": {
+      "accuracy": 0.1429,
+      "macro_f1": 0.128,
+      "within_1_accuracy": 0.392
+    },
+    "binary": {
+      "accuracy_at_0.5": 0.5,
+      "macro_f1_at_0.5": 0.4803,
+      "macro_f1_at_rate": 0.5,
+      "roc_auc": 0.5,
+      "positive_prevalence": 0.3051
+    }
+  },
+  "rate_from_dev": 0.2966
+}
