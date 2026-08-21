@@ -1,0 +1,61 @@
+{
+  "n_dev": 8068,
+  "n_holdout": 2018,
+  "seven_class": {
+    "accuracy": 0.3593,
+    "macro_f1": 0.126,
+    "n_cells_in_dev": 21,
+    "cell_modal_labels": {
+      "AB|NL.01": "C",
+      "AB|NL.02": "A",
+      "AB|NL.03": "A",
+      "AB|NL.04": "A",
+      "AB|NL.05": "A",
+      "AB|NL.06": "A",
+      "MFH|NL.01": "C",
+      "MFH|NL.03": "C",
+      "MFH|NL.04": "B",
+      "SFH|NL.01": "C",
+      "SFH|NL.02": "D",
+      "SFH|NL.03": "C",
+      "SFH|NL.04": "A",
+      "SFH|NL.05": "A",
+      "SFH|NL.06": "A",
+      "TH|NL.01": "C",
+      "TH|NL.02": "C",
+      "TH|NL.03": "A",
+      "TH|NL.04": "A",
+      "TH|NL.05": "A",
+      "TH|NL.06": "A"
+    },
+    "within_1_accuracy": 0.6591
+  },
+  "binary": {
+    "accuracy": 0.7027,
+    "macro_f1": 0.4143,
+    "n_cells_in_dev": 21,
+    "cell_modal_labels": {
+      "AB|NL.01": "A-C",
+      "AB|NL.02": "A-C",
+      "AB|NL.03": "A-C",
+      "AB|NL.04": "A-C",
+      "AB|NL.05": "A-C",
+      "AB|NL.06": "A-C",
+      "MFH|NL.01": "A-C",
+      "MFH|NL.03": "A-C",
+      "MFH|NL.04": "A-C",
+      "SFH|NL.01": "A-C",
+      "SFH|NL.02": "D-G",
+      "SFH|NL.03": "A-C",
+      "SFH|NL.04": "A-C",
+      "SFH|NL.05": "A-C",
+      "SFH|NL.06": "A-C",
+      "TH|NL.01": "A-C",
+      "TH|NL.02": "A-C",
+      "TH|NL.03": "A-C",
+      "TH|NL.04": "A-C",
+      "TH|NL.05": "A-C",
+      "TH|NL.06": "A-C"
+    }
+  }
+}
