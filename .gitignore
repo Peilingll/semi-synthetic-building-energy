@@ -47,3 +47,6 @@ data/processed/mvp_vlm_testing_data_gmini/
 
 # OpenFACADES Phase 2 VLM inference outputs; that branch is not part of the thesis
 data/processed/phase_2_openfacade_vlm_pipeline/
+
+# LaTeX draft previews (rebuild from thesistemplate-main/)
+output/
