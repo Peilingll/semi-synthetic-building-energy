@@ -1,0 +1,65 @@
+\chapter{Data-Integrity Audits}
+
+
+This appendix records the systematic audit of data-layer assumptions conducted before the analysis was finalised: what was checked, what was found, and how each issue was addressed. The main text presents only the corrected system and numerical results. This record retains the revision trail to support reproducibility and reconciliation with figures reported in earlier project-stage documents, including the interim presentation.
+
+
+
+\begin{table}[H]
+\centering
+\caption{Audit items and actions}
+\label{tab:A_1}
+\small
+\begin{tblr}{
+  width = \linewidth,
+  colspec = {X[1,l] X[1,l] X[1,l]},
+  row{1} = {font=\bfseries},
+  rowsep = 3pt,
+  colsep = 4pt
+}
+\toprule
+Audit item & Finding & Action \\
+\midrule
+Feature provenance & ``Compactness'' and ``floor area'' were in fact EPC-certificate fields used to calculate the label. Their use as features constituted leakage, and the fields would be unavailable for buildings without certificates. & Removed the fields, recalculated them from reconstructed 3DBAG values, and updated all affected results. \\
+TABULA lookup & The manually transcribed table contained a systematic thermal-resistance bias relative to the original workbook. & Replaced manual transcription with automated generation and value-level provenance. Classification results were unaffected because the lookup values are deterministic functions of type \ensuremath{\times} period; physical quantities were recalculated using the corrected values. \\
+Label definition & The official ratings are binned according to the \texttt{forfaitair} variant of the indicator. & Aligned the regression target field. \textbf{WIP:} affected results are being recalculated. \\
+Count reconciliation & Building counts reported at different stages referred to different sets. & Standardised the convention of reporting 10,104 buildings in the delivered SVI dataset and 10,086 buildings in the experimental dataset. \\
+Certificate chronology & The database contains only current certificates, and only 0.1\% of dwellings nationwide have a certificate time series. & Longitudinal renovation labels are infeasible; renovation detection is retained as future work in \cref{sec:5_3}. \\
+Nature of the geometry source & 3DBAG contains automatically reconstructed outputs rather than field measurements. Floor count and the separation of internal and external walls are derived fields introduced after Peters et al. (2022). & Standardised the manuscript terminology as ``reconstructed geometry'', documented the derivation of each field in \cref{tab:A_2}, and noted the need to report the version used. \\
+\bottomrule
+\end{tblr}
+\end{table}
+
+
+The feature-provenance finding has been converted into the general eligibility rule stated in \cref{sec:3_5}: the provenance of every candidate feature must be verified in advance, and any field used to calculate the target label must be excluded.
+
+
+
+\begin{table}[H]
+\centering
+\caption{Definitions of derived 3DBAG fields (corresponding to the source-characterisation note in \cref{sec:3_2_1})}
+\label{tab:A_2}
+\small
+\begin{tblr}{
+  width = \linewidth,
+  colspec = {X[1,l] X[1,l] X[1,l]},
+  row{1} = {font=\bfseries},
+  rowsep = 3pt,
+  colsep = 4pt
+}
+\toprule
+Field used in this study & Definition & Note \\
+\midrule
+\texttt{building\_height} & \texttt{b3\_h\_max − b3\_h\_maaiveld} & Ground elevation is the fifth percentile of ground-point elevations. \\
+\texttt{num\_floors\_estimated} & \texttt{b3\_bouwlagen}; if missing, \texttt{round(building\_height / 3.0)} & Assumes a floor-to-floor height of 3.0 m. \\
+\texttt{floor\_area\_estimated} & \texttt{b3\_opp\_grond × num\_floors\_estimated} & Replaces the EPC-certificate field used incorrectly in the earlier analysis. \\
+\texttt{shared\_ratio} & \texttt{b3\_opp\_scheidingsmuur / (b3\_opp\_buitenmuur + b3\_opp\_scheidingsmuur)} & Classification statistic derived from reconstructed surfaces. \\
+\texttt{shape\_factor} & \texttt{envelope\_area / volume} & A comparison variant including shared walls is also retained. \\
+\bottomrule
+\end{tblr}
+\end{table}
+
+
+\begin{quote}
+WIP: Add the identifier of the 3DBAG version used.
+\end{quote}

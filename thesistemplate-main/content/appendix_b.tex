@@ -1,0 +1,32 @@
+\chapter{Supplementary Label-Collapse Comparisons}
+
+
+The results in this appendix apply post-hoc transformations to the seven-class predictions. They are not equivalent to the independently trained binary models reported in \cref{tab:4_4} and are therefore excluded from the primary downstream route comparison.
+
+
+
+\begin{table}[H]
+\centering
+\caption{Literature-aligned label-collapse results}
+\label{tab:B_1}
+\small
+\begin{tblr}{
+  width = \linewidth,
+  colspec = {X[1,l] X[1,r] X[1,r]},
+  row{1} = {font=\bfseries},
+  rowsep = 3pt,
+  colsep = 4pt
+}
+\toprule
+Route & Sun split macro-F1 & Mayer split macro-F1 \\
+\midrule
+M0 & 0.412 & 0.457 \\
+M1 & 0.514 & 0.502 \\
+M2--DINOv2 & 0.583 & 0.562 \\
+M3--DINOv2 & 0.498 & 0.488 \\
+\bottomrule
+\end{tblr}
+\end{table}
+
+
+The Sun split uses A--C versus D--G, whereas the Mayer split uses A--D versus E--G. Because these values are obtained by collapsing seven-class predictions rather than retraining a binary classifier, they should not be compared directly with the binary results in \cref{tab:4_4}.
