@@ -1,108 +1,73 @@
-\documentclass[ %
-fleqn, % left aligned equations.
-11pt, % normal textsize.
-oneside, % single side page, use twoside if >50 pages.
-print=false, % sets all link colors to black and redefines colors in greyscale (lower printing costs).
-language=ngerman, % use only ngerman or english.
-thesis=true, % set to false when writing a report
+\documentclass[
+fleqn,
+11pt,
+oneside,
+print=false,
+language=english,
+citeStyle=none,
+thesis=true
 ]{CMSthesis}
 
-%======================== please fill in your data here ==========================
-\SetType{Master of Science (M.Sc.)} % Bachelor, Master.
-\SetFieldOfStudy{XYZ-Ingenieurwesen} % Bauingenieurwesen/Civil engineering, Umweltingenieurwesen/Environmental engineering, etc.
-\SetTopic{Latex-Vorlage für Abschlussarbeiten und Projektarbeiten mit sehr sehr sehr langem Titel um die Formatierung zu testen} % Topic of your thesis
-\SetSubtopic{Falls ein Untertitel vorhanden ist} % Remove otherwise
-\SetAuthor{Vorname Name} % comma separated list for report
-\SetMatrikulationNo{112233} % only for thesis
-\SetEmail{xyz@tum.de} % only for thesis
-\SetZipCode{D-12345} % only for thesis
-\SetLocation{München} % only for thesis
-\SetStreet{Musterstraße~1} % only for thesis
+\SetType{Master of Science (M.Sc.)}
+\SetFieldOfStudy{[To be completed]}
+\SetTopic{\raggedright Quantifying the Performance Cost of\\
+Replacing Registry Metadata with\\
+Street-View-Derived Building Attributes}
+\SetSubtopic{\raggedright in Archetype-Based UBEM Workflows}
+\SetAuthor{Pei-Ling Song}
+\SetMatrikulationNo{03798081}
+\SetEmail{peiling.song@gmail.com}
+\SetZipCode{80995}
+\SetLocation{München}
+\SetStreet{Franz-Kötterl-Straße 19a}
+\SetStart{[Date of issue]}
+\SetEnd{\today}
+\AddSupervisor{Agata Dalach}
+\AddSupervisor{Jose Quesada Allerhand}
+\AddAffil{\DAchair}
 
-\SetStart{TT. Monat JJJJ} % Date of registration, e.g. 01. Mai 2010
-\SetEnd{\today} % Date of submission, e.g. 01. Mai 2010
-
-%======================== Add supervisors ===========================
-\AddSupervisor{Name des Professsors, Name Supervisor 1, Name Supervisor 2} % Add supervisors in a comma separated list, Name the Professor first.
-\AddAffil{\DAchair} % Add affiliation of the supervisors, deactivated for report
-\AddSupervisor{Name Supervisor 3} % If supervisors have different affiliations, you can alternate AddSupervisor and AddAffil
-\AddAffil{Name of Company} % deactivated for report
-% remove if no supervisor should be listed
-
-%======================== load extra packages here ===============================
-% \usepackage{...package name...}
-
-%======================== Silbentrennung =========================================
-\hyphenation{Sil-ben-tren-nung pa-ra-me-tri-schen}
-
-%======================== Programmiersprachen ====================================
 \input{codestyles}
+\usepackage{float}
+\renewcommand{\ttdefault}{lmtt}
+\emergencystretch=2em
+\graphicspath{{{./figures/fig/}}}
+\captionsetup[table]{position=top,skip=6pt}
+\captionsetup[figure]{position=bottom,skip=6pt}
+\hypersetup{
+  pdftitle={Quantifying the Performance Cost of Replacing Registry Metadata with Street-View-Derived Building Attributes in Archetype-Based UBEM Workflows},
+  pdfauthor={Pei-Ling Song},
+  bookmarksopen=true
+}
 
-%======================== Settings ===============================================
-% \setcounter{secnumdepth}{3} % use this if you want to increase toc depth.
-%\DefineColor[0.5]{kwcolor}{default}{Green}
-
-%======================== References and Abbreviations ===========================
-\addbibresource{./literature/references.bib}
-\addbibresource{./literature/norms.bib}
-
-\makeglossaries
-\input{content/00a_abkuerzungen} % Definition der Abkürzungen (Abbreviations)
-\input{content/00d_symbollist} % not implemented yet
-%\input{content/00e_glossary}
-
-%=================================================================================
 \begin{document}
 \pagestyle{empty}
 \pagenumbering{Alph}
-%========== Titelseite, Zusammenfassung, Inhaltsverzeichnis, etc. ================
 \maketitle
 \pagenumbering{Roman}
 \cleardoublepage
 
-% \include{content/00b_vorwort}
-\include{content/00c_abstract} % not needed in report
-
-\tableofcontents % Inhaltsverzeichnis
+\include{content/00c_abstract}
+\tableofcontents
+\cleardoublepage
+\listoftables
+\cleardoublepage
+\listoffigures
 \cleardoublepage
 
-%========== Optionale Verzeichnisse, nur nach Abstimmung mit Betreuer ============
-%\listoffigures % Abbildungsverzeichnis, optional
-%\cleardoublepage
+\parskip 8pt
+\pagenumbering{arabic}
+\include{content/01_introduction}
+\include{content/02_literature_review}
+\include{content/03_method}
+\include{content/04_experiments}
+\include{content/05_discussion_conclusion}
 
-%\listoftables % Tabellenverzeichnis, optional
-%\cleardoublepage
-
-% \lstlistoflistings % Algorithmusverzeichnis, optional
-% \cleardoublepage
-% \glsaddall
-\printglossary[type=abbreviations,style=super,title={Abkürzungsverzeichnis}] % Abkürzungsverzeichnis, es werden nur im Text vorhandene angezeigt, optional
-\printglossary[type=symbols,style=super4col,title={Symbolverzeichnis}]   % list of symbols, optional
-\cleardoublepage
-
-%============ Ab hier der eigentliche Inhalt der Master Thesis ===================
-\parskip 8pt % Abstand zwischen aufeinanderfolgenden Absätzen
-\pagenumbering{arabic} % 
-
-\include{content/01_einleitung}
-\include{content/02_kapitel}
-%\include{...more chapters...}
-
-%============ Anhang =============================================================
 \begin{appendix}
-\include{content/za_attachment_a}
-%\include{...more attachments...}
+\include{content/appendix_a}
+\include{content/appendix_b}
 \end{appendix}
-\cleardoublepage
 
-%============ Literaturverzeichnis ===============================================
-\printbibliography[heading=bibintoc]
-\cleardoublepage
-\printbibliography[heading=bibintoc, type=standard, title=Normen]
-\printglossary
-
-%=============Eidesstattliche Erklärung ==========================================
+\include{content/99_references}
 \Declaration
 \cleardoublepage
-
 \end{document}

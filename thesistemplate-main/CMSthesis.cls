@@ -313,7 +313,8 @@ Ich versichere hiermit, dass ich die von mir eingereichte Abschlussarbeit selbst
 
 \RequirePackage{rotating}
 
-\RequirePackage{lscape}
+% Rotate landscape pages in PDF viewers as well as on the printed page.
+\RequirePackage{pdflscape}
 \RequirePackage{tabularray}
 \UseTblrLibrary{booktabs}
 \RequirePackage{caption}
@@ -334,7 +335,7 @@ Ich versichere hiermit, dass ich die von mir eingereichte Abschlussarbeit selbst
 \IfStrEq{\BGU@citeStyle}{none}{}{
 \RequirePackage[style=\BGU@citeStyle,sortcites=true,backend=biber]{biblatex}
 \IfStrEq{ieee}{\BGU@citeStyle}{}{
-    \DeclareLanguageMapping{\BGU@language}{\BGU@language-\BGU@citeStyle}}}
+    \DeclareLanguageMapping{\BGU@language}{\BGU@language-\BGU@citeStyle}}
 \DeclareBibliographyDriver{standard}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -362,7 +363,7 @@ Ich versichere hiermit, dass ich die von mir eingereichte Abschlussarbeit selbst
   {}
   {\usebibmacro{author}:\bibhyperref{\printfield{year}}\printfield[parens]{postfix}}
   {\multicitedelim}
-  {}
+  {}}
 
 \RequirePackage{titlesec}
 \titleformat{\chapter}[display]{\filouter\LARGE\bf}{\chaptertitlename~\thechapter}{.2ex}{\bfseries\huge}
