@@ -59,7 +59,7 @@ def main() -> None:
         masked = np.ma.masked_invalid(recall)
         cmap = plt.get_cmap("Blues").copy()
         cmap.set_bad("#EBEBEB")
-        im = ax.imshow(masked, cmap=cmap, vmin=0, vmax=1)
+        ax.imshow(masked, cmap=cmap, vmin=0, vmax=1)
         for i in range(4):
             for j in range(6):
                 if count[i, j]:
@@ -71,13 +71,13 @@ def main() -> None:
                             color="#999999")
         ax.set_xticks(range(6), PERIOD_RANGES, fontsize=8)
         ax.set_yticks(range(4), TYPES)
-        ax.set_xlabel("Construction period (TABULA-NL)")
+        ax.set_xlabel("Construction period")
         if ax is axes[0]:
             ax.set_ylabel("Size class")
         ax.set_title(name)
         ax.spines[:].set_visible(False)
 
-    fig.colorbar(im, ax=axes, fraction=0.02, pad=0.01, label="Per-cell recall")
+    fig.tight_layout()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for ext in ("png", "pdf"):
         out = OUT_DIR / f"F4_3_cell_recall_heatmap.{ext}"
