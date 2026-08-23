@@ -42,7 +42,7 @@ UPSTREAM = [
     ("Building-type accuracy", 0.901, 0.897, "−0.004", BLUE, (0.5, 1.0), -22),
 ]
 DOWNSTREAM = [
-    ("M1 · Reference attributes", 0.492, 0.496, "+0.004", GREY),
+    ("M1 · Reference attributes\n(no vision component)", 0.492, 0.496, "+0.004", GREY),
     ("M2 · Direct image-to-EPC\n(DINOv2)", 0.597, 0.499, "−0.098", BLUE),
     ("M3 · Attribute-mediated\n(DINOv2)", 0.490, 0.490, "±0.000", ORANGE),
 ]
@@ -59,16 +59,13 @@ def slope(ax, v0: float, v1: float, color: str, fmt: str, note: str,
             color=INK)
     ax.annotate(note, xy=(0.5, (v0 + v1) / 2), xytext=(0, note_dy),
                 textcoords="offset points", ha="center", fontsize=9,
-                color=color, fontweight="bold")
+                color=color)
 
 
 def style(ax, ylim: tuple[float, float]) -> None:
     ax.set_xlim(-0.45, 1.45)
     ax.set_ylim(*ylim)
-    ax.set_xticks([0, 1], ["Pooled\n(4 cities)", "LOCO\n(Amsterdam)"], fontsize=9)
-    ax.set_yticks([])
-    ax.spines[:].set_visible(False)
-    ax.tick_params(length=0)
+    ax.set_xticks([0, 1], ["Pooled\n(4 cities)", "LOCO\n(Amsterdam)"])
 
 
 def main() -> None:
@@ -83,7 +80,7 @@ def main() -> None:
         fmt = "{:.2f}" if v1 > 1 else "{:.3f}"
         slope(ax, v0, v1, color, fmt, note, note_dy=note_dy)
         style(ax, ylim)
-        ax.set_title(title, fontsize=10)
+        ax.set_title(title)
 
     # -- bottom row: downstream binary macro-F1 ---------------------------
     for k, (title, v0, v1, note, color) in enumerate(DOWNSTREAM):
@@ -96,7 +93,7 @@ def main() -> None:
         note_dy = 10 if abs(v1 - v0) < 0.02 else -18
         slope(ax, v0, v1, color, "{:.3f}", note, note_dy=note_dy)
         style(ax, F1_LIM)
-        ax.set_title(title, fontsize=10)
+        ax.set_title(title)
 
     fig.text(0.5, 0.945, "Upstream attribute extraction (DINOv2)",
              ha="center", fontsize=11, fontweight="bold", color=INK)
