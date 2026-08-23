@@ -30,6 +30,10 @@ Street-View-Derived Building Attributes}
 \usepackage{float}
 \renewcommand{\ttdefault}{lmtt}
 \emergencystretch=2em
+% pdflatex cannot typeset these UTF-8 symbols in T1; map them to math equivalents
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
 \graphicspath{{{./figures/fig/}}}
 \captionsetup[table]{position=top,skip=6pt}
 \captionsetup[figure]{position=bottom,skip=6pt}

@@ -17,15 +17,12 @@ The pipeline developed in this study is designed to examine how replacing measur
 The evaluation design is defined separately from the preceding data-processing stages. M1 uses reference attributes or reference thermal parameters, whereas M3 replaces the corresponding inputs with attributes inferred from street-view imagery and the results of the associated archetype lookup; together, these routes form the primary substitution comparison. M2 instead predicts EPC directly from imagery and serves as a parallel end-to-end comparator rather than an intermediate stage of the archetype pipeline. All comparable routes use the same geographic split. Binary EPC classification is the primary task, while seven-class EPC prediction is used to diagnose the information ceiling associated with fine-grained labels. LOCO evaluates cross-location generalisation, and \(H'_{\mathrm{tr}}\) provides a physical consistency check for the substituted thermal parameters.
 
 
-\begin{landscape}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.98\linewidth,height=0.78\textheight,keepaspectratio]{figures/fig/fig_3_1_workflow.png}
 \caption{End-to-end study workflow.}
 \label{fig:3_1}
 \end{figure}
-
-\end{landscape}
 
 
 \subsection{Semi-Synthetic Dataset: Three-Layer Structure}
@@ -44,15 +41,12 @@ Here, semi-synthetic refers to the combination of reference observations, image-
 In the controlled substitution comparison, M1 and M3 use the same eligible buildings, geographic split, feature positions, and fixed model for each downstream task. M1 uses the reference type, year, and floor attributes and obtains the TABULA U-values from the corresponding reference (type, period) cell. M3 replaces these inputs with the type, year, and floor attributes inferred from SVI and retrieves the U-values from the resulting predicted cell. Within this protocol, the difference between M3 and M1 therefore measures the consequence of substituting the attribute source rather than the effect of retraining the downstream model. M2 predicts EPC directly from imagery and does not pass through this three-layer substitution chain; it is consequently treated as a parallel end-to-end comparator.
 
 
-\begin{landscape}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.98\linewidth,height=0.78\textheight,keepaspectratio]{figures/fig/fig_3_2_layers.png}
 \caption{Three-layer semi-synthetic dataset structure.}
 \label{fig:3_2}
 \end{figure}
-
-\end{landscape}
 
 
 \section{Dataset Construction}
@@ -114,15 +108,12 @@ For the retained footprints, OpenFACADES acquires metadata for Mapillary 360\ens
 Each cropped image retains its OpenFACADES \texttt{building\_id}, whereas the building attributes and energy labels in this study use the BAG \texttt{pand\_id} as their primary key. After image processing, the same centroid-based matching rule is therefore applied to create the formal crosswalk between the OpenFACADES \texttt{building\_id} and BAG \texttt{pand\_id}. When the centroid of a footprint falls within a BAG residential-building polygon, the building's \texttt{pand\_id} is assigned to the corresponding images. Images for which no BAG match can be established are excluded.
 
 
-\begin{landscape}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.98\linewidth,height=0.78\textheight,keepaspectratio]{figures/fig/fig_3_3_svi_workflow.png}
 \caption{SVI acquisition and processing workflow.}
 \label{fig:3_3}
 \end{figure}
-
-\end{landscape}
 
 \begin{figure}[htbp]
 \centering
@@ -244,15 +235,12 @@ Because the two supervised configurations use up to eight images with feature-le
 \Cref{fig:3_5} summarises the input, parameter-update scope, multi-image aggregation, and prediction outputs of the three vision-inference configurations.
 
 
-\begin{landscape}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.98\linewidth,height=0.78\textheight,keepaspectratio]{figures/fig/fig_3_5_vision_models.png}
 \caption{Vision-model configurations and multi-image aggregation.}
 \label{fig:3_5}
 \end{figure}
-
-\end{landscape}
 
 
 \section{TABULA Archetype Matching}
