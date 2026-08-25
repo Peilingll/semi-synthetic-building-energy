@@ -97,3 +97,6 @@ latex.out/
 
 # xindy
 *.xdy
+
+# Compiled thesis (build artefact - rebuild with build.cmd)
+thesis.pdf
