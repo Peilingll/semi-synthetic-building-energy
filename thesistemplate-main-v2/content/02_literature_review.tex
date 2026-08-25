@@ -31,33 +31,25 @@ These routes rely on different forms of data availability and differ in whether 
 	\end{tblr}
 \end{table}
 
-The studies considered here differ in their label spaces, source populations, data splits, and metrics.
-Their numerical results are therefore used to characterise the capabilities and boundaries of each route, rather than to rank performance directly across studies.
+Studies across the four routes differ in their target definitions, study populations, data partitions, and evaluation metrics. Their reported results are therefore used to characterise the capabilities and limitations of each route rather than to establish direct performance rankings across studies.
 
 \section{Reference and Open Data Approaches}
 \label{sec:reference_open_data}
 
-When complete building-level records are available, the reference-attribute route uses administrative, geometric, and neighbourhood data to train statistical models.
-\textcite{hettinga2023} developed an energy class classifier for Dutch residential buildings by combining BAG building year, building type, ground-floor area, total floor area, and exposed-envelope geometry with CBS neighbourhood-level home ownership and average building value \parencite{cbs}.
-Their random forest achieved 71\% accuracy and 93\% $\pm$1 accuracy on the test subset of an 80/10/10 training, validation, and test protocol.
-By comparison, TABULA rule-based assignment achieved 26\% accuracy and 67\% $\pm$1 accuracy across 2,574,227 EPC records.
-The two approaches used different evaluation sets, and the reference energy classes covered A++ to G, whereas the TABULA outputs covered only B to G.
-These values therefore demonstrate the analytical potential of additional open data features rather than providing a fully equivalent model comparison.
+When sufficiently complete building-level records are available, the reference attribute route combines administrative, geometric, and neighbourhood data to train statistical models for energy class prediction. An energy class classifier for Dutch residential buildings combined data from the Dutch Registry of Addresses and Buildings on building year, building type, ground floor area, and total floor area with exposed envelope geometry and Statistics Netherlands neighbourhood statistics on home ownership and average building value \parencite{hettinga2023}. The random forest classifier achieved 71\% exact accuracy and 93\% accuracy within one energy class using an 80/10/10 training, validation, and test split \parencite{hettinga2023}. TABULA rule-based assignment achieved 26\% exact accuracy and 67\% accuracy within one energy class across 2,574,227 EPC records \parencite{hettinga2023}. Although both approaches used the same EPC database, the random forest result was reported for the test subset, whereas TABULA was evaluated on the complete dataset. The EPC reference labels ranged from A++ to G, while TABULA assigned only classes B to G. The reported values therefore support the potential of additional open data features for energy class prediction but do not constitute a strictly matched comparison between the two approaches.
 
-This route retains interpretable tabular inputs and can incorporate building-level and neighbourhood-level information beyond the archetype.
-However, it assumes that the target region already has linkable reference attributes of sufficient quality.
-When building type, construction year, or floor count is missing, the route alone cannot determine how these inputs should be reconstructed or quantify the cost of replacing them with information from other sources.
+This route retains interpretable tabular inputs and can incorporate information beyond the variables used for archetype assignment. However, it requires sufficiently complete building-level records that can be linked across data sources. If building type, construction year, or floor count is unavailable, this route does not show how those attributes should be recovered or how replacing them with inferred values affects downstream performance.
 
 \section{Proxy-Based Attribute and Archetype Inference}
 \label{sec:proxy_based_inference}
 
 The proxy-attribute route uses data sources that correlate with a target attribute but do not constitute observations of the individual building itself.
-\textcite{dabrock2025} combined German census data aggregated to a 100\,m $\times$ 100\,m grid with building-level and neighbourhood-level morphological and socioeconomic features, and trained XGBoost models to predict residential size class and construction year class.
+German census data aggregated to a 100\,m $\times$ 100\,m grid were combined with building-level and neighbourhood-level morphological and socioeconomic features, and XGBoost models were trained to predict residential size class and construction year class \parencite{dabrock2025}.
 The two tasks achieved accuracies of 97.4\% and 73.9\%, respectively, on an individual-building test set, and the predictions were subsequently used to construct a nationwide TABULA-based building dataset.
 The study also observed that the resulting dataset tended to overrepresent majority classes, indicating that aggregate proxies can support individual-building estimates but that their errors are affected by grid composition and class imbalance.
 
 Remote sensing can also serve as an attribute proxy.
-A city-scale workflow derived building geometry from aerial imagery and a digital surface model, classified construction type from morphometric features, and combined these outputs with census-based construction-period data for urban heat-demand modelling \parencite{wurm2021}.
+The city-scale workflow derived building geometry from aerial imagery and a digital surface model, classified construction type from morphometric features, and combined these outputs with census-based construction-period data for urban heat-demand modelling \parencite{wurm2021}.
 The study demonstrated that remote-sensing-derived building information can be incorporated into a downstream energy model.
 However, the imagery source was not \ac{SVI}, and reference attributes and image-derived substitutes were not compared for the same buildings under a common downstream protocol.
 Proxy-based methods therefore offer a feasible route for large-scale data completion, but their transferability remains dependent on proxy resolution, geographic context, and target taxonomy.

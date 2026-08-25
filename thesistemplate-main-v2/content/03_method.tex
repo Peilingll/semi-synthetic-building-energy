@@ -7,24 +7,24 @@
 \subsection{Pipeline Architecture}
 \label{sec:pipeline_architecture}
 
-The pipeline developed in this study examines how replacing reference building attributes with attributes inferred from street-view imagery, and subsequently converting those inferred attributes into U-values through a fixed TABULA archetype lookup, affects downstream energy class classification and physical consistency.
-Data processing comprises four sequential stages.
-First, street-view images are paired with the target buildings, while the image source, view quality, and pairing status are retained.
-Second, eligible images are used to infer building type, construction year, and floor-related attributes, with the predicted values and unreadable cases recorded separately.
-Third, only the attributes required by the lookup key are used to assign each building deterministically to a TABULA archetype cell, from which the substituted thermal parameters and their provenance are obtained.
-Fourth, the features required by the downstream model are assembled for each experimental route, and the physical parameters required to calculate $H'_{tr}$ are prepared.
+This study uses a sequential pipeline to evaluate how substituting reference building attributes with attributes inferred from \ac{SVI} affects TABULA-NL archetype assignment, derived thermal parameters, and downstream energy class classification.
+\Cref{fig:pipeline_overview} presents the four processing stages and shows how they correspond to the three research objectives.
 
-The evaluation design is defined separately from the preceding data-processing stages.
-M1 uses reference attributes or reference thermal parameters, whereas M3 replaces the corresponding inputs with attributes inferred from street-view imagery and the results of the associated archetype lookup; together, these routes form the primary substitution comparison.
-M2 instead predicts energy class directly from imagery and serves as a parallel end-to-end comparator rather than an intermediate stage of the archetype pipeline.
-All comparable routes use the same geographic split.
-Binary energy class classification is the primary task, while seven-class energy class prediction is used to diagnose the information ceiling associated with fine-grained labels.
-LOCO evaluates cross-location generalisability, and $H'_{tr}$ provides a physical consistency check for the substituted thermal parameters.
+The first stage pairs street-view images with the target buildings and retains information on image source, view quality, and pairing status.
+The second stage uses the eligible images to infer building type, construction year, and floor count.
+Predicted values and invalid responses are recorded separately.
+The third stage converts the inferred building type and construction year into a TABULA-NL archetype cell through a deterministic lookup.
+This step provides the associated U-values and preserves their provenance.
+The final stage assembles the features used by the downstream energy class classifier and prepares the geometric and thermal inputs required to calculate $H'_{tr}$.
+
+The outputs of this pipeline form the basis of the controlled evaluation described in \cref{ch:experiments}.
+The evaluation compares reference attributes with attributes inferred from \ac{SVI} under common data partitions and fixed downstream protocols.
+It also examines direct energy class prediction from imagery, geographic transfer, and the physical consistency of the substituted thermal parameters.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_3_1_workflow}
-	\caption{Overview of the proposed pipeline and evaluation routes.}
+	\caption{Overview of the study pipeline and its correspondence to the three research objectives.}
 	\label{fig:pipeline_overview}
 \end{figure}
 
