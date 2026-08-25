@@ -1,8 +1,8 @@
-\chapter{VLM Prompts and Output-Parsing Rules}
+\chapter{VLM Prompts and Output Parsing Rules}
 \label{ch:appendix_c}
 
 This appendix reproduces verbatim the three prompts used with InternVL3-2B: M3 attribute inference, M2 direct seven-class prediction, and M2 direct binary prediction.
-It also specifies the output-parsing rules.
+It also specifies the output parsing rules.
 The prompts were developed using a fixed, class-balanced subset of 200 development buildings and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
 
 \textbf{Decoding configuration.}
@@ -11,7 +11,7 @@ Each image is processed using dynamic tiling with no more than twelve 448 $\time
 Generation uses greedy decoding (\texttt{do\_sample = False}) with \texttt{max\_new\_tokens = 512}, making inference deterministic.
 The first three ranked images for each building are processed independently.
 
-\section{Attribute-Inference Prompt (M3)}
+\section{Attribute Inference Prompt (M3)}
 \label{sec:appendix_c_attribute_prompt}
 
 \begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
@@ -53,7 +53,7 @@ Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}
 \label{sec:appendix_c_sevenclass_prompt}
 
 The seven-class and binary prompts use the same description of visual evidence and differ only in the permitted answer space.
-This controls for prompt-wording differences between the two tasks.
+This controls for differences in prompt wording between the two tasks.
 
 \begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
 Look at this Dutch residential building street-view photo. Estimate the building's official Dutch energy label (energielabel, NTA 8800), which rates a home's primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
@@ -107,6 +107,6 @@ A response that fails any applicable rule is marked as invalid and excluded from
 \begin{enumerate}
 	\item The first JSON object is extracted from the response. Markdown code fences and additional text before or after the object are tolerated. Common trailing-comma errors are repaired before JSON parsing.
 	\item For the attribute task, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}; \texttt{construction\_year} must be an integer from 1800 to 2025; and \texttt{num\_floors} must be an integer from 1 to 30. An image is marked as parse-valid only when all three values are valid.
-	\item For direct energy-class prediction, \texttt{energy\_label} must be one of \{A, B, C, D, E, F, G\}, and \texttt{energy\_band} must be one of \{A-C, D-G\}.
-	\item For building-level aggregation of the attribute task, building type is determined by the mode, while construction year and floor count are determined by the median; the median floor count is rounded to the nearest integer. Direct energy-class predictions are aggregated by majority vote.
+	\item For direct energy class prediction, \texttt{energy\_label} must be one of \{A, B, C, D, E, F, G\}, and \texttt{energy\_band} must be one of \{A-C, D-G\}.
+	\item For building-level aggregation of the attribute task, building type is determined by the mode, while construction year and floor count are determined by the median; the median floor count is rounded to the nearest integer. Direct energy class predictions are aggregated by majority vote.
 \end{enumerate}
