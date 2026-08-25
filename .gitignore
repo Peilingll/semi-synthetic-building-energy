@@ -50,3 +50,16 @@ data/processed/phase_2_openfacade_vlm_pipeline/
 
 # LaTeX draft previews (rebuild from thesistemplate-main/)
 output/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.synctex.gz
