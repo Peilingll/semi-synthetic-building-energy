@@ -1,0 +1,748 @@
+\ifger
+
+\chapter{Einführung}
+\label{ch:einfuehrung}
+
+
+\LaTeX\ ist ein Textsatzsystem, mit dem man größere Schriftstücke wie Bücher, Diplomarbeiten, Masterarbeiten und Artikel erstellen kann.
+Da Latex ausgezeichnete Funktionalitäten zur Erstellung von Literaturlisten, Indexen und Glossaren bietet, ist es eine ideale Wahl für die Erstellung solch einer wissenschaftlichen Arbeit. \parencite{Stein:2014}
+
+Diese Vorlage soll die Erstellung von Abschlussarbeiten an der \ac{BGU} erleichtern. 
+Um eine möglichst gute Übersichtlichkeit bei möglichst hohem Funktionsumfang zu gewährleisten, wurde hierzu eine eigene Klasse erstellt. 
+Zur Verwendung müssen die Dateien BGUthesis.cls sowie BGUngerman.def und BGUenglish.def müssen im Hauptverzeichnis neben der thesis.tex Datei vorliegen.
+
+Wichtige Pakete für oft genutzte Funktionen sind direkt in der Klasse integriert und müssen nicht extra eingebunden werden, eine Liste mit den eingearbeiteten Paketen ist im Anhang angefügt \cref{ch:packages}. 
+Im Folgenden werden einige Befehle und Mechanismen erklärt bzw. genutzt und sollten durch den in diesem Dokument zugrunde liegenden Beispielcode nachvollzogen werden können.
+Bei Unklarheiten ist es zudem hilfreich kurz im Web zu recherchieren, dabei sind folgende Webseiten besonders hervorzuheben, unter anderem für generelle Infos und Anleitungen zu \LaTeX-Befehlen und den eingebundenen Paketen:
+
+\begin{itemize}
+	\item http://de.wikipedia.org/wiki/LaTeX
+    \item http://www.ctan.org/
+    \item http://www.golatex.de
+\end{itemize}
+
+\section{Software}
+\label{sec:software}
+
+Um \LaTeX\ sinnvoll zu nutzen, können eine Reihe von verscheidenen \LaTeX-Editoren sowie unterschiedliche \LaTeX-Distributionen genutzt werden:
+\begin{itemize}
+	\item \href{http://www.miktex.org/}{http://www.miktex.org/}\\
+	MiKTeX ist eine TeX-Distribution für Microsofts Windows-Betriebssysteme. Mit dem Installationspaket wird zusätzlich ein einfacher TeX-Editor (TeXworks) mitgeliefert.
+	\item \href{http://blog.kowalczyk.info/software/sumatrapdf/free-pdf-reader-de.html}{http://blog.kowalczyk.info/software/sumatrapdf/free-pdf-reader-de.html}\\
+	Sumatra PDF ist ein schlanker, freier, open-source PDF, ePub, MOBI, XPS, DjVu, CHM, CBZ, CBR Betrachter für Windows.	Im Gegensatz zum Arcobat Reader können PDF-Dateien, die in Sumatra geöffnet sind noch durch andere Programme geändert werden.
+	\item \href{http://www.texniccenter.org/}{http://www.texniccenter.org/}\\
+	TeXnicCenter (TXC) ist ein freier Texteditor für LaTeX-Dokumente unter Windows.
+	\item \href{https://www.xm1math.net/texmaker/}{https://www.xm1math.net/texmaker/}\\
+	TeXmaker ist ein frei erhälticher cross-platform LaTeX-Editor.
+\end{itemize}
+
+Alternativ können auch Online-Lösungen wie \glqq{}\href{https://www.overleaf.com/}{Overleaf}\grqq{} verwendet werden. 
+Hier bietet die TUM auch einen eigenen Overleaf-Server an (\href{https://latex.tum.de}{https://latex.tum.de}).
+Mit diesen Online-Tools kann ein \LaTeX-Projekt direkt im Browser erstellt und bearbeitet werden ohne die zuvor genannte Software auf dem Computer installieren zu müssen. 
+Zudem können weitere Personen zu dem Projekt eingeladen werden, die dann gleichzeitig die Dokumente bearbeiten können.
+
+\section{Erste Schritte}
+\label{sec:ersteschritte}
+
+Bevor mit dem Schreiben der wissenschaftlichen Arbeit begonnen werden kann, sollten zunächst die Einstellungen im Header der Datei \texttt{thesis.tex} angepasst werden (vgl. \cref{alg:docClass}). 
+Die Zeilen 2--8 beeinflussen hierbei die Formatierung sowie einige vordefinierte Makros. 
+Besonders wichtig sind dabei die Zeilen 6--8, welche die Sprache, den Zitierstil und den Dokumenttyp einstellen. 
+Im folgenden werden die wichtigsten Optionen erläutert:
+
+\lstinputlisting[numbers=left,float=b!,morecomment={[l]{\%}},commentstyle={\color{Gray}\em},language={[LaTeX]TeX}, caption={Klassenoptionen},label={alg:docClass},linerange={2-6},firstnumber=2]{thesis.tex}
+
+{
+% \newcommand{\TrailingZero}[1]{\ifnum #1<10 $\phantom{1}$\fi}
+% \begin{enumerate}[label=\textbf{Zeile~\protect\TrailingZero{\theenumi}\texttt{\arabic*}:},leftmargin=*]
+%     \setcounter{enumi}{1}
+%     \item Richtet Gleichungen (\texttt{equation}-Umgebung) linksbündig aus (vgl.)
+%     \item Bestimmt die Schriftgröße des Fließtextes (\texttt{\textbackslash{}normalsize}). Andere Schriftgrößen richten sich danach aus.
+%     \item Legt fest, ob das Dokument einseitig ist (\texttt{oneside}) oder doppelseitig (\texttt{twoside}).
+%     \item Wenn print auf \texttt{true} gestellt wird, werden sämtliche Links, Referenzierungen und Codesequenzen im Text nicht mehr eingefärbt. Damit hat das Dokument weniger Farbseiten und ist günstiger zu drucken.
+%     \item Stellt ein, in welcher Sprache das Dokument verfasst wird. Es sollten nur Deutsch und Englisch verwendet werden (\texttt{ngerman} bzw. \texttt{english}). Falls dennoch eine andere Sprache verwendet werden soll, so muss eine Übersetzung der .def Datei erzeugt werden.
+%     \item Hier soll der zu verwendende Zitierstil eingegeben werden. Bisher sind nur \texttt{apa} und \texttt{ieee} vordefiniert. Soll ein anderer Stil verwendet werden, bitte hier \texttt{none} eingeben und das Packet \texttt{biblatex} eigenständig einbinden und einrichten (vgl.).
+%     \item Legt den Typ der Arbeit fest. Die Möglichkeiten sind hier \texttt{thesis}, für eine Bachelor- oder Masterthesis, \texttt{diss}, für eine Dissertation, oder \texttt{plain}, für eine frei gestaltbare Titelseite. Zum Anpassen der \texttt{plain}-Titelseite einfach den command \texttt{\textbackslash{}TPplain} erneuern.
+% \end{enumerate}
+
+\begin{table}[h!]
+    \caption*{\textbf{weitere Klassenoptionen:\hfill\null}}
+    \begin{tblr}{llX}
+        \toprule
+        \textbf{Option} & \textbf{Typ} & \textbf{Funktion} \\
+        \midrule
+        \texttt{colorcode} & \texttt{true/false} & Wird hier \texttt{false} eingestellt, werden keywords in \texttt{listing}-Umgebungen nicht mehr eingefärbt. Hat keinen Einfluss, wenn \texttt{print=true}.\\[3em]
+        \texttt{microtype} & \texttt{true/false} & Wenn es font expansion errors gibt, dann sollte entweder hier die Option auf \texttt{false} gesetzt werden, oder für \LaTeX scalierbare Fonts installiert werden.\\[3em]
+        \texttt{showframe} & \texttt{true/false} & Zeigt, wenn auf \texttt{true} gesetzt, Rahmen um die beschrifteten Bereiche als Korrekturhilfe an. Damit lassen sich eventuell auftretende overfull hboxes besser identifizieren (vgl.).\\[4em]
+        \texttt{citeInAcroList} & \texttt{true/false} & Bestimmt, ob die Zitierung bei einer Abkürzung schon in der Liste der Abkürzungen angezeigt werden soll.\\[2em]
+        \texttt{chairLogo} & \texttt{string} & Dateiname eines Lehrstuhllogos, das im Header der Titelseite eingefügt werden soll.\\
+        \bottomrule
+    \end{tblr}
+\end{table}
+}
+
+Als nächstes \textbf{müssen} alle Commands in den \textbf{Zeilen 12--35} auf die eigenen Bedürfnisse angepasst werden.
+Hierzu wird einfach der Text in der letzten Klammer des jeweiligen \texttt{renewcommand}-Befehls angepasst.
+Die so definierten Commands werden in den Vordefinierten Makros, \texttt{\textbackslash{}maketitle} und \texttt{\textbackslash{}Declaration}, verwendet und formatieren die personalisierte Titelseite am Anfang und Eidesstattliche Erklärung am Ende.
+
+\section{Pakete die in CMSthesis geladen werden}
+\label{sec:packages}
+
+Folgende Pakete werden direkt über die CMSthesis-Klasse geladen und stehen zur Verwendung bereit:
+
+\begin{tblr}{lX}
+    \textbf{Paketname} & \textbf{Beschreibung} \\
+    \href{https://www.ctan.org/pkg/listings}{\textbf{listings:}} & Wird Benötigt um Programmiercode ordentlich zu typesetten.\\
+    \href{https://www.ctan.org/pkg/pgf}{\textbf{tikz}} & Wird für das Erstellen von Vektorgrafiken genutzt.\\
+    \href{https://www.ctan.org/pkg/rotating}{\textbf{rotating}} & Notwendig um Float-Objekte (Tabellen oder Bilder) zu drehen.\\
+    \href{https://ctan.org/pkg/tabularray?lang=de}{\textbf{tabularray}} & Für das Erstellen von Tabellen. Umfassende Bibliothek, die die Funktionalität von einigen anderen Tabellenpaketen (z.B. longtable, tabularx, multirow, etc.) vereint.\\
+    \href{https://www.ctan.org/pkg/caption}{\textbf{caption}} & Zum feintuning von Tabellen- und Bildbeschriftungen.\\
+    \href{https://www.ctan.org/pkg/floatrow}{\textbf{floatrow}} & Bietet bessere Kontrolle über die Anordnung von Float-Objekten (Tabellen, Bilder).\\
+    \href{https://ctan.org/pkg/acro?lang=de}{\textbf{acro}} & Wird für Abkürzungen und das entsprechende Abkürzungsverzeichnis sowie das Symbolverzeichnis genutzt.\\
+    \href{https://ctan.org/pkg/cleveref?lang=de}{\textbf{cleveref}} & Vereinfacht und verbessert Referenzierungen. Anstelle von \texttt{\textbackslash{}ref} sollte \texttt{\textbackslash{}cref} verwendet werden.\\
+\end{tblr}
+
+Weitere benötigte Pakete (sind bereits geladen, bitte beachten um Paketinkompatibilitäten zu vermeiden):
+
+\begin{minipage}{.49\textwidth}
+\begin{itemize}
+\item iftex
+\item etoolbox
+\item kvoptions
+\item xstring
+\item xcolor
+\item graphicx
+\item enumitem
+\item amsmath,amssymb,amsthm,nccmath
+\item framed
+\item url
+\item pgfplots
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}{.49\textwidth}
+\begin{itemize}
+\item booktabs
+\item footnote
+\item subfig
+\item biblatex
+\item titlesec
+\item fancyhdr
+\item hyperref
+\item showframe
+\item microtype
+\item csquotes
+\item lscape
+\end{itemize}
+\end{minipage}
+
+\section{Kapitel und Abschnitte}
+\label{sec:kapitel}
+
+Um die Arbeit in Kapitel, Abschnitte und Unterabschnitte zu strukturieren, werden die Befehle entprechend \cref{alg:chapsNsecs} genutzt.
+Aus diesen wird mit dem Befehl \texttt{\textbackslash{}tableofcontents} automatisch ein Inhaltsverzeichnis erstellt (siehe \texttt{thesis.tex}, Zeile \texttt{92}).
+Mit Hilfe der Befehle \texttt{\textbackslash{}label\{\}} und \texttt{\textbackslash{}cref\{\}} kann im Text auf ein Kapitel oder einen Absatz verwiesen werden.
+Die Befehle für Kapitel, Abschnitte, etc. gibt es in der gezeigten Version, sowie mit einem angehängtem Stern, z.B. \texttt{\textbackslash{}chapter$^\ast$\{\}}. 
+Die Stern-Version erzeugt hierbei aber unnummerierte Kapitel, Abschnitte, etc., die zudem nicht im Inhaltsverzeichnis gelistet werden, z.B zur weiteren Unterteilung des Dokuments in mehr Abschnitte ohne dabei das Inhaltsverzeichnis zu überladen.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries,language={[LaTeX]TeX}, caption={Kapitel und Abschnitte},label={alg:chapsNsecs}]
+\chapter{Kapitel 1}
+\label{ch:kapitel_1}
+
+\section{Abschnitt 1.1}
+\label{sec:abschnitt_1.1}
+
+\subsection{Abschnitt 1.1.1}
+\label{sec:abschnitt_1.1.1}
+
+\subsubsection{Abschnitt 1.1.1.1}
+\end{lstlisting}
+
+Sollen in einer Überschrift Sonderzeichen oder andere \LaTeX{}-Commands verwendet werden, wie z.B. Abkürzungen, dann empfiehlt es sich diese Zeichen mit dem Befehl  \texttt{\textbackslash{}texorpdfstring} in einen String umzuwandeln.
+Ansonsten kann es sein, dass das Paket \texttt{hyperref} damit einen Fehler verursacht.
+Z.B. könnte eine Überschrift die Zeichen, $\mathcal{L}(\gamma)$, enthalten.
+Problematisch ist hier die Mathe-Umgebung und die Sonderzeichen.
+In der Überschrift sollte dies mit \texttt{\textbackslash{}texorpdfstring\{\$\textbackslash{}mathcal\{L\}(\textbackslash{}gamma)\$\}\{Lg\}} realisiert werden.
+
+Um die Dataistruktur des \LaTeX-Projekts sauber zu halten ist es sinnvoll für jedes Kapitel eine eigene \texttt{.tex}-Datei zu erzeugen und im Hauptdokument (\texttt{thesis.tex}) mit dem Befehl \texttt{\textbackslash{}include\{<filename>\}} einzubinden, vgl. Zeilen~150--152 in \texttt{thesis.tex}.
+Auf diese Weise können eventuelle Fehler besser lokalisiert werden und es wird die Übersichtlichkeit beim Bearbeiten der Thesis verbessert.
+
+\section{Farben}
+
+In \cref{tab:colors} werden die in der Dokumentenklasse vordefinierten Farben dargestellt, die mit den Klassenoptionen \texttt{print} und \texttt{colorcode} (vgl. \cref{alg:docClass}) \glqq{}ausgeschaltet\grqq{} werden können (siehe Beschreibung in \cref{sec:ersteschritte}).
+Unter \glqq{}ausschalten\grqq{} ist hier zu verstehen, dass die Farbe dann durch einen Grauwert ersetzt wird um z.B. eine Druckversion des Dokuments zu erstellen (als Test kann dieses Dokument mit der Option \texttt{print=true} kompiliert werden).
+
+Die Farben können mit \texttt{\textbackslash DefineColor}[<gray value>]\{<name>\}\{<model>\}\{<color>\} (auf Großbuchstaben achten!) überschrieben oder neu erstellt werden. Wird als <model> \textit{mix} verwendet, wird die Farbe mit dem Befehl \texttt{\textbackslash{}colorlet} definiert, ansonsten mit \texttt{\textbackslash{}definecolor} (vgl. \href{https://ctan.org/pkg/xcolor?lang=de}{\texttt{xcolor} Dokumentation}). Der optionale Grauwert ermöglicht es einen Graustufenwert festzulegen falls die Farbe \glqq{}ausgeschaltet\grqq{} wird.
+
+Beispiele:
+
+\DefineColor[0.4]{beispiel1}{RGB}{150,10,250}
+\textcolor{beispiel1}{\textbackslash{}DefineColor[0.2]\{beispiel1\}\{RGB\}\{22,0,250\}}
+
+\DefineColor[0.3]{beispiel2}{mix}{Blue!60!White}
+\textcolor{beispiel2}{\textbackslash{}DefineColor[0.2]\{beispiel2\}\{mix\}\{Blue!60!White\}}
+
+\begin{table}[t!]
+	\centering
+	\caption{Vordefinierte Farben.}
+	\label{tab:colors}
+    \begin{tblr}{lccc}
+        \toprule
+        <name> & <model> & <color> & <gray value> \\
+        \midrule
+        \textcolor{kwcolor}{kwcolor} & mix & blue!70!black & 0.1 \\[1mm] 
+        \textcolor{kwcolor2}{kwcolor2} & mix & magenta!80!white & 0.8 \\[1mm]
+        \textcolor{kwcolor3}{kwcolor3} & mix & OliveGreen & 0.3 \\[1mm]
+        \textcolor{kwcolor4}{kwcolor4} & mix & Yellow!50!white & 0.6 \\[1mm]
+        \textcolor{kwcolor5}{kwcolor5} & mix & blue!50!white & 0.7 \\[1mm] 
+        \textcolor{kwcolor6}{kwcolor6} & mix & RedViolet &  0.4 \\[1mm]
+        \textcolor{commentcolor}{commentcolor} & mix & green!50!black & 0.4 \\[1mm]
+        \textcolor{commentcolor2}{commentcolor2} & mix & gray & 0.5 \\[1mm]
+        \textcolor{stringcolor}{stringcolor} & mix & violet!50!black & 0.1 \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+
+\section{Bilder}
+
+Bilder werden am besten in der Float-Umgebung \texttt{figure} mit \texttt{\textbackslash{}includegraphics} eingebunden (siehe \cref{alg:figures}). 
+Dieser Befehl unterstützt die meisten Pixelgrafik-Formate sowie Formate, wie EPS und PDF, für Vektorgrafiken.
+Sollen direkt Inkscape-Dateien (\texttt{.svg}) eingebunden werden, bietet es sich an das Paket \texttt{svg} zu verwenden (nicht in der Dokumentklasse enthalten, vgl. \href{https://ctan.org/pkg/svg?lang=de}{\texttt{svg} Dokumentation}).
+Damit lassen sich SVG-Dateien mit dem Befehl \texttt{\textbackslash{}includesvg} im Dokument einbinden.
+
+Sollen Matlab-Plots im Dokument dargestellt werden, ist das matlab2tikz-Projekt zu empfehlen (vgl. \href{https://github.com/matlab2tikz/matlab2tikz}{https://github.com/matlab2tikz/matlab2tikz}).
+Mit diesem Matlab-Tool lassen sich Plots umwandeln in eine TikZ-Darstellung (Vektorgrafik-Tool für \LaTeX), die direkt im Dokument eingebunden werden können.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries,language={[LaTeX]TeX}, caption={Einbinden von Bilddateien.},label={alg:figures}]
+\begin{figure}
+    \centering
+    \includegraphics{<filename>}
+    \caption{Meine Bildbeschreibung}
+    \label{fig:my_label}
+\end{figure}
+\end{lstlisting}
+
+Für eine bessere Formatierungsfreiheit der Bilder wurde das Paket \texttt{floatrow} in die Dokumentklasse integriert (vgl. \href{https://ctan.org/pkg/floatrow}{\texttt{floatrow} Dokumentation}).
+Mit diesem Paket können sehr gut Bilder neben- und untereinander dargestellt werden.
+Z.B. wenn es darum geht Bilder mit gleicher Höhe nebeneinander darzustellen, liefert das Paket eine sehr einfach Lösung (vgl. \cref{alg:figuresFloatrow}).
+Werden ohne den \texttt{\textbackslash{}ffigbox}-Befehl mehrere Bilder in einer \texttt{figure}-Umgebung eingebunden und jeweils mit einer eigenen \texttt{caption} versehen, muss der Befehl \texttt{\textbackslash{}RawFloats} am Anfang der Umgebung ausgeführt werden.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries, caption={Darstellung von zwei Bildern nebeneinander mit gleicher Höhe und mit jeweils eigener Bildunterschrift.},label={alg:figuresFloatrow}]
+\begin{figure}
+    \CommonHeightRow[5.5cm]{%
+        \begin{floatrow}[2]
+            \ffigbox[\FBwidth]{%
+                \caption{Bildunterschrift 1.}%
+                \label{fig:my_label_1}%
+            }{%
+                \includegraphics[height=\CommonHeight]{<filename>}%
+            }
+            \ffigbox[\FBwidth]{%
+                \caption{Bildunterschrift 2.}%
+                \label{fig:my_label_2}%
+            }{%
+                \includegraphics[height=\CommonHeight]{<filename>}%
+            }
+        \end{floatrow}
+    }
+\end{figure}
+\end{lstlisting}
+
+Ein Abbildungsverzeichnis wird automatisiert mit dem Befehl \texttt{\textbackslash{}listoffigures} erstellt (siehe \texttt{thesis.tex}).
+Im Verzeichnis wird jeweils die Abbildungsnummer und die entsprechende Bildunterschrift (\texttt{\textbackslash{}caption}) dargestellt.
+Ist hierbei die Bildunterschrift zu lange, so kann bei dem entsprechenden \texttt{caption}-Befehl in eckigen Klammern eine alternative, kürzere Bildunterschrift angegeben werden, die nur im Verzeichnis angezeigt wird.
+
+\section{Code}
+
+Code kann einfach und komfortabel mit dem listings-Paket dargestellt werden.
+Innerhalb der \texttt{lstlisting}-Umgebung werden alle Leerzeichen berücksichtigt und sämtliche Commands ignoriert, es sei denn ein Command wird escaped.
+In dieser Vorlage werden Commands innerhalb der Zeichenketten \texttt{(*@} und \texttt{@*)} escaped, also als \LaTeX-Code ausgeführt.
+Auf diese Weise können z.B. Labels an wichtigen Zeilen angebracht werden und entsprechend Referenziert werden, wie z.B.  \cref{algl:codeLine} in dem \cref{alg:lstexmpl}.
+Dies funktioniert aber nur, wenn die Zeilennummerierung über die entsprechende Option der Umgebung aktiviert wurde.
+
+In \texttt{thesis.tex} wurden bereits Vorlagen für drei Programmiersprachen definiert, mit denen innerhalb der \texttt{lstlisting}-Umgebung definierte Schlüsselwörter entsprechend der Vorlage formatiert werden können.
+Um die entsprechende Sprache zu verwenden, kann diese entweder global mit \texttt{lstset} eingestellt werden, oder jeweils in der entsprechenden \texttt{lstlisting}-Umgebung über die Option \texttt{language} ausgewählt werden.
+
+Ohne Weiteres ist die \texttt{lstlisting}-Umgebung keine Float-Umgebung, wie z.B. \texttt{figure} oder \texttt{table}, und wird immer in den Fließtext platziert.
+Es kann aber auch hier eine Caption, ein Label und ein Positionsspecifier (h,t,b) über entsprechende Optionen definiert werden.
+
+\begin{lstlisting}[numbers=left, title={Syntax}, breaklines=true, caption={Beispiel-Listing}, label={alg:lstexmpl}, language=pseudo, float=t]
+So sieht
+    mit dem Listings-Paket
+dargestellter Code
+    aus.
+    
+In dieser Zeile ist ein Label definiert und kann referenziert werden. (*@\label{algl:codeLine}@*)
+\end{lstlisting}
+
+\section{Abkürzungen}
+
+Um Abkürzungen zu erstellen bitte die Anleitung in der Datei \textit{00c\_abkuerzungen.tex} befolgen (siehe auch \href{https://ctan.org/pkg/acro?lang=de}{\texttt{acro} Dokumentation}).
+Generell empfiehlt es sich für jede Abkürzung einen Eintrag zu erstellen und bei jeder Benutzung im Text einen der \texttt{\textbackslash{}ac}-Befehle zu verwenden.
+Auf diese Weise wird jede Abkürzung mit dem Abkürzungsverzeichnis über das \texttt{hyperref}-Paket verlinkt (vgl. \cref{tab:acro}).
+
+\begin{table}[h!]
+    \centering
+    \caption{Abkürzungen, Beispiele.}
+    \label{tab:acro}
+    \begin{tblr}{ll}
+        \toprule
+        acf (wiederholt 1. Benutzung): & \acf{BIM} \\
+        acl und acs im Satz: & \acl{BIM}, abgekürzt mit \acs{BIM}. \\
+        ac (nach erster Benutzung): & \ac{BIM} \\
+        accite: & \accite{BIM} \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+\section{Symbolverzeichnis}
+
+\begin{table}[ht!]
+    \centering
+    \caption{Symbole, Beispiele.}
+    \label{tab:symb}
+    \begin{tblr}{ll}
+        \toprule
+        Erdbeschleunigung: & \ac{g} \\
+        Erdradius: & \ac{RA} \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+
+\section{Zitate und Literaturverzeichnis}
+
+Um Zitate richtig zu kennzeichnen und ein Literaturverzeichnis automatisiert zu erstellen müssen die einzelnen Quellen in eine \texttt{.bib}-Datei exportiert und diese in \texttt{thesis.tex} mit dem Befehl \texttt{\textbackslash{}addbibresource} eingebunden werden.
+Zur besseren Übersicht sollten \texttt{.bib}-Dateien im separaten Ordner \texttt{literature} untergebracht werden.
+Diese \texttt{.bib}-Dateien können auch per Hand nachbearbeitet werden, als Vorlage kann hierzu die vorhandene \texttt{references.bib} Datei verwendet werden.
+Der Bibtex-Code von Veröffentlichungen kann beispielsweise über Google Schoolar bezogen werden (\href{http://scholar.google.de/}{http://scholar.google.de/}).
+Wird Citavi für die Literaturverwaltung benutzt kann auch dort direkt eine Bibtex-Datei exportiert werden. 
+
+Jeder Eintrag in der \texttt{.bib}-Datei muss dabei über einen eigenen, einzigartigen Bibtex-Key verfügen, mit dessen Hilfe die jeweilige Quelle in der Arbeit zitiert werden kann.
+Wird wie empfohlen der APA-Zitierstil verwendet, gibt es zwei verschiedene \LaTeX{}-Befehle, die zum zitieren verwendet werden können.
+
+Zum Einen gibt es den Befehl \texttt{\textbackslash{}parencite}, mit dem im eingeklammerten Stil das Zitat gesetzt werden kann.
+Diese Art von Zitat wird üblicherweise am Ende des Satzes (vor den Punkt) oder des Satzteils gesetzt, auf den sich das Zitat bezieht.
+Alternativ kann das Zitat auch am Ende eines Absatzes (dann nach dem Punkt) gesetzt werden, sofern sich die Quelle auf den gesamten Absatz bezieht.
+
+Zum Anderen gibt es den Befehl \texttt{\textbackslash{}textcite}, mit dem die Referenz ohne Klammern ausgegeben wird.
+Diese Art von Zitat wird verwendet, wenn der Autor der Quelle direkt namentlich im Text genannt wird.
+Für beide Befehle gibt es zudem die Option ein Prä- und/oder Postfix zu definieren, wenn z.B. die Seitenzahl angegeben oder z.B. ein \glqq{}siehe\grqq{} vorangestellt werden soll.
+
+Beispielzitat, in Klammern: \parencite{Amann.2013}\nl
+Zitat im Fließtext: \textcite{Stein:2014} gibt viele gute Hinweise in seiner \LaTeX{}-Einführung.\nl
+Eingeklammertes Zitat mit Präfix: \parencite[siehe auch][]{Amann.2013}\nl
+Eingeklammertes Zitat mit Postfix: \parencite[][S.~5f.]{Amann.2013}
+
+Wird nicht APA sondern IEEE verwendet, kann einfach nur der Befehl \texttt{\textbackslash{}cite} verwendet werden, da es hier keine unterschiedlichen Versionen gibt.
+
+\subsection*{Troubleshooting}
+
+Das in dieser Vorlage voreingestellte Paket für die Literaturverwaltung ist \texttt{biblatex}, welches mit dem backend \texttt{biber} eingestellt ist.
+In den meisten \LaTeX{}-Editoren muss eine Extra Einstellung vorgenommen werden, um \texttt{biblatex} mit dieser Einstellung verwenden zu können.
+Das backend \texttt{biber} ist ein eigenes \LaTeX{}-Programm, welches die für das Setzen der Literaturverweise notwendige auxiliar-Dateien kompiliert.
+Damit beim Kompilieren der Projektdaten dieses Programm ausgeführt wird, muss im entsprechenden \LaTeX{}-Editor eine Einstellung vorgenommen werden.
+Was beim Editor gemacht werden muss, ist je nach Editor unterschiedlich.
+Eine umfangreiche Beschreibung für die gängigsten Editoren ist unter folgender Adresse zu finden: \href{https://texwelt.de/fragen/1909/wie-verwende-ich-biber-in-meinem-editor}{https://texwelt.de/fragen/1909/wie-verwende-ich-biber-in-meinem-editor}.
+
+Sollte es weitere Probleme geben mit den Voreinstellungen, kann auch bei den Klassenoptionen in Zeile~10 \texttt{citeStyle=none} eingetragen werden.
+Mit dieser Einstellung wird kein Paket zur Literaturverwaltung geladen, es kann dann ein anderes Paket geladen und eigene Einstellungen vorgenommen werden.
+Als Alternative zu \texttt{biblatex} ist hier das \texttt{natbib}-Paket zu empfehlen, es ist nur mittlerweile etwas veraltet und wird seit 2010 nicht mehr geupdated.
+Sollte das Problem an \texttt{biber} liegen, dann ist es auch möglich das \texttt{biblatex}-Paket mit der Option \texttt{backend=bibtex} zu laden, damit ist keine Konfiguration des Editors notwendig, es kann aber auf diese Weise nicht der APA-Zitierstil verwendet werden.
+
+\section{Sonstiges}
+
+Zeilenumbrüche können mit \textbackslash\textbackslash\ erzeugt werden. 
+Allerdings kommt es vereinzelt vor, dass hierdurch eine \glqq{}underfull box\grqq{} entsteht und es ist daher sicherer vor dem Zeilenumbruch die Zeile mit einem \texttt{\textbackslash{}hfill} zu \glqq{}füllen\grqq{}. 
+Der Einfachheit halber wurde hierzu der Befehl \texttt{\textbackslash{}nl} definiert, mit dem im Fließtext problemlos eine Zeile umgebrochen werden kann.
+
+Einen neuen Absatz erhält man, indem man im Code eine Leerzeile einfügt.
+Beispiele für diese Zeilen- und Absatzstrukturierung finden sich zuhauf im Code dieser Beschreibung.
+
+\subsection*{Weitere vordefinierte Commands}
+
+\begin{longtblr}[
+    caption={Caption},
+    label={tab:newCommands},
+    note{a}={Beispiel für \texttt{TblrNote}. Nur in longtblr und talltablr verfügbar. Text muss in den longtblr/talltblr Optionen hinzugefügt werden.}
+]{lp{11cm}}
+    \toprule
+    \texttt{\textbackslash{}dC}:         & Stellt eine Kurzform von \texttt{\$\^{}\textbackslash{}circ\{\}C\$} dar, schreibt also ein Grad Celsius (\dC) \TblrNote{a}\\
+    \texttt{\textbackslash{}TblrNote} & Ermöglicht es eine Tabellenfußnote mehrfach zu referenzieren, wie etwa die Fußnote \textit{a} in der ersten und zweiten Zeile.\TblrNote{a}\\
+    \texttt{\textbackslash{}lquote}      & Erstellt eine Quotierung, also einen eingerückten Bereich in Anführungszeichen und mit Quellenangabe (siehe Beispiele in \cref{ch:li}). \\
+    \texttt{\textbackslash{}squote}      & Erstellt eine ähnliche Quotierung wie \texttt{lquote} nur im Fließtext und nicht eingerückt. \\
+    \texttt{\textbackslash{}Declaration} & Erstellt die Eidestattliche Erklärung, die für eine gültige Abgabe der Arbeit unterzeichnet werden muss. Ist bereits in \texttt{thesis.tex} am Ende aufgerufen. \\
+    \bottomrule
+\end{longtblr}
+
+\else
+
+\chapter{Introduction}
+\label{ch:einfuehrung}
+
+\LaTeX\ is a text typesetting system that can be used to create larger pieces of writing, such as books, theses, master's theses and articles.
+Since Latex offers excellent functionalities for creating bibliographies, indexes, and glossaries, it is an ideal choice for creating such a scientific work. \parencite{Stein:2014}
+
+This template is intended to facilitate the creation of theses at \ac{BGU}. 
+To ensure the best possible clarity with as much functionality as possible, a separate class was created for this purpose. 
+To use it, the files BGUthesis.cls as well as BGUngerman.def and BGUenglish.def must be present in the main directory next to the thesis.tex file.
+
+Important packages for frequently used functions are integrated directly in the class and do not have to be included separately, a list with the incorporated packages is attached \cref{ch:packages}. 
+In the following, some commands and mechanisms are explained or used and should be comprehensible by the sample code underlying this document.
+If you are unsure, it is helpful to do some research on the web. The following websites are worth mentioning for general information and instructions on \LaTeX commands and the included packages:
+
+\begin{itemize}
+	\item \href{http://de.wikipedia.org/wiki/LaTeX}{http://de.wikipedia.org/wiki/LaTeX}
+    \item \href{http://www.ctan.org/}{http://www.ctan.org/}
+    \item \href{http://www.golatex.de}{http://www.golatex.de}
+\end{itemize}
+
+\section{Software}
+\label{sec:software}
+
+To make use of \LaTeX, a number of different \LaTeX editors as well as different \LaTeX distributions can be used:
+\begin{itemize}
+	\item \href{http://www.miktex.org/}{http://www.miktex.org/}\\
+	MiKTeX is a TeX distribution for Microsoft's Windows operating systems. A simple TeX editor (TeXworks) is also supplied with the installation package.
+	\item \href{http://blog.kowalczyk.info/software/sumatrapdf/free-pdf-reader-de.html}{http://blog.kowalczyk.info/software/sumatrapdf/free-pdf-reader-de.html}\\
+	Sumatra PDF is a lightweight, free, open-source PDF, ePub, MOBI, XPS, DjVu, CHM, CBZ, CBR viewer for Windows. Unlike Arcobat Reader, PDF files opened in Sumatra can still be modified by other programs.
+	\item \href{http://www.texniccenter.org/}{http://www.texniccenter.org/}\\
+	TeXnicCenter (TXC) is a free text editor for LaTeX documents under Windows.
+	\item \href{https://www.xm1math.net/texmaker/}{https://www.xm1math.net/texmaker/}\\
+	TeXmaker is a freely available cross-platform (Windows, MacOS, Linux) LaTeX editor.
+\end{itemize}
+
+Alternatively, online solutions such as \glqq{}\href{https://www.overleaf.com/}{Overleaf}\grqq{} can be used. 
+TUM also offers its own Overleaf server (\href{https://latex.tum.de}{https://latex.tum.de}).
+With these online tools, a \LaTeX project can be created and edited directly in the browser without having to install the aforementioned software on the computer. 
+In addition, other people can be invited to the project, who can then edit the documents at the same time.
+
+\section{First steps}
+\label{sec:ersteschritte}
+
+Before you can start writing the scientific paper, you should first adjust the settings in the header of the file \texttt{thesis.tex} (cf. \cref{alg:docClass}). 
+Lines 2--8 influence the formatting and some predefined macros. 
+Especially important are lines 6--8, which set the language, the citation style and the document type. 
+The most important options are explained below:
+
+\lstinputlisting[numbers=left,float=b!,morecomment={[l]{\%}},commentstyle={\color{Gray}\em},language={[LaTeX]TeX}, caption={class options},label={alg:docClass},linerange={2-8},firstnumber=2]{thesis.tex}
+
+{
+\begin{enumerate}[label=\textbf{line~\protect\parbox[b]{.6cm}{\raggedleft\texttt{\arabic*}}:},leftmargin=*]
+    \setcounter{enumi}{1}
+    \item Aligns equations (\texttt{equation}-environment) flushed left
+    \item Sets the font size of the body text (\texttt{\textbackslash{}normalsize}). Other font sizes will be aligned accordingly.
+    \item Specifies whether the document is single-sided (\texttt{oneside}) or double-sided (\texttt{twoside}).
+    \item If print is set to \texttt{true}, all links, references, and code sequences in the text are no longer colored. This makes the document have fewer color pages and cheaper to print.
+    \item Sets in which language the document is written. Only English and German should be used (\texttt{ngerman} and \texttt{english} respectively). If you want to use another language, you have to create a translation of the .def file.
+    \item The citation style to be used should be entered here. So far only \texttt{apa} and \texttt{ieee} are predefined. If another style is to be used, please enter \texttt{none} here and include and set up the \texttt{biblatex} package independently (cf.).
+    \item Specifies the type of the paper. The options here are \texttt{thesis}, for a bachelor or master thesis, \texttt{diss}, for a dissertation, or \texttt{plain}, for a free-form title page. To customize the \texttt{plain} title page, simply renew the \texttt{\textbackslash{}TPplain} command.
+\end{enumerate}
+}
+
+\begin{table}[H]
+    \caption*{\textbf{other class options:\hfill\null}}
+    \begin{tblr}{llX}
+        \toprule
+        \textbf{Option} & \textbf{Type} & \textbf{Function} \\
+        \midrule
+        \texttt{colorcode} & \texttt{true/false} & If set to \texttt{false}, keywords in \texttt{listing}-environments will not be printed in color. Has no effect, if \texttt{print=true}.\\[2mm]
+        \texttt{microtype} & \texttt{true/false} & If there are font expansion errors, this option should be set to \texttt{false}. Otherwise scalable Fonts need to be installed for \LaTeX (more difficult).\\[2mm]
+        \texttt{showframe} & \texttt{true/false} & Displays, if set to \texttt{true}, the borders of any content box. Makes it easier to debug any overfull hbox issues.\\[2mm]
+        \texttt{citeInAcroList} & \texttt{true/false} & Determines if references should be included in the list of acronymes. [Default false]\\[2mm]
+        \texttt{chairLogo} & \textit{string} & If a chair logo should be printed in the title page header, specify the filename here and place the image in the figures/Logos folder.\\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+Next, all commands in the \textbf{lines 12--35} \textbf{must} be adapted to your own needs.
+To do this, simply adjust the text in the last bracket of the respective \texttt{Set...} command.
+These commands are used in the predefined macros, \texttt{\textbackslash{}maketitle} and \texttt{\textbackslash{}Declaration}, which format the personalized title page at the beginning and affidavit at the end.
+
+\section{Packages included in CMSthesis class}
+\label{sec:packages}
+
+The following packages are loaded directly from the CMSthesis class and are ready for use:
+
+\begin{tblr}{lX}
+    \textbf{Package name} & \textbf{Description} \\
+    \href{https://www.ctan.org/pkg/listings}{\textbf{listings:}} & Needed to properly typeset programming code.\\
+    \href{https://www.ctan.org/pkg/pgf}{\textbf{tikz}} & Used for creating vector graphics.\\
+    \href{https://www.ctan.org/pkg/rotating}{\textbf{rotating}} & Necessary to rotate float objects (tables or images).\\
+    \href{https://ctan.org/pkg/tabularray?lang=de}{\textbf{tabularray}} & For creating tables. Comprehensive library that combines the functionality of some other table packages (e.g. longtable, tabularx, multirow, etc.).\\
+    \href{https://www.ctan.org/pkg/caption}{\textbf{caption}} & For fine-tuning table and image captions.\\
+    \href{https://www.ctan.org/pkg/floatrow}{\textbf{floatrow}} & Provides better control over the arrangement of float objects (tables, images).\\
+    \href{https://ctan.org/pkg/acro?lang=de}{\textbf{acro}} & Used for abbreviations and the corresponding list of abbreviations and the list of symbols.\\
+    \href{https://ctan.org/pkg/cleveref?lang=de}{\textbf{cleveref}} & Simplifies and improves referencing. Instead of \texttt{\textbackslash{}ref} \texttt{\textbackslash{}cref} should be used.\\
+\end{tblr}
+
+Other required packages (they are already loaded, please note to avoid package incompatibilities):
+
+\begin{minipage}{.49\textwidth}
+\begin{itemize}
+\item iftex
+\item etoolbox
+\item kvoptions
+\item xstring
+\item xcolor
+\item graphicx
+\item enumitem
+\item amsmath,amssymb,amsthm,nccmath
+\item framed
+\item url
+\item pgfplots
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}{.49\textwidth}
+\begin{itemize}
+\item booktabs
+\item footnote
+\item subfig
+\item biblatex
+\item titlesec
+\item fancyhdr
+\item hyperref
+\item showframe
+\item microtype
+\item csquotes
+\item lscape
+\end{itemize}
+\end{minipage}
+
+\section{Chapters and Sections}
+\label{sec:kapitel}
+
+To structure the work into chapters, sections and subsections, the commands corresponding to \cref{alg:chapsNsecs} are used.
+From these, a table of contents is automatically created using the command \texttt{\textbackslash{}tableofcontents} (see \texttt{thesis.tex}, line \texttt{92}).
+The \texttt{\textbackslash{}label\{\}} and \texttt{\textbackslash{}cref\{\}} commands can be used to refer to a chapter or paragraph in the text.
+The commands for chapters, paragraphs, etc. exist in the version shown, as well as with an appended asterisk, e.g. \texttt{\textbackslash{}chapter$^\ast$\{\}}. 
+The star version creates unnumbered chapters, sections, etc., which are not listed in the table of contents, e.g. to further divide the document into more sections without cluttering the table of contents.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries,language={[LaTeX]TeX}, caption={Chapters and Sections},label={alg:chapsNsecs}]
+\chapter{Chapter 1}
+\label{ch:kapitel_1}
+
+\section{Section 1.1}
+\label{sec:abschnitt_1.1}
+
+\subsection{Section 1.1.1}
+\label{sec:abschnitt_1.1.1}
+
+\subsubsection{Section 1.1.1.1}
+\end{lstlisting}
+
+If special characters or other \LaTeX{} commands are to be used in a heading, such as abbreviations, then it is recommended to convert these characters to a string using the \texttt{\textbackslash{}texorpdfstring} command.
+Otherwise, the \texttt{hyperref} package may cause an error with it.
+For example, a heading might contain the characters, $\mathcal{L}(\gamma)$.
+The math environment and special characters are problematic here.
+In the heading this should be realized with \texttt{\textbackslash{}texorpdfstring\{\$\textbackslash{}mathcal\{L\}(\textbackslash{}gamma)\$\}\{Lg\}}.
+
+To keep the data structure of the \LaTeX project clean it is useful to create a separate \texttt{.tex} file for each chapter and include it in the main document (\texttt{thesis.tex}) with the command \texttt{\textbackslash{}include\{<filename>\}}, cf. lines~111--113 in \texttt{thesis.tex}.
+This way, any errors can be better localized and clarity is improved when editing the thesis.
+
+\section{Colors}
+
+\cref{tab:colors} displays the colors predefined in the document class, which can be switched off with the switches \texttt{print} and \texttt{colorcode} (cf. \cref{alg:docClass}, line~5 and~7) \glqq{}can be switched off\grqq{} (see description in \cref{sec:ersteschritte}).
+By \glqq{}off\grqq{} is meant here that the color is then replaced by a gray value to e.g. create a print version of the document (as a test this document can be compiled with the option \texttt{print=true}).
+
+The colors can be changed with \texttt{\textbackslash DefineColor}[<gray value>]\{<name>\}\{<model>\}\{<color>\} (watch out for capital letters!) can be overwritten or recreated. If \textit{mix} is used as <model>, the color is defined with the \texttt{\textbackslash{}colorlet} command, otherwise with \texttt{\textbackslash{}definecolor} (cf. \href{https://ctan.org/pkg/xcolor?lang=de}{\texttt{xcolor} documentation}). The optional gray value allows to specify a grayscale value if the color \glqq{}is turned off\grqq{}.
+
+Examples:
+
+\DefineColor[0.4]{beispiel1}{RGB}{150,10,250}
+\textcolor{beispiel1}{\textbackslash{}DefineColor[0.2]\{beispiel1\}\{RGB\}\{22,0,250\}}
+
+\DefineColor[0.3]{beispiel2}{mix}{Blue!60!White}
+\textcolor{beispiel2}{\textbackslash{}DefineColor[0.2]\{beispiel2\}\{mix\}\{Blue!60!White\}}
+
+\begin{table}[t!]
+    \begin{tblr}{lccc}
+        \toprule
+        <name> & <model> & <color> & <gray value> \\
+        \midrule
+        \textcolor{kwcolor}{kwcolor} & mix & blue!70!black & 0.1 \\[1mm] 
+        \textcolor{kwcolor2}{kwcolor2} & mix & magenta!80!white & 0.8 \\[1mm]
+        \textcolor{kwcolor3}{kwcolor3} & mix & OliveGreen & 0.3 \\[1mm]
+        \textcolor{kwcolor4}{kwcolor4} & mix & Yellow!50!white & 0.6 \\[1mm]
+        \textcolor{kwcolor5}{kwcolor5} & mix & blue!50!white & 0.7 \\[1mm] 
+        \textcolor{kwcolor6}{kwcolor6} & mix & RedViolet &  0.4 \\[1mm]
+        \textcolor{commentcolor}{commentcolor} & mix & green!50!black & 0.4 \\[1mm]
+        \textcolor{commentcolor2}{commentcolor2} & mix & gray & 0.5 \\[1mm]
+        \textcolor{stringcolor}{stringcolor} & mix & violet!50!black & 0.1 \\
+        \bottomrule
+    \end{tblr}
+    \caption{Predefined colors.}
+    \label{tab:colors}
+\end{table}
+
+
+\section{Images}
+
+Images are best included in the \texttt{figure} float environment with \texttt{\textbackslash{}includegraphics} (see \cref{alg:figures}). 
+This command supports most pixel graphics formats as well as formats, such as EPS and PDF, for vector graphics.
+If you want to include Inkscape files (\texttt{.svg}) directly, you should use the \texttt{svg} package (not included in the document class, cf. \href{https://ctan.org/pkg/svg?lang=de}{\texttt{svg} documentation}).
+This allows SVG files to be included in the document with the \texttt{\textbackslash{}includesvg} command.
+
+If Matlab plots are to be displayed in the document, the matlab2tikz project is recommended (cf. \href{https://github.com/matlab2tikz/matlab2tikz}{https://github.com/matlab2tikz/matlab2tikz}).
+With this Matlab tool plots can be converted into a TikZ representation (vector graphics tool for \LaTeX), which can be embedded directly in the document.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries,language={[LaTeX]TeX}, caption={Embedding image files.},label={alg:figures}]
+\begin{figure}
+    \centering
+    \includegraphics{<filename>}
+    \caption{My image description}
+    \label{fig:my_label}
+\end{figure}
+\end{lstlisting}
+
+For better formatting freedom for images, the \texttt{floatrow} package has been integrated into the document class (see \href{https://ctan.org/pkg/floatrow}{\texttt{floatrow} documentation}).
+This package is very good for displaying images next to and below each other.
+For example, if you need to display images with the same height next to each other, the package provides a very simple solution (cf. \cref{alg:figuresFloatrow}).
+Without the \texttt{\textbackslash{}ffigbox} command, if multiple images are included in a \texttt{figure} environment, each with its own \texttt{caption}, the \texttt{\textbackslash{}RawFloats} command must be executed at the beginning of the environment.
+
+\begin{lstlisting}[float=ht,keywordsprefix={\\},keywordstyle=\color{kwcolor}\bfseries, caption={Display of two images side by side with the same height and each with its own caption.},label={alg:figuresFloatrow}]
+\begin{figure}
+    \CommonHeightRow[5.5cm]{%
+        \begin{floatrow}[2]
+            \ffigbox[\FBwidth]{%
+                \caption{Bildunterschrift 1.}%
+                \label{fig:my_label_1}%
+            }{%
+                \includegraphics[height=\CommonHeight]{<filename>}%
+            }
+            \ffigbox[\FBwidth]{%
+                \caption{Bildunterschrift 2.}%
+                \label{fig:my_label_2}%
+            }{%
+                \includegraphics[height=\CommonHeight]{<filename>}%
+            }
+        \end{floatrow}
+    }
+\end{figure}
+\end{lstlisting}
+
+A list of figures is created automatically with the command \texttt{\textbackslash{}listoffigures} (see \texttt{thesis.tex}).
+In the directory, the figure number and the corresponding caption (\texttt{\textbackslash{}caption}) are displayed.
+If the caption is too long, the corresponding \texttt{caption} command can be used to specify an alternative, shorter caption in square brackets, which will only be displayed in the directory.
+
+\section{Code}
+
+Code can be easily and conveniently displayed using the listings package.
+Within the \texttt{lstlisting} environment, all spaces are considered and all commands are ignored unless a command is escaped.
+In this template, commands inside the \texttt{(*@} and \texttt{@*)} strings are escaped, i.e. executed as \LaTeX code.
+This way labels can be attached to important lines and referenced accordingly, e.g.  \cref{algl:codeLine} in the \cref{alg:lstexmpl}.
+However, this only works if line numbering has been enabled via the appropriate environment option.
+
+Templates for three programming languages have already been defined in \texttt{thesis.tex}, which can be used to format keywords defined within the \texttt{lstlisting} environment according to the template.
+To use the appropriate language, it can either be set globally with \texttt{lstset}, or selected in each case in the corresponding \texttt{lstlisting} environment via the \texttt{language} option.
+
+Without further ado, the \texttt{lstlisting} environment is not a float environment, like e.g. \texttt{figure} or \texttt{table}, and is always placed in the body text.
+However, a caption, label and position specifier (h,t,b) can also be defined here via appropriate options.
+
+\begin{lstlisting}[numbers=left, title={syntax}, breaklines=true, caption={Example listing}, label={alg:lstexmpl}, language=pseudo, float=t]
+This is how
+    code looks like
+with the listings package
+    
+In this line a label is defined and can be referenced. (*@\label{algl:codeLine}@*)
+\end{lstlisting}
+
+\section{Abbreviations}
+
+To create abbreviations please follow the instructions in the \textit{00c\_abbreviations.tex} file (see also \href{https://ctan.org/pkg/acro?lang=de}{\texttt{acro} documentation}).
+In general, it is recommended to create an entry for each abbreviation and to use one of the \texttt{\textbackslash{}ac} commands each time it is used in the text.
+This way, each abbreviation is linked to the list of abbreviations via the \texttt{hyperref} package (cf. \cref{tab:acro}).
+
+\begin{table}[H]
+    \centering
+    \begin{tblr}{ll}
+        \toprule
+        acf (repeated 1st use): & \acf{BIM} \\
+        acl and acs in the sentence: & \acl{BIM}, abbreviated as \acs{BIM}. \\
+        ac (after first use): & \ac{BIM} \\
+        accite: & \accite{BIM} \\
+        \bottomrule
+    \end{tblr}
+    \caption{abbreviations, examples}
+    \label{tab:acro}
+\end{table}
+
+\section{List of Symbols}
+
+\begin{table}[H]
+    \centering
+    \begin{tblr}{ll}
+        \toprule
+        Erdbeschleunigung: & \ac{g} \\
+        Erdradius: & \ac{RA} \\
+        \bottomrule
+    \end{tblr}
+    \caption{Symbole, Beispiele.}
+    \label{tab:symb}
+\end{table}
+
+\section{Citations and Bibliography}
+
+In order to properly mark citations and create a bibliography automatically, the individual sources must be exported to a \texttt{.bib} file and included in \texttt{thesis.tex} with the command \texttt{\textbackslash{}addbibresource}.
+For ease of reference, \texttt{.bib} files should be placed in the separate \texttt{literature} folder.
+These \texttt{.bib} files can also be edited by hand, as a template the existing \texttt{references.bib} file can be used as a template.
+The Bibtex code of publications can be obtained for example from Google Schoolar (\href{http://scholar.google.de/}{http://scholar.google.de/}).
+If Citavi is used for literature management, a Bibtex file can also be exported directly there. 
+
+Each entry in the \texttt{.bib} file must have its own unique Bibtex key, with the help of which the respective source can be cited in the work.
+If the APA citation style is used as recommended, there are two different \LaTeX{} commands that can be used for citation.
+
+First, there is the \texttt{\textbackslash{}parencite} command, which can be used to set the citation in the bracketed style.
+This type of quotation is usually placed at the end of the sentence (before the period) or the part of the sentence to which the quotation refers.
+Alternatively, the citation can be placed at the end of a paragraph (then after the period), provided that the source refers to the entire paragraph.
+
+On the other hand, there is the \texttt{\textbackslash{}textcite} command which outputs the reference without parentheses.
+This type of citation is used when the author of the source is directly mentioned by name in the text.
+For both commands there is also the option to define a prefix and/or postfix, e.g. if the page number is to be given or if e.g. a \glqq{}she\grqq{} is to be prefixed.
+
+Example citation, in parentheses: \parencite{Amann.2013}\nl
+Continuous text citation: \textcite{Stein:2014} gives many good references in his \LaTeX{} introduction.\nl
+Bracketed citation with prefix: \parencite[siehe auch][]{Amann.2013}\nl
+Bracketed quote with postfix: \parencite[][S.~5f.]{Amann.2013}
+
+If not APA but IEEE is used, just \texttt{\textbackslash{}cite} can be used, as there are no different versions here.
+
+\subsection*{Troubleshooting}
+
+The default package for literature management in this template is \texttt{biblatex}, which is set with the backend \texttt{biber}.
+In most \LaTeX{} editors, an extra setting must be made to use \texttt{biblatex} with this setting.
+The backend \texttt{biber} is a separate \LaTeX{} program which compiles the auxiliar files necessary for setting the bibliographic references.
+In order for this program to be executed when compiling the project data, a setting must be made in the corresponding \LaTeX{} editor.
+What has to be done at the editor differs depending on the editor.
+A comprehensive description for the most common editors can be found at the following address: \href{https://texwelt.de/fragen/1909/wie-verwende-ich-biber-in-meinem-editor}{https://texwelt.de/fragen/1909/wie-verwende-ich-biber-in-meinem-editor}.
+
+If there are further problems with the default settings, you can also enter \texttt{citeStyle=none} in the class options in line~10.
+With this setting no package is loaded for the literature management, it can be loaded then another package and own attitudes be made.
+As an alternative to \texttt{biblatex} the \texttt{natbib} package is recommended, but it is somewhat outdated and has not been updated since 2010.
+If the problem is with \texttt{biber}, it is also possible to load the \texttt{biblatex} package with the option \texttt{backend=bibtex}, this way no configuration of the editor is necessary, but it is not possible to use the APA citation style this way.
+
+\section{Miscellaneous}
+
+Line breaks can be created with \textbackslash\textbackslash. 
+However, occasionally this creates a \glqq{}underfull box\grqq{} and it is therefore safer to \glqq{}fill{} the line with a \texttt{\textbackslash{}hfill} before the line break. 
+For the sake of simplicity, the command \texttt{\textbackslash{}nl} has been defined for this purpose, which can be used to break a line in continuous text without any problems.
+
+A new paragraph is obtained by inserting a blank line in the code.
+Examples for this line and paragraph structuring can be found in the code of this description.
+
+\subsection*{Other predefined commands}
+
+\begin{longtblr}[
+    caption={caption},
+    label={tab:newCommands},
+    note{a}={Example for \texttt{TblrNote}. Only available in longtblr and talltblr. Must be added to longtblr/talltblr options.}
+]{lp{11cm}}
+    \toprule
+    \texttt{\textbackslash{}dC}:         & Represents a short form of \texttt{\$\^{}\textbackslash{}circ\{\}C\$} and writes degree Celsius (\dC)\TblrNote{a} \\
+    \texttt{\textbackslash{}TblrNote} & Allows placing table footnotes. They can be referenced multiple times, such as the footnote \textit{a} in the first and second lines.\TblrNote{a} \\
+    \texttt{\textbackslash{}lquote} & Creates a quotation, i.e. an indented area in quotation marks and with source citation (see examples in \cref{ch:li}). \\
+    \texttt{\textbackslash{}squote} & Creates a quote similar to \texttt{lquote} only in body text and not indented. \\
+    \texttt{\textbackslash{}Declaration} & Creates the affidavit that must be signed for the work to be validly submitted. Is already called in \texttt{thesis.tex} at the end. \\
+    \bottomrule
+\end{longtblr}
+
+\fi

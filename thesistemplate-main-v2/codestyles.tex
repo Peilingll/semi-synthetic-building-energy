@@ -1,0 +1,47 @@
+\lstloadlanguages{[LaTeX]TeX}
+
+\lstdefinelanguage{pseudo}{%
+	morekeywords={for, while, return, and, or, do, od, procedure, begin, end, print, fun, function, try, mutable, fi, then},
+	sensitive=false,
+	keywordstyle=\color{kwcolor}\bfseries\em,
+	morecomment=[l][\color{commentcolor}\em]{///},
+	morecomment=[l][\color{commentcolor}\em]{//},
+	morecomment=[s][\color{commentcolor}\em]{/*}{*/},
+	morestring=[b]",
+	stringstyle=\color{stringcolor}
+}
+
+%% C# language with Siemens NX and GrGen API commands
+\lstdefinelanguage{csharp}{%
+	morekeywords=[1]{namespace, using, override, protected, public, private, virtual, abstract, class, get, set, false, true, const, static, dynamic, void, bool, int, double, string, var, new, null, is, as, out},
+	morekeywords=[2]{for, while, if, return, else, foreach, try, catch, in, break},
+	morekeywords=[3]{Point3d, NXMatrix, RelationBuilder, List, Dictionary, Constraints, Entity, Sketch, Part, Program},
+	morekeywords=[4]{INode, IEdge, IGraph, IproceduralEdge, Isketchedge, Icontain},
+	sensitive=true,
+	keywordstyle=[1]\color{kwcolor}\bfseries\em,
+	keywordstyle=[2]\color{kwcolor2}\bfseries\em,
+	keywordstyle=[3]\color{kwcolor3},
+	keywordstyle=[4]\color{kwcolor4},
+	morecomment=[l][\color{commentcolor}\em]{///},
+	morecomment=[l][\color{commentcolor}\em]{//},
+	morecomment=[s][\color{commentcolor}\em]{/*}{*/},
+	morestring=[b]",
+	stringstyle=\color{stringcolor}
+}    
+
+\lstdefinelanguage{python}{%
+	morekeywords=[1]{class, null, is, for, while, if, return, else, elif, foreach, try, except, as, print, break, in, def, not, raise},
+	morekeywords=[2]{__init__, __dict__, __eq__},
+	morekeywords=[3]{False, True, str, len, object, super, Exception, type, next, None },
+	morekeywords=[4]{self},
+	sensitive=true,
+	keywordstyle=[1]\color{kwcolor}\bfseries\em,
+	keywordstyle=[2]\color{stringcolor}\bfseries\em,
+	keywordstyle=[3]\color{kwcolor5},
+	keywordstyle=[4]\color{kwcolor6},
+	morecomment=[l][\color{commentcolor2}\em]{\#},
+	morecomment=[s][\color{commentcolor}\em]{"""}{"""},
+	morestring=[b]",
+	morestring=[b]',
+	stringstyle=\color{kwcolor4}
+}    
