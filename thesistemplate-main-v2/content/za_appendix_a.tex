@@ -88,7 +88,7 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 
 \begin{table}[htbp]
 	\centering
-	\caption[Per-class classification report for the binary task.]{Per-class classification report for the binary task (\cref{tab:binary_routes}; holdout set, $n = 2{,}018$; support for classes A to C = 1,416; support for classes D to G = 602).}
+	\caption[Per-class classification report for the binary task.]{Per-class classification report for the binary task (\cref{tab:binary_routes}; holdout set, $n = 2{,}018$; support for classes A--C = 1,416; support for classes D--G = 602).}
 	\label{tab:binary_perclass}
 	\footnotesize
 	\begin{tblr}{
@@ -99,7 +99,7 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 			rowsep = 2pt,
 		}
 		\toprule
-		Route                 & A to C P       & A to C R       & A to C F1      & D to G P       & D to G R       & D to G F1      \\
+		Route                 & A--C P       & A--C R       & A--C F1      & D--G P       & D--G R       & D--G F1      \\
 		\midrule
 		M0 (random, expected) & 0.702          & 0.500          & 0.584          & 0.298          & 0.500          & 0.373          \\
 		M1                    & 0.715          & \textbf{0.960} & \textbf{0.819} & \textbf{0.509} & 0.098          & 0.165          \\
@@ -114,8 +114,8 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 \end{table}
 
 The macro values in \cref{tab:binary_routes} are the unweighted means of the two corresponding class-level values reported here.
-M1 and the trained M3 routes show high recall for classes A to C (0.927 to 0.960) but low recall for classes D to G (0.098 to 0.110).
-M2-DINOv2 provides the most balanced class-level result, with a recall of 0.469 for classes D to G and the highest precision for classes A to C.
-M2-InternVL3 assigns every building to classes D to G; its F1 score of 0.459 for these classes therefore reflects the class prevalence (precision = 0.298) rather than discrimination between buildings.
+M1 and the trained M3 routes show high recall for classes A--C (0.927 to 0.960) but low recall for classes D--G (0.098 to 0.110).
+M2-DINOv2 provides the most balanced class-level result, with a recall of 0.469 for classes D--G and the highest precision for classes A--C.
+M2-InternVL3 assigns every building to classes D--G; its F1 score of 0.459 for these classes therefore reflects the class prevalence (precision = 0.298) rather than discrimination between buildings.
 M0 reports the analytical expectation, with precision equal to each class prevalence and recall equal to 0.5.
 Source: \texttt{reports/stage3/\allowbreak binary\_prf\_htr\_r2.json}.

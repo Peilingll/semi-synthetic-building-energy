@@ -42,7 +42,7 @@ The experimental sample is highly concentrated geographically: Amsterdam contain
 Its building type composition also differs substantially from that of the eligible four-city registry reference pool, which contains 124,784 residential buildings with EPC records and valid TABULA-NL matches.
 Apartment Blocks (AB) account for approximately 88\% of the experimental sample, compared with approximately 54\% of the reference pool.
 The energy class distributions also differ, but the difference cannot be characterised simply as a shift towards better-performing buildings in the experimental sample.
-Under the binary grouping used in this study, buildings in classes A to C account for 70.3\% of the experimental sample and 76.5\% of the reference pool.
+Under the binary grouping used in this study, buildings in classes A--C account for 70.3\% of the experimental sample and 76.5\% of the reference pool.
 Subsequent results should therefore be interpreted as estimates for the \ac{SVI}-covered sample rather than as unbiased estimates for the residential building stock of the four cities.
 
 This mismatch in sample composition is consistent with the contributor-driven, non-random spatial coverage of Mapillary and is also affected by the study-area boundaries, residential eligibility criteria, and image-quality filtering.
@@ -52,7 +52,7 @@ The effect of sample composition on model performance is evaluated in \cref{sec:
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_4_1_distributions}
-	\caption[Normalised distributions of the experimental sample and the registry reference pool.]{Normalised distributions of the experimental sample and eligible four-city registry reference pool. Panel~(a) compares the four building types, panel~(b) compares floor count groups from 1 to 7 and 8 or more, panel~(c) compares the six TABULA-NL construction periods, and panel~(d) compares energy classes A to G after A+ through A++++ are combined with A. Each panel reports within-sample percentages rather than absolute counts or city-level stacks. The experimental sample contains 10,086 buildings, and the reference pool contains 124,784 buildings.}
+	\caption[Normalised distributions of the experimental sample and the registry reference pool.]{Normalised distributions of the experimental sample and eligible four-city registry reference pool. Panel~(a) compares the four building types, panel~(b) compares floor count groups from 1 to 7 and 8 or more, panel~(c) compares the six TABULA-NL construction periods, and panel~(d) compares energy classes A--G after A+ through A++++ are combined with A. Each panel reports within-sample percentages rather than absolute counts or city-level stacks. The experimental sample contains 10,086 buildings, and the reference pool contains 124,784 buildings.}
 	\label{fig:distributions}
 \end{figure}
 
@@ -138,10 +138,10 @@ Joint accuracy is therefore not interpreted without these baselines.
 
 \textbf{Downstream tasks.}
 The energy class target is evaluated at two levels of granularity.
-The primary task is binary classification of A to C versus D to G.
+The primary task is binary classification of A--C versus D--G.
 This grouping corresponds to a threshold of 250\,kWh/(m$^2\cdot$year), the upper boundary of class C, and follows the coarse grouping used by \textcite{sun2026}.
-The experimental population contains 70.3\% of buildings in classes A to C and 29.7\% in classes D to G.
-The seven-class A to G task is retained as a diagnostic evaluation of seven-class separability and the limitations of the available predictors (\cref{sec:sample_composition_effects}).
+The experimental population contains 70.3\% of buildings in classes A--C and 29.7\% in classes D--G.
+The seven-class A--G task is retained as a diagnostic evaluation of seven-class separability and the limitations of the available predictors (\cref{sec:sample_composition_effects}).
 The binary classifier is trained independently with a binary objective; its outputs are not obtained by collapsing predictions from the seven-class model after inference.
 
 \textbf{Downstream metrics.}
@@ -152,8 +152,8 @@ However, majority guessing alone yields a $\pm$1 accuracy of 0.612, compared wit
 The $\pm$1 metric is therefore reported only alongside macro-F1 and the relevant baselines.
 
 The binary task reports macro precision, macro recall, and macro-F1 at the default probability threshold of 0.5, consistent with the macro-averaged reporting used in the comparison literature.
-Aggregate metrics can conceal asymmetric predictions, so class-specific precision and recall, particularly recall for classes D to G, are also examined.
-Binary accuracy is likewise interpreted against the majority guess, which reaches 0.702 by assigning every building to classes A to C.
+Aggregate metrics can conceal asymmetric predictions, so class-specific precision and recall, particularly recall for classes D--G, are also examined.
+Binary accuracy is likewise interpreted against the majority guess, which reaches 0.702 by assigning every building to classes A--C.
 The principal LightGBM protocol uses no class weighting, avoiding a change in the effective class prior and maintaining a common configuration across tasks.
 The class-balanced sensitivity variant increases macro-F1 by 0.071 and is documented in Appendix~\ref{ch:appendix_a}.
 
@@ -416,11 +416,11 @@ This interpretation remains bounded by the metric definition: the $H'_{tr}$ diff
 \label{sec:downstream_route_comparison}
 
 The downstream routes were compared on the same fixed holdout subset of $n = 2{,}018$ buildings for which all required predictions were available.
-The binary A to C versus D to G task is reported as the primary downstream task, followed by the original seven-class task as a diagnostic assessment of exact energy class prediction.
+The binary A--C versus D--G task is reported as the primary downstream task, followed by the original seven-class task as a diagnostic assessment of exact energy class prediction.
 
 \subsubsection*{Binary primary task}
 
-\Cref{tab:binary_routes} compares the routes on the independently trained binary task, with classes D to G defined as the positive class.
+\Cref{tab:binary_routes} compares the routes on the independently trained binary task, with classes D--G defined as the positive class.
 Macro precision, macro recall, and macro-F1 are reported at the default threshold of 0.5.
 Selected class-level values clarify asymmetric prediction patterns, while the complete classification reports are provided in \cref{tab:binary_perclass}.
 
@@ -452,19 +452,19 @@ Selected class-level values clarify asymmetric prediction patterns, while the co
 \end{table}
 
 Among the trained routes, M2-DINOv2 achieved the highest macro-F1 (0.597) and macro recall (0.600), followed by M2-ResNet-50 with a macro-F1 of 0.566.
-M2-DINOv2 recalled 46.9\% of buildings in classes D to G while retaining a precision of 0.764 for classes A to C (\cref{tab:binary_perclass}), indicating a more balanced result across the two groups than the attribute-mediated routes.
+M2-DINOv2 recalled 46.9\% of buildings in classes D--G while retaining a precision of 0.764 for classes A--C (\cref{tab:binary_perclass}), indicating a more balanced result across the two groups than the attribute-mediated routes.
 Its macro-F1 was numerically close to the 0.588 reported for a Copenhagen model using street-view and aerial imagery \parencite{mayer2023dk}.
 The populations, class boundaries, and evaluation protocols differ, so this value is included as contextual evidence rather than as a direct performance comparison.
 
 M1 attained the highest macro precision (0.612), but its macro-F1 remained close to the random-guessing expectation (0.492 versus 0.479).
-This combination reflects a strongly asymmetric prediction pattern: M1 recalled 96.0\% of buildings in classes A to C but only 9.8\% of those in classes D to G.
+This combination reflects a strongly asymmetric prediction pattern: M1 recalled 96.0\% of buildings in classes A--C but only 9.8\% of those in classes D--G.
 Replacing the reference attributes with predictions from the trained vision models changed the aggregate performance only slightly.
-M3-DINOv2 and M3-ResNet-50 achieved macro-F1 values of 0.490 and 0.488, respectively, and showed similar class-level asymmetry, with recall values of 0.108 and 0.110 for classes D to G.
-Thus, under the present configuration, attribute substitution had little effect on the downstream metric, although all three routes remained strongly oriented towards classes A to C at the default threshold.
+M3-DINOv2 and M3-ResNet-50 achieved macro-F1 values of 0.490 and 0.488, respectively, and showed similar class-level asymmetry, with recall values of 0.108 and 0.110 for classes D--G.
+Thus, under the present configuration, attribute substitution had little effect on the downstream metric, although all three routes remained strongly oriented towards classes A--C at the default threshold.
 
 The two InternVL3 routes produced different outcomes.
-Direct binary prompting assigned every building to classes D to G, resulting in a macro-F1 of 0.230 and no discrimination among buildings.
-Attribute mediation increased macro-F1 to 0.528, with a recall of 0.359 and precision of 0.335 for classes D to G.
+Direct binary prompting assigned every building to classes D--G, resulting in a macro-F1 of 0.230 and no discrimination among buildings.
+Attribute mediation increased macro-F1 to 0.528, with a recall of 0.359 and precision of 0.335 for classes D--G.
 The higher downstream score coincided with a less concentrated distribution of predicted classes, but not with stronger upstream attribute extraction: InternVL3-2B obtained the lowest upstream scores among the three configurations (\cref{tab:upstream_attributes}).
 \Cref{sec:cross_city_transfer} next examines whether the advantage of the trained direct routes was retained when Amsterdam was excluded from training.
 
@@ -658,7 +658,7 @@ This result reflects conditional redundancy rather than a general lack of releva
 
 The contribution of reconstructed geometry was task-dependent.
 Adding all four geometry features increased seven-class macro-F1 by 0.037, to approximately 0.217, but increased binary macro-F1 by 0.104, to approximately 0.581.
-Geometry therefore provided more discriminative information for the broad distinction between classes A to C and D to G than for exact classification from A to G.
+Geometry therefore provided more discriminative information for the broad distinction between classes A--C and D--G than for exact classification from A to G.
 
 \Cref{tab:geometry_utility} compares the extent to which each geometry feature could be recovered from frozen DINOv2 embeddings with its downstream contribution when the corresponding reconstructed 3DBAG value was supplied.
 Height was the most extractable feature ($R^2 = 0.741$), whereas the largest individual downstream gain was associated with shared-wall ratio ($+0.027$).

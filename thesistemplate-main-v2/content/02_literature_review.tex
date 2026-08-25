@@ -66,16 +66,16 @@ Proxy-based methods therefore offer a feasible route for large-scale data comple
 \label{sec:direct_image_to_energy}
 
 The direct visual route bypasses explicit archetype assignment and predicts energy classes directly from imagery.
-In the United Kingdom, \ac{SVI}, aerial imagery, building footprints, and land-surface temperature were integrated for approximately 40,000 buildings to perform binary classification of A to D versus E to G; the complete multimodal model achieved a macro-F1 score of 64.64\% \parencite{mayer2023uk}.
+In the United Kingdom, \ac{SVI}, aerial imagery, building footprints, and land-surface temperature were integrated for approximately 40,000 buildings to perform binary classification of A--D versus E--G; the complete multimodal model achieved a macro-F1 score of 64.64\% \parencite{mayer2023uk}.
 In a study of more than 21,000 buildings in the Copenhagen metropolitan area, \ac{SVI} and aerial imagery produced a macro-F1 score of 58.79\%, and these two image sources alone were found to be insufficient for consistently distinguishing building energy efficiency \parencite{mayer2023dk}.
 
 Subsequent studies expanded both the data sources and label granularity.
-Google Street View and geographic information system data were combined in a three-stage framework using 1\% local samples for transfer learning, achieving an accuracy of 84\% for A to G energy class classification, although performance decreased for occluded high-rise buildings \parencite{liu2025}.
+Google Street View and geographic information system data were combined in a three-stage framework using 1\% local samples for transfer learning, achieving an accuracy of 84\% for A--G energy class classification, although performance decreased for occluded high-rise buildings \parencite{liu2025}.
 Thermal infrared imagery, optical remote sensing, \ac{SVI}, morphology, and socioeconomic indicators were also integrated for binary high- versus low-performance classification, achieving F1 scores of 0.64 in Glasgow and 0.69 in Edinburgh; the corresponding \ac{SVI}-only models achieved 0.59 and 0.68, respectively \parencite{sun2026}.
 
 These findings support the presence of signals predictive of energy class in building appearance and urban-context data, but the capability of the direct visual route cannot be summarised by a single performance value.
 Previous studies differ substantially in modality, local adaptation, class aggregation, class definition, and evaluation protocol.
-Most employ binary targets, while only a small number report A to G classification; consequently, a directly comparable seven-class benchmark has not yet emerged.
+Most employ binary targets, while only a small number report A--G classification; consequently, a directly comparable seven-class benchmark has not yet emerged.
 Moreover, direct models bypass explicit TABULA parameters.
 Although they can directly support classification, they cannot independently identify the contribution of individual building attributes or directly quantify how attribute substitution affects the archetype cell and its inherited physical parameters.
 

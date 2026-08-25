@@ -279,7 +279,7 @@ The complete wording of the three prompts, decoding settings, and output parsing
 \textbf{Direct energy class prediction (M2).}
 In addition to the attribute-prediction models used in the M3 route, a direct energy class classification configuration is established for M2.
 For ResNet-50 and DINOv2, a single energy class classification head replaces the three attribute heads.
-The seven-class A to G task and binary A to C versus D to G task are trained separately using cross-entropy loss with class weights inversely proportional to the class frequencies in the corresponding development training fold.
+The seven-class A--G task and binary A--C versus D--G task are trained separately using cross-entropy loss with class weights inversely proportional to the class frequencies in the corresponding development training fold.
 ResNet-50 is fully fine-tuned for M2.
 DINOv2 instead uses pre-extracted and cached building-level mean features, with only the energy class classification network being trained.
 Early stopping within each fold and selection of the final fold checkpoint are based on energy class macro-F1 on the corresponding validation partition of the development set.
@@ -437,7 +437,7 @@ The two routes therefore have the same eight-field feature schema, and city rema
 The only differences arise from the source of the three upstream attributes and the archetype U-values derived from them.
 Apart from the energy class target and the fields required to construct the reference attributes, no other certificate-derived variables are used as predictors because such variables would be unavailable for target buildings without an existing energy certificate.
 
-The seven-class A to G and binary A to C versus D to G energy class tasks use two independently trained LightGBM classifiers with multiclass and binary objectives, respectively.
+The seven-class A--G and binary A--C versus D--G energy class tasks use two independently trained LightGBM classifiers with multiclass and binary objectives, respectively.
 Both tasks use the same fixed hyperparameter configuration, without route-specific tuning.
 The principal settings are 400 boosting iterations, a learning rate of 0.05, 31 leaves, and no class weighting.
 The complete configuration is reported in Appendix~\ref{ch:appendix_b} (\cref{tab:lightgbm_hyperparams}).
