@@ -7,13 +7,15 @@
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 24px; }
   .figwrap { max-width: 1062px; margin: 0 auto; }
   svg { width: 100%; height: auto; }
-  .caption { max-width: 950px; margin: 18px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
+  .caption { max-width: 950px; margin: 18px auto 0; font-size: 13px; color: #333; line-height: 1.55; }
   .mono { font-family: Consolas, "Courier New", monospace; }
 
-  .t-title { font: 600 11.5px "Segoe UI", Arial, sans-serif; fill: #111; }
-  .t-sub   { font: 10px "Segoe UI", Arial, sans-serif; fill: #444; }
-  .t-out   { font: 600 10.4px "Segoe UI", Arial, sans-serif; fill: #1F4E7A; }
-  .t-chip  { font: italic 10px "Segoe UI", Arial, sans-serif; fill: #555; }
+  .t-title { font: 600 13px "Segoe UI", Arial, sans-serif; fill: #111; }
+  .t-sub   { font: 11.5px "Segoe UI", Arial, sans-serif; fill: #444; }
+  .t-out   { font: 600 11.5px "Segoe UI", Arial, sans-serif; fill: #1F4E7A; }
+  .t-chip  { font: italic 11.5px "Segoe UI", Arial, sans-serif; fill: #555; }
+  .t-obj   { font: 700 10.5px "Segoe UI", Arial, sans-serif; fill: #fff; }
+  .objtag  { fill: #1F4E7A; }
   .m       { font-family: Consolas, "Courier New", monospace; }
 
   .box  { fill: #fff; stroke: #333; stroke-width: 1.4; }
@@ -27,7 +29,7 @@
 <div class="figwrap">
 
 <svg viewBox="0 0 1062 300" xmlns="http://www.w3.org/2000/svg" role="img"
-     aria-label="End-to-end methodological workflow in five stages">
+     aria-label="End-to-end methodological workflow in six stages">
   <defs>
     <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
@@ -35,18 +37,20 @@
 
   <!-- ============ 1 ============ -->
   <rect class="box" x="30" y="52" width="224" height="100" rx="4"/>
-  <text class="t-title" x="44" y="72">&#9312; Reference-data construction</text>
-  <text class="t-sub"   x="44" y="105">BAG + EP-Online + 3DBAG</text>
-  <line class="rule" x1="44" y1="128" x2="240" y2="128"/>
+  <text class="t-title" x="44" y="72">&#9312; Reference-data</text>
+  <text class="t-title" x="44" y="88">&nbsp;&nbsp;&nbsp;construction</text>
+  <text class="t-sub"   x="44" y="110">BAG + EP-Online + 3DBAG</text>
+  <line class="rule" x1="44" y1="126" x2="240" y2="126"/>
   <text class="t-out"   x="44" y="143">&#8594; Building reference table</text>
 
   <!-- ============ 2 ============ -->
   <rect class="box" x="30" y="176" width="224" height="100" rx="4"/>
   <text class="t-title" x="44" y="196">&#9313; SVI acquisition and</text>
-  <text class="t-title" x="44" y="210">&nbsp;&nbsp;&nbsp;building matching</text>
-  <text class="t-sub"   x="44" y="229">Mapillary imagery + building footprints</text>
-  <line class="rule" x1="44" y1="248" x2="240" y2="248"/>
-  <text class="t-out"   x="44" y="263">&#8594; SVI manifest keyed by <tspan class="m">pand_id</tspan></text>
+  <text class="t-title" x="44" y="212">&nbsp;&nbsp;&nbsp;building matching</text>
+  <text class="t-sub"   x="44" y="230">Mapillary imagery +</text>
+  <text class="t-sub"   x="44" y="244">building footprints</text>
+  <line class="rule" x1="44" y1="252" x2="240" y2="252"/>
+  <text class="t-out"   x="44" y="266">&#8594; SVI manifest keyed by <tspan class="m">pand_id</tspan></text>
 
   <!-- merge of the two tracks -->
   <path class="bus" d="M254,102 L272,102"/>
@@ -61,27 +65,43 @@
   <line class="rule" x1="306" y1="190" x2="502" y2="190"/>
   <text class="t-out"   x="306" y="205">&#8594; Linked building&#8211;SVI dataset</text>
 
-  <path class="arr" d="M516,164 L550,164"/>
-
-  <!-- TABULA input -->
-  <rect class="chip" x="550" y="62" width="224" height="26" rx="3"/>
-  <text class="t-chip" x="662" y="79" text-anchor="middle">TABULA-NL matrix</text>
-  <path class="arr" d="M662,88 L662,114"/>
+  <!-- 3 -> 4 -->
+  <path class="arr" d="M516,140 L533,140 L533,102 L550,102"/>
 
   <!-- ============ 4 ============ -->
-  <rect class="box" x="550" y="114" width="224" height="100" rx="4"/>
-  <text class="t-title" x="564" y="134">&#9315; Attribute inference and</text>
-  <text class="t-title" x="564" y="148">&nbsp;&nbsp;&nbsp;archetype lookup</text>
-  <text class="t-sub"   x="564" y="167">SVI crops &#8594; vision models (&#167;3.3)</text>
-  <text class="t-sub"   x="564" y="180">&#8594; type, year &#8594; TABULA-NL</text>
-  <line class="rule" x1="564" y1="190" x2="760" y2="190"/>
-  <text class="t-out"   x="564" y="205">&#8594; Attributes and U-values</text>
+  <rect class="box" x="550" y="52" width="224" height="100" rx="4"/>
+  <rect class="objtag" x="712" y="44" width="50" height="17" rx="8"/>
+  <text class="t-obj" x="737" y="56" text-anchor="middle">Obj. 1</text>
+  <text class="t-title" x="564" y="72">&#9315; Attribute inference</text>
+  <text class="t-sub"   x="564" y="105">SVI crops &#8594; vision models (&#167;3.3)</text>
+  <line class="rule" x1="564" y1="126" x2="760" y2="126"/>
+  <text class="t-out"   x="564" y="143">&#8594; Type and construction year</text>
 
-  <path class="arr" d="M774,164 L808,164"/>
+  <!-- 4 -> 5 -->
+  <path class="arr" d="M662,152 L662,176"/>
 
   <!-- ============ 5 ============ -->
+  <rect class="box" x="550" y="176" width="224" height="100" rx="4"/>
+  <rect class="objtag" x="712" y="168" width="50" height="17" rx="8"/>
+  <text class="t-obj" x="737" y="180" text-anchor="middle">Obj. 2</text>
+  <text class="t-title" x="564" y="196">&#9316; Archetype assignment</text>
+  <text class="t-sub"   x="564" y="229">Deterministic TABULA-NL lookup</text>
+  <line class="rule" x1="564" y1="248" x2="760" y2="248"/>
+  <text class="t-out"   x="564" y="264">&#8594; Attributes and U-values</text>
+
+  <!-- TABULA input -->
+  <rect class="chip" x="292" y="240" width="224" height="26" rx="3"/>
+  <text class="t-chip" x="404" y="257" text-anchor="middle">TABULA-NL matrix</text>
+  <path class="arr" d="M516,253 L550,253"/>
+
+  <!-- 5 -> 6 -->
+  <path class="arr" d="M774,200 L791,200 L791,164 L808,164"/>
+
+  <!-- ============ 6 ============ -->
   <rect class="box" x="808" y="114" width="224" height="100" rx="4"/>
-  <text class="t-title" x="822" y="134">&#9316; Downstream EPC prediction</text>
+  <rect class="objtag" x="970" y="106" width="50" height="17" rx="8"/>
+  <text class="t-obj" x="995" y="118" text-anchor="middle">Obj. 3</text>
+  <text class="t-title" x="822" y="134">&#9317; Energy class prediction</text>
   <text class="t-sub"   x="822" y="167">Fixed LightGBM evaluator</text>
   <line class="rule" x1="822" y1="190" x2="1018" y2="190"/>
   <text class="t-out"   x="822" y="205">&#8594; EPC prediction</text>
@@ -94,13 +114,14 @@ Two tracks are built independently and then joined. The reference track combines
 and building footprints into per-building facade crops, producing an SVI manifest keyed by the BAG
 <span class="mono">pand_id</span>, as detailed in Fig.&nbsp;3.3. The two meet at an inner join on
 <span class="mono">pand_id</span>, so the linked dataset contains only buildings for which both a
-reference record and usable imagery exist. Attribute inference then derives the building type and
-construction year from the crops using the vision models of &sect;3.3, and the resulting size class
-and period are mapped deterministically to a TABULA-NL cell supplying the as-built envelope U-values.
-The assembled attributes and U-values are finally passed to a fixed LightGBM evaluator that outputs
-the EPC prediction. The figure shows the processing chain only: the comparison routes, feature
-admission tiers and evaluation design that operate on this chain are defined in &sect;3.5 and
-&sect;4.1.2, and the counts surviving each filtering step are given in Table&nbsp;3.2.
+reference record and usable imagery exist. Attribute inference (Obj.&nbsp;1) derives the building type
+and construction year from the crops using the vision models of &sect;3.3; archetype assignment
+(Obj.&nbsp;2) maps the resulting size class and period deterministically to a TABULA-NL cell supplying
+the as-built envelope U-values. The assembled attributes and U-values are finally passed to a fixed
+LightGBM evaluator for energy class prediction (Obj.&nbsp;3), which outputs the EPC prediction. The
+figure shows the processing chain only: the comparison routes, feature admission tiers and evaluation
+design that operate on this chain are defined in &sect;3.5 and &sect;4.1.2, and the counts surviving
+each filtering step are given in Table&nbsp;3.2.
 </p>
 
 </div>
