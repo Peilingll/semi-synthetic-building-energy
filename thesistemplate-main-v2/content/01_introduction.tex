@@ -8,14 +8,14 @@ The building sector accounts for approximately 40\% of final energy consumption 
 The 2024 recast of the Energy Performance of Buildings Directive (EPBD) further established the policy objective of transforming the existing building stock into a zero-emission building stock by 2050 \parencite{epbd2024}.
 However, the actual coverage of Energy Performance Certificate (EPC) data remains incomplete.
 The Netherlands introduced its EPC scheme in 2008, but by the end of 2019, only approximately 3.8 million residential buildings had a valid, registered EPC, representing around 48\% of the residential building stock \parencite{caepbd2020}.
-Large-scale model-based estimation can therefore complement formal energy certification for building stock analysis and preliminary retrofit prioritisation, although its use should be clearly distinguished from legally issued EPC certification.
+Large-scale model-based estimation can therefore complement formal energy certification for building stock analysis and preliminary retrofit prioritisation.
 
 \Acf{UBEM} provides a bottom-up framework for analysing the operational energy use of tens to thousands of buildings at neighbourhood or city scale \parencite{reinhart2016}.
 Because collecting detailed information on the geometry, construction, systems, and use of individual buildings is prohibitively costly, many \ac{UBEM} workflows employ an archetype-based approach.
 Buildings with similar characteristics are grouped into categories, and each building inherits the thermal and system parameters associated with its archetype.
 TABULA is a representative European building-typology framework that defines residential typologies for 20 European countries according to building size, construction period, and other country-specific parameters \parencite{loga2016}.
 In the TABULA-NL configuration adopted in this study, building type and the construction period derived from construction year jointly determine the archetype cell, while floor count serves as an additional feature in the subsequent energy classification.
-Consequently, the large-scale application of archetype-based \ac{UBEM} requires not only building geometry but also semantic attributes that are frequently missing, including building type, construction year, and floor count.
+Consequently, the large-scale application of archetype-based \ac{UBEM} requires building geometry and semantic attributes that are frequently missing, including building type, construction year, and floor count.
 
 Previous research has shown that archetype lookup provides a consistent representation of the building stock but cannot capture all building-specific variation.
 In a large-scale evaluation using approximately 2.57 million Dutch residential EPC records, TABULA rule-based assignment achieved an accuracy of 26\%, below the majority-class baseline of 33\%, whereas a random forest incorporating additional building-level and neighbourhood-level open data features achieved 71\% accuracy \parencite{hettinga2023}.
@@ -28,32 +28,29 @@ Building-age prediction from spatial attributes has also been evaluated in terms
 Direct energy class classification from images has been investigated in the United Kingdom using street-view, aerial, footprint, and land-surface-temperature data, and in Denmark using street-view and aerial imagery \parencite{mayer2023uk,mayer2023dk}.
 OpenFACADES, meanwhile, demonstrated the feasibility of large-scale, multi-attribute building-profile enrichment using \acf{SVI} and \acfp{VLM} \parencite{liang2025}.
 
-However, although previous studies have linked inferred building attributes to energy models or archetype assignment, they generally do not provide a controlled, building-paired evaluation in which reference and \ac{SVI}-derived attributes pass through the same TABULA-grounded workflow while the evaluated buildings, data partitions, and downstream classifier are held constant \parencite{garbasevschi2021,wurm2021,dabrock2025}.
-Specifically, it remains unclear how much agreement with reference archetype assignments is retained when building type, construction year, and floor count inferred from \ac{SVI} replace reference attributes; which inferred attributes remain informative for archetype assignment and downstream energy class classification; and what downstream performance changes and transfer limitations arise from this substitution.
-This gap motivates the present study and leads to the three research objectives presented in the following section.
+Previous studies have linked inferred building attributes to energy models or archetype assignment \parencite{garbasevschi2021,wurm2021,dabrock2025}. However, they generally do not compare reference and \ac{SVI}-derived attributes within the same TABULA-grounded workflow while holding the evaluated buildings, data partitions, and downstream classifier constant.
+
+Specifically, three unresolved issues motivate this study. First, the comparative performance of different SVI-based paradigms for inferring building type, construction year, and floor count under the same evaluation protocol remains insufficiently characterised. Second, the effects of errors in inferred building type and construction year on TABULA-NL archetype assignment, together with the contribution of all three inferred attributes to downstream energy class classification, remain to be quantified. Third, the downstream performance changes and geographic transfer limitations resulting from substituting SVI-derived attributes for reference attributes require controlled evaluation. These issues define the three research objectives presented in the following section.
 
 \section{Research Objectives}
 \label{sec:research_objectives}
 
-Large-scale applications of archetype-based \ac{UBEM} depend on the metadata required to assign individual buildings to appropriate archetypes.
-In the present study, the relevant semantic attributes are building type, construction year, and floor count.
-When these attributes are incomplete or unavailable, \ac{SVI} may provide an alternative source.
-The linked Dutch data environment provides administrative attributes, reconstructed geometry, and registered energy classes for the same buildings, thereby enabling a controlled comparison with \ac{SVI}-derived substitutes.
-Within TABULA-NL, building type and construction period, derived here from construction year, determine the archetype cell; floor count is retained as an additional predictor in downstream energy class classification.
+Large-scale applications of archetype-based \ac{UBEM} require metadata for assigning individual buildings to appropriate archetypes. This study focuses on three semantic attributes: building type, construction year, and floor count. When these attributes are incomplete or unavailable, \ac{SVI} may serve as an alternative source. The linked Dutch datasets provide administrative attributes, reconstructed geometry, and registered energy classes for the same buildings. This linkage enables a controlled comparison between \ac{SVI}-derived and reference attributes. In TABULA-NL, building type and construction period determine the archetype cell. This study derives construction period from construction year and retains floor count as an additional predictor in downstream energy class classification.
 
-The overall objective of this thesis is to assess the extent to which attributes inferred from \ac{SVI} can substitute for reference attributes obtained from administrative records and reconstructed 3D building data in a TABULA-based building stock enrichment workflow, within the evaluated population, tasks, and geographic setting.
-This overall objective is addressed through three specific research objectives:
+Accordingly, this study assesses the extent to which \ac{SVI}-derived attributes can substitute for reference attributes obtained from administrative records and reconstructed 3D building data in a TABULA-based building stock enrichment workflow. The assessment is limited to the evaluated population, tasks, and geographic setting. Specifically, this study addresses three research objectives:
 
 \begin{enumerate}
 	\item \textbf{Evaluate the predictive performance of \ac{SVI}-based extraction of building type, construction year, and floor count.}
-	      This objective compares a fully fine-tuned \acf{CNN}, a frozen self-supervised backbone with supervised prediction heads, and \ac{VLM} inference without parameter updating on the same three building attributes.
+	      Three inference paradigms are evaluated on the same attributes and data partitions: a fully fine-tuned \acf{CNN}, a frozen self-supervised backbone with supervised prediction heads, and \ac{VLM} inference without parameter updating.
+
 	\item \textbf{Quantify agreement between \ac{SVI}-derived and reference TABULA-NL archetype assignments and the resulting differences in archetype-derived transmission heat transfer coefficients.}
-	      This objective compares the assigned archetype cells and their resulting $H'_{tr}$ values under common geometric and thermal assumptions; it does not constitute validation against measured heat loss.
+	      Reference and \ac{SVI}-derived archetype assignments are compared using cell-level agreement metrics and differences in the resulting $H'_{tr}$ values.
+	      Both calculations use the same reconstructed areas and window-to-wall ratio.
+	      The resulting $H'_{tr}$ differences provide a physically weighted comparison of archetype assignments and do not constitute validation against measured heat loss.
+
 	\item \textbf{Quantify the downstream performance change resulting from replacing reference attributes with \ac{SVI}-derived attributes, and evaluate transfer to Amsterdam as a held-out city.}
-	      For the substitution comparison, the evaluated buildings, data splits, and downstream classifier are held constant across attribute sources.
-	      This objective also estimates the marginal contribution of individual attributes and evaluates a single-city transfer setting in which Amsterdam is excluded from model development.
+	      The controlled substitution analysis holds the evaluated buildings, data partitions, and downstream classifier constant while changing the attribute source.
+	      The analysis also estimates the marginal contribution of individual attributes and evaluates transfer to Amsterdam after excluding the city from model development.
 \end{enumerate}
 
-To support these objectives, this thesis constructs a three-layer, TABULA-grounded semi-synthetic building dataset in which the provenance of each value is retained.
-The reference layer contains administrative observations, reconstructed geometry, and EP-Online reference energy classes; the vision-inference layer contains \ac{SVI}-derived attributes; and the synthetic archetype layer contains the TABULA cells and parameters deterministically assigned from the reference or inferred attributes.
-A controlled downstream energy class classification evaluation then examines how changing the attribute source affects predictive performance.
+To support these objectives, this study constructs a three-layer semi-synthetic building dataset grounded in TABULA. The provenance of every value is retained across the three layers. The reference layer combines administrative observations, reconstructed geometry, and EP-Online reference energy classes. The vision-inference layer stores \ac{SVI}-derived attributes. The synthetic archetype layer records the TABULA cells and parameters assigned deterministically from reference or inferred attributes. Using this layered structure, this study evaluates how substituting \ac{SVI}-derived attributes for reference attributes affects performance in downstream energy class classification.

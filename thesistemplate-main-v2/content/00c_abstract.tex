@@ -1,23 +1,12 @@
 \section*{Abstract}
 
-Large-scale archetype-based urban building energy modelling depends on semantic building metadata that are incomplete or unavailable in many open geospatial datasets.
-This thesis assesses whether building type, construction year, and floor count inferred from street-view imagery (SVI) can substitute for reference attributes obtained from administrative records and reconstructed 3D data within a TABULA-NL building-stock enrichment workflow.
-A traceable semi-synthetic dataset links 47,150 images to 10,086 residential buildings across four Dutch cities.
-Three configurations were evaluated: a fully fine-tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction heads, and zero-shot InternVL3-2B.
-The evaluation covered attribute extraction, TABULA-NL archetype assignment, physically weighted differences between assigned archetypes, and downstream energy-class classification under controlled attribute substitution.
+Large-scale archetype-based urban building energy modelling relies on semantic building metadata that are often incomplete or missing from open geospatial datasets. This study evaluates whether building type, construction year, and floor count inferred from street view imagery (SVI) can replace reference attributes from administrative records and reconstructed 3D data in a TABULA-NL building stock enrichment workflow. A traceable semi-synthetic dataset comprises 47,150 images linked to 10,086 residential buildings in four Dutch cities. Three models were evaluated: a ResNet-50 fine-tuned across all layers, a frozen DINOv2 backbone with supervised prediction heads, and zero-shot InternVL3-2B. Evaluation spanned attribute extraction, TABULA-NL archetype assignment, physically weighted discrepancies from reference archetypes, and downstream classification of energy classes under controlled attribute substitution.
 
-DINOv2 achieved the best results in six of seven attribute metrics, including a mean absolute error of 9.45 years for construction year.
-Its joint-cell accuracy exceeded both the uniform random expectation and the majority-cell baseline.
-With the reconstructed building areas and window-to-wall ratio held constant, DINOv2 assignments overestimated stock-level transmission heat loss by approximately 10\% relative to reference archetype assignments.
-Replacing reference attributes with DINOv2 predictions had little effect on binary macro-F1, but both the reference and attribute-mediated routes showed low recall for classes D to G.
-Direct image classification with DINOv2 achieved the highest binary macro-F1.
-Excluding Amsterdam from model development increased construction-year error, and trained downstream routes approached the uniform random expectation in Amsterdam.
+DINOv2 performed best on six of seven attribute metrics, including a mean absolute error of 9.45 years for construction year. Its joint-cell accuracy exceeded both the uniform random expectation and the majority-cell baseline. Holding the reconstructed building areas and window-to-wall ratios constant, its archetype assignments overestimated stock-level transmission heat loss by approximately 10\% relative to reference assignments. Substituting DINOv2 predictions for reference attributes had little effect on binary macro-F1. However, both the reference route and the route based on inferred attributes had low recall for classes D--G. Direct image classification achieved the highest binary macro-F1. When Amsterdam was excluded from model development, construction-year error increased, and trained downstream routes approached the uniform random baseline in that city.
 
-The findings support only conditional use of SVI-derived attributes when reference metadata are unavailable.
-Their suitability depends on the attribute, downstream task, sample composition, and geographic relationship between training and application data.
+The findings support the conditional use of attributes derived from SVI when reference metadata are unavailable. Suitability depends on the attribute, downstream task, sample composition, and geographic relationship between training and application data.
 
 \newpage
 \section*{Zusammenfassung}
 
-% TODO: insert German abstract (check with supervisor whether it is required for
-% an English-language thesis).
+% TODO: insert German abstract.
