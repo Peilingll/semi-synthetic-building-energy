@@ -51,15 +51,26 @@ data/processed/phase_2_openfacade_vlm_pipeline/
 # LaTeX draft previews (rebuild from thesistemplate-main/)
 output/
 
-# LaTeX build artifacts
-*.aux
-*.log
-*.toc
-*.lof
-*.lot
-*.out
-*.bbl
-*.blg
-*.bcf
-*.run.xml
-*.synctex.gz
+# LaTeX build artifacts (scoped: pipeline .log files elsewhere stay tracked)
+thesistemplate-main*/**/*.aux
+thesistemplate-main*/**/*.log
+thesistemplate-main*/**/*.toc
+thesistemplate-main*/**/*.lof
+thesistemplate-main*/**/*.lot
+thesistemplate-main*/**/*.out
+thesistemplate-main*/**/*.bbl
+thesistemplate-main*/**/*.blg
+thesistemplate-main*/**/*.bcf
+thesistemplate-main*/**/*.run.xml
+thesistemplate-main*/**/*.synctex.gz
+thesistemplate-main*/*.aux
+thesistemplate-main*/*.log
+thesistemplate-main*/*.toc
+thesistemplate-main*/*.lof
+thesistemplate-main*/*.lot
+thesistemplate-main*/*.out
+thesistemplate-main*/*.bbl
+thesistemplate-main*/*.blg
+thesistemplate-main*/*.bcf
+thesistemplate-main*/*.run.xml
+thesistemplate-main*/*.synctex.gz
