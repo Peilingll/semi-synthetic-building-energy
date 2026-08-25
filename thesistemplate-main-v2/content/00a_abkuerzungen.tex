@@ -1,31 +1,32 @@
 % Usage in text:
-% \ac{<label>}   Full acronym (long (short)) on first use, short form afterwards.
+% \ac{<label>}   Full form (long (short)) on first use, short form afterwards.
 % \acs{<label>}  Short form only.
-% \acf{<label>}  Always full form.
+% \acf{<label>}  Always the full form.
 % \acl{<label>}  Long form only.
-% Plural: append "p" (e.g. \acp{VLM}). Capitalised: \Ac, \Acs, \Acf, \Acl.
+% Plural: append "p", e.g. \acp{VLM}. Capitalised: \Ac, \Acs, \Acf, \Acl.
+%
+% Long forms are stored in lower case so that \ac{} reads correctly inside a
+% sentence; use \Ac{} at the beginning of a sentence. Only abbreviations that
+% are actually used in the text appear in the List of Abbreviations.
+%
 % Use {} brackets if a value contains special characters or a comma!
 
-\newabbreviation{AoV}{AoV}{Angle of view}
+\newabbreviation{AoV}{AoV}{angle of view}
 
-\newabbreviation{CNN}{CNN}{Convolutional neural network}
+\newabbreviation{CNN}{CNN}{convolutional neural network}
 
-\newabbreviation{CV}{CV}{Computer vision}
-
-\newabbreviation{EPBD}{EPBD}{Energy Performance of Buildings Directive}
-
-\newabbreviation{EPC}{EPC}{Energy Performance Certificate}
+\newabbreviation{CV}{CV}{computer vision}
 
 \newabbreviation{LoD}{LoD}{Level of Detail}
 
-\newabbreviation{ML}{ML}{Machine learning}
+\newabbreviation{ML}{ML}{machine learning}
 
-\newabbreviation{MLP}{MLP}{Multilayer perceptron}
+\newabbreviation{MLP}{MLP}{multilayer perceptron}
 
-\newabbreviation{SVI}{SVI}{Street-view imagery}
+\newabbreviation{SVI}{SVI}{street-view imagery}
 
-\newabbreviation{UBEM}{UBEM}{Urban building energy modelling}
+\newabbreviation{UBEM}{UBEM}{urban building energy modelling}
 
 \newabbreviation{ViT}{ViT}{Vision Transformer}
 
-\newabbreviation{VLM}{VLM}{Vision-language model}
+\newabbreviation{VLM}{VLM}{vision-language model}

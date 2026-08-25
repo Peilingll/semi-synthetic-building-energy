@@ -1,22 +1,112 @@
 \chapter{VLM Prompts and Output-Parsing Rules}
 \label{ch:appendix_c}
 
+This appendix reproduces verbatim the three prompts used with InternVL3-2B: M3 attribute inference, M2 direct seven-class prediction, and M2 direct binary prediction.
+It also specifies the output-parsing rules.
+The prompts were developed using a fixed, class-balanced subset of 200 development buildings and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
+
+\textbf{Decoding configuration.}
+The model is loaded in bfloat16.
+Each image is processed using dynamic tiling with no more than twelve 448 $\times$ 448 tiles.
+Generation uses greedy decoding (\texttt{do\_sample = False}) with \texttt{max\_new\_tokens = 512}, making inference deterministic.
+The first three ranked images for each building are processed independently.
+
 \section{Attribute-Inference Prompt (M3)}
 \label{sec:appendix_c_attribute_prompt}
 
-% TODO: insert content from draft_V9 §C.1
+\begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
+Look at this Dutch residential building street-view photo. Estimate three physical attributes of the main building in view.
+
+Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide values for ALL fields. NEVER return null.
+
+Required keys:
+
+- "building_type": one of
+    "SFH" = single-family house, FREE-STANDING: open space visible on at
+            least one side. A building sharing BOTH side walls in a
+            continuous row is NEVER SFH.
+    "TH"  = terraced / row house: a dwelling in a continuous row of similar
+            houses, typically 2-3 storeys, in a residential street
+    "AB"  = apartment block: multiple dwellings stacked in one building.
+            Cues: a shared entrance with many doorbells/mailboxes, external
+            access galleries, a wide flat repetitive facade, OR a narrow
+            historic building of 3+ storeys in a dense city-centre street
+            (these are usually subdivided into stacked apartments)
+    "MFH" = collective housing without self-contained dwellings (student
+            dormitory, rooming house, elderly care home)
+  If unsure between TH and AB: a 2-3 storey row house in a quiet residential
+  street is TH; 4+ storeys, shops at ground level, or a dense city-centre
+  street means AB.
+
+- "construction_year": integer 1800-2025. Estimate from visible evidence:
+  facade style, brickwork, window shapes, roof form, detailing.
+
+- "num_floors": integer 1-30, visible storeys above ground (count window rows).
+
+Your JSON object must contain ALL three keys, in this order. If uncertain,
+give your best single estimate - never omit a key.
+
+Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}
+\end{lstlisting}
 
 \section{Direct Seven-Class Classification Prompt (M2)}
 \label{sec:appendix_c_sevenclass_prompt}
 
-% TODO: insert content from draft_V9 §C.2
+The seven-class and binary prompts use the same description of visual evidence and differ only in the permitted answer space.
+This controls for prompt-wording differences between the two tasks.
+
+\begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
+Look at this Dutch residential building street-view photo. Estimate the building's official Dutch energy label (energielabel, NTA 8800), which rates a home's primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
+
+Judge ONLY from visible evidence in the photo:
+- window glazing: single-pane (older, less efficient) vs double / HR++ glazing
+- solar panels on the roof
+- signs of recent renovation or added wall insulation (new render, cladding, modern detailing)
+- general age and upkeep of the facade and roof
+Buildings that look newly built or recently renovated, with modern glazing or solar panels, tend toward A-B. Old, un-renovated buildings with single glazing and worn facades tend toward F-G. Most ordinary housing falls in the middle.
+
+Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide a value. NEVER return null.
+
+Required key:
+- "energy_label": exactly one of "A", "B", "C", "D", "E", "F", "G"
+
+Example: {"energy_label": "C"}
+\end{lstlisting}
 
 \section{Direct Binary Classification Prompt (M2)}
 \label{sec:appendix_c_binary_prompt}
 
-% TODO: insert content from draft_V9 §C.3
+\begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
+Look at this Dutch residential building street-view photo. Dutch homes carry an official energy label (energielabel, NTA 8800) rating primary fossil energy use from A (most energy-efficient) to G (least energy-efficient).
+
+Decide which of two bands this building falls into:
+- "A-C": the more energy-efficient band
+- "D-G": the less energy-efficient band
+
+Judge ONLY from visible evidence in the photo:
+- window glazing: single-pane (older, less efficient) vs double / HR++ glazing
+- solar panels on the roof
+- signs of recent renovation or added wall insulation (new render, cladding, modern detailing)
+- general age and upkeep of the facade and roof
+Buildings that look newly built or recently renovated, with modern glazing or solar panels, tend toward A-C. Old, un-renovated buildings with single glazing and worn facades tend toward D-G.
+
+Respond with EXACTLY one JSON object, no markdown fences, no extra text. You MUST provide a value. NEVER return null.
+
+Required key:
+- "energy_band": exactly one of "A-C", "D-G"
+
+Example: {"energy_band": "A-C"}
+\end{lstlisting}
 
 \section{Output Parsing and Validity Rules}
 \label{sec:appendix_c_parsing_rules}
 
-% TODO: insert content from draft_V9 §C.4
+Each image-level response is parsed according to the following rules.
+A response that fails any applicable rule is marked as invalid and excluded from building-level aggregation (\cref{sec:vision_inference_strategies}).
+
+\begin{enumerate}
+	\item The first JSON object is extracted from the response. Markdown code fences and additional text before or after the object are tolerated. Common trailing-comma errors are repaired before JSON parsing.
+	\item For the attribute task, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}; \texttt{construction\_year} must be an integer from 1800 to 2025; and \texttt{num\_floors} must be an integer from 1 to 30. An image is marked as parse-valid only when all three values are valid.
+	\item For direct energy-class prediction, \texttt{energy\_label} must be one of \{A, B, C, D, E, F, G\}, and \texttt{energy\_band} must be one of \{A-C, D-G\}.
+	\item For building-level aggregation of the attribute task, building type is determined by the mode, while construction year and floor count are determined by the median; the median floor count is rounded to the nearest integer. Direct energy-class predictions are aggregated by majority vote.
+\end{enumerate}

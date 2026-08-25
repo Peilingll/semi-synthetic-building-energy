@@ -10,22 +10,28 @@ thesis=true, % set to false when writing a report
 %======================== please fill in your data here ==========================
 \SetType{Master of Science (M.Sc.)} % Bachelor, Master.
 \SetFieldOfStudy{Information Technologies for the Built Environment} % TODO: check official program name
-\SetTopic{TODO: thesis title} % Topic of your thesis
+% The class typesets the title with \nohyphens (hyphenation off). Justified
+% setting would therefore have to stretch the word spaces and can overrun the
+% margin, so the title is set ragged right: LaTeX breaks the lines by itself and
+% no manual \\ is needed. Keep the leading \raggedright and the closing
+% \endgraf (\SetTopic takes a short argument, so a literal \par breaks it).
+\SetTopic{\raggedright Evaluating Street-View-Derived Attributes as Substitutes for Reference Building Attributes in an Archetype-Based Building-Stock Workflow\endgraf} % Topic of your thesis
 % \SetSubtopic{TODO: subtitle if any} % Remove otherwise
 \SetAuthor{Pei-Ling Song} % comma separated list for report
-\SetMatrikulationNo{TODO} % only for thesis
-\SetEmail{TODO@tum.de} % only for thesis
-\SetZipCode{TODO} % only for thesis
+\SetMatrikulationNo{037980} % only for thesis
+\SetEmail{peiling.song@gmail.com} % only for thesis
+\SetZipCode{80333} % only for thesis
 \SetLocation{München} % only for thesis
-\SetStreet{TODO} % only for thesis
+\SetStreet{Arcisstrasse 21} % only for thesis
 
-\SetStart{TODO: date of registration} % Date of registration, e.g. 01. Mai 2010
-\SetEnd{\today} % Date of submission, e.g. 01. Mai 2010
+\SetStart{} % Date of registration; not printed on the thesis title page
+\SetEnd{September 16, 2026} % Date of submission
 
 %======================== Add supervisors ===========================
-\AddSupervisor{TODO: Professor, TODO: Supervisor} % Add supervisors in a comma separated list, Name the Professor first.
+% \SetReferent{} and \SetReferentAffil{} add a separate "Referent" (examining
+% professor) block above the supervisors. Left unset for now.
+\AddSupervisor{Agata Dalach, Jose Quesada Allerhand} % comma separated list, one line each
 \AddAffil{\DAchair} % Add affiliation of the supervisors, deactivated for report
-% remove if no supervisor should be listed
 
 %======================== load extra packages here ===============================
 % \usepackage{...package name...}
@@ -64,11 +70,11 @@ thesis=true, % set to false when writing a report
 \cleardoublepage
 
 %========== Optionale Verzeichnisse, nur nach Abstimmung mit Betreuer ============
-%\listoffigures % Abbildungsverzeichnis, optional
-%\cleardoublepage
+\listoffigures % List of Figures, optional
+\cleardoublepage
 
-%\listoftables % Tabellenverzeichnis, optional
-%\cleardoublepage
+\listoftables % List of Tables, optional
+\cleardoublepage
 
 % \lstlistoflistings % Algorithmusverzeichnis, optional
 % \cleardoublepage
@@ -99,7 +105,6 @@ thesis=true, % set to false when writing a report
 \printbibliography[heading=bibintoc]
 \cleardoublepage
 \printbibliography[heading=bibintoc, type=standard, title=Standards]
-\printglossary
 
 %=============Eidesstattliche Erklärung ==========================================
 \Declaration

@@ -1,8 +1,22 @@
 \section*{Abstract}
 
-% TODO: insert English abstract
+Archetype-based urban building energy modelling requires building type, construction year, and floor count, yet these semantic attributes are often unavailable.
+This thesis evaluates whether attributes inferred from street-view imagery (SVI) can substitute for reference attributes derived from administrative records and reconstructed 3D data in a TABULA-NL building-stock enrichment workflow.
+A traceable semi-synthetic dataset was constructed for 10,086 residential buildings and 47,150 images across four Dutch cities.
+Three inference configurations---a fully fine-tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction heads, and zero-shot InternVL3-2B---were evaluated for attribute extraction, archetype assignment, archetype-derived transmission heat-transfer differences, and downstream energy-class classification under controlled comparisons.
+
+DINOv2 provided the most consistent performance, achieving a construction-year mean absolute error of 9.45 years, a period accuracy of 0.901, and a joint TABULA-NL cell accuracy of 0.825.
+However, the latter exceeded the majority-cell baseline by only 3.5 percentage points, reflecting sample concentration.
+DINOv2-derived archetypes produced a stock-level transmission heat-loss bias of $+10.0$\% relative to reference assignments.
+Replacing reference attributes with DINOv2 predictions changed binary macro-F1 only from 0.492 to 0.490, but the routes showed weak recall for buildings in classes D--G.
+Direct DINOv2 image classification reached the highest binary macro-F1 of 0.597, while seven-class performance remained low across all routes.
+When Amsterdam was excluded from model development, construction-year error increased and trained routes approached random-guessing performance.
+
+The results show that SVI-derived attributes can supplement missing metadata but are not equivalent replacements.
+Their utility depends on the attribute, target task, sample composition, and geographic relationship between training and application data.
 
 \newpage
 \section*{Zusammenfassung}
 
-% TODO: insert German abstract (check with supervisor whether required)
+% TODO: insert German abstract (check with supervisor whether it is required for
+% an English-language thesis).
