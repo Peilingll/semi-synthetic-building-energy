@@ -114,22 +114,15 @@ Seven-class classification from A to G is retained as a diagnostic task for eval
 Both classification tasks use the registered energy class.
 Continuous energy regression is treated as an auxiliary analysis and does not define the primary targets.
 
-\subsection{Workflow Overview and Inclusion Criteria}
+\subsection{Stage 1: Dataset Construction Workflow and Inclusion Criteria}
 \label{sec:svi_acquisition_filtering}
 
 This study adapts the OpenFACADES framework \parencite{liang2025} for the acquisition and processing of Mapillary imagery associated with individual buildings.
-Reference records from BAG, 3DBAG, and EP-Online are prepared through a separate procedure and linked to the resulting \ac{SVI} dataset using the BAG building identifier.
-\Cref{fig:svi_workflow} summarises the complete dataset construction workflow, and \cref{tab:data_criteria} reports the operational inclusion criteria for each step.
-Steps 1 to 6 produce the curated \ac{SVI} dataset.
-Step 7 defines the eligible reference records.
-Step 8 integrates the two datasets and assigns TABULA-NL archetypes.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\linewidth]{figures/fig/fig_3_3_svi_workflow}
-	\caption[SVI acquisition and final data integration workflow.]{WIP* Workflow for \ac{SVI} acquisition, reference data construction, and final integration.}
-	\label{fig:svi_workflow}
-\end{figure}
+Reference records from BAG, 3DBAG, and EP-Online are prepared separately and linked to the resulting \ac{SVI} dataset using the BAG building identifier.
+\Cref{tab:data_criteria} summarises the ordered dataset-construction steps and their operational inclusion and filtering criteria.
+Steps 1 and 3--5 adapt the OpenFACADES workflow, whereas Steps 2 and 6 are BAG-specific operations introduced in this study.
+Step 7 constructs the eligible reference dataset, and Step 8 integrates it with the curated \ac{SVI} dataset.
+TABULA-NL archetype assignment is subsequently performed in Stage 3, as described in \cref{sec:tabula_archetype_matching}.
 
 \begin{table}[htbp]
 	\centering
@@ -153,7 +146,7 @@ Step 8 integrates the two datasets and assigns TABULA-NL archetypes.
 		5    & Building detection, cropping, and quality filtering & GroundingDINO detection and perspective reprojection. Building class pixel share $\geq$ 15\%. Wall class pixel share $\leq$ 30\%. Laplacian variance $>$ 30. File size $\geq$ 20\,kB. Places365 = outdoor. \\
 		6    & BAG building matching and image cap                & Assignment based on containment of the footprint centroid in a BAG polygon. A maximum of eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance.             \\
 		7    & Building record eligibility                        & Existing residential building with an available energy class. Latest certificate by registration date. Construction year from 1800 to 2025. Building type mapped to four residential size classes. Reference floor count from 1 to 30. \\
-		8    & Final data integration and archetype matching      & Present in both the curated \ac{SVI} and eligible reference datasets. 3DBAG geometry available for the required calculations. TABULA-NL archetype assigned.                                    \\
+		8    & Final data integration                             & Present in both the curated \ac{SVI} and eligible reference datasets. 3DBAG geometry available for the required calculations. Building type and construction year permit subsequent TABULA-NL archetype assignment.            \\
 		\bottomrule
 	\end{tblr}
 \end{table}
