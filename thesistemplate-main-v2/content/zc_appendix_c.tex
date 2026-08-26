@@ -5,7 +5,7 @@ This appendix reproduces verbatim the three prompts used with InternVL3-2B: M3 a
 It also specifies the output parsing rules.
 The prompts were developed using a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled, and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
 
-\textbf{Decoding configuration.}
+\textbf{The decoding configuration is specified below.}
 The model is loaded in bfloat16.
 Each image is processed using dynamic tiling with no more than twelve 448 $\times$ 448 tiles.
 Generation uses greedy decoding (\texttt{do\_sample = False}) with \texttt{max\_new\_tokens = 512}, making inference deterministic.
@@ -102,11 +102,11 @@ Example: {"energy_band": "A-C"}
 \label{sec:appendix_c_parsing_rules}
 
 Each image-level response is parsed according to the following rules.
-A response that fails any applicable rule is marked as invalid and excluded from building-level aggregation (\cref{sec:vision_inference_strategies}).
+Responses that fail any applicable rule are marked as invalid and excluded from building-level aggregation (\cref{sec:vision_inference_strategies}).
 
 \begin{enumerate}
 	\item The first JSON object is extracted from the response. Markdown code fences and additional text before or after the object are tolerated. Common trailing-comma errors are repaired before JSON parsing.
-	\item For the attribute task, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}; \texttt{construction\_year} must be an integer from 1800 to 2025; and \texttt{num\_floors} must be an integer from 1 to 30. An image is marked as parse-valid only when all three values are valid.
+	\item For the attribute task, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}; \texttt{construction\_year} must be an integer from 1800 to 2025; and \texttt{num\_floors} must be an integer from 1 to 30. Parse validity requires all three values to be valid.
 	\item For direct energy class prediction, \texttt{energy\_label} must be one of \{A, B, C, D, E, F, G\}, and \texttt{energy\_band} must be one of \{A-C, D-G\}.
 	\item For building-level aggregation of the attribute task, building type is determined by the mode, while construction year and floor count are determined by the median; the median floor count is rounded to the nearest integer. Direct energy class predictions are aggregated by majority vote.
 \end{enumerate}

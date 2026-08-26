@@ -50,7 +50,7 @@ Only the parameters assigned through the TABULA-NL lookup are synthetic.
 The energy class target remains a registered administrative value rather than a simulated outcome.
 This separation preserves the provenance of each value and provides a common data foundation for the three research objectives.
 
-The two TABULA-derived columns in \cref{fig:three_layers} correspond to the M1 reference route and the M3 attribute-mediated route.
+The two TABULA-derived columns in \cref{fig:three_layers} correspond to the M1 reference route and the M3 attribute mediated route.
 M2 is not shown because it predicts energy class directly from imagery and bypasses the three-layer structure.
 The complete definitions of M0 to M3 and their comparison protocol are provided in \cref{sec:strategy_metrics}.
 
@@ -143,9 +143,9 @@ TABULA-NL archetype assignment is presented separately in \cref{sec:tabula_arche
 		1    & Footprint acquisition                              & OpenStreetMap and Overture Maps footprints within the four study area boundaries.                                                                                                             \\
 		2    & Residential prefilter                              & Footprint centroid contained by a BAG polygon registered for residential use.                                                                                                                \\
 		3    & Panorama and building matching                     & Distance from camera to building $\leq$ 30\,m. The line of sight did not intersect another building footprint.                                                                                \\
-		4    & View angle selection                               & $10^\circ < \acs{AoV} < 130^\circ$. A maximum of three panoramas per footprint, ranked by decreasing \acs{AoV}.                                                                              \\
+		4    & View angle selection                               & $10^\circ < \acs{AoV} < 130^\circ$. Up to three panoramas per footprint, ranked by decreasing \acs{AoV}.                                                                                     \\
 		5    & Building detection, cropping, and quality filtering & Building class pixel share $\geq$ 15\%. Wall class pixel share $\leq$ 30\%. Laplacian variance $>$ 30. File size $\geq$ 20\,kB. Places365 = outdoor.                                           \\
-		6    & BAG building assignment and image limit            & Assignment based on containment of the footprint centroid in a BAG polygon. A maximum of eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance.             \\
+		6    & BAG building assignment and image limit            & Assignment based on containment of the footprint centroid in a BAG polygon. Up to eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance.                    \\
 		7    & Building record eligibility                        & Existing residential building with an available energy class. Latest certificate by registration date. Construction year from 1800 to 2025. Building type mapped to four residential size classes. Reference floor count from 1 to 30. \\
 		8    & Final data integration                             & Present in both the filtered \ac{SVI} and eligible reference datasets. 3DBAG geometry available for the required calculations. Building type and construction year permit subsequent TABULA-NL archetype assignment.           \\
 		\bottomrule
@@ -162,7 +162,7 @@ Steps 1, 3, 4, and 5 in \cref{tab:data_criteria} follow the OpenFACADES workflow
 
 Before image processing, this study projected the OpenFACADES footprints and BAG building polygons to the Dutch national coordinate reference system (EPSG:28992).
 The centroid of each OpenFACADES footprint was then calculated.
-A footprint was retained only when its centroid fell within a BAG polygon registered for residential use.
+The residential filter retained a footprint only when its centroid fell within a BAG polygon registered for residential use.
 This centroid containment operation determined which footprints proceeded to image processing.
 It did not establish the final link between the \ac{SVI} and reference data.
 
@@ -221,7 +221,7 @@ The reference dataset included only buildings with a construction year from 1800
 The BAG, 3DBAG, and EP-Online records were combined using the BAG building identifier.
 The eligible reference records were then linked to the filtered \ac{SVI} dataset using the same identifier.
 
-A linked building was retained in the final experimental dataset only if its 3DBAG geometry could be processed for the required calculations and a TABULA-NL archetype could be assigned.
+The final experimental dataset retained a linked building only if its 3DBAG geometry could be processed for the required calculations and a TABULA-NL archetype could be assigned.
 These requirements excluded 18 buildings and their 88 associated images.
 The final experimental dataset contained 10,086 buildings and 47,150 images.
 
@@ -331,7 +331,7 @@ Development labels were used during prompt development and response processing d
 
 Up to three images were selected for each building according to the image ranking described in \cref{sec:svi_acquisition_matching}.
 Each image was processed independently.
-A response was marked as invalid if it could not be parsed or if any required value fell outside the permitted range.
+The validation procedure marked a response as invalid if it could not be parsed or if any required value fell outside the permitted range.
 Only responses containing valid values for all three attributes were included in the building aggregation.
 No aggregated prediction was produced when none of the responses for a building was valid.
 
@@ -352,7 +352,7 @@ For each task, class weights are inversely proportional to the class frequencies
 
 For ResNet-50, all model parameters are updated during M2 training.
 For DINOv2, the backbone remains frozen.
-A mean feature vector is computed and stored for each building, after which only the energy class classification network is trained.
+For each building, the procedure computes and stores a mean feature vector and then trains only the energy class classification network.
 Within each development fold, the validation macro F1 score for energy class prediction determines early stopping and the checkpoint retained for that fold.
 
 InternVL3-2B uses separate prompts for the task with seven classes and the binary task.
@@ -387,8 +387,8 @@ The construction-period boundaries and operational definitions of the size class
 	\label{fig:tabula_matrix}
 \end{figure}
 
-\textbf{Size class definitions.}
-The TABULA-NL matrix defines four size classes: Single-Family House (SFH), Terraced House (TH), Multi-Family House (MFH), and Apartment Block (AB).
+\textbf{The TABULA-NL size classes are defined as follows.}
+The four classes are Single-Family House (SFH), Terraced House (TH), Multi-Family House (MFH), and Apartment Block (AB).
 No additional thresholds based on dwelling count or floor count are imposed.
 \Cref{tab:type_mapping} presents the deterministic mapping between the retained EP-Online residential building categories and these four size classes.
 

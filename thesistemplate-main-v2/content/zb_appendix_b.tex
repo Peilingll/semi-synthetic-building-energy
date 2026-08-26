@@ -3,12 +3,12 @@
 
 This appendix reports the complete training configurations for the two supervised vision models in \cref{sec:vision_inference_strategies} and the LightGBM classifiers in \cref{sec:downstream_model}.
 All values were obtained from the training records, including the history JSON file for each fold and the run arguments stored in the checkpoints, rather than inferred from software defaults.
-A single graphics processing unit (GPU) --- an NVIDIA GeForce RTX 4060 Laptop GPU with 8\,GB of video memory (VRAM) --- was used for all model training and \ac{VLM} inference.
+All model training and \ac{VLM} inference used one NVIDIA GeForce RTX 4060 Laptop graphics processing unit (GPU) with 8\,GB of video memory (VRAM).
 
 \section{Supervised Vision Configurations}
 \label{sec:appendix_b_vision_configs}
 
-The two supervised configurations use the same training procedure: the AdamW optimiser; weight decay of 0.01, excluding normalisation parameters and biases; a cosine-annealing learning-rate schedule with $T_{\max} = 30$; a maximum of 30 epochs; early stopping based on validation building type macro-F1 with a patience of 10 epochs; and fp16 automatic mixed precision (AMP).
+The two supervised configurations use the same training procedure: the AdamW optimiser; weight decay of 0.01, excluding normalisation parameters and biases; a cosine-annealing learning-rate schedule with $T_{\max} = 30$; a maximum of 30 epochs; early stopping based on validation building type macro F1 with a patience of 10 epochs; and fp16 automatic mixed precision (AMP).
 The shared trunks use Gaussian error linear unit (GELU) activation.
 Input images are resized to 224 $\times$ 224 pixels and normalised using ImageNet statistics (mean = (0.485, 0.456, 0.406); standard deviation = (0.229, 0.224, 0.225)).
 Training augmentation comprises \texttt{RandomResizedCrop} with a scale range of 0.7--1.0, horizontal flipping with $p = 0.5$, and \texttt{ColorJitter} with brightness, contrast, and saturation set to 0.2.
@@ -48,7 +48,7 @@ Construction year and floor count are standardised using the mean and standard d
 	\end{tblr}
 \end{table}
 
-The M2 direct energy class configurations follow the same training procedure as \cref{tab:vision_hyperparams}, except that the three attribute heads are replaced by one energy class classification head and early stopping uses validation energy class macro-F1.
+The M2 direct energy class configurations follow the same training procedure as \cref{tab:vision_hyperparams}, except that the three attribute heads are replaced by one energy class classification head and early stopping uses validation energy class macro F1.
 M2-ResNet-50 is fine-tuned end to end using the learning rates and batch size reported above.
 Because the DINOv2 backbone is frozen, M2-DINOv2 first extracts and caches building-level mean features using deterministic resizing and centre cropping without augmentation.
 The same classification-network structure is then trained on the cached features using AdamW, a learning rate of $5\times10^{-4}$, weight decay of 0.01, cosine annealing, early-stopping patience of 10 epochs, and a minibatch size of 256.

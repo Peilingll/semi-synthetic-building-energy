@@ -22,7 +22,7 @@ The main text reports only the corrected system and results, while this appendix
 	Feature provenance            & Compactness and floor area were certificate fields used to calculate the target. Their inclusion as predictors constituted target leakage, and the fields would not be available for buildings without EPCs. & Removed both fields, replaced them with reconstructed 3DBAG-derived values, and updated all affected results.                                                                                                                                                     \\
 	TABULA lookup                 & The manually transcribed table contained a systematic thermal-resistance bias relative to the source workbook.                                                                                               & Replaced manual transcription with automated generation and value-level provenance. Classification results were unaffected because the lookup values are deterministic functions of type and period; physical quantities were recalculated using corrected values. \\
 	Target definition             & The registered energy class is derived from \texttt{Primaire\allowbreak Fossiele\allowbreak Energie\allowbreak EMG\allowbreak Forfaitair} where that field is available, rather than from the unadjusted primary fossil energy field. & Aligned the regression target with the registered energy class definition and recalculated the affected regression results.                                                                                                       \\
-	Count reconciliation          & Building counts reported at different stages referred to different data populations.                                                                                                                        & Standardised the convention of reporting 10,104 buildings in the curated \ac{SVI} dataset and 10,086 buildings in the experimental dataset.                                                                                                                       \\
+	Count reconciliation          & Building counts reported at different stages referred to different data populations.                                                                                                                        & Standardised the convention of reporting 10,104 buildings in the filtered \ac{SVI} dataset and 10,086 buildings in the experimental dataset.                                                                                                                      \\
 	Certificate chronology        & The database contains only current certificates, and only 0.1\% of dwellings nationwide have a certificate time series.                                                                                      & The available data did not support longitudinal renovation labels; renovation detection was retained as future work in \cref{sec:future_work}.                                                                                                                    \\
 	Nature of the geometry source & 3DBAG contains automatically reconstructed outputs rather than field measurements. Floor count and the party-wall and external-wall areas are derived fields introduced after \textcite{peters2022}.          & Standardised the manuscript terminology as \emph{reconstructed geometry}, documented the derivation of each field in \cref{tab:3dbag_fields}, and identified the 3DBAG version as required metadata.                                                               \\
 	\bottomrule
@@ -88,7 +88,7 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 
 \begin{table}[htbp]
 	\centering
-	\caption[Per-class classification report for the binary task.]{Per-class classification report for the binary task (\cref{tab:binary_routes}; holdout set, $n = 2{,}018$; support for classes A--C = 1,416; support for classes D--G = 602).}
+	\caption[Per-class classification report for the binary task.]{Per-class classification report for the binary task (\cref{tab:binary_routes}; holdout set, $n = 2{,}018$; support for classes A to C = 1,416; support for classes D to G = 602).}
 	\label{tab:binary_perclass}
 	\footnotesize
 	\begin{tblr}{
@@ -99,7 +99,7 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 			rowsep = 2pt,
 		}
 		\toprule
-		Route                 & A--C P       & A--C R       & A--C F1      & D--G P       & D--G R       & D--G F1      \\
+		Route                 & A-C P        & A-C R        & A-C F1       & D-G P        & D-G R        & D-G F1       \\
 		\midrule
 		M0 (random, expected) & 0.702          & 0.500          & 0.584          & 0.298          & 0.500          & 0.373          \\
 		M1                    & 0.715          & \textbf{0.960} & \textbf{0.819} & \textbf{0.509} & 0.098          & 0.165          \\
@@ -114,8 +114,8 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 \end{table}
 
 The macro values in \cref{tab:binary_routes} are the unweighted means of the two corresponding class-level values reported here.
-M1 and the trained M3 routes show high recall for classes A--C (0.927 to 0.960) but low recall for classes D--G (0.098 to 0.110).
-M2-DINOv2 provides the most balanced class-level result, with a recall of 0.469 for classes D--G and the highest precision for classes A--C.
-M2-InternVL3 assigns every building to classes D--G; its F1 score of 0.459 for these classes therefore reflects the class prevalence (precision = 0.298) rather than discrimination between buildings.
+M1 and the trained M3 routes show high recall for classes A to C (0.927 to 0.960) but low recall for classes D to G (0.098 to 0.110).
+M2-DINOv2 provides the most balanced class-level result, with a recall of 0.469 for classes D to G and the highest precision for classes A to C.
+M2-InternVL3 assigns every building to classes D to G; its F1 score of 0.459 for these classes therefore reflects the class prevalence (precision = 0.298) rather than discrimination between buildings.
 M0 reports the analytical expectation, with precision equal to each class prevalence and recall equal to 0.5.
 Source: \texttt{reports/stage3/\allowbreak binary\_prf\_htr\_r2.json}.

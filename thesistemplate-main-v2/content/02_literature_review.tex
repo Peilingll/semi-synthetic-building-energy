@@ -4,7 +4,7 @@
 \section{Comparison Framework}
 \label{sec:comparison_framework}
 
-For the large-scale application of archetype-based \ac{UBEM}, previous studies can be organised into four workflow routes according to how building information is transferred from observational sources to energy-related tasks: the reference-attribute, proxy-attribute, direct visual, and attribute-mediated visual routes.
+For the large-scale application of archetype-based \ac{UBEM}, previous studies can be organised into four workflow routes according to how building information is transferred from observational sources to energy-related tasks: the reference-attribute, proxy-attribute, direct visual, and attribute mediated visual routes.
 These routes rely on different forms of data availability and differ in whether they retain explicit building attributes and the TABULA archetype structure.
 \Cref{tab:route_comparison} establishes a common comparison framework based on the observed input, intermediate representation, typical target, and principal dependency of each route.
 
@@ -26,7 +26,7 @@ These routes rely on different forms of data availability and differ in whether 
 		Reference-attribute       & Registry, geometry, and neighbourhood data            & Recorded building attributes                                            & Energy class or energy-performance prediction                   & Complete and linkable building-level records                            \\
 		Proxy-attribute           & Aggregated census, morphology, or remote-sensing data & Inferred attributes or archetype classes                                & Archetype assignment or energy modelling                        & Transferable relationship between the proxy and the individual building \\
 		Direct visual             & \ac{SVI}, aerial, or multimodal imagery               & Latent visual representation                                            & Direct energy class classification                              & Local labels, image coverage, and domain stability                      \\
-		Attribute-mediated visual & \ac{SVI}                                              & Explicit building type, construction year, floor count, and TABULA cell & Archetype parameters and downstream energy class classification & Attribute extractability and error propagation                          \\
+		Attribute mediated visual & \ac{SVI}                                              & Explicit building type, construction year, floor count, and TABULA cell & Archetype parameters and downstream energy class classification & Accuracy of attribute prediction and error propagation                  \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -36,7 +36,7 @@ Studies across the four routes differ in their target definitions, study populat
 \section{Reference and Open Data Approaches}
 \label{sec:reference_open_data}
 
-When sufficiently complete building-level records are available, the reference attribute route combines administrative, geometric, and neighbourhood data to train statistical models for energy class prediction. An energy class classifier for Dutch residential buildings combined data from the Dutch Registry of Addresses and Buildings on building year, building type, ground floor area, and total floor area with exposed envelope geometry and Statistics Netherlands neighbourhood statistics on home ownership and average building value \parencite{hettinga2023}. The random forest classifier achieved 71\% exact accuracy and 93\% accuracy within one energy class using an 80/10/10 training, validation, and test split \parencite{hettinga2023}. TABULA rule-based assignment achieved 26\% exact accuracy and 67\% accuracy within one energy class across 2,574,227 EPC records \parencite{hettinga2023}. Although both approaches used the same EPC database, the random forest result was reported for the test subset, whereas TABULA was evaluated on the complete dataset. The EPC reference labels ranged from A++ to G, while TABULA assigned only classes B to G. The reported values therefore support the potential of additional open data features for energy class prediction but do not constitute a strictly matched comparison between the two approaches.
+When sufficiently complete building-level records are available, the reference attribute route combines administrative, geometric, and neighbourhood data to train statistical models for energy class prediction. For Dutch residential buildings, \textcite{hettinga2023} combined registry data on construction year, building type, ground floor area, and total floor area with exposed envelope geometry and neighbourhood statistics on home ownership and average building value. The random forest classifier achieved 71\% exact accuracy and 93\% accuracy within one energy class using an 80/10/10 training, validation, and test split \parencite{hettinga2023}. TABULA rule-based assignment achieved 26\% exact accuracy and 67\% accuracy within one energy class across 2,574,227 EPC records \parencite{hettinga2023}. Although both approaches used the same EPC database, the random forest result was reported for the test subset, whereas TABULA was evaluated on the complete dataset. The EPC reference labels ranged from A++ to G, while TABULA assigned only classes B to G. The reported values therefore support the potential of additional open data features for energy class prediction but do not constitute a strictly matched comparison between the two approaches.
 
 This route retains interpretable tabular inputs and can incorporate information beyond the variables used for archetype assignment. However, it requires sufficiently complete building-level records that can be linked across data sources. If building type, construction year, or floor count is unavailable, this route does not show how those attributes should be recovered or how replacing them with inferred values affects downstream performance.
 
@@ -58,23 +58,23 @@ Proxy-based methods therefore offer a feasible route for large-scale data comple
 \label{sec:direct_image_to_energy}
 
 The direct visual route bypasses explicit archetype assignment and predicts energy classes directly from imagery.
-In the United Kingdom, \ac{SVI}, aerial imagery, building footprints, and land-surface temperature were integrated for approximately 40,000 buildings to perform binary classification of A--D versus E--G; the complete multimodal model achieved a macro-F1 score of 64.64\% \parencite{mayer2023uk}.
-In a study of more than 21,000 buildings in the Copenhagen metropolitan area, \ac{SVI} and aerial imagery produced a macro-F1 score of 58.79\%, and these two image sources alone were found to be insufficient for consistently distinguishing building energy efficiency \parencite{mayer2023dk}.
+In the United Kingdom, \ac{SVI}, aerial imagery, building footprints, and land-surface temperature were integrated for approximately 40,000 buildings to perform binary classification of classes A to D versus E to G; the complete multimodal model achieved a macro F1 score of 64.64\% \parencite{mayer2023uk}.
+In a study of more than 21,000 buildings in the Copenhagen metropolitan area, \ac{SVI} and aerial imagery produced a macro F1 score of 58.79\%, and these two image sources alone were found to be insufficient for consistently distinguishing building energy efficiency \parencite{mayer2023dk}.
 
 Subsequent studies expanded both the data sources and label granularity.
-Google Street View and geographic information system data were combined in a three-stage framework using 1\% local samples for transfer learning, achieving an accuracy of 84\% for A--G energy class classification, although performance decreased for occluded high-rise buildings \parencite{liu2025}.
+Google Street View and geographic information system data were combined in a three-stage framework using 1\% local samples for transfer learning, achieving an accuracy of 84\% for classification across energy classes A to G, although performance decreased for occluded high-rise buildings \parencite{liu2025}.
 Thermal infrared imagery, optical remote sensing, \ac{SVI}, morphology, and socioeconomic indicators were also integrated for binary high- versus low-performance classification, achieving F1 scores of 0.64 in Glasgow and 0.69 in Edinburgh; the corresponding \ac{SVI}-only models achieved 0.59 and 0.68, respectively \parencite{sun2026}.
 
 These findings support the presence of signals predictive of energy class in building appearance and urban-context data, but the capability of the direct visual route cannot be summarised by a single performance value.
 Previous studies differ substantially in modality, local adaptation, class aggregation, class definition, and evaluation protocol.
-Most employ binary targets, while only a small number report A--G classification; consequently, a directly comparable seven-class benchmark has not yet emerged.
+Most employ binary targets, while only a small number report classification across classes A to G; consequently, a directly comparable seven-class benchmark has not yet emerged.
 Moreover, direct models bypass explicit TABULA parameters.
 Although they can directly support classification, they cannot independently identify the contribution of individual building attributes or directly quantify how attribute substitution affects the archetype cell and its inherited physical parameters.
 
 \section{Image-Based Building Attribute Extraction}
 \label{sec:image_based_attribute_extraction}
 
-The attribute-mediated visual route first infers explicit building attributes from \ac{SVI} and then performs TABULA cell assignment or downstream modelling.
+The attribute mediated visual route first infers explicit building attributes from \ac{SVI} and then performs TABULA cell assignment or downstream modelling.
 In contrast to the direct route, this structure retains intermediate attributes and thereby enables separate evaluation of attribute extraction, joint-cell assignment, and downstream utility.
 The relevant vision strategies can be further divided into supervised full fine-tuning, frozen self-supervised representations, and inference without parameter updating.
 
@@ -111,9 +111,9 @@ Furthermore, the term \enquote{zero-shot} does not necessarily mean that develop
 The routes reviewed above also produce different forms of building-level datasets.
 \textcite{dabrock2025} mapped predicted size and construction year classes to TABULA archetypes to construct a nationwide residential dataset.
 OpenFACADES, by contrast, extended image-derived attributes and captions to approximately 1.2 million images covering 500,000 buildings \parencite{liang2025}.
-These studies demonstrate archetype instantiation and image-based data enrichment, respectively, but neither organises reference attributes, image-derived substitutes, deterministically assigned TABULA parameters, and reference energy classes within a single paired-comparison structure.
+These studies demonstrate archetype assignment and image-based data enrichment, respectively, but neither organises reference attributes, image-derived substitutes, deterministically assigned TABULA parameters, and reference energy classes within a single paired comparison.
 
 The recent Building Energy Graphs (BEGs) preprint further combined OpenStreetMap footprints, Global Human Settlement Layer products, European building archetypes, and deterministic assumptions to construct simulation-ready building energy models, with EnergyPlus outputs supporting graph neural network surrogate prediction \parencite{dalach2025}.
-This work demonstrates that observed geospatial sources, archetype assumptions, and simulation outputs can be integrated into synthetic or semi-synthetic learning artefacts.
+This work demonstrates that observed geospatial sources, archetype assumptions, and simulation outputs can be integrated into synthetic or semi-synthetic datasets for model development.
 Its target, however, is simulated energy-use intensity rather than administrative reference energy classes.
-This distinction positions the utility of the dataset developed in the present study as measurement-anchored attribute-substitution and energy class analysis, rather than as another simulation-surrogate benchmark.
+Unlike the BEG dataset, the dataset developed in the present study supports analysis of attribute substitution against administrative reference energy classes rather than evaluation of a surrogate model against simulated outputs.
