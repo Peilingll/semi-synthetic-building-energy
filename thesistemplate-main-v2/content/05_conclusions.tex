@@ -59,59 +59,61 @@ Feature ablation identifies the relative downstream contribution of the existing
 \section{Limitations}
 \label{sec:limitations}
 
-\textbf{Data coverage, energy class targets, and sample composition.}
+The representativeness of the experimental sample is constrained by uneven SVI coverage, imbalanced sample composition, and uncertainty in the energy class targets.
 Mapillary is a crowdsourced source with uneven spatial coverage, acquisition dates, viewpoints, and image quality.
-Buildings without suitable street-level views are less likely to enter the experimental sample.
+Buildings without suitable street view images are less likely to enter the experimental sample.
 The resulting sample is dominated by Amsterdam and apartment blocks, while several construction periods, building types, archetype cells, and energy classes remain sparsely represented.
-The diagnostic analyses show that this composition affects class-balanced performance and cannot be addressed by increasing sample count while retaining the same distribution.
+The diagnostic analyses show that this imbalance affects performance averaged across classes.
+Increasing the sample size without changing its distribution does not resolve this limitation.
 Energy class targets introduce further uncertainty because one building can be linked to multiple certificates that differ across units or registration dates.
-The reported agreement statistics describe the adopted aggregation rules and are not strict upper bounds on prediction.
-Mapillary acquisition dates were not systematically aligned with EPC registration dates, so the imagery and certificate may represent different building states.
+The reported agreement statistics describe the adopted aggregation rules rather than strict upper bounds on achievable prediction performance.
+Mapillary acquisition dates were not systematically aligned with EPC registration dates, so the imagery and certificate records may represent different states of the same building.
 
-\textbf{Scope of model development.}
-The study trained supervised models and prediction layers to compare predefined inference configurations, but its purpose was not to introduce a new architecture or maximise attainable prediction performance.
-It did not exhaustively evaluate model size, pretraining strategy, hyperparameters, training duration, or alternative image-selection procedures.
-InternVL3-2B was evaluated only without parameter updates, and no \ac{VLM} was fine-tuned on the study dataset.
-The reported accuracy and macro-F1 values therefore characterise the selected configurations rather than an upper bound on what can be inferred from \ac{SVI}.
-Additional representative training data, task-specific fine-tuning, or broader optimisation may improve performance, but the present experiments do not determine the magnitude of such gains.
-The sample composition analysis also shows that adding data without improving representation is not sufficient by itself.
+The reported model performance is also bounded by the predefined scope of model development.
+Supervised models and prediction layers were trained to compare the predefined inference configurations.
+The objective was not to introduce a new architecture or maximise attainable prediction performance.
+Model size, pretraining strategy, hyperparameters, training duration, and alternative image selection procedures were not evaluated exhaustively.
+InternVL3-2B was evaluated without parameter updates, and no \ac{VLM} was fine tuned using the experimental dataset.
+The reported accuracy and macro-F1 values therefore characterise the selected configurations rather than the maximum performance attainable from \ac{SVI}.
+More representative training data, fine tuning for the target tasks, and broader optimisation may improve performance, but the present experiments do not establish the magnitude of such gains.
+Any improvement would also depend on increasing the representation of sparsely sampled groups rather than increasing the sample size alone.
 
-\textbf{Archetype and physical assumptions.}
+The archetype comparison depends on mapping decisions and physical assumptions that cannot be verified from \ac{SVI} alone.
 Converting reference or predicted attributes into TABULA-NL archetypes requires operational mapping decisions, including the assignment of semi-detached houses and flats to broader building types.
 These decisions were not examined through separate sensitivity tests.
-\Ac{SVI} can show visible facade or window changes but cannot reliably reveal concealed insulation, heating-system upgrades, or unit-level renovation.
+\Ac{SVI} may show visible changes to facades or windows but cannot reliably reveal concealed insulation, heating system upgrades, or renovations to individual units.
 The assigned TABULA parameters therefore represent archetypal as-built characteristics rather than verified current envelope conditions.
-In addition, the $H'_{tr}$ analysis compares \ac{SVI}-derived and reference-derived archetype assignments and is not a validation against measured heat loss or energy consumption.
+In addition, the $H'_{tr}$ analysis compares archetype assignments obtained from \ac{SVI} and reference data.
+It does not validate either assignment against measured heat loss or energy consumption.
 
-\textbf{Geographical scope.}
-The empirical evaluation covers four cities in the Netherlands, and Amsterdam is the only fully held-out target city.
-The Amsterdam target sample is concentrated in apartment blocks and one dominant archetype cell, so its result is not an average estimate of transfer to other cities.
-The use of national registries, energy class definitions, 3DBAG geometry, and the TABULA-NL taxonomy also limits direct transfer to other countries.
-Cross-country application requires country-specific assessment of data sources, archetype mappings, target definitions, and model performance.
+The geographical evidence is limited to four Dutch cities and supports only a bounded assessment of transfer.
+Amsterdam is the only city that was excluded entirely from model development and used as the target city.
+Its target sample is concentrated in apartment blocks and one dominant archetype cell, so the resulting performance is not an average estimate of transfer to other cities.
+The reliance on national registries, Dutch energy class definitions, 3DBAG geometry, and the TABULA-NL taxonomy also limits direct application in other countries.
+Application in another country would require a separate assessment of the available data sources, archetype mappings, target definitions, and model performance.
 
 \section{Future Work}
 \label{sec:future_work}
 
-\textbf{Improve data coverage and target alignment.}
-Future datasets should increase representation of sparsely sampled construction periods, residential building types, archetype cells, energy classes, and urban contexts.
-Expansion should be guided by these groups rather than preserve the current sample composition.
+Future dataset construction should improve the representation of sparsely sampled groups and strengthen the alignment between imagery and energy certificate records.
+Additional data should target underrepresented construction periods, residential building types, archetype cells, energy classes, and urban contexts rather than preserve the current sample composition.
 Image acquisition and EPC registration dates should be aligned where possible.
-For apartment buildings, unit-level prediction and alternative building-level aggregation rules should be evaluated to address the mismatch between facade-level observation and unit-level certification.
+For apartment buildings, prediction for individual units and alternative aggregation rules at the building level should be evaluated to address the mismatch between observations of a shared facade and certificates issued for individual units.
 
-\textbf{Optimise visual attribute extraction.}
-Construction year is the first priority for further model development because it made the largest marginal contribution to downstream energy class classification among the existing attributes.
-A fine-tuned open-source \ac{VLM} should be compared with frozen DINOv2 and fully fine-tuned \ac{CNN} configurations using the same buildings, splits, attribute definitions, and downstream protocol.
-Representative additional training data, class-balanced objectives, ordinal construction-period formulations, calibration, and systematic hyperparameter optimisation should also be evaluated.
-These experiments would establish how much of the current error is associated with model capacity, training design, target quality, and the visual evidence available in \ac{SVI}.
+Further development of visual attribute extraction should prioritise construction year because it made the largest marginal contribution to downstream energy class classification among the evaluated attributes.
+An open source \ac{VLM} fine tuned on the experimental data should be compared with frozen DINOv2 and configurations in which the \ac{CNN} is fully fine tuned.
+These comparisons should use the same buildings, data partitions, attribute definitions, and downstream protocol.
+Further experiments should also evaluate more representative training data, objectives that account for class imbalance, ordinal formulations of construction period, calibration, and systematic hyperparameter optimisation.
+The results would help distinguish errors associated with model capacity, training design, target quality, and the visual evidence available in \ac{SVI}.
 
-\textbf{Extend geographical validation and adaptation.}
-Leave-one-city-out evaluation should be repeated with each city as the target to distinguish general transfer behaviour from the composition of Amsterdam.
-Separate experiments could then evaluate target-city calibration using a limited number of labelled buildings or suitable geospatial labels.
-Cross-country evaluation should begin with explicit mappings among national registries, energy class definitions, and TABULA taxonomies, followed by within-country validation before transfer between countries is assessed.
+Geographical validation should be extended beyond the Amsterdam holdout by excluding each city from model development in turn.
+This evaluation would help distinguish general transfer behaviour from effects associated with the composition of Amsterdam.
+Separate experiments could then evaluate calibration for each target city using a limited number of labelled buildings or suitable geospatial labels.
+Evaluation in other countries should begin with explicit mappings among national registries, energy class definitions, and TABULA taxonomies.
+Validation should first be conducted within each country before transfer across national contexts is assessed.
 
-\textbf{Represent renovation and validate physical performance effects.}
-Future workflows should use the source best suited to each attribute.
-Reconstructed geospatial data should remain the preferred source for building geometry where equivalent 3D data are available, while \ac{SVI} analysis can focus on visible facade characteristics and potentially outdated or missing semantic attributes.
-Renovation records, measured energy consumption, or building-specific thermal assessments are needed to distinguish as-built archetypes from current building conditions.
-If the residual between measured consumption and archetype-based estimates is examined as a renovation signal, weather, occupancy, floor area, and heating systems must first be controlled.
-These data would also enable the physical evaluation to move from comparison with reference archetypes to validation against observed building performance.
+Future physical validation should combine each attribute with the data source best suited to its observation.
+Reconstructed geospatial data should remain the preferred source for building geometry where equivalent 3D data are available, while \ac{SVI} analysis can focus on visible facade characteristics and semantic attributes that are outdated or unavailable in existing records.
+Renovation records, measured energy consumption, or thermal assessments of individual buildings are needed to distinguish archetypal as-built characteristics from current building conditions.
+If the residual between measured consumption and estimates based on archetypes is examined as a renovation signal, weather, occupancy, floor area, and heating systems must first be controlled.
+These data would allow the physical evaluation to progress from comparison with reference archetypes to validation against observed building performance.

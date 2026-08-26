@@ -230,7 +230,8 @@ The implications of this temporal difference are discussed in \cref{sec:limitati
 
 This study partitioned the final experimental dataset at the building level in two stages to separate model development from final performance evaluation.
 In the first stage, this study used the scikit-learn \texttt{StratifiedGroupKFold} splitter to create a stratified, group-aware five-fold partition of the 10,086 buildings.
-The splitter was configured with \texttt{shuffle=True} and \texttt{random\_state=42}, and the first generated validation fold was designated as the fixed holdout set.
+The splitter used shuffled assignments with a fixed random seed of 42.
+The first validation fold was retained as the fixed holdout set.
 This procedure allocated 2,018 buildings (20\%) to the holdout set and the remaining 8,068 buildings (80\%) to the development set.
 To improve balance across key contextual and target variables, this study constructed a composite stratification label from the study area, the original EP-Online residential building type, the registered energy class, and the derived TABULA construction period.
 The BAG building identifier served as the grouping variable.
@@ -271,7 +272,7 @@ The two supervised configurations use up to eight images with feature-level aggr
 		\midrule
 		ResNet-50 full fine-tuning              & Backbone, shared \acs{MLP}, and three attribute heads      & Full development-set labels                                                  & Up to 8             & Feature mean before building-level prediction                                 \\
 		Frozen DINOv2 \acs{ViT}-B/14            & Shared \acs{MLP} and three attribute heads, with a frozen backbone & Full development-set labels                                                  & Up to 8             & Feature mean before building-level prediction                                 \\
-		InternVL3-2B without parameter updating & None                                                       & Prompt design on a fixed, class-balanced subset of 200 development buildings & Up to 3             & Type mode, year median, and rounded floor-count median                         \\
+		InternVL3-2B without parameter updating & None                                                       & Prompt design on a fixed subset of 200 development buildings stratified by reference building type, with minority types oversampled & Up to 3             & Type mode, year median, and rounded floor-count median                         \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -316,22 +317,24 @@ Appendix~\ref{ch:appendix_b} reports the complete training hyperparameters, incl
 \subsection{VLM-Based Attribute Inference}
 \label{sec:vlm_attribute_inference}
 
-This study uses the original InternVL3-2B model from the \texttt{OpenGVLab/\allowbreak InternVL3-2B} repository and does not update its parameters on the study dataset \parencite{chen2024}.
-This differs from the InternVL3-2B model fine tuned for building profiling in OpenFACADES \parencite{liang2025}.
-For each image, greedy decoding produces one JavaScript Object Notation (JSON) response containing \texttt{building\_type}, \texttt{construction\_year}, and \texttt{num\_floors}.
-The prompt wording and output constraints were developed using a fixed subset of 200 development buildings balanced across classes.
-Both were frozen before evaluation on the holdout set.
+The pretrained InternVL3-2B checkpoint from the \texttt{OpenGVLab/\allowbreak InternVL3-2B} repository is used without updating its parameters on the study dataset \parencite{chen2024}.
+For each image, the model uses greedy decoding and is instructed to return a single JavaScript Object Notation (JSON) object containing predictions for building type, construction year, and floor count.
 
-In this study, \emph{zero-shot} refers specifically to the absence of parameter training or fine tuning on the study dataset.
-The term does not imply that prompt design or response processing was developed without access to development labels.
+Prompt development used a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled.
+The final prompt and output constraints were fixed before evaluation on the holdout set.
+In this study, \emph{zero-shot} refers only to the absence of parameter updates using the study dataset.
+Development labels were used during prompt development and response processing design.
 
-For each building, up to three images are selected in rank order and processed independently.
-Each response is parsed and checked against the permitted values for all three attributes.
-A response is marked as invalid if it cannot be parsed or if any required value falls outside the permitted range.
-Only valid responses are included in the building aggregation.
-Building type is determined by the mode of the valid predictions.
-Construction year is determined by the median, and floor count is determined by the rounded median.
-Appendix~\ref{ch:appendix_c} reports the complete prompt wording, decoding settings, and output parsing rules for the VLM configurations.
+Up to three images were selected for each building according to the image ranking described in \cref{sec:svi_acquisition_matching}.
+Each image was processed independently.
+A response was marked as invalid if it could not be parsed or if any required value fell outside the permitted range.
+Only responses containing valid values for all three attributes were included in the building aggregation.
+No aggregated prediction was produced when none of the responses for a building was valid.
+
+Building type was determined by the mode of the valid predictions.
+If several building types received the same highest count, the prediction from the valid image with the highest rank was retained.
+Construction year was determined by the median, and floor count was determined by the rounded median.
+Appendix~\ref{ch:appendix_c} reports the complete prompt wording, decoding settings, output constraints, and parsing rules.
 
 \subsection{Direct Energy Class Prediction}
 \label{sec:direct_energy_class_prediction}
@@ -443,9 +446,11 @@ After archetype-cell assignment, the wall, roof, floor, and window U-values are 
 All four values are expressed in $\mathrm{W/(m^2\,K)}$.
 The reference-attribute route performs the lookup using the reference building type and construction year, while the vision-attribute route applies the same procedure using the image-inferred building type and construction year.
 \Cref{tab:tabula_uvalues} reports the complete lookup values.
-SFH, MFH, and AB share the same values within each construction period, while TH differs only in NL.01; the corresponding rows are therefore combined.
-The lookup table was generated programmatically from the TABULA workbook and stored in \texttt{data/processed/tabula\_nl.csv}.
-The source of each value is recorded in \texttt{data/processed/\allowbreak tabula\_nl\_provenance.csv}, with the associated audit documented in Appendix~\ref{ch:appendix_a}.
+SFH, MFH, and AB share the same values within each construction period.
+TH differs only for NL.01.
+The corresponding rows are therefore combined.
+The lookup table was generated programmatically from the TABULA workbook.
+The associated provenance audit is documented in Appendix~\ref{ch:appendix_a}.
 
 \begin{table}[htbp]
 	\centering

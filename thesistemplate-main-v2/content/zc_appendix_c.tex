@@ -3,7 +3,7 @@
 
 This appendix reproduces verbatim the three prompts used with InternVL3-2B: M3 attribute inference, M2 direct seven-class prediction, and M2 direct binary prediction.
 It also specifies the output parsing rules.
-The prompts were developed using a fixed, class-balanced subset of 200 development buildings and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
+The prompts were developed using a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled, and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
 
 \textbf{Decoding configuration.}
 The model is loaded in bfloat16.

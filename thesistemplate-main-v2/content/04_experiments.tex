@@ -52,20 +52,20 @@ The effect of sample composition on model performance is evaluated in \cref{sec:
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_4_1_distributions}
-	\caption[Normalised distributions of the experimental sample and the registry reference pool.]{Normalised distributions of the experimental sample and eligible four-city registry reference pool. Panel~(a) compares the four building types, panel~(b) compares floor count groups from 1 to 7 and 8 or more, panel~(c) compares the six TABULA-NL construction periods, and panel~(d) compares energy classes A--G after A+ through A++++ are combined with A. Each panel reports within-sample percentages rather than absolute counts or city-level stacks. The experimental sample contains 10,086 buildings, and the reference pool contains 124,784 buildings.}
+	\caption[Composition of the experimental sample across the four study areas.]{Composition of the 10,086 buildings in the experimental sample across Amsterdam, Rotterdam, Utrecht, and Delft. Stacked bars show the number of buildings in each study area by (a) residential building type, (b) floor count from 1 to 7 and 8 or more, (c) TABULA-NL construction period, and (d) registered energy class after ratings from A+ through A++++ were combined with class A. Values above the bars report the total number of buildings in each study area.}
 	\label{fig:distributions}
 \end{figure}
 
 \subsection{Route Families and Evaluation Settings}
 \label{sec:route_families}
 
-\textbf{Route families.}
-Four evaluation routes distinguish a no-information baseline, reference-attribute inference, direct prediction from imagery, and attribute-mediated inference.
-The M identifiers denote inference routes rather than different datasets or downstream-model families.
+The four evaluation routes distinguish a no information baseline, reference attribute inference, direct prediction from imagery, and attribute mediated inference.
+The M identifiers refer to inference routes rather than separate datasets or downstream model families.
 
 \begin{table}[htbp]
 	\centering
-	\caption*{\textbf{Route families used in the evaluation.\hfill\null}}
+	\caption{Route families used in the evaluation.}
+	\label{tab:route_families}
 	\footnotesize
 	\begin{tblr}{
 			width = \linewidth,
@@ -75,21 +75,25 @@ The M identifiers denote inference routes rather than different datasets or down
 			rowsep = 2pt,
 		}
 		\toprule
-		Route & Inputs                                                                                                                   & Inference procedure                                                                                                              & Role in the comparison       \\
+		Route & Inputs                                                                  & Inference procedure                                                               & Role in the comparison       \\
 		\midrule
-		M0    & No building attributes or images                                                                                         & Assign a uniformly random class to each building; report the analytic expectation of each metric                                 & No-information baseline      \\
-		M1    & Reference building type, construction year, floor count, four U-values from the reference TABULA-NL cell, and city        & Pass the eight reference-derived features to the fixed LightGBM energy class classifier                                          & Reference-attribute baseline \\
-		M2    & Street-view images                                                                                                       & Predict the binary or seven-class energy class directly from imagery without attribute prediction, TABULA lookup, or LightGBM    & End-to-end comparator        \\
-		M3    & \ac{SVI}-predicted building type, construction year, floor count, four U-values from the predicted TABULA-NL cell, and city & Pass the eight vision-derived features to the same fixed LightGBM energy class classifier used for M1                          & Attribute-mediated route     \\
+		M0    & No attributes or imagery                                                    & Assign equal probability to every class and report analytic expected metrics              & No information baseline      \\
+		M1    & Reference attributes, four TABULA-NL U-values, and city                     & Apply the eight reference features to the fixed LightGBM classifier                    & Reference attribute baseline \\
+		M2    & \ac{SVI}                                                                    & Predict the energy label directly from imagery for both classification tasks              & Direct visual comparator     \\
+		M3    & Attributes predicted from \ac{SVI}, four TABULA-NL U-values, and city       & Apply the eight resulting features to the same fixed LightGBM classifier as M1            & Attribute mediated route     \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-M0 is a \textbf{uniform random-guessing baseline} that assigns equal probability to every class in the seven-class or binary label space.
-Metrics are reported as analytic expectations, including a seven-class accuracy of $1/7$ and a binary macro recall of 0.5, so the reported values do not depend on a random seed.
-The prediction rule uses neither the reference labels nor the class prevalence, although analytic expectations for prevalence-dependent metrics are calculated from the evaluation-label frequencies.
-A separate \textbf{majority guess}, which always predicts the most frequent class, is reported where needed to expose inflation caused by class imbalance.
-Majority guessing alone yields a $\pm$1 accuracy of 0.612 and a binary accuracy of 0.702; neither metric is therefore interpreted in isolation.
+M0 represents uniform random guessing.
+Each class receives the same prediction probability within the relevant label space.
+The reported metrics are analytic expectations rather than results obtained from simulated draws.
+The expected accuracy is therefore $1/7$ for the task with seven classes, while the expected macro recall is 0.5 for the binary task.
+These values do not depend on a random seed.
+The prediction rule does not use reference labels or class prevalence.
+Evaluation label frequencies are used only to calculate metrics whose expectations depend on prevalence.
+A separate majority guess is reported where needed to show the effect of class imbalance.
+Majority guessing yields a $\pm$1 accuracy of 0.612 and a binary accuracy of 0.702, so neither metric is interpreted in isolation.
 
 The M1 and M3 attribution comparison uses a shared fitted-model protocol.
 Separate LightGBM classifiers are trained for the binary and seven-class tasks.
@@ -98,8 +102,8 @@ The same fitted parameters then receive the M1 reference features and each set o
 In the Amsterdam holdout setting, each classifier is refitted once using reference features from the source cities and is again shared by M1 and M3 within that setting.
 The M3 minus M1 difference therefore excludes the effect of downstream retraining and reflects the combined consequences of replacing the three upstream attributes, changing the resulting TABULA-NL cell, and retrieving different U-values.
 
-\textbf{Evaluation settings.}
-The primary evaluation uses the fixed building-level split defined in \cref{sec:data_partitioning}: 8,068 development buildings and a fixed holdout set of 2,018 buildings.
+The evaluation uses two settings.
+The primary setting uses the fixed building level split defined in \cref{sec:data_partitioning}, comprising 8,068 development buildings and a fixed holdout set of 2,018 buildings.
 The five development folds support model selection and out-of-fold (OOF) analyses, whereas all pooled headline results are reported on the untouched holdout set.
 A separate Amsterdam holdout transfer evaluation trains and selects all trainable components using 2,075 buildings from Rotterdam, Utrecht, and Delft and evaluates them on 8,011 Amsterdam buildings.
 The original pooled split is not retained in this setting.
@@ -112,17 +116,16 @@ Their training procedures are not repeated here.
 \subsection{Prediction Tasks and Metrics}
 \label{sec:prediction_tasks_metrics}
 
-\textbf{Upstream metrics.}
+The upstream evaluation applies a separate set of metrics to construction year, building type, and floor count.
 Construction year prediction is evaluated using mean absolute error (MAE), $R^2$, and TABULA period accuracy.
 Because the TABULA periods have unequal widths, MAE alone does not indicate whether a prediction crosses a period boundary.
-The $R^2$ score compares prediction error with the variation in construction year within the evaluation set and therefore helps identify cases in which a low MAE partly reflects a narrow target distribution.
+The $R^2$ score compares the prediction error with the variation in construction year within the evaluation set and helps identify cases in which a low MAE partly reflects a narrow target distribution.
 Building type prediction is evaluated primarily using macro-F1, with accuracy reported as a supplementary metric.
-A large difference between these metrics indicates sensitivity to class imbalance; $R^2$ is not applicable to this categorical task.
+The difference between accuracy and macro-F1 indicates the extent to which aggregate performance is influenced by class imbalance.
 Floor count prediction is evaluated using MAE and $R^2$.
 
-\textbf{Archetype-cell metrics.}
-TABULA uses the joint archetype cell rather than either attribute in isolation.
-Joint accuracy is therefore defined as the proportion of buildings for which both size class and construction period are correct:
+Archetype assignment is evaluated at the level of the joint TABULA-NL cell because the lookup depends on both size class and construction period.
+Joint accuracy is defined as the proportion of buildings for which both attributes are assigned correctly:
 
 \begin{equation}
 	\label{eq:joint_acc}
@@ -131,64 +134,69 @@ Joint accuracy is therefore defined as the proportion of buildings for which bot
 	\mathbf{1}\!\left[\hat{s}_i = s_i \;\land\; p(\hat{y}_i) = p(y_i)\right].
 \end{equation}
 
-Uniform random guessing across the 24 cells has an expected joint accuracy of $1/24 \approx 0.042$.
-Macro-cell recall, defined as the unweighted mean recall across occupied cells, is also reported to reveal performance outside the dominant cells.
-Because the evaluation population is highly concentrated, a majority-cell guess already achieves a joint accuracy of 0.790 in the pooled holdout set and 0.868 in the Amsterdam population.
-Joint accuracy is therefore not interpreted without these baselines.
+Uniform random assignment across the 24 cells has an expected joint accuracy of $1/24 \approx 0.042$.
+Macro-cell recall is also reported as the unweighted mean recall across occupied cells, thereby revealing performance outside the dominant cells.
+Because the evaluation population is highly concentrated, the majority cell baseline reaches a joint accuracy of 0.790 in the pooled holdout set and 0.868 in the Amsterdam population.
+Joint accuracy is therefore interpreted relative to both the uniform and majority cell baselines.
 
-\textbf{Downstream tasks.}
-The energy class target is evaluated at two levels of granularity.
-The primary task is binary classification of A--C versus D--G.
-This grouping corresponds to a threshold of 250\,kWh/(m$^2\cdot$year), the upper boundary of class C, and follows the coarse grouping used by \textcite{sun2026}.
-The experimental population contains 70.3\% of buildings in classes A--C and 29.7\% in classes D--G.
-The seven-class A--G task is retained as a diagnostic evaluation of seven-class separability and the limitations of the available predictors (\cref{sec:sample_composition_effects}).
-The binary classifier is trained independently with a binary objective; its outputs are not obtained by collapsing predictions from the seven-class model after inference.
+The downstream energy class evaluation comprises an independently trained binary task and a diagnostic task covering the seven individual classes from A to G.
+The primary task classifies buildings into classes A to C and D to G.
+This division corresponds to the upper boundary of class C at 250\,kWh/(m$^2\cdot$year) and follows the coarse grouping used by \textcite{sun2026}.
+The experimental population contains 70.3\% of buildings in classes A to C and 29.7\% in classes D to G.
+Prediction across classes A to G is retained as a diagnostic analysis of exact class separability and the limitations of the available predictors (\cref{sec:sample_composition_effects}).
+The binary classifier is trained independently using a binary objective.
+Its predictions are not obtained by collapsing the outputs of the model trained for classes A to G.
 
-\textbf{Downstream metrics.}
-The seven-class task reports macro-F1, exact accuracy, and $\pm$1 accuracy.
-Macro-F1 gives equal weight to each energy class, exact accuracy supports comparison with studies that report accuracy, including \textcite{hettinga2023}, and $\pm$1 accuracy measures whether the predicted class lies within one ordinal class of the reference class.
-M0 is reported as a lower reference point.
-However, majority guessing alone yields a $\pm$1 accuracy of 0.612, compared with approximately 0.39 under uniform random guessing.
-The $\pm$1 metric is therefore reported only alongside macro-F1 and the relevant baselines.
+The downstream metrics account for both class imbalance and the ordinal relationship among energy classes.
+For prediction across classes A to G, performance is reported using macro-F1, exact accuracy, and $\pm$1 accuracy.
+Macro-F1 assigns equal importance to each energy class.
+Exact accuracy supports comparison with studies that report this metric, including \textcite{hettinga2023}.
+The $\pm$1 accuracy measures whether the predicted class lies within one ordinal class of the reference class.
+M0 provides the corresponding lower baseline.
+However, a majority class prediction already yields a $\pm$1 accuracy of 0.612, compared with approximately 0.39 under uniform random prediction.
+The $\pm$1 accuracy is therefore interpreted only alongside macro-F1 and the relevant baselines.
 
-The binary task reports macro precision, macro recall, and macro-F1 at the default probability threshold of 0.5, consistent with the macro-averaged reporting used in the comparison literature.
-Aggregate metrics can conceal asymmetric predictions, so class-specific precision and recall, particularly recall for classes D--G, are also examined.
-Binary accuracy is likewise interpreted against the majority guess, which reaches 0.702 by assigning every building to classes A--C.
-The principal LightGBM protocol uses no class weighting, avoiding a change in the effective class prior and maintaining a common configuration across tasks.
-The class-balanced sensitivity variant increases macro-F1 by 0.071 and is documented in Appendix~\ref{ch:appendix_a}.
+For the binary task, performance is reported using macro precision, macro recall, and macro-F1 at the default probability threshold of 0.5.
+This selection is consistent with the reporting of macro averages in the comparison literature.
+Because aggregate metrics can conceal asymmetric predictions, precision and recall are also reported separately for each class, with particular attention to recall for classes D to G.
+Binary accuracy is interpreted relative to the majority baseline, which reaches 0.702 by assigning every building to classes A to C.
+The principal LightGBM protocol does not apply class weighting.
+This setting preserves the observed class distribution and maintains a common model configuration across tasks.
+A sensitivity analysis using class weighting is documented in Appendix~\ref{ch:appendix_a}.
 
-\textbf{Error attribution.}
-Downstream errors in M3 are separated according to whether the required upstream attributes are correct.
-Cases in which the attributes are correct but the energy class prediction remains incorrect are assigned to the downstream task, whereas cases containing an upstream attribute error are assigned to visual extraction.
-This decomposition and the performance difference between M1 and M3 provide complementary views of the downstream cost of attribute substitution.
+Error attribution separates failures introduced by upstream visual extraction from those that remain in the downstream classifier.
+For M3, a case with correct upstream attributes but an incorrect energy class prediction is attributed to the downstream task.
+A case containing an upstream attribute error is attributed to visual extraction.
+This decomposition and the performance difference between M1 and M3 provide complementary measures of the downstream cost of attribute substitution.
 
-\textbf{Metric definitions.}
+The metrics are defined formally as follows.
 Let $N$ denote the number of evaluated buildings, $y_i$ the reference value, $\hat{y}_i$ the prediction, and $K$ the number of classes:
 
 \begin{itemize}
 	\item $\mathrm{Accuracy} = N^{-1}\sum_i \mathbf{1}[\hat{y}_i = y_i]$.
 	\item For each class $c$, precision is the proportion of predictions assigned to $c$ that are correct, recall is the proportion of reference observations in $c$ that are recovered, and $F1_c = 2P_cR_c/(P_c+R_c)$.
-	\item Macro precision, macro recall, and macro-F1 are the unweighted means of the corresponding class-level values, with weight $1/K$ assigned to each class rather than to each building.
+	\item Macro precision, macro recall, and macro-F1 are the unweighted means of the corresponding class values, with weight $1/K$ assigned to each class rather than to each building.
 	\item $\mathrm{MAE} = N^{-1}\sum_i |\hat{y}_i - y_i|$.
-	\item $R^2 = 1 - \sum_i(\hat{y}_i-y_i)^2 / \sum_i(y_i-\bar{y})^2$, where $\bar{y}$ is the mean reference value. A value of zero is equivalent to predicting the reference mean, and a negative value indicates poorer performance.
+	\item $R^2 = 1 - \sum_i(\hat{y}_i-y_i)^2 / \sum_i(y_i-\bar{y})^2$, where $\bar{y}$ is the mean reference value. A value of zero is equivalent to predicting the reference mean. A negative value indicates poorer performance than predicting that mean.
 	\item $\mathrm{PeriodAcc} = N^{-1}\sum_i \mathbf{1}[p(\hat{y}_i) = p(y_i)]$, where $p(\cdot)$ maps a construction year to a TABULA period.
 	\item $\mathrm{Acc}_{\pm 1} = N^{-1}\sum_i \mathbf{1}[|r(\hat{y}_i)-r(y_i)| \leq 1]$, where $r(\cdot)$ gives the ordinal rank of an energy class from A to G.
 	\item Macro-cell recall is the unweighted mean recall across occupied TABULA-NL cells.
 \end{itemize}
 
-\subsection{Physically Weighted Archetype-Difference Metric}
+\subsection{Physically Weighted Metric for Archetype Differences}
 \label{sec:weighted_archetype_metric}
 
-\textbf{Physically weighted archetype-difference measure.}
-Cell-level metrics record only whether an assignment is correct.
-They therefore assign the same error to confusion between adjacent cells with similar U-values and to confusion between distant cells whose U-values differ substantially.
-To account for this difference, the transmission heat transfer coefficient $H'_{tr}$ is calculated for each building using the TABULA U-values of the assigned cell and reconstructed 3DBAG envelope areas.
-Shared walls are treated as adiabatic, and the window-to-wall ratio (WWR) is the only assumed input parameter.
-Values calculated from predicted cells are compared with values calculated from reference cells using building-level MAE and $R^2$, together with a floor-area-weighted stock-level heat loss bias.
-The stock-level measure retains systematic error while allowing building-level errors with opposite signs to offset one another.
-This analysis is a physically weighted comparison of predicted and reference archetype assignments; it is not a validation against measured energy consumption.
+The physically weighted metric distinguishes between archetype assignment errors according to their effects on transmission heat transfer.
+Metrics evaluated at the cell level record only whether an assignment is correct.
+They therefore assign equal weight to confusion between adjacent cells with similar U-values and confusion between distant cells with substantially different U-values.
+To account for this limitation, the transmission heat transfer coefficient $H'_{tr}$ is calculated for each building using the TABULA U-values of the assigned cell and the reconstructed 3DBAG envelope areas.
+Shared walls are treated as adiabatic, and the window-to-wall ratio (WWR) is the only assumed input.
+Values obtained from predicted and reference cells are compared using MAE and $R^2$ across buildings, together with a bias in aggregate transmission heat transfer weighted by floor area.
+The aggregate measure retains systematic error, although errors with opposite signs can offset one another.
+This analysis compares the physical implications of predicted and reference archetype assignments.
+It does not validate either assignment against measured heat loss or energy consumption.
 
-For building $i$, the transmission heat transfer coefficient is
+For building $i$, the transmission heat transfer coefficient is defined as
 
 \begin{equation}
 	\label{eq:htr}
@@ -199,7 +207,7 @@ For building $i$, the transmission heat transfer coefficient is
 	\end{split}
 \end{equation}
 
-The corresponding coefficient of determination is
+Agreement between the values obtained from predicted and reference cells is quantified using the coefficient of determination
 
 \begin{equation}
 	\label{eq:htr_r2}
@@ -208,7 +216,7 @@ The corresponding coefficient of determination is
 	{\sum_i\left(H'_{tr,\mathrm{ref},i} - \overline{H'_{tr,\mathrm{ref}}}\right)^2},
 \end{equation}
 
-and the signed stock-level bias is
+and the signed bias in aggregate transmission heat transfer is defined as
 
 \begin{equation}
 	\label{eq:bias_stock}
@@ -217,14 +225,19 @@ and the signed stock-level bias is
 	{\sum_i H'_{tr,\mathrm{ref},i}A_{floor,i}} .
 \end{equation}
 
-\Cref{eq:htr} is evaluated twice for each building: once using the U-values retrieved from the reference cell and once using those retrieved from the predicted cell.
+\Cref{eq:htr} is evaluated twice for each building, once using the U-values retrieved from the reference cell and once using those retrieved from the predicted cell.
 Both calculations use the same reconstructed areas and WWR.
 A correctly assigned cell therefore produces zero error.
-\Cref{eq:htr_r2} expresses agreement with the variation in the reference-derived coefficients, while \cref{eq:bias_stock} retains the sign of aggregate error; a value of zero indicates no net stock-level bias.
+\Cref{eq:htr_r2} measures agreement relative to the variation in the values obtained from reference cells.
+\Cref{eq:bias_stock} retains the direction of the aggregate error.
+A value of zero indicates no net aggregate bias.
+
+The inputs required by \cref{eq:htr} and their data sources are summarised in \cref{tab:htr_inputs}.
 
 \begin{table}[htbp]
 	\centering
-	\caption*{\textbf{Inputs to \cref{eq:htr} and their data sources.\hfill\null}}
+	\caption{Inputs and data sources for calculating $H'_{tr}$.}
+	\label{tab:htr_inputs}
 	\footnotesize
 	\begin{tblr}{
 			width = \linewidth,
@@ -236,23 +249,26 @@ A correctly assigned cell therefore produces zero error.
 		\toprule
 		Symbol                                     & Quantity                                                                        & Source                                                                                    & Interpretation                                     \\
 		\midrule
-		$U_{wall}$, $U_{roof}$, $U_{floor}$, $U_{window}$ & Envelope U-values                                                       & TABULA-NL cell lookup (\cref{sec:uvalue_lookup}), performed separately for reference and predicted cells & Lookup values shared by buildings in the same cell \\
-		$A_{wall}$                                 & External facade area, excluding shared walls treated as adiabatic               & Reconstructed 3DBAG \acs{LoD}2.2 geometry                                                 & Building-level reconstructed geometry              \\
-		$A_{roof}$                                 & Roof area                                                                       & Reconstructed 3DBAG \acs{LoD}2.2 geometry                                                 & Building-level reconstructed geometry              \\
-		$A_{ground}$                               & Ground-contact area                                                             & Reconstructed 3DBAG \acs{LoD}2.2 geometry                                                 & Building-level reconstructed geometry              \\
-		$A_{floor}$                                & Floor area used as the denominator in \cref{eq:htr} and as the stock weight in \cref{eq:bias_stock} & Reconstructed 3DBAG geometry; derivation reported in \cref{tab:3dbag_fields} & Building-level reconstructed geometry              \\
-		WWR                                        & Window-to-wall ratio used to divide the facade into window and opaque-wall areas & Assumed value of 0.25                                                                     & Only input without a building-specific data source \\
+		$U_{wall}$, $U_{roof}$, $U_{floor}$, $U_{window}$ & Envelope U-values & TABULA-NL cell lookup (\cref{sec:uvalue_lookup}) applied separately to the reference and predicted cells & Values shared by buildings assigned to the same cell \\
+		$A_{wall}$                                 & External facade area after excluding shared walls treated as adiabatic & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{roof}$                                 & Roof area & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{ground}$                               & Area in contact with the ground & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{floor}$                                & Floor area used as the denominator in \cref{eq:htr} and as the weight in \cref{eq:bias_stock} & Reconstructed 3DBAG geometry, with its derivation reported in \cref{tab:3dbag_fields} & Geometry reconstructed for each building \\
+		WWR                                        & Window-to-wall ratio used to divide the facade into window and opaque wall areas & Assumed baseline value of 0.25 & Only input not obtained separately for each building \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-\textbf{WWR assumption and sensitivity analysis.}
-The 3DBAG geometry does not distinguish window openings within the facade, while window U-values are substantially higher than wall U-values for the same period.
-For example, the NL.01 values are 5.2 and 1.61\,$\mathrm{W/(m^2K)}$, respectively (\cref{tab:tabula_uvalues}).
-The baseline assumption of $\mathrm{WWR} = 0.25$ assigns 25\% of the facade area to windows.
-Because WWR is the only assumed parameter in \cref{eq:htr}, a local one-at-a-time sensitivity analysis was conducted, following a standard approach in building-performance analysis \parencite{pang2020}.
-Recalculating \cref{tab:htr_metrics} with WWR values of 0.15 and 0.35 did not change the ranking of the three vision configurations; the complete results are reported in \cref{tab:wwr_sensitivity}.
-The reference-derived and prediction-derived calculations use the same WWR and reconstructed areas, so their difference arises solely from the U-values associated with the reference and predicted archetype cells.
+The sensitivity analysis evaluates whether the assumed WWR affects the comparison among the vision configurations.
+The 3DBAG geometry does not distinguish window openings within the facade, although window U-values are substantially higher than wall U-values for the same construction period.
+For example, the NL.01 window and wall U-values are 5.2 and 1.61\,$\mathrm{W/(m^2K)}$, respectively (\cref{tab:tabula_uvalues}).
+The baseline value of $\mathrm{WWR} = 0.25$ assigns 25\% of the facade area to windows.
+Because WWR is the only assumed input, the calculation is repeated using values of 0.15 and 0.35 while all other inputs remain fixed.
+These values provide a symmetric local variation of 0.10 around the baseline.
+This procedure is treated as a local sensitivity analysis rather than an uncertainty analysis \parencite{pang2020}.
+The calculations based on reference and predicted cells use the same WWR and reconstructed areas at each tested value.
+Their difference is therefore determined only by the U-values associated with the respective archetype cells.
+The resulting metrics are reported in \cref{tab:wwr_sensitivity}.
 
 \section{Quantitative Results}
 \label{sec:quantitative_results}
@@ -599,7 +615,7 @@ M1 achieved 0.496 despite using reference attributes, showing that errors in the
 	\includegraphics[width=\linewidth]{figures/fig/fig_4_5_pooled_vs_loco}
 	% Caption written for this figure: draft V9 reports the underlying values in
 	% Tables 4.7 and 4.8 but does not yet provide a caption for the plot.
-	\caption[Pooled versus Amsterdam holdout performance.]{Pooled versus Amsterdam holdout (LOCO) performance. The upper row reports upstream DINOv2 attribute extraction as construction year MAE and building type accuracy. The lower row reports downstream binary macro-F1 for the reference-attribute route (M1), the direct energy class prediction route (M2-DINOv2), and the attribute-mediated route (M3-DINOv2), with the M0 uniform random-guessing expectation shown as a dashed line. Annotations give the change from the pooled to the Amsterdam holdout setting.}
+	\caption[Pooled and Amsterdam holdout performance.]{Comparison of pooled and Amsterdam holdout (LOCO) performance. The upper panels report DINOv2 construction year MAE and building type accuracy. The lower panels report binary macro F1 for M1, M2 using DINOv2, and M3 using DINOv2. The dashed line shows the M0 uniform random guessing expectation. Because the two settings use different evaluation populations, their differences do not isolate the effect of excluding Amsterdam from model development.}
 	\label{fig:pooled_vs_loco}
 \end{figure}
 
