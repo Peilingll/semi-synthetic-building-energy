@@ -31,24 +31,28 @@ It also examines direct energy class prediction from imagery, geographic transfe
 \subsection{Semi-Synthetic Dataset: Three-Layer Structure}
 \label{sec:three_layer_structure}
 
-This study defines the semi-synthetic dataset as three layers with explicitly separated provenance.
-First, the reference layer contains administrative records from BAG and EP-Online, reconstructed geometry from 3DBAG, and the reference energy class adopted in this study.
-These fields provide the reference observations required for model training, attribute substitution, and downstream evaluation, but they are not collectively treated as error-free ground truth.
-In particular, the reference energy class remains affected by multiple certificates and within-building class disagreement; its quality is audited separately in \cref{sec:building_level_consistency}.
+This study organises the semi-synthetic dataset into three layers to preserve the provenance of each field.
+The reference layer contains administrative attributes from BAG and EP-Online, reconstructed geometry from 3DBAG, and the registered EP-Online energy class used as the evaluation target.
+These fields support model training, attribute substitution, and downstream evaluation.
+They are not collectively treated as error-free ground truth.
+Multiple certificates and within-building class disagreement introduce uncertainty into the reference energy class.
+The quality of this target is assessed separately in \cref{sec:building_level_consistency}.
 
-Second, the vision-inference layer stores the building-level predictions of building type, construction year, and floor count produced by the three vision paradigms, together with their model provenance.
-Third, the synthetic archetype layer derives the construction period from the estimated year, deterministically maps the pair (type, period) to a TABULA-NL cell, and assigns the cell's four as-built envelope U-values for the wall, roof, floor, and windows.
-These U-values are archetype-level average assumptions for the corresponding building stock subgroup; they are not measurements of the thermal performance of individual buildings and do not introduce new building-specific observations.
+The vision-inference layer stores the building-level predictions of building type, construction year, and floor count produced by the three vision configurations.
+It also records the provenance of each prediction.
+The synthetic archetype layer derives the construction period from the corresponding reference or inferred construction year.
+It then maps building type and construction period to a TABULA-NL cell and assigns the associated as-built U-values for walls, roofs, floors, and windows.
+These U-values represent archetype-level assumptions for the corresponding building stock subgroup.
+They are not measurements of individual buildings and do not introduce new building-specific observations.
 
-Here, semi-synthetic refers to the combination of reference observations, image-derived attributes, and deterministically assigned archetype parameters.
-The energy class target remains an administrative reference obtained from EP-Online rather than a simulated class; only the archetype parameters assigned through the TABULA cell are synthetic.
-This separation makes the provenance of each value traceable and provides the common data foundation for the three research objectives.
+The dataset is described as semi-synthetic because it combines reference observations and attributes inferred from \ac{SVI} with deterministically assigned archetype parameters.
+Only the parameters assigned through the TABULA-NL lookup are synthetic.
+The energy class target remains a registered administrative value rather than a simulated outcome.
+This separation preserves the provenance of each value and provides a common data foundation for the three research objectives.
 
-In the controlled substitution comparison, M1 and M3 use the same eligible buildings, geographic split, feature positions, and fixed model for each downstream task.
-M1 uses the reference type, year, and floor attributes and obtains the TABULA U-values from the corresponding reference (type, period) cell.
-M3 replaces these inputs with the type, year, and floor attributes inferred from \ac{SVI} and retrieves the U-values from the resulting predicted cell.
-Within this protocol, the difference between M3 and M1 therefore measures the consequence of substituting the attribute source rather than the effect of retraining the downstream model.
-M2 predicts energy class directly from imagery and does not pass through this three-layer substitution chain; it is consequently treated as a parallel end-to-end comparator.
+The two TABULA-derived columns in \cref{fig:three_layers} correspond to the M1 reference route and the M3 attribute-mediated route.
+M2 is not shown because it predicts energy class directly from imagery and bypasses the three-layer structure.
+The complete definitions of M0--M3 and their comparison protocol are provided in \cref{sec:strategy_metrics}.
 
 \begin{figure}[htbp]
 	\centering
@@ -63,14 +67,17 @@ M2 predicts energy class directly from imagery and does not pass through this th
 \subsection{Sources}
 \label{sec:data_sources}
 
-The dataset is organised around the BAG building identifier and integrates five public or openly licensed data sources: BAG, 3DBAG, EP-Online, Mapillary, and TABULA-NL.
-Building-level linkage among BAG, EP-Online, and Mapillary forms the core sample.
-3DBAG provides the reconstructed geometry used in subsequent stages \parencite{peters2022,dukai2021}, while TABULA-NL provides a deterministic archetype lookup based on building type and construction period.
-The position of each source within the three-layer data structure is shown in \cref{fig:three_layers}, and the principal data elements and their roles are summarised in \cref{tab:data_sources}.
+The dataset integrates five public or openly licensed data sources: BAG, 3DBAG, EP-Online, Mapillary, and TABULA-NL.
+The BAG building identifier provides the organising key for the building-level records.
+Linking BAG, EP-Online, and Mapillary records at the building level defines the core sample.
+3DBAG provides the reconstructed geometry used in subsequent stages \parencite{peters2022,dukai2021}.
+TABULA-NL provides the deterministic archetype lookup based on building type and construction period.
+\Cref{fig:three_layers} shows the position of each source within the three-layer data structure.
+\Cref{tab:data_sources} summarises the principal data elements and their roles.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Data sources, principal data elements, and roles in the study.}
+	\caption{Data sources, principal data elements, and roles in this study.}
 	\label{tab:data_sources}
 	\small
 	\begin{tblr}{
@@ -84,7 +91,7 @@ The position of each source within the three-layer data structure is shown in \c
 		Source    & Principal data elements                                                                    & Role in this study                                                                                                  \\
 		\midrule
 		BAG       & Building identifier, construction year, two-dimensional footprints, and building status    & Building-level join key, construction year reference, and residential-stock filtering                               \\
-		3DBAG     & \acf{LoD} 2.2 reconstructions of floor count, height, volume, and envelope areas            & Floor count reference, Tier B reconstructed geometry, and area inputs for $H'_{tr}$                                 \\
+		3DBAG     & \acf{LoD} 2.2 reconstructions of floor count, height, volume, and envelope areas            & Floor count reference, reconstructed building geometry, and area inputs for $H'_{tr}$                                \\
 		EP-Online & Energy class, residential building type, and certificate registration date                  & Reference energy class, building type reference, and certificate selection by date                                  \\
 		Mapillary & Crowdsourced street-view imagery and image metadata                                        & Vision-model input, \ac{SVI}-to-building pairing, and image provenance                                              \\
 		TABULA-NL & Six construction periods and four size classes, comprising 24 archetype cells               & Deterministic lookup from building type and period, providing as-built U-values for walls, roofs, floors, and windows \\
@@ -93,15 +100,19 @@ The position of each source within the three-layer data structure is shown in \c
 \end{table}
 
 Mapillary was selected instead of a commercial street-view service because its open licensing supports a reproducible research workflow \parencite{mapillary}.
-However, its image coverage is determined by contributor activity and does not constitute a random sample of the building stock.
+Because Mapillary coverage reflects contributor activity, the available imagery does not represent a random sample of the building stock.
 The resulting dataset may therefore be biased towards image-dense urban centres and particular residential types.
-Representative cropped street-view images are shown in \cref{fig:svi_examples}; the coverage bias is quantified through the sample distributions in \cref{sec:dataset_statistics}, and its implications for the scope of the study are discussed in \cref{sec:limitations}.
+Representative cropped street-view images are shown in \cref{fig:svi_examples}.
+The coverage bias is quantified through the sample distributions in \cref{sec:dataset_statistics}.
+Its implications for the scope of this study are discussed in \cref{sec:limitations}.
 
-The downstream targets are constructed directly from the registered EP-Online energy class, with ratings from A+ through A++++ merged into class A.
-The primary task is an independently trained binary classifier that groups energy classes into A to C and D to G.
-The division corresponds to the upper boundary of class C at 250\,kWh/(m$^2\cdot$year).
-Seven-class A to G prediction is retained as a diagnostic task for examining exact-class classification.
-Both tasks use the registered energy class; continuous energy regression is an auxiliary analysis and does not define the primary targets.
+The downstream classification targets are derived from the registered EP-Online energy class.
+Ratings from A+ through A++++ are merged into class A.
+The primary task is binary classification that distinguishes classes A--C from D--G.
+This split follows the upper boundary of class C at 250\,kWh/(m$^2\cdot$year).
+Seven-class classification from A to G is retained as a diagnostic task for evaluating performance at the original label resolution.
+Both classification tasks use the registered energy class.
+Continuous energy regression is treated as an auxiliary analysis and does not define the primary targets.
 
 \subsection{SVI Acquisition, Data Integration, and Filtering Rules}
 \label{sec:svi_acquisition_filtering}
