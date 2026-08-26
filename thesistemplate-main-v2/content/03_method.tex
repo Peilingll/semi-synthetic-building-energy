@@ -204,21 +204,26 @@ Representative crops from the four study areas and four residential building typ
 \subsection{Reference Data Construction and Final Integration}
 \label{sec:reference_data_integration}
 
-EP-Online records were restricted to existing residential buildings with an available energy class, and the certificate with the latest registration date was retained for each BAG building.
-Certificates were not explicitly filtered by calculation method.
-However, all certificates retained from the EP-Online snapshot dated 1 April 2026 were registered in 2021 or later, during the period in which NTA 8800 \parencite{NTA8800} was in effect.
-Registration date alone does not confirm the calculation method used for each certificate.
+This study constructed the reference dataset by filtering EP-Online records and linking the retained certificates to BAG and 3DBAG records.
+EP-Online records were restricted to existing residential buildings with an available energy class.
+When multiple certificates were available for the same BAG building, the certificate with the most recent registration date was retained.
+The effect of reducing multiple certificates to one target for each building is evaluated in \cref{sec:building_level_consistency}.
 
-Eligible reference records also required a construction year between 1800 and 2025, a building type mappable to one of the four residential size classes, and a reference floor count derived from 3DBAG between 1 and 30.
-BAG, 3DBAG, and EP-Online records were combined using the BAG building identifier.
-Records were excluded when their 3DBAG geometry could not be processed for the required calculations or when a TABULA-NL archetype could not be assigned.
-The remaining reference records were then combined with the curated \ac{SVI} dataset.
-Uncertainty arising from reducing multiple certificate records to a single target for each building is evaluated in \cref{sec:building_level_consistency}.
+Certificates were not filtered by calculation method.
+All certificates retained from the EP-Online snapshot dated 1 April 2026 were registered in 2021 or later, when NTA 8800 \parencite{NTA8800} was in effect.
+These registration dates are consistent with the NTA 8800 period, but they do not verify the calculation method used for each certificate.
 
-The final integration excluded 18 buildings and 88 associated images because their 3DBAG geometry could not be processed for the required calculations or because a TABULA-NL archetype could not be assigned.
-The final experimental dataset therefore contained 10,086 buildings and 47,150 images.
-Mapillary image acquisition dates were not matched to EPC registration dates, creating a possible temporal mismatch between the imagery and the reference energy class.
-The implications of this mismatch are discussed in \cref{sec:limitations}.
+The reference dataset included only buildings with a construction year from 1800 to 2025, a building type that could be mapped to one of the four residential size classes, and a reference floor count derived from 3DBAG that ranged from 1 to 30.
+The BAG, 3DBAG, and EP-Online records were combined using the BAG building identifier.
+The eligible reference records were then linked to the curated \ac{SVI} dataset using the same identifier.
+
+A linked building was retained in the final experimental dataset only if its 3DBAG geometry could be processed for the required calculations and a TABULA-NL archetype could be assigned.
+These requirements excluded 18 buildings and their 88 associated images.
+The final experimental dataset contained 10,086 buildings and 47,150 images.
+
+Mapillary image acquisition dates were not matched to EPC registration dates.
+Consequently, the imagery and the registered energy class may represent the building at different points in time.
+The implications of this temporal difference are discussed in \cref{sec:limitations}.
 
 \subsection{Data Partitioning and Cross-Validation}
 \label{sec:data_partitioning}
@@ -328,7 +333,7 @@ Building type is determined by the mode of the valid predictions.
 Construction year is determined by the median, and floor count is determined by the rounded median.
 Appendix~\ref{ch:appendix_c} reports the complete prompt wording, decoding settings, and output parsing rules for the VLM configurations.
 
-\subsection{Direct Energy Class Prediction (M2)}
+\subsection{Direct Energy Class Prediction}
 \label{sec:direct_energy_class_prediction}
 
 Following previous research that classified building energy efficiency directly from imagery \parencite{mayer2023uk,mayer2023dk}, this study evaluates M2 as a direct alternative to M3.
