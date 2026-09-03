@@ -1,0 +1,113 @@
+\documentclass[ %
+fleqn, % left aligned equations.
+11pt, % normal textsize.
+oneside, % single side page, use twoside if >50 pages.
+print=false, % sets all link colors to black and redefines colors in greyscale (lower printing costs).
+language=english, % use only ngerman or english.
+thesis=true, % set to false when writing a report
+]{CMSthesis}
+
+%======================== please fill in your data here ==========================
+\SetType{Master of Science (M.Sc.)} % Bachelor, Master.
+\SetFieldOfStudy{Information Technologies for the Built Environment} % TODO: check official program name
+% The class typesets the title with \nohyphens (hyphenation off). Justified
+% setting would therefore have to stretch the word spaces and can overrun the
+% margin, so the title is set ragged right: LaTeX breaks the lines by itself and
+% no manual \\ is needed. Keep the leading \raggedright and the closing
+% \endgraf (\SetTopic takes a short argument, so a literal \par breaks it).
+\SetTopic{\raggedright Evaluating Street-View-Derived Attributes as Substitutes for Reference Building Attributes in an Archetype-Based Building-Stock Workflow\endgraf} % Topic of your thesis
+% \SetSubtopic{TODO: subtitle if any} % Remove otherwise
+\SetAuthor{Pei-Ling Song} % comma separated list for report
+\SetMatrikulationNo{03798081} % only for thesis
+\SetEmail{peiling.song@gmail.com} % only for thesis
+\SetZipCode{80333} % only for thesis
+\SetLocation{München} % only for thesis
+\SetStreet{Arcisstrasse 21} % only for thesis
+
+\SetStart{} % Date of registration; not printed on the thesis title page
+\SetEnd{September 16, 2026} % Date of submission
+
+%======================== Add supervisors ===========================
+% \SetReferent{} and \SetReferentAffil{} add a separate "Referent" (examining
+% professor) block above the supervisors. Left unset for now.
+\AddSupervisor{Agata Dalach, Jose Quesada Allerhand} % comma separated list, one line each
+\AddAffil{\DAchair} % Add affiliation of the supervisors, deactivated for report
+
+%======================== load extra packages here ===============================
+% \usepackage{...package name...}
+
+%======================== Silbentrennung =========================================
+\hyphenation{Sil-ben-tren-nung pa-ra-me-tri-schen}
+
+%======================== Programmiersprachen ====================================
+\input{codestyles}
+
+%======================== Settings ===============================================
+% \setcounter{secnumdepth}{3} % use this if you want to increase toc depth.
+%\DefineColor[0.5]{kwcolor}{default}{Green}
+
+%======================== References and Abbreviations ===========================
+\addbibresource{./literature/references.bib}
+\addbibresource{./literature/norms.bib}
+
+\makeglossaries
+\input{content/00a_abkuerzungen} % Definition der Abkürzungen (Abbreviations)
+\input{content/00d_symbollist} % not implemented yet
+%\input{content/00e_glossary}
+
+%=================================================================================
+\begin{document}
+\pagestyle{empty}
+\pagenumbering{Alph}
+%========== Titelseite, Zusammenfassung, Inhaltsverzeichnis, etc. ================
+\maketitle
+\pagenumbering{Roman}
+\cleardoublepage
+
+\include{content/00c_abstract} % not needed in report
+
+\tableofcontents % Inhaltsverzeichnis
+\cleardoublepage
+
+%========== Optionale Verzeichnisse, nur nach Abstimmung mit Betreuer ============
+\listoffigures % List of Figures, optional
+\cleardoublepage
+
+\listoftables % List of Tables, optional
+\cleardoublepage
+
+% \lstlistoflistings % Algorithmusverzeichnis, optional
+% \cleardoublepage
+% \glsaddall
+\printglossary[type=abbreviations,style=super,title={List of Abbreviations}] % only abbreviations used in the text are listed, optional
+% \printglossary[type=symbols,style=super4col,title={List of Symbols}]   % list of symbols, optional — enable if symbols are used
+\cleardoublepage
+
+%============ Ab hier der eigentliche Inhalt der Master Thesis ===================
+\parskip 8pt % Abstand zwischen aufeinanderfolgenden Absätzen
+\pagenumbering{arabic} % 
+
+\include{content/01_introduction}
+\include{content/02_literature_review}
+\include{content/03_method}
+\include{content/04_experiments}
+\include{content/05_conclusions}
+
+%============ Anhang =============================================================
+\begin{appendix}
+\include{content/za_appendix_a}
+\include{content/zb_appendix_b}
+\include{content/zc_appendix_c}
+\end{appendix}
+\cleardoublepage
+
+%============ Literaturverzeichnis ===============================================
+\printbibliography[heading=bibintoc]
+\cleardoublepage
+\printbibliography[heading=bibintoc, type=standard, title=Standards]
+
+%=============Eidesstattliche Erklärung ==========================================
+\Declaration
+\cleardoublepage
+
+\end{document}

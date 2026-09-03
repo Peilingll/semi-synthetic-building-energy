@@ -1,0 +1,121 @@
+\chapter{Data Integrity Audits}
+\label{ch:appendix_a}
+
+This appendix records the systematic audit of data-layer assumptions conducted before the analysis was finalised.
+It documents what was checked, what was found, and how each issue was addressed.
+The main text reports only the corrected system and results, while this appendix retains the revision trail needed to reproduce the analysis and reconcile differences with earlier project-stage documents, including the interim presentation.
+
+\begin{longtblr}[
+		caption = {Audit findings and corrective actions.},
+		label = {tab:audit_findings},
+	]{
+		width = \linewidth,
+		colspec = {Q[l,m,2.6cm] X[l] X[l]},
+		colsep = 4pt,
+		row{1} = {font=\bfseries},
+		rowhead = 1,
+		rowsep = 2pt,
+	}
+	\toprule
+	Audit item                    & Finding                                                                                                                                                                                                     & Corrective action                                                                                                                                                                                                                                                \\
+	\midrule
+	Feature provenance            & Compactness and floor area were certificate fields used to calculate the target. Their inclusion as predictors constituted target leakage, and the fields would not be available for buildings without EPCs. & Removed both fields, replaced them with reconstructed 3DBAG-derived values, and updated all affected results.                                                                                                                                                     \\
+	TABULA lookup                 & The manually transcribed table contained a systematic thermal-resistance bias relative to the source workbook.                                                                                               & Replaced manual transcription with automated generation and value-level provenance. Classification results were unaffected because the lookup values are deterministic functions of type and period; physical quantities were recalculated using corrected values. \\
+	Target definition             & The registered energy class is derived from \texttt{Primaire\allowbreak Fossiele\allowbreak Energie\allowbreak EMG\allowbreak Forfaitair} where that field is available, rather than from the unadjusted primary fossil energy field. & Aligned the regression target with the registered energy class definition and recalculated the affected regression results.                                                                                                       \\
+	Count reconciliation          & Building counts reported at different stages referred to different data populations.                                                                                                                        & Standardised the convention of reporting 10,104 buildings in the filtered \ac{SVI} dataset and 10,086 buildings in the experimental dataset.                                                                                                                      \\
+	Certificate chronology        & The database contains only current certificates, and only 0.1\% of dwellings nationwide have a certificate time series.                                                                                      & The available data did not support longitudinal renovation labels; renovation detection was retained as future work in \cref{sec:future_work}.                                                                                                                    \\
+	Nature of the geometry source & 3DBAG contains automatically reconstructed outputs rather than field measurements. Floor count and the party-wall and external-wall areas are derived fields introduced after \textcite{peters2022}.          & Standardised the manuscript terminology as \emph{reconstructed geometry}, documented the derivation of each field in \cref{tab:3dbag_fields}, and identified the 3DBAG version as required metadata.                                                               \\
+	\bottomrule
+\end{longtblr}
+
+The feature-provenance finding was converted into the general eligibility rule stated in \cref{sec:downstream_model}: the provenance of every candidate predictor must be verified, and any field used to calculate the target must be excluded.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Definitions of derived 3DBAG fields referenced in \cref{sec:data_sources}.}
+	\label{tab:3dbag_fields}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,3.4cm] X[l] X[l]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Field used in this study        & Definition                                                                    & Note                                                                     \\
+		\midrule
+		\texttt{building\_height}       & \texttt{b3\_h\_max} $-$ \texttt{b3\_h\_maaiveld}                              & Ground elevation is the fifth percentile of ground-point elevations.     \\
+		\texttt{num\_floors\_estimated} & \texttt{b3\_bouwlagen}; if missing, \texttt{round(building\_height / 3.0)}     & Assumes a floor-to-floor height of 3.0\,m.                               \\
+		\texttt{floor\_area\_estimated} & \texttt{b3\_opp\_grond} $\times$ \texttt{num\_floors\_estimated}               & Replaces the certificate field used incorrectly in the earlier analysis. \\
+		\texttt{shared\_ratio}          & \texttt{b3\_opp\_scheidingsmuur / (b3\_opp\_buitenmuur + b3\_opp\_scheidingsmuur)} & Classification statistic derived from reconstructed surfaces.        \\
+		\texttt{shape\_factor}          & \texttt{envelope\_area / volume}                                              & A comparison variant that includes shared walls is also retained.        \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		% TODO (author action): insert the identifier of the 3DBAG version used.
+		\footnotesize\textit{To be completed:} identifier of the 3DBAG version used.
+	\end{minipage}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption[Sensitivity of the $H'_{tr}$ MAE to the assumed WWR.]{Sensitivity of the $H'_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) to WWR (\cref{sec:weighted_archetype_metric}; corresponding to \cref{tab:htr_metrics}).}
+	\label{tab:wwr_sensitivity}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,2.4cm] Q[r,m,2.4cm] Q[r,m,2.4cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Vision configuration   & WWR 0.15 & WWR 0.25 & WWR 0.35 \\
+		\midrule
+		DINOv2 (frozen)        & 0.150    & 0.150    & 0.150    \\
+		ResNet-50 (fine-tuned) & 0.157    & 0.157    & 0.157    \\
+		InternVL3 (zero-shot)  & 0.495    & 0.474    & 0.453    \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+The ranking and separation of the three configurations remained unchanged across the tested WWR values.
+The MAEs of the two trained configurations were unchanged at the reported precision because their cell errors were concentrated among the adjacent early periods NL.01--NL.03, which share the same window U-value of 5.2\,$\mathrm{W/(m^2K)}$ (\cref{tab:tabula_uvalues}).
+The smaller variation for InternVL3-2B is consistent with assignments that cross the change in window U-value from 5.2 to 1.8\,$\mathrm{W/(m^2K)}$.
+Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, generated by \texttt{src/stage3/htr\_instrument.py}.
+
+\begin{table}[htbp]
+	\centering
+	\caption[Per-class classification report for the binary task.]{Per-class classification report for the binary task (\cref{tab:binary_routes}; holdout set, $n = 2{,}018$; support for classes A to C = 1,416; support for classes D to G = 602).}
+	\label{tab:binary_perclass}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,2.4cm] Q[r,m,1.85cm] Q[r,m,1.85cm] Q[r,m,1.85cm] Q[r,m,1.85cm] Q[r,m,1.85cm] Q[r,m,1.85cm]},
+			colsep = 2pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Route                 & A-C P        & A-C R        & A-C F1       & D-G P        & D-G R        & D-G F1       \\
+		\midrule
+		M0 (random, expected) & 0.702          & 0.500          & 0.584          & 0.298          & 0.500          & 0.373          \\
+		M1                    & 0.715          & \textbf{0.960} & \textbf{0.819} & \textbf{0.509} & 0.098          & 0.165          \\
+		M2-DINOv2            & \textbf{0.764} & 0.731          & 0.748          & 0.426          & 0.469          & \textbf{0.447} \\
+		M2-ResNet-50         & 0.741          & 0.741          & 0.741          & 0.390          & 0.391          & 0.391          \\
+		M2-InternVL3         & 0.000          & 0.000          & 0.000          & 0.298          & \textbf{1.000} & 0.459          \\
+		M3-DINOv2            & 0.712          & 0.936          & 0.809          & 0.419          & 0.108          & 0.172          \\
+		M3-ResNet-50         & 0.710          & 0.927          & 0.804          & 0.391          & 0.110          & 0.171          \\
+		M3-InternVL3         & 0.719          & 0.698          & 0.708          & 0.335          & 0.359          & 0.347          \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+The macro values in \cref{tab:binary_routes} are the unweighted means of the two corresponding class-level values reported here.
+M1 and the trained M3 routes show high recall for classes A to C (0.927 to 0.960) but low recall for classes D to G (0.098 to 0.110).
+M2-DINOv2 provides the most balanced class-level result, with a recall of 0.469 for classes D to G and the highest precision for classes A to C.
+M2-InternVL3 assigns every building to classes D to G; its F1 score of 0.459 for these classes therefore reflects the class prevalence (precision = 0.298) rather than discrimination between buildings.
+M0 reports the analytical expectation, with precision equal to each class prevalence and recall equal to 0.5.
+Source: \texttt{reports/stage3/\allowbreak binary\_prf\_htr\_r2.json}.

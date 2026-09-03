@@ -1,0 +1,794 @@
+\chapter{Experiments and Evaluation}
+\label{ch:experiments}
+
+\section{Strategy and Metrics}
+\label{sec:strategy_metrics}
+
+\subsection{Dataset Statistics}
+\label{sec:dataset_statistics}
+
+The \ac{SVI} manifest described in \cref{sec:svi_acquisition_filtering} contains 10,104 buildings and 47,238 images.
+After linkage with the quality-controlled and TABULA-NL-matched building-level reference table, 88 images associated with 18 buildings were excluded from model development and evaluation because of invalid 3DBAG geometry or unsuccessful archetype matching.
+All experiments in this chapter therefore use the final population of \textbf{10,086 buildings and 47,150 images}, comprising 8,068 buildings in the development set and 2,018 buildings in the fixed holdout set.
+The counts of 10,104 and 10,086 do not refer to the same data stage: the former represents the \ac{SVI} delivery set after image curation, whereas the latter is the modelling sample with complete experimental inputs and reference targets.
+
+\begin{table}[htbp]
+	\centering
+	\caption{City composition and fixed partition of the experimental dataset.}
+	\label{tab:city_composition}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,1.9cm] X[r] X[r] X[r] X[r] X[r] X[r]},
+			colsep = 3pt,
+			row{1} = {font=\bfseries},
+			row{Z} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		City      & Development buildings & Development images & Holdout buildings & Holdout images & Total buildings & Total images \\
+		\midrule
+		Amsterdam & 6,416                 & 29,309             & 1,595              & 7,215           & 8,011           & 36,524       \\
+		Rotterdam & 1,129                 & 5,864              & 286                & 1,460           & 1,415           & 7,324        \\
+		Utrecht   & 384                   & 1,778              & 103                & 454             & 487             & 2,232        \\
+		Delft     & 139                   & 871                & 34                 & 199             & 173             & 1,070        \\
+		\midrule
+		Total     & 8,068                 & 37,822             & 2,018              & 9,328           & 10,086          & 47,150       \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+The experimental sample is highly concentrated geographically: Amsterdam contains 8,011 buildings, corresponding to 79.4\% of the dataset.
+Its building type composition also differs substantially from that of the eligible four-city registry reference pool, which contains 124,784 residential buildings with EPC records and valid TABULA-NL matches.
+Apartment Blocks (AB) account for approximately 88\% of the experimental sample, compared with approximately 54\% of the reference pool.
+The energy class distributions also differ, but the difference cannot be characterised simply as a shift towards better-performing buildings in the experimental sample.
+Under the binary grouping used in this study, buildings in classes A to C account for 70.3\% of the experimental sample and 76.5\% of the reference pool.
+Subsequent results should therefore be interpreted as estimates for the \ac{SVI}-covered sample rather than as unbiased estimates for the residential building stock of the four cities.
+
+This mismatch in sample composition is consistent with the contributor-driven, non-random spatial coverage of Mapillary and is also affected by the study-area boundaries, residential eligibility criteria, and image-quality filtering.
+The observed mismatch is not attributed further to specific contributor behaviour.
+The effect of sample composition on model performance is evaluated in \cref{sec:sample_composition_effects}, and the resulting limitation on the scope of the study is discussed in \cref{sec:limitations}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figures/fig/fig_4_1_distributions}
+	\caption[Composition of the experimental sample across the four study areas.]{Composition of the 10,086 buildings in the experimental sample across Amsterdam, Rotterdam, Utrecht, and Delft. Stacked bars show the number of buildings in each study area by (a) residential building type, (b) floor count from 1 to 7 and 8 or more, (c) TABULA-NL construction period, and (d) registered energy class after ratings from A+ through A++++ were combined with class A. Values above the bars report the total number of buildings in each study area.}
+	\label{fig:distributions}
+\end{figure}
+
+\subsection{Route Families and Evaluation Settings}
+\label{sec:route_families}
+
+The four evaluation routes distinguish a uniform random baseline, inference from reference attributes, direct prediction from imagery, and attribute mediated inference.
+The M identifiers refer to inference routes rather than separate datasets or downstream model families.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Route families used in the evaluation.}
+	\label{tab:route_families}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,1.2cm] X[l] X[l] Q[l,m,2.6cm]},
+			colsep = 3pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Route & Inputs                                                                  & Inference procedure                                                               & Role in the comparison       \\
+		\midrule
+		M0    & No attributes or imagery                                                    & Assign equal probability to every class and report analytic expected metrics              & Uniform random baseline      \\
+		M1    & Reference attributes, four TABULA-NL U-values, and city                     & Apply the eight reference features to the fixed LightGBM classifier                    & Reference attribute baseline \\
+		M2    & \ac{SVI}                                                                    & Predict the energy label directly from imagery for both classification tasks              & Direct visual comparator     \\
+		M3    & Attributes predicted from \ac{SVI}, four TABULA-NL U-values, and city       & Apply the eight resulting features to the same fixed LightGBM classifier as M1            & Attribute mediated route     \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+M0 represents uniform random guessing.
+Each class receives the same prediction probability within the relevant label space.
+The reported metrics are analytic expectations rather than results obtained from simulated draws.
+The expected accuracy is therefore $1/7$ for the task with seven classes, while the expected macro recall is 0.5 for the binary task.
+These values do not depend on a random seed.
+The prediction rule does not use reference labels or class prevalence.
+Evaluation label frequencies are used only to calculate metrics whose expectations depend on prevalence.
+Where needed, the analysis also reports the majority class guess to show the effect of class imbalance.
+Majority guessing yields a $\pm$1 accuracy of 0.612 and a binary accuracy of 0.702, so neither metric is interpreted in isolation.
+
+The M1 and M3 attribution comparison uses a shared fitted-model protocol.
+Separate LightGBM classifiers are trained for the binary and seven-class tasks.
+In the pooled setting, each classifier is fitted once using reference-derived features from the complete development set.
+The same fitted parameters then receive the M1 reference features and each set of M3 vision-derived features.
+In the Amsterdam holdout setting, each classifier is refitted once using reference features from the source cities and is again shared by M1 and M3 within that setting.
+The M3 minus M1 difference therefore excludes the effect of downstream retraining and reflects the combined consequences of replacing the three upstream attributes, changing the resulting TABULA-NL cell, and retrieving different U-values.
+
+The evaluation uses two settings.
+The primary setting uses the fixed building level split defined in \cref{sec:data_partitioning}, comprising 8,068 development buildings and a fixed holdout set of 2,018 buildings.
+The five development folds support model selection and out-of-fold (OOF) analyses, whereas all pooled headline results are reported on the untouched holdout set.
+The separate Amsterdam holdout evaluation trains and selects all trainable components using 2,075 buildings from Rotterdam, Utrecht, and Delft and evaluates them on 8,011 Amsterdam buildings.
+The original pooled split is not retained in this setting.
+Because Amsterdam is the only held-out city, this experiment provides evidence for transfer to one target city rather than an estimate of average cross-city generalisability.
+
+The ResNet-50, DINOv2, and InternVL3-2B configurations retain the parameter-update scopes, image counts, and multi-image aggregation procedures defined in \cref{sec:vision_inference_strategies} and \cref{tab:vision_configs}.
+Each configuration produces a corresponding M3 attribute mediated variant and a separately configured M2 direct energy class comparator.
+Their training procedures are not repeated here.
+
+\subsection{Prediction Tasks and Metrics}
+\label{sec:prediction_tasks_metrics}
+
+The upstream evaluation applies a separate set of metrics to construction year, building type, and floor count.
+Construction year prediction is evaluated using mean absolute error (MAE), $R^2$, and TABULA period accuracy.
+Because the TABULA periods have unequal widths, MAE alone does not indicate whether a prediction crosses a period boundary.
+The $R^2$ score compares the prediction error with the variation in construction year within the evaluation set and helps identify cases in which a low MAE partly reflects a narrow target distribution.
+Building type prediction is evaluated primarily using macro F1, with accuracy reported as a supplementary metric.
+The difference between accuracy and macro F1 indicates the extent to which aggregate performance is influenced by class imbalance.
+Floor count prediction is evaluated using MAE and $R^2$.
+
+Archetype assignment is evaluated at the level of the joint TABULA-NL cell because the lookup depends on both size class and construction period.
+Joint accuracy is defined as the proportion of buildings for which both attributes are assigned correctly:
+
+\begin{equation}
+	\label{eq:joint_acc}
+	\mathrm{JointAcc}
+	= \frac{1}{N}\sum_{i=1}^{N}
+	\mathbf{1}\!\left[\hat{s}_i = s_i \;\land\; p(\hat{y}_i) = p(y_i)\right].
+\end{equation}
+
+Uniform random assignment across the 24 cells has an expected joint accuracy of $1/24 \approx 0.042$.
+Macro-cell recall is also reported as the unweighted mean recall across occupied cells, thereby revealing performance outside the dominant cells.
+Because the evaluation population is highly concentrated, the majority cell baseline reaches a joint accuracy of 0.790 in the pooled holdout set and 0.868 in the Amsterdam population.
+Joint accuracy is therefore interpreted relative to both the uniform and majority cell baselines.
+
+The downstream energy class evaluation comprises an independently trained binary task and a diagnostic task covering the seven individual classes from A to G.
+The primary task classifies buildings into classes A to C and D to G.
+This division corresponds to the upper boundary of class C at 250\,kWh/(m$^2\cdot$year) and follows the coarse grouping used by \textcite{sun2026}.
+The experimental population contains 70.3\% of buildings in classes A to C and 29.7\% in classes D to G.
+Prediction across classes A to G is retained as a diagnostic analysis of exact class separability and the limitations of the available predictors (\cref{sec:sample_composition_effects}).
+The binary classifier is trained independently using a binary objective.
+Its predictions are not obtained by collapsing the outputs of the model trained for classes A to G.
+
+The downstream metrics account for both class imbalance and the ordinal relationship among energy classes.
+For prediction across classes A to G, performance is reported using macro F1, exact accuracy, and $\pm$1 accuracy.
+Macro F1 assigns equal importance to each energy class.
+Exact accuracy supports comparison with studies that report this metric, including \textcite{hettinga2023}.
+The $\pm$1 accuracy measures whether the predicted class lies within one ordinal class of the reference class.
+M0 provides the corresponding lower baseline.
+However, a majority class prediction already yields a $\pm$1 accuracy of 0.612, compared with approximately 0.39 under uniform random prediction.
+The $\pm$1 accuracy is therefore interpreted only alongside macro F1 and the relevant baselines.
+
+For the binary task, performance is reported using macro precision, macro recall, and macro F1 at the default probability threshold of 0.5.
+This selection is consistent with the reporting of macro averages in the comparison literature.
+Because aggregate metrics can conceal asymmetric predictions, precision and recall are also reported separately for each class, with particular attention to recall for classes D to G.
+Binary accuracy is interpreted relative to the majority baseline, which reaches 0.702 by assigning every building to classes A to C.
+The principal LightGBM protocol does not apply class weighting.
+This setting preserves the observed class distribution and maintains a common model configuration across tasks.
+Appendix~\ref{ch:appendix_a} documents a sensitivity analysis using class weighting.
+
+Error attribution separates failures introduced by upstream visual extraction from those that remain in the downstream classifier.
+For M3, a case with correct upstream attributes but an incorrect energy class prediction is attributed to the downstream task.
+Cases containing an upstream attribute error are attributed to visual extraction.
+This decomposition and the performance difference between M1 and M3 provide complementary measures of the downstream cost of attribute substitution.
+
+The metrics are defined formally as follows.
+Let $N$ denote the number of evaluated buildings, $y_i$ the reference value, $\hat{y}_i$ the prediction, and $K$ the number of classes:
+
+\begin{itemize}
+	\item $\mathrm{Accuracy} = N^{-1}\sum_i \mathbf{1}[\hat{y}_i = y_i]$.
+	\item For each class $c$, precision is the proportion of predictions assigned to $c$ that are correct, recall is the proportion of reference observations in $c$ that are recovered, and $F1_c = 2P_cR_c/(P_c+R_c)$.
+	\item Macro precision, macro recall, and macro F1 are the unweighted means of the corresponding class values, with weight $1/K$ assigned to each class rather than to each building.
+	\item $\mathrm{MAE} = N^{-1}\sum_i |\hat{y}_i - y_i|$.
+	\item $R^2 = 1 - \sum_i(\hat{y}_i-y_i)^2 / \sum_i(y_i-\bar{y})^2$, where $\bar{y}$ is the mean reference value. Zero is equivalent to predicting the reference mean. Negative values indicate poorer performance than predicting that mean.
+	\item $\mathrm{PeriodAcc} = N^{-1}\sum_i \mathbf{1}[p(\hat{y}_i) = p(y_i)]$, where $p(\cdot)$ maps a construction year to a TABULA period.
+	\item $\mathrm{Acc}_{\pm 1} = N^{-1}\sum_i \mathbf{1}[|r(\hat{y}_i)-r(y_i)| \leq 1]$, where $r(\cdot)$ gives the ordinal rank of an energy class from A to G.
+	\item Macro-cell recall is the unweighted mean recall across occupied TABULA-NL cells.
+\end{itemize}
+
+\subsection{Physically Weighted Metric for Archetype Differences}
+\label{sec:weighted_archetype_metric}
+
+The physically weighted metric distinguishes between archetype assignment errors according to their effects on transmission heat transfer.
+Metrics evaluated at the cell level record only whether an assignment is correct.
+They therefore assign equal weight to confusion between adjacent cells with similar U-values and confusion between distant cells with substantially different U-values.
+To account for this limitation, the transmission heat transfer coefficient $H'_{tr}$ is calculated for each building using the TABULA U-values of the assigned cell and the reconstructed 3DBAG envelope areas.
+Shared walls are treated as adiabatic, and the window-to-wall ratio (WWR) is the only assumed input.
+Values obtained from predicted and reference cells are compared using MAE and $R^2$ across buildings, together with a bias in aggregate transmission heat transfer weighted by floor area.
+The aggregate measure retains systematic error, although errors with opposite signs can offset one another.
+This analysis compares the physical implications of predicted and reference archetype assignments.
+It does not validate either assignment against measured heat loss or energy consumption.
+
+For building $i$, the transmission heat transfer coefficient is defined as
+
+\begin{equation}
+	\label{eq:htr}
+	\begin{split}
+		H'_{tr,i} = \frac{1}{A_{floor,i}} \Bigl[
+		 & U_{wall,i}A_{wall,i}(1-\mathrm{WWR}) + U_{window,i}A_{wall,i}\,\mathrm{WWR}                     \\
+		 & + U_{roof,i}A_{roof,i} + U_{floor,i}A_{ground,i} \Bigr], \qquad [\mathrm{W/(K\,m^2)}] .
+	\end{split}
+\end{equation}
+
+Agreement between the values obtained from predicted and reference cells is quantified using the coefficient of determination
+
+\begin{equation}
+	\label{eq:htr_r2}
+	R^2_{H'_{tr}}
+	= 1 - \frac{\sum_i\left(H'_{tr,\mathrm{pred},i} - H'_{tr,\mathrm{ref},i}\right)^2}
+	{\sum_i\left(H'_{tr,\mathrm{ref},i} - \overline{H'_{tr,\mathrm{ref}}}\right)^2},
+\end{equation}
+
+and the signed bias in aggregate transmission heat transfer is defined as
+
+\begin{equation}
+	\label{eq:bias_stock}
+	\mathrm{Bias}_{stock}
+	= \frac{\sum_i H'_{tr,\mathrm{pred},i}A_{floor,i} - \sum_i H'_{tr,\mathrm{ref},i}A_{floor,i}}
+	{\sum_i H'_{tr,\mathrm{ref},i}A_{floor,i}} .
+\end{equation}
+
+\Cref{eq:htr} is evaluated twice for each building, once using the U-values retrieved from the reference cell and once using those retrieved from the predicted cell.
+Both calculations use the same reconstructed areas and WWR.
+Correct cell assignment therefore produces zero error.
+\Cref{eq:htr_r2} measures agreement relative to the variation in the values obtained from reference cells.
+\Cref{eq:bias_stock} retains the direction of the aggregate error.
+Zero indicates no net aggregate bias.
+
+The inputs required by \cref{eq:htr} and their data sources are summarised in \cref{tab:htr_inputs}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Inputs and data sources for calculating $H'_{tr}$.}
+	\label{tab:htr_inputs}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,2.9cm] X[l] X[l] X[l]},
+			colsep = 3pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Symbol                                     & Quantity                                                                        & Source                                                                                    & Interpretation                                     \\
+		\midrule
+		$U_{wall}$, $U_{roof}$, $U_{floor}$, $U_{window}$ & Envelope U-values & TABULA-NL cell lookup (\cref{sec:uvalue_lookup}) applied separately to the reference and predicted cells & Values shared by buildings assigned to the same cell \\
+		$A_{wall}$                                 & External facade area after excluding shared walls treated as adiabatic & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{roof}$                                 & Roof area & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{ground}$                               & Area in contact with the ground & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Geometry reconstructed for each building \\
+		$A_{floor}$                                & Floor area used as the denominator in \cref{eq:htr} and as the weight in \cref{eq:bias_stock} & Reconstructed 3DBAG geometry, with its derivation reported in \cref{tab:3dbag_fields} & Geometry reconstructed for each building \\
+		WWR                                        & Window-to-wall ratio used to divide the facade into window and opaque wall areas & Assumed baseline value of 0.25 & Only input not obtained separately for each building \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+The sensitivity analysis evaluates whether the assumed WWR affects the comparison among the vision configurations.
+The 3DBAG geometry does not distinguish window openings within the facade, although window U-values are substantially higher than wall U-values for the same construction period.
+For example, the NL.01 window and wall U-values are 5.2 and 1.61\,$\mathrm{W/(m^2K)}$, respectively (\cref{tab:tabula_uvalues}).
+The baseline value of $\mathrm{WWR} = 0.25$ assigns 25\% of the facade area to windows.
+Because WWR is the only assumed input, the calculation is repeated using values of 0.15 and 0.35 while all other inputs remain fixed.
+These values provide a symmetric local variation of 0.10 around the baseline.
+This procedure is treated as a local sensitivity analysis rather than an uncertainty analysis \parencite{pang2020}.
+The calculations based on reference and predicted cells use the same WWR and reconstructed areas at each tested value.
+Their difference is therefore determined only by the U-values associated with the respective archetype cells.
+The resulting metrics are reported in \cref{tab:wwr_sensitivity}.
+
+\section{Quantitative Results}
+\label{sec:quantitative_results}
+
+\subsection{Upstream Attribute Extraction}
+\label{sec:upstream_attribute_extraction}
+
+The three vision configurations produced a consistent overall ranking on the fixed holdout set (\cref{tab:upstream_attributes}; metric definitions are provided in \cref{sec:prediction_tasks_metrics}).
+DINOv2 achieved the best result in six of the seven reported metric columns: building type macro F1 (0.520), construction year MAE (9.45 years), construction year $R^2$ (0.679), period accuracy (0.901), floor count MAE (0.377), and floor count $R^2$ (0.569).
+ResNet-50 achieved a slightly higher building type accuracy than DINOv2 (0.915 versus 0.901), but a lower macro F1 (0.492 versus 0.520).
+InternVL3-2B produced the lowest value for every reported metric.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Upstream attribute extraction on the holdout set ($n = 2{,}018$).}
+	\label{tab:upstream_attributes}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,3.1cm] X[r] X[r] X[r] X[r] X[r] X[r] X[r]},
+			colsep = 2pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Vision configuration        & Type accuracy   & Type macro F1   & Year MAE (years) & Year $R^2$      & Period accuracy & Floor MAE (floors) & Floor $R^2$  \\
+		\midrule
+		DINOv2, frozen backbone     & 0.901           & \textbf{0.520}  & \textbf{9.45}    & \textbf{0.679}  & \textbf{0.901}  & \textbf{0.377}  & \textbf{0.569}  \\
+		ResNet-50, full fine-tuning & \textbf{0.915}  & 0.492           & 11.82            & 0.549           & 0.892           & 0.428           & 0.551           \\
+		InternVL3-2B, zero-shot     & 0.495           & 0.246           & 30.65            & $-$0.543        & 0.769           & 0.708           & 0.042           \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+The difference between accuracy and macro F1 indicates that aggregate building type accuracy was strongly influenced by the dominant Apartment Block class.
+For DINOv2, the class recalls were 0.93 for AB, 0.77 for TH, 0.54 for SFH, and 0.00 for MFH (\cref{fig:type_confusion}).
+The errors were concentrated in the larger neighbouring classes: 46\% of SFH buildings were classified as TH, and 83\% of MFH buildings were classified as AB.
+ResNet-50 showed the same imbalance, achieving higher accuracy but lower macro F1 than DINOv2.
+Macro F1 therefore provides the more informative summary of performance across the four building types.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figures/fig/fig_4_2_type_confusion}
+	\caption[Building type confusion matrices for the three vision configurations.]{Row-normalised building type confusion matrices for the three vision configurations on the holdout set. Each cell also reports the number of buildings.}
+	\label{fig:type_confusion}
+\end{figure}
+
+Construction year showed the strongest building-level predictive performance among the three attributes.
+The DINOv2 $R^2$ of 0.679 was numerically close to the value of 0.710 reported for a fully fine-tuned InternVL3-2B model in OpenFACADES \parencite{liang2025}.
+Because the studies used different datasets and label sources, this comparison indicates only the approximate performance range and is not a direct benchmark.
+In contrast, zero-shot InternVL3-2B obtained a negative construction year $R^2$ of $-0.543$.
+Its outputs were concentrated at a small set of years, including 1850, 1900, 1950, 1970, and 1980, and did not reproduce the building-level variation in the reference years (\cref{fig:year_floor_scatter}).
+
+Period accuracy expresses construction year error in terms of its consequence for TABULA cell assignment.
+DINOv2 assigned 90.1\% of the buildings to the same construction period as the reference year.
+The remaining errors were not distributed symmetrically.
+Three quarters of the development buildings were constructed before 1933, and predictions for newer buildings tended to shift towards earlier years.
+This regression-to-the-mean pattern is visible for reference years after approximately 1965, where the predictions are concentrated below the diagonal in \cref{fig:year_floor_scatter}.
+The resulting stock-level heat loss bias is reported in \cref{sec:weighted_archetype_scoring}.
+
+Floor count MAE was 0.377 for DINOv2 and 0.428 for ResNet-50.
+However, most buildings in the dataset had between two and six floors and were apartment blocks (\cref{fig:year_floor_scatter}).
+The low MAE therefore partly reflects the restricted target range.
+The corresponding $R^2$ values of 0.569 and 0.551 show that both trained configurations captured building-level variation beyond a mean prediction, but the narrow floor count distribution of the evaluated stock limits this result.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figures/fig/fig_4_4_pred_vs_true_r2}
+	\caption[Predicted and reference construction year and floor count.]{Predicted and reference values for construction year (top row) and floor count (bottom row). Columns show DINOv2, ResNet-50, and InternVL3-2B; each panel reports holdout MAE and $R^2$.}
+	\label{fig:year_floor_scatter}
+\end{figure}
+
+\subsection{Joint-Cell Assignment}
+\label{sec:joint_cell_assignment}
+
+Joint-cell assignment results are reported in \cref{tab:joint_cell}.
+DINOv2 and ResNet-50 achieved almost identical joint accuracies of 0.825 and 0.826, respectively, compared with an expected accuracy of 0.042 under uniform random assignment to the 24 cells.
+However, 1,595 of the 2,018 holdout buildings belonged to the modal AB\,\textbar\,NL.01 cell (\cref{fig:cell_recall}).
+Assigning every building to this cell would achieve an accuracy of 0.790, leaving gains of only 3.5 and 3.6 percentage points for DINOv2 and ResNet-50.
+InternVL3-2B achieved a joint accuracy of 0.342, below the majority-cell baseline.
+
+Macro-cell recall shows that performance was unevenly distributed across the occupied cells.
+DINOv2 achieved recalls of 0.93 for AB\,\textbar\,NL.01 and 0.79 for TH\,\textbar\,NL.01, whereas recall was generally no higher than 0.25 for cells after 1964 and was zero for all MFH cells (\cref{fig:cell_recall}).
+Its unweighted recall across the 21 occupied cells was 0.180, compared with 0.048 for a classifier that always assigns the majority cell.
+InternVL3-2B achieved a similar macro-cell recall of 0.168 through a different prediction pattern: its assignments were dispersed across more cells and included correct predictions for cells with very few observations, such as SFH\,\textbar\,NL.02 ($n = 1$).
+Because macro-cell recall gives each occupied cell equal weight, this value is sensitive to such sparse cells and does not indicate stable coverage of the TABULA matrix.
+
+\begin{table}[htbp]
+	\centering
+	\caption[Joint-cell assignment on the holdout set.]{Joint-cell assignment on the holdout set (uniform random expectation = 0.042; majority-cell accuracy = 0.790).}
+	\label{tab:joint_cell}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,3.2cm] Q[r,m,3.6cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Vision configuration   & Joint accuracy & Macro-cell recall \\
+		\midrule
+		DINOv2 (frozen)        & 0.825          & 0.180             \\
+		ResNet-50 (fine-tuned) & 0.826          & 0.128             \\
+		InternVL3 (zero-shot)  & 0.342          & 0.168             \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figures/fig/fig_4_3_cell_recall_heatmap}
+	\caption[Per-cell recall across the 24 TABULA-NL cells.]{Per-cell recall across the 24 TABULA-NL cells on the holdout set. Each cell reports recall and the number of buildings; cells without observations are shown in grey.}
+	\label{fig:cell_recall}
+\end{figure}
+
+\subsection{Physically Weighted Archetype-Difference Scoring}
+\label{sec:weighted_archetype_scoring}
+
+Joint-cell metrics record whether an assignment is correct but do not distinguish errors by the thermal differences between cells.
+\Cref{tab:htr_metrics} therefore reports the difference in $H'_{tr}$ defined in \cref{sec:weighted_archetype_metric}.
+The separation between the trained and zero-shot configurations was larger on this scale than in joint accuracy.
+DINOv2 and InternVL3-2B achieved joint accuracies of 0.825 and 0.342, respectively, while their building-level $H'_{tr}$ MAEs differed by a factor of 3.2 (0.150 versus 0.474\,$\mathrm{W/(K\,m^2)}$).
+The larger error indicates that the zero-shot assignments also produced greater differences in the associated thermal transmittance values.
+For example, the wall U-value decreases from 1.61\,$\mathrm{W/(m^2K)}$ in NL.01 to 0.27\,$\mathrm{W/(m^2K)}$ in NL.05 (\cref{tab:tabula_uvalues}).
+The $H'_{tr}$ $R^2$ values were 0.806 for DINOv2, 0.771 for ResNet-50, and 0.439 for InternVL3-2B.
+Because this comparison does not use energy classes, it is independent of the building-level class consistency examined in \cref{sec:building_level_consistency}.
+
+All three configurations overestimated the floor-area-weighted stock total: the biases were $+10.0$\%~for DINOv2, $+10.5$\%~for ResNet-50, and $+16.6$\%~for InternVL3-2B (\cref{tab:htr_metrics}).
+The common direction is consistent with the construction year pattern in \cref{sec:upstream_attribute_extraction}.
+Newer buildings were often assigned to earlier periods with higher U-values, which increased estimated heat loss under the as-built archetype representation.
+The metric definition limits this interpretation: the $H'_{tr}$ difference is a physically weighted score relative to reference-cell assignment, not validation against measured heat loss or energy consumption.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Physically weighted archetype-difference metrics on the holdout set (WWR = 0.25).}
+	\label{tab:htr_metrics}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,3.4cm] Q[r,m,2.2cm] Q[r,m,3.4cm]},
+			colsep = 3pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Vision configuration   & $H'_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) & $H'_{tr}$ $R^2$ & Stock-level total heat loss bias \\
+		\midrule
+		DINOv2 (frozen)        & 0.150                                 & 0.806           & $+10.0$\%                        \\
+		ResNet-50 (fine-tuned) & 0.157                                 & 0.771           & $+10.5$\%                        \\
+		InternVL3 (zero-shot)  & 0.474                                 & 0.439           & $+16.6$\%                        \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		\footnotesize\textit{Note.} The ranking remained unchanged for WWR values of 0.15, 0.25, and 0.35 (\cref{tab:wwr_sensitivity}).
+	\end{minipage}
+\end{table}
+
+\subsection{Downstream Route Comparison}
+\label{sec:downstream_route_comparison}
+
+The downstream routes were compared on the same fixed holdout subset of $n = 2{,}018$ buildings for which all required predictions were available.
+The binary task that distinguishes classes A to C from classes D to G is reported as the primary downstream task, followed by the original seven-class task as a diagnostic assessment of exact energy class prediction.
+
+\subsubsection*{Binary primary task}
+
+\Cref{tab:binary_routes} compares the routes on the independently trained binary task, with classes D to G defined as the positive class.
+Macro precision, macro recall, and macro F1 are reported at the default threshold of 0.5.
+Selected class-level values clarify asymmetric prediction patterns, while the complete classification reports are provided in \cref{tab:binary_perclass}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Binary downstream route comparison on the holdout set ($n = 2{,}018$).}
+	\label{tab:binary_routes}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,2.4cm] X[l] Q[r,m,2.1cm] Q[r,m,2.1cm] Q[r,m,1.9cm]},
+			colsep = 3pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Route          & Inference configuration                        & Macro precision & Macro recall   & Macro F1       \\
+		\midrule
+		M0             & Uniform random guessing (expected)             & 0.500           & 0.500          & 0.479          \\
+		M1             & Reference attributes                           & \textbf{0.612}  & 0.529          & 0.492          \\
+		M2-DINOv2     & Direct energy class prediction, trained head     & 0.595           & \textbf{0.600} & \textbf{0.597} \\
+		M2-ResNet-50  & Direct energy class prediction, full fine-tuning & 0.566           & 0.566          & 0.566          \\
+		M2-InternVL3  & Direct zero-shot binary prompting              & 0.149           & 0.500          & 0.230          \\
+		M3-DINOv2     & Attribute mediated, trained head               & 0.566           & 0.522          & 0.490          \\
+		M3-ResNet-50  & Attribute mediated, full fine-tuning           & 0.550           & 0.518          & 0.488          \\
+		M3-InternVL3  & Attribute mediated, zero-shot                  & 0.527           & 0.528          & 0.528          \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+Among the trained routes, M2-DINOv2 achieved the highest macro F1 (0.597) and macro recall (0.600), followed by M2-ResNet-50 with a macro F1 of 0.566.
+M2-DINOv2 recalled 46.9\% of buildings in classes D to G while retaining a precision of 0.764 for classes A to C (\cref{tab:binary_perclass}), indicating a more balanced result across the two groups than the attribute mediated routes.
+Its macro F1 was numerically close to the 0.588 reported for a Copenhagen model using street-view and aerial imagery \parencite{mayer2023dk}.
+The populations, class boundaries, and evaluation protocols differ, so this value is included as contextual evidence rather than as a direct performance comparison.
+
+M1 attained the highest macro precision (0.612), but its macro F1 remained close to the random-guessing expectation (0.492 versus 0.479).
+This combination reflects a strongly asymmetric prediction pattern: M1 recalled 96.0\% of buildings in classes A to C but only 9.8\% of those in classes D to G.
+Replacing the reference attributes with predictions from the trained vision models changed the aggregate performance only slightly.
+M3-DINOv2 and M3-ResNet-50 achieved macro F1 values of 0.490 and 0.488, respectively, and showed similar class-level asymmetry, with recall values of 0.108 and 0.110 for classes D to G.
+Thus, under the present configuration, attribute substitution had little effect on the downstream metric, although all three routes remained strongly oriented towards classes A to C at the default threshold.
+
+The two InternVL3 routes produced different outcomes.
+Direct binary prompting assigned every building to classes D to G, resulting in a macro F1 of 0.230 and no discrimination among buildings.
+Attribute mediation increased macro F1 to 0.528, with a recall of 0.359 and precision of 0.335 for classes D to G.
+The higher downstream score coincided with a less concentrated distribution of predicted classes, but not with stronger upstream attribute extraction: InternVL3-2B obtained the lowest upstream scores among the three configurations (\cref{tab:upstream_attributes}).
+\Cref{sec:cross_city_transfer} next examines whether the advantage of the trained direct routes was retained when Amsterdam was excluded from training.
+
+\subsubsection*{Seven-class diagnostic task}
+
+The original seven-class energy class task was retained to determine whether the route-level patterns persisted when each energy class was predicted separately.
+\Cref{tab:sevenclass_routes} reports macro F1, exact accuracy, and $\pm$1 accuracy on the same holdout subset.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Seven-class diagnostic performance on the same holdout set ($n = 2{,}018$).}
+	\label{tab:sevenclass_routes}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,2.6cm] Q[r,m,2.6cm] Q[r,m,2.6cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Route          & Macro F1       & Accuracy       & $\pm$1 accuracy \\
+		\midrule
+		M0             & 0.127          & 0.143          & 0.390           \\
+		M1             & 0.172          & \textbf{0.356} & \textbf{0.655}  \\
+		M2-DINOv2     & \textbf{0.213} & 0.266          & 0.544           \\
+		M2-ResNet-50  & 0.201          & 0.263          & 0.570           \\
+		M2-InternVL3  & 0.015          & 0.046          & 0.167           \\
+		M3-DINOv2     & 0.150          & 0.292          & 0.589           \\
+		M3-ResNet-50  & 0.149          & 0.282          & 0.587           \\
+		M3-InternVL3  & 0.137          & 0.278          & 0.591           \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+Class-balanced performance on the seven-class task remained low across all routes.
+M2-DINOv2 achieved the highest macro F1 at 0.213, while even M1, which used reference attributes, reached only 0.172.
+The trained M3-DINOv2 and M3-ResNet-50 routes followed at 0.150 and 0.149, respectively.
+The route ranking nevertheless depended on the metric: M1 achieved the highest exact accuracy (0.356) and $\pm$1 accuracy (0.655), whereas the trained direct routes achieved higher macro F1 but lower exact accuracy.
+
+The $\pm$1 accuracy counts a prediction as correct when it matches the reference energy class or differs by one adjacent class.
+For example, C, D, and E are accepted when the reference class is D.
+This tolerance explains the comparatively high values: always predicting the modal class already yields a $\pm$1 accuracy of 0.612 on this holdout set, and only M1 exceeded that baseline.
+The metric therefore shows that some errors occurred between neighbouring classes; it does not demonstrate reliable exact classification from A to G.
+The zero-shot comparison followed the same pattern as the binary task, with macro F1 increasing from 0.015 under direct prompting to 0.137 under attribute mediation.
+Factors associated with seven-class performance are examined in \cref{sec:diagnostic_analyses}.
+
+\subsection{Cross-City Transfer to Amsterdam}
+\label{sec:cross_city_transfer}
+
+The pooled evaluations in the preceding sections used development and holdout buildings drawn from the same four cities.
+The transfer evaluation instead trained and selected all trainable components using 2,075 buildings from Rotterdam, Utrecht, and Delft and evaluated them on all 8,011 Amsterdam buildings.
+No Amsterdam building or energy class was used for model fitting or selection.
+This setting approximates deployment to a target city without labelled training data.
+Because Amsterdam was the only city held out, the experiment tests transfer to Amsterdam but does not estimate average cross-city generalisability.
+
+\Cref{tab:loco_upstream} summarises the upstream DINOv2 performance under the pooled and leave-one-city-out (LOCO) evaluations.
+Construction year MAE increased from 9.45 to 19.50 years, period accuracy decreased from 0.901 to 0.876, and joint-cell accuracy decreased from 0.825 to 0.799.
+Under LOCO evaluation, joint-cell accuracy was also below Amsterdam's majority-cell baseline of 0.868.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Upstream DINOv2 performance under pooled and LOCO evaluation.}
+	\label{tab:loco_upstream}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,3.0cm] Q[r,m,3.0cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Upstream metric (DINOv2) & Pooled & LOCO  \\
+		\midrule
+		Year MAE (years)         & 9.45   & 19.50 \\
+		Period accuracy          & 0.901  & 0.876 \\
+		Joint-cell accuracy      & 0.825  & 0.799 \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		\footnotesize\textit{Note.} Pooled and LOCO results are based on different test populations; the differences therefore do not isolate the effect of excluding Amsterdam from training.
+	\end{minipage}
+\end{table}
+
+The analysis used a control sample of equal size to distinguish target city exclusion from the reduction in training set size.
+Both control arms were trained on 2,075 buildings using the same cached DINOv2 embeddings, prediction head, and training protocol, and were evaluated on the same disjoint Amsterdam holdout set of 1,595 buildings.
+The source-only arm excluded Amsterdam, whereas the matched arm sampled from all four cities after removing the test buildings.
+Excluding Amsterdam increased construction year MAE from 8.17 to 18.13 years and reduced building type macro F1 from 0.525 to 0.397.
+Joint-cell accuracy also decreased from 0.905 to 0.841, falling below the majority-cell baseline of 0.866.
+Within this control, excluding target-city examples accounted for more of the increase in construction year error than the reduction in training-set size.
+Because the control used cached embeddings rather than the full Stage~1 training procedure, only the difference between its two arms is interpreted.
+
+\Cref{tab:loco_routes} compares the selected trained routes on the Amsterdam target set.
+The pooled advantage of M2-DINOv2 over M1 was not retained: its margin changed from $+0.041$ to $-0.003$ in seven-class macro F1 and from $+0.105$ to $+0.003$ in binary macro F1.
+The trained route families achieved similar binary macro F1 values, ranging from 0.490 to 0.499 and lying within 0.019 of the uniform random expectation of 0.480.
+M1 achieved 0.496 despite using reference attributes, showing that errors in the vision-derived inputs alone do not account for the observed performance.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Selected trained-route performance in the Amsterdam holdout evaluation ($n = 8{,}011$).}
+	\label{tab:loco_routes}
+	\footnotesize
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[l,m,2.3cm] X[l] Q[r,m,2.0cm] Q[r,m,2.2cm] Q[r,m,2.0cm] Q[r,m,1.8cm]},
+			colsep = 2pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Route         & Inference configuration                    & Seven-class macro F1 & Binary macro precision & Binary macro recall & Binary macro F1 \\
+		\midrule
+		M0            & Uniform random guessing (expected)         & 0.128                & 0.500                  & 0.500               & 0.480           \\
+		M1            & Reference attributes                       & 0.143                & 0.501                  & 0.501               & 0.496           \\
+		M2-DINOv2    & Direct energy class prediction, trained head & 0.140                & 0.514                  & 0.510               & 0.499           \\
+		M3-DINOv2    & Attribute mediated, trained head           & 0.141                & 0.500                  & 0.500               & 0.490           \\
+		M3-ResNet-50 & Attribute mediated, full fine-tuning       & 0.146                & 0.509                  & 0.506               & 0.491           \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		\footnotesize\textit{Note.} M2-ResNet-50 was not evaluated. InternVL3 routes are excluded because their results were available only for the 1,595-building matched subset.
+	\end{minipage}
+\end{table}
+
+\Cref{fig:pooled_vs_loco} places the pooled and Amsterdam holdout results side by side for the upstream attributes and the three downstream routes.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figures/fig/fig_4_5_pooled_vs_loco}
+	% Caption written for this figure: draft V9 reports the underlying values in
+	% Tables 4.7 and 4.8 but does not yet provide a caption for the plot.
+	\caption[Pooled and Amsterdam holdout performance.]{Comparison of pooled and Amsterdam holdout (LOCO) performance. The upper panels report DINOv2 construction year MAE and building type accuracy. The lower panels report binary macro F1 for M1, M2 using DINOv2, and M3 using DINOv2. The dashed line shows the M0 uniform random guessing expectation. Because the two settings use different evaluation populations, their differences do not isolate the effect of excluding Amsterdam from model development.}
+	\label{fig:pooled_vs_loco}
+\end{figure}
+
+Taken together, the transfer results show two concurrent patterns.
+First, vision-based construction year prediction deteriorated when Amsterdam examples were excluded from training.
+Second, the reference-attribute route also provided limited downstream discrimination in the highly concentrated Amsterdam sample.
+The M3 minus M1 comparison isolates the change in attribute source under a shared downstream classifier.
+In contrast, the M2 versus M1 comparison remains a route-level comparison because both the input representation and model architecture differ.
+
+\section{Diagnostic Analyses}
+\label{sec:diagnostic_analyses}
+
+The route-level comparisons establish the overall effect of replacing reference attributes with vision-derived inputs, but they do not identify which attributes account for the observed differences or how the composition and definition of the evaluation target constrain performance.
+The following analyses therefore examine three factors: the downstream contribution of individual attributes and the extent to which geometry can be predicted from \ac{SVI}, the consistency of energy classes at building level, and the effect of sample composition on seven-class classification.
+
+\subsection{Downstream Feature Utility and Prediction from SVI}
+\label{sec:feature_utility}
+
+\Cref{tab:feature_ablation} evaluates the marginal contribution of the existing downstream attributes and the additional contribution of reconstructed geometry.
+Among the attributes already used by the reference route, construction year produced the largest performance reduction when removed: macro F1 decreased by 0.032 in the seven-class task and by 0.030 in the binary task.
+Removing floor count produced smaller reductions of 0.012 and 0.011, while building type and city had limited marginal effects under the full feature configuration.
+
+Removing the four TABULA-derived U-values produced virtually no change in either task.
+This result reflects conditional redundancy rather than a general lack of relevance of thermal properties: once building type and construction period are included, the tabulated U-values are deterministic functions of those attributes and do not provide independent building-level information.
+
+\begin{table}[htbp]
+	\centering
+	\caption[Changes in cross-validated macro F1 under feature removal and geometry augmentation.]{Changes in cross-validated macro F1 under feature removal and geometry augmentation (development set, five-fold OOF).}
+	\label{tab:feature_ablation}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,3.6cm] Q[r,m,3.0cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Operation                                    & Seven-class $\Delta$ macro F1 & Binary $\Delta$ macro F1 \\
+		\midrule
+		Remove construction year                     & $\mathbf{-0.032}$             & $\mathbf{-0.030}$        \\
+		Remove floor count                           & $-0.012$                      & $-0.011$                 \\
+		Remove building type                         & $-0.003$                      & $+0.003$                 \\
+		Remove TABULA U-values                       & 0.000                         & $+0.002$                 \\
+		Remove city                                  & $-0.009$                      & $-0.006$                 \\
+		Add reconstructed shape factor               & $+0.027$                      & $+0.063$                 \\
+		Add reconstructed floor area                 & $+0.028$                      & $+0.071$                 \\
+		Add all four reconstructed geometry features & $+0.037$                      & $+0.104$                 \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		\footnotesize\textit{Note.} The full-feature macro F1 baselines were 0.181 for the seven-class task and 0.478 for the binary task.
+	\end{minipage}
+\end{table}
+
+The contribution of reconstructed geometry was task-dependent.
+Adding all four geometry features increased seven-class macro F1 by 0.037, to approximately 0.217, but increased binary macro F1 by 0.104, to approximately 0.581.
+Geometry therefore provided more discriminative information for the broad distinction between classes A to C and D to G than for exact classification from A to G.
+
+\Cref{tab:geometry_utility} compares the extent to which each geometry feature could be recovered from frozen DINOv2 embeddings with its downstream contribution when the corresponding reconstructed 3DBAG value was supplied.
+Height achieved the highest prediction $R^2$ from \ac{SVI} at 0.741, whereas the largest individual downstream gain was associated with shared-wall ratio ($+0.027$).
+Shape factor combined an $R^2$ of 0.646 with a seven-class macro F1 gain of 0.027.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Prediction of reconstructed geometry features from SVI and their downstream utility.}
+	\label{tab:geometry_utility}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,4.0cm] Q[r,m,3.6cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Geometry feature  & Prediction from SVI $R^2$ & Seven-class $\Delta$ macro F1 \\
+		\midrule
+		Height            & 0.741                         & $+0.023$                      \\
+		Shared-wall ratio & 0.460                         & $+0.027$                      \\
+		Volume            & 0.428                         & $+0.020$                      \\
+		Shape factor      & 0.646                         & $+0.027$                      \\
+		\bottomrule
+	\end{tblr}
+	\par\vspace{0.4em}
+	\begin{minipage}{\linewidth}
+		\footnotesize\textit{Note.} Prediction from SVI was evaluated using five-fold OOF probes on frozen DINOv2 embeddings. Downstream utility was evaluated by adding the corresponding reconstructed 3DBAG feature to the reference-feature classifier.
+	\end{minipage}
+\end{table}
+
+At the aggregate level, supplying geometry predicted from \ac{SVI} increased macro F1 by 0.005.
+By comparison, supplying the corresponding reconstructed geometry to the same classifier increased macro F1 by 0.050.
+Thus, moderate prediction performance at feature level did not preserve the full downstream signal after prediction errors were propagated through the pipeline.
+Under the evaluated protocol, these results do not support replacing available 3D open data geometry with \ac{SVI}-derived estimates.
+
+\subsection{Building-Level Consistency of Energy Classes}
+\label{sec:building_level_consistency}
+
+\Cref{tab:class_consistency} examines whether a single energy class adequately represents all certificate records associated with the same building identifier.
+Of the buildings in the \ac{SVI} manifest, 58.4\% were linked to more than one certificate.
+Among these buildings, 77\% contained certificates with different energy classes.
+The median modal share was 0.50, and the median within-building standard deviation of the continuous energy indicator was 35.8\,kWh/(m$^2\cdot$year).
+For each building, the modal share is the proportion of linked certificates assigned to its most frequent energy class.
+The mean modal share across buildings estimates the probability that the modal class agrees with the class of a certificate selected at random from the same building.
+Latest to modal agreement is the proportion of buildings for which the energy class on the most recently registered certificate equals the modal class.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Building-level consistency of energy classes across certificate records.}
+	\label{tab:class_consistency}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,4.6cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Measure                                                       & Value                    \\
+		\midrule
+		Buildings linked to multiple certificates                     & 58.4\%                   \\
+		Multi-certificate buildings with inconsistent energy classes   & 77\%                     \\
+		Median modal share                                            & 0.50                     \\
+		Mean modal share across buildings                             & 0.79                     \\
+		Buildings with latest class equal to modal class              & 0.88                     \\
+		Median within-building standard deviation of energy indicator & 35.8\,kWh/(m$^2\cdot$year) \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+These results show that reducing multiple unit-level certificate records to one building-level target can conceal substantial within-building variation.
+The mean modal share of 0.79 indicates the expected agreement between the modal class and a randomly selected certificate from the same building.
+The latest class equalled the modal class for 88\% of buildings.
+Neither value should be interpreted as a strict upper bound on classification against the fixed latest-certificate energy class used in the main evaluation.
+The findings instead identify target aggregation as an additional source of uncertainty when interpreting building-level energy class predictions.
+
+\subsection{Effects of Sample Composition on Seven-Class Performance}
+\label{sec:sample_composition_effects}
+
+The final diagnostic analysis examines whether the low seven-class performance of the reference-attribute route was primarily associated with training-set size or with the composition of the evaluated building pool.
+\Cref{tab:sample_composition} reports changes relative to the fixed development baseline, which achieved a macro F1 of 0.170 and an accuracy of 0.345.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Effects of weighting and sample composition interventions on seven-class macro F1.}
+	\label{tab:sample_composition}
+	\small
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {X[l] Q[r,m,3.4cm]},
+			colsep = 4pt,
+			row{1} = {font=\bfseries},
+			rowsep = 2pt,
+		}
+		\toprule
+		Intervention                                                             & $\Delta$ macro F1 \\
+		\midrule
+		Class weighting                                                          & $+0.018$          \\
+		Cap dominant archetype cells                                             & $+0.064$          \\
+		Cap energy classes                                                       & $+0.039$          \\
+		Replace the experimental pool with a sample of equal size from the eligible reference population        & $+0.039$          \\
+		Increase sample size by a factor of fifteen while retaining the reference population composition        & $-0.001$          \\
+		\bottomrule
+	\end{tblr}
+\end{table}
+
+Reducing the concentration of dominant archetype cells produced the largest gain, increasing macro F1 by 0.064.
+Class balancing and replacement with a sample of equal size from the eligible reference population each improved macro F1 by 0.039, whereas class weighting produced a smaller gain of 0.018.
+In contrast, increasing the size of the eligible reference population sample by a factor of fifteen while retaining its composition changed macro F1 by only $-0.001$.
+Evaluation on the complete eligible reference population of 124,784 buildings yielded a macro F1 of 0.208 and an accuracy of 0.440.
+
+Within the evaluated interventions, performance was therefore more sensitive to the composition of the building pool than to sample count alone.
+This finding helps explain why seven-class performance remained low even for M1, which used reference attributes: the experimental pool was dominated by a small number of archetype cells and provided limited support for learning class-balanced distinctions.
+The analysis characterises a sample composition effect rather than a formal upper bound on seven-class performance.
