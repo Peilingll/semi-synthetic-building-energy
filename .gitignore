@@ -63,3 +63,7 @@ output/
 **/thesistemplate-main*/**/*.bcf
 **/thesistemplate-main*/**/*.run.xml
 **/thesistemplate-main*/**/*.synctex.gz
+
+# Scratch: paper full-text dumps for Zotero gap check, and temporary PDFs
+.codex-zotero-gap/
+tmp/

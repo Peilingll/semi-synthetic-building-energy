@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "mcp__zotero__zotero_get_item_metadata",
-      "mcp__zotero__zotero_get_item_fulltext"
-    ]
-  }
-}
