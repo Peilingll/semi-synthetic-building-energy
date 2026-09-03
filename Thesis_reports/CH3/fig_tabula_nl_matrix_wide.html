@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>TABULA-NL residential typology matrix</title>
+<title>TABULA-NL residential typology matrix (wide)</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111;
          margin: 24px; }
-  table.matrix { border-collapse: collapse; margin: 0 auto; }
+  .wrap { display: flex; gap: 16px; justify-content: center; align-items: flex-start; }
+  table.matrix { border-collapse: collapse; }
   table.matrix th, table.matrix td { border: 1px solid #999; padding: 6px 8px;
          text-align: center; vertical-align: middle; }
   table.matrix thead th { background: #efefef; }
@@ -16,15 +17,16 @@
   .periodcol .code { font-weight: 400; font-size: 11px; color: #444; display: block; }
   td.cell img { width: 150px; height: auto; display: block; margin: 0 auto; }
   td.cell .code { font-size: 10px; color: #555; display: block; margin-top: 3px; }
-  .caption { max-width: 860px; margin: 14px auto 0; font-size: 12px; color: #333; line-height: 1.5; }
 </style>
 </head>
 <body>
 
+<div class="wrap">
+
 <table class="matrix">
   <thead>
     <tr class="grouphead">
-      <th rowspan="1"></th>
+      <th></th>
       <th colspan="2">Single-family housing</th>
       <th colspan="2">Collective housing</th>
     </tr>
@@ -58,6 +60,25 @@
       <td class="cell"><img src="tabula_nl_matrix/nl_mfh_03.png"><span class="code">NL.N.MFH.03.Gen</span></td>
       <td class="cell"><img src="tabula_nl_matrix/nl_ab_03.png"><span class="code">NL.N.AB.03.Gen</span></td>
     </tr>
+  </tbody>
+</table>
+
+<table class="matrix">
+  <thead>
+    <tr class="grouphead">
+      <th></th>
+      <th colspan="2">Single-family housing</th>
+      <th colspan="2">Collective housing</th>
+    </tr>
+    <tr class="typehead">
+      <th>Construction period</th>
+      <th>Single-Family House (SFH)</th>
+      <th>Terraced House (TH)</th>
+      <th>Multi-Family House (MFH)</th>
+      <th>Apartment Block (AB)</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
       <td class="periodcol">1992&ndash;2005 <span class="code">NL.04</span></td>
       <td class="cell"><img src="tabula_nl_matrix/nl_sfh_04.png"><span class="code">NL.N.SFH.04.Gen</span></td>
@@ -82,15 +103,7 @@
   </tbody>
 </table>
 
-<p class="caption">
-<b>TABULA-NL residential building typology matrix</b> (6 construction periods &times; 4 size
-classes = 24 archetype cells). Each cell shows the exemplary real building
-(&ldquo;Real Example&rdquo;, ReEx.001) of the generic archetype
-NL.N.&lt;type&gt;.&lt;period&gt;.Gen. Photographs from the TABULA WebTool
-(webtool.building-typology.eu, &copy; TABULA/EPISCOPE project consortium, IWU);
-period boundaries per the Dutch national typology (RVO, <i>Voorbeeldwoningen</i>).
-Note: the WebTool serves the same exemplary photograph for NL.N.AB.04 and NL.N.AB.05.
-</p>
+</div>
 
 </body>
 </html>

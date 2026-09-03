@@ -10,14 +10,14 @@
   .caption { max-width: 1000px; margin: 16px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
 
   .example-strip { margin: 16px 30px 0; padding: 14px 16px 12px; border: 1px solid #aaa; background: #fafafa; }
-  .example-head { margin: 0 0 10px; font-size: 11.5px; font-weight: 600; color: #222; letter-spacing: .25px; }
-  .example-grid { display: grid; grid-template-columns: minmax(0, 3.5fr) 96px minmax(160px, 1fr); gap: 14px; align-items: center; }
+  .example-head { margin: 0 0 10px; font: 600 20px "Segoe UI", Arial, sans-serif; color: #111; }
+  .example-grid { display: grid; grid-template-columns: minmax(0, 2.2fr) 170px minmax(160px, 1fr); gap: 14px; align-items: center; }
   .example-panel { margin: 0; }
   .example-panel svg { display: block; border: 1px solid #777; background: #fff; }
   .example-panel.target svg { border: 2px solid #55a875; }
   .example-panel figcaption { margin-top: 6px; font-size: 9.7px; color: #444; text-align: center; }
-  .example-arrow { text-align: center; color: #3070B3; font-size: 27px; font-weight: 600; line-height: 1; }
-  .example-arrow span { display: block; margin-top: 7px; font-size: 9px; line-height: 1.25; font-weight: 500; color: #444; }
+  .example-arrow { text-align: center; color: #333; font-size: 52px; font-weight: 600; line-height: 1; }
+  .example-arrow span { display: block; margin-top: 8px; font-size: 18px; line-height: 1.3; font-weight: 600; color: #333; }
   .example-note { margin: 9px 0 0; font-size: 9.5px; color: #555; line-height: 1.4; }
 
   .t-stage   { font: 600 11.5px "Segoe UI", Arial, sans-serif; fill: #333; letter-spacing: .3px; }
@@ -160,23 +160,21 @@
 </svg>
 
 <div class="example-strip" role="group" aria-label="Illustrative panorama-to-crop transformation">
-  <div class="example-head">ILLUSTRATIVE IMAGE TRANSFORMATION &#183; one retained panorama&#8211;building pair</div>
+  <div class="example-head">Illustrative image transformation &#183; one retained panorama&#8211;building pair</div>
   <div class="example-grid">
     <figure class="example-panel">
-      <svg viewBox="0 0 1900 700" role="img" aria-label="Mapillary panorama with detected buildings">
-        <image href="svi_processing_example.png" x="0" y="0" width="2394" height="1231"/>
+      <svg viewBox="0 0 2048 1024" role="img" aria-label="Mapillary 360-degree panorama with the target building highlighted">
+        <image href="svi_example_pano.png" x="0" y="0" width="2048" height="1024"/>
+        <rect x="1185" y="185" width="560" height="430" fill="none" stroke="#55a875" stroke-width="10"/>
       </svg>
-      <figcaption>360&#176; panorama with candidate building detections</figcaption>
     </figure>
     <div class="example-arrow">&#8594;<span>detection + perspective<br>reprojection</span></div>
     <figure class="example-panel target">
-      <svg viewBox="1940 615 430 585" role="img" aria-label="Rectified crop of the selected building">
-        <image href="svi_processing_example.png" x="0" y="0" width="2394" height="1231"/>
+      <svg viewBox="0 0 428 347" role="img" aria-label="Rectified facade crop of the target building">
+        <image href="svi_example_crop.png" x="0" y="0" width="428" height="347"/>
       </svg>
-      <figcaption>selected green detection &#8594; one rectified facade crop</figcaption>
     </figure>
   </div>
-  <p class="example-note">The raster example is illustrative; one crop is generated per retained panorama&#8211;building pair, and several crops may therefore be associated with the same BAG building.</p>
 </div>
 
 <p class="caption">
@@ -189,7 +187,9 @@ Retained residential footprints and Mapillary panorama metadata jointly enter th
 pairing step. Candidate views are screened by AoV, limited to three panoramas per OpenFACADES
 footprint, downloaded, detected, reprojected, cropped and quality filtered. Crops are then linked to
 BAG buildings and limited to eight per <span class="mono">pand_id</span>. The illustrative image strip
-shows one panorama&ndash;building pair and its resulting facade crop; numeric filtering thresholds and
+shows one panorama&ndash;building pair and its resulting facade crop (Rotterdam; panorama
+<span class="mono">686679844161937</span>, building <span class="mono">276637663</span>; the green
+box is drawn for illustration); numeric filtering thresholds and
 step-wise counts are reported in Table&nbsp;3.2. Imagery &copy; Mapillary contributors
 (CC&nbsp;BY-SA&nbsp;4.0).
 </p>
