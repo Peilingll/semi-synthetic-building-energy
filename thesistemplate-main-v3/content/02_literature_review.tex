@@ -1,119 +1,75 @@
 \chapter{Literature Review}
 \label{ch:literature_review}
 
-\section{Comparison Framework}
-\label{sec:comparison_framework}
+This chapter examines two approaches to energy assessment when official building information is incomplete. The first estimates explicit building attributes that can be used for archetype assignment, while the second predicts registered energy classes directly from imagery. Section~\ref{sec:building_attributes_archetype_assignment} first establishes how building attributes affect archetype assignment and thermal calculations. Section~\ref{sec:building_attribute_enrichment} then reviews how missing attributes are estimated from administrative, contextual, geospatial, and image data. Section~\ref{sec:direct_image_energy_class} examines direct energy class prediction from imagery. Section~\ref{sec:comparative_synthesis} compares the information retained and the validation evidence provided by the two approaches, leading to the research gap addressed in this study.
 
-For the large-scale application of archetype-based \ac{UBEM}, previous studies can be organised into four workflow routes according to how building information is transferred from observational sources to energy-related tasks: the reference-attribute, proxy-attribute, direct visual, and attribute mediated visual routes.
-These routes rely on different forms of data availability and differ in whether they retain explicit building attributes and the TABULA archetype structure.
-\Cref{tab:route_comparison} establishes a common comparison framework based on the observed input, intermediate representation, typical target, and principal dependency of each route.
+\section{Building Attributes and Archetype Assignment}
+\label{sec:building_attributes_archetype_assignment}
 
-\begin{table}[htbp]
+Building type and construction year perform different but complementary roles in TABULA archetype assignment. Building age, construction type, size, geometry, use, and technical systems are commonly used to group buildings with similar energy-related characteristics \parencite{reinhart2016,shen_archetype_2024}. Within the Dutch TABULA typology, building type determines the dwelling type category, such as detached, terraced, or apartment buildings, while construction year determines the construction period associated with prevailing construction practices and thermal regulations \parencite{loga2016,rvo2011}. Each combination of dwelling type and construction period defines a separate archetype cell. Accurate cell assignment therefore requires both attributes to be identified correctly. Floor count does not determine the TABULA cell in this study and is evaluated separately as an additional input to energy class prediction.
+
+Assigning a building to a TABULA cell determines which representative thermal properties are used in subsequent heat transmission calculations. These properties include representative U-values for walls, roofs, floors, and windows rather than measurements of the individual building, as shown in Figure~\ref{fig:tabula_u_value} \parencite{loga2016}. A U-value expresses heat flow through a building element per unit area and per degree of temperature difference. ISO 13789 defines steady-state transmission and ventilation heat transfer coefficients for whole buildings and building parts \parencite{iso13789}. Construction period therefore affects the representative thermal properties assigned to a building, while geometry determines the areas over which transmission occurs. Building type is also related to geometric exposure because a detached house generally has more external wall area relative to its volume than a terraced or multifamily building \parencite{wurm2021}. Archetype accuracy must therefore be evaluated not only as a categorical match but also through the change in thermal properties assigned to the building.
+
+\begin{figure}[htbp]
 	\centering
-	\caption{Comparison framework for the four workflow routes.}
-	\label{tab:route_comparison}
-	\footnotesize
-	\begin{tblr}{
-			width = \linewidth,
-			colspec = {Q[l,m,2.1cm] X[l] X[l] X[l] X[l]},
-			colsep = 3pt,
-			row{1} = {font=\bfseries},
-			rowsep = 2pt,
-		}
-		\toprule
-		Route                     & Observed input                                        & Intermediate representation                                             & Typical target                                                  & Principal dependency                                                    \\
-		\midrule
-		Reference-attribute       & Registry, geometry, and neighbourhood data            & Recorded building attributes                                            & Energy class or energy-performance prediction                   & Complete and linkable building-level records                            \\
-		Proxy-attribute           & Aggregated census, morphology, or remote-sensing data & Inferred attributes or archetype classes                                & Archetype assignment or energy modelling                        & Transferable relationship between the proxy and the individual building \\
-		Direct visual             & \ac{SVI}, aerial, or multimodal imagery               & Latent visual representation                                            & Direct energy class classification                              & Local labels, image coverage, and domain stability                      \\
-		Attribute mediated visual & \ac{SVI}                                              & Explicit building type, construction year, floor count, and TABULA cell & Archetype parameters and downstream energy class classification & Accuracy of attribute prediction and error propagation                  \\
-		\bottomrule
-	\end{tblr}
-\end{table}
+	\includegraphics[width=\textwidth]{figures/fig/fig_2_1_tabula_u_value}
+	\caption{Building type and construction year determine the archetype cell, from which representative U-values are assigned for heat transmission calculations. Adapted from the TABULA WebTool \parencite{tabulawebtool}.}
+	\label{fig:tabula_u_value}
+\end{figure}
 
-Studies across the four routes differ in their target definitions, study populations, data partitions, and evaluation metrics. Their reported results are therefore used to characterise the capabilities and limitations of each route rather than to establish direct performance rankings across studies.
+Evidence from different urban energy modelling contexts shows that uncertainty in building type and construction year can affect energy estimates for individual buildings. In a heat demand model for Hamburg, \textcite{dochev2020} showed that archetype classification based on cadastral construction type and construction epoch could constitute a substantial source of error. The resulting estimates remained plausible at aggregated spatial scales despite discrepancies for individual buildings. Using an urban building energy model covering 50,843 buildings in the United States, \textcite{bass2022} similarly identified estimated building type and construction year as important sources of bias when simulated electricity use was compared with measurements. Although the two studies used different archetype systems and energy outcomes, both found that uncertainty in type and year affected the properties assigned to individual buildings. These findings establish the need to compare reference and estimated attributes at the level of individual buildings before interpreting their aggregate energy effects.
 
-\section{Reference and Open Data Approaches}
-\label{sec:reference_open_data}
+\section{Building Attribute Enrichment}
+\label{sec:building_attribute_enrichment}
 
-When sufficiently complete building-level records are available, the reference attribute route combines administrative, geometric, and neighbourhood data to train statistical models for energy class prediction. For Dutch residential buildings, \textcite{hettinga2023} combined registry data on construction year, building type, ground floor area, and total floor area with exposed envelope geometry and neighbourhood statistics on home ownership and average building value. The random forest classifier achieved 71\% exact accuracy and 93\% accuracy within one energy class using an 80/10/10 training, validation, and test split \parencite{hettinga2023}. TABULA rule-based assignment achieved 26\% exact accuracy and 67\% accuracy within one energy class across 2,574,227 EPC records \parencite{hettinga2023}. Although both approaches used the same EPC database, the random forest result was reported for the test subset, whereas TABULA was evaluated on the complete dataset. The EPC reference labels ranged from A++ to G, while TABULA assigned only classes B to G. The reported values therefore support the potential of additional open data features for energy class prediction but do not constitute a strictly matched comparison between the two approaches.
+This section examines how building type, construction year, and related attributes are obtained when complete reference records are unavailable. Existing methods draw on two main sources of evidence. Contextual and geospatial approaches estimate attributes from census records, building morphology, and remote sensing, whereas image approaches use visible characteristics of individual buildings. Image methods also differ in how extensively the selected model is adapted to the target dataset.
 
-This route retains interpretable tabular inputs and can incorporate information beyond the variables used for archetype assignment. However, it requires sufficiently complete building-level records that can be linked across data sources. If building type, construction year, or floor count is unavailable, this route does not show how those attributes should be recovered or how replacing them with inferred values affects downstream performance.
+\subsection{Administrative, Census, and Geospatial Data}
+\label{sec:administrative_geospatial_data}
 
-\section{Proxy-Based Attribute and Archetype Inference}
-\label{sec:proxy_based_inference}
+Administrative and open geospatial datasets improve access to building information but do not consistently provide the attributes required for archetype assignment. Building age information used in urban energy applications varies in availability and level of detail across regions \parencite{garbasevschi2021}. \Ac{OSM} provides broad geographic coverage, but its building descriptions and attribute availability vary between locations. EUBUCCO v0.1 harmonises available footprints and attributes for approximately 202 million buildings across the European Union and Switzerland, yet construction year and building type are available for only 24\% and 46\% of the buildings, respectively \parencite{milojevicdupont2023}. These datasets expand the spatial coverage of building footprints, but they do not eliminate gaps in the information needed to assign individual buildings to archetypes.
 
-The proxy-attribute route uses data sources that correlate with a target attribute but do not constitute observations of the individual building itself.
-German census data aggregated to a 100\,m $\times$ 100\,m grid were combined with building-level and neighbourhood-level morphological and socioeconomic features, and XGBoost models were trained to predict residential size class and construction year class \parencite{dabrock2025}.
-The two tasks achieved accuracies of 97.4\% and 73.9\%, respectively, on an individual-building test set, and the predictions were subsequently used to construct a nationwide TABULA-based building dataset.
-The study also observed that the resulting dataset tended to overrepresent majority classes, indicating that aggregate proxies can support individual-building estimates but that their errors are affected by grid composition and class imbalance.
+When attributes are unavailable, census data and characteristics of buildings and their surroundings can be used to estimate them for individual buildings. \textcite{dabrock2025} trained XGBoost, a gradient boosted tree method, with census, morphological, and socioeconomic features to estimate residential size class and construction year across Germany. The estimated attributes were assigned to TABULA archetypes and evaluated through an individual building test set and comparisons with statistics aggregated by federal state. \textcite{garbasevschi2021} used building characteristics together with street and urban block measures to estimate residential building age across eight German municipalities and then examined the effect of age classification errors on calculated heat demand. Dabrock et al. emphasised nationwide data completion and archetype assignment, whereas Garbasevschi et al. examined how spatial context affected age estimation and its energy consequences. Combining census data with building and neighbourhood characteristics can therefore support attribute estimation over large areas, but the resulting estimates remain dependent on the spatial resolution and composition of the source data.
 
-Remote sensing can also serve as an attribute proxy.
-The city-scale workflow derived building geometry from aerial imagery and a digital surface model, classified construction type from morphometric features, and combined these outputs with census-based construction-period data for urban heat-demand modelling \parencite{wurm2021}.
-The study demonstrated that remote-sensing-derived building information can be incorporated into a downstream energy model.
-However, the imagery source was not \ac{SVI}, and reference attributes and image-derived substitutes were not compared for the same buildings under a common downstream protocol.
-Proxy-based methods therefore offer a feasible route for large-scale data completion, but their transferability remains dependent on proxy resolution, geographic context, and target taxonomy.
+Remote sensing can provide geometry and morphology at the level of individual buildings and connect the estimated information to an energy model. \textcite{wurm2021} combined aerial imagery and a digital surface model to derive building footprints and heights for approximately 14,800 residential buildings in M\"unster. Morphometric features were used to classify construction type, while census data supplied construction period. The resulting building information was used for heat demand modelling and compared with reference values from the Energy Atlas at a spatial resolution of 100 m. This workflow demonstrates that information derived from remote sensing can enter an energy model, although validation at an aggregated grid level does not isolate the effect of each estimated attribute for the same buildings.
 
-\section{Direct Energy Class Prediction from Images}
-\label{sec:direct_image_to_energy}
+Administrative, census, and geospatial approaches can therefore cover large building stocks and may support archetype assignment or heat demand modelling. Their evidence is nevertheless distributed across different observation and validation levels. Some inputs describe individual buildings, while others describe census cells, urban blocks, or larger administrative units. Consequently, the reported results do not provide a common comparison of all attributes required by one archetype workflow against official values for the same buildings.
 
-The direct visual route bypasses explicit archetype assignment and predicts energy classes directly from imagery.
-In the United Kingdom, \ac{SVI}, aerial imagery, building footprints, and land-surface temperature were integrated for approximately 40,000 buildings to perform binary classification of classes A to D versus E to G; the complete multimodal model achieved a macro F1 score of 64.64\% \parencite{mayer2023uk}.
-In a study of more than 21,000 buildings in the Copenhagen metropolitan area, \ac{SVI} and aerial imagery produced a macro F1 score of 58.79\%, and these two image sources alone were found to be insufficient for consistently distinguishing building energy efficiency \parencite{mayer2023dk}.
+\subsection{SVI Based Attribute Estimation}
+\label{sec:street_view_attribute_estimation}
 
-Subsequent studies expanded both the data sources and label granularity.
-Google Street View and geographic information system data were combined in a three-stage framework using 1\% local samples for transfer learning, achieving an accuracy of 84\% for classification across energy classes A to G, although performance decreased for occluded high-rise buildings \parencite{liu2025}.
-Thermal infrared imagery, optical remote sensing, \ac{SVI}, morphology, and socioeconomic indicators were also integrated for binary high- versus low-performance classification, achieving F1 scores of 0.64 in Glasgow and 0.69 in Edinburgh; the corresponding \ac{SVI}-only models achieved 0.59 and 0.68, respectively \parencite{sun2026}.
+\Ac{SVI} offers a different basis for attribute estimation because it depicts the facade of an individual building rather than the statistical context of an area. The images can reveal building form, floor count, facade material, and visual indications of construction period. They provide less direct evidence about insulation, technical systems, or refurbishment that is not visible on the facade. Occlusion, camera position, and image coverage further determine which building characteristics can be observed. \Ac{SVI} therefore provides direct visual evidence for individual buildings, but only for attributes expressed in their visible exterior.
 
-These findings support the presence of signals predictive of energy class in building appearance and urban-context data, but the capability of the direct visual route cannot be summarised by a single performance value.
-Previous studies differ substantially in modality, local adaptation, class aggregation, class definition, and evaluation protocol.
-Most employ binary targets, while only a small number report classification across classes A to G; consequently, a directly comparable seven-class benchmark has not yet emerged.
-Moreover, direct models bypass explicit TABULA parameters.
-Although they can directly support classification, they cannot independently identify the contribution of individual building attributes or directly quantify how attribute substitution affects the archetype cell and its inherited physical parameters.
+Existing studies show that \ac{SVI} can support both multiattribute enrichment and focused age estimation. \textcite{liang2025} introduced OpenFACADES and used 31,180 crowdsourced Mapillary images from seven cities to estimate building use, surface material, construction year, and floor count. The authors compared convolutional neural networks, vision transformers, and \acp{VLM} using labels assembled primarily from \ac{OSM}, with missing information supplemented from other sources, and then applied the selected framework to a larger image collection. The estimated attributes were not subsequently evaluated in an archetype or energy application. Focusing on construction age, \textcite{zeng2024} used GPT-4 Vision to classify London facade images into construction epochs without updating the model parameters and reported an accuracy of 39.69\%. Liang et al. estimated several building attributes, whereas Zeng et al. considered construction age alone, but neither study evaluated the effect of attribute errors on TABULA assignment or thermal properties. These studies establish the feasibility of estimating energy-related attributes from facade images but do not determine whether the estimates preserve the archetype associated with official records.
 
-\section{Image-Based Building Attribute Extraction}
-\label{sec:image_based_attribute_extraction}
+\subsection{Image Model Configurations}
+\label{sec:image_model_configurations}
 
-The attribute mediated visual route first infers explicit building attributes from \ac{SVI} and then performs TABULA cell assignment or downstream modelling.
-In contrast to the direct route, this structure retains intermediate attributes and thereby enables separate evaluation of attribute extraction, joint-cell assignment, and downstream utility.
-The relevant vision strategies can be further divided into supervised full fine-tuning, frozen self-supervised representations, and inference without parameter updating.
+The reviewed image methods also differ in how much the model is adapted to local building labels. ResNet-50 is a residual convolutional neural network introduced by \textcite{he2016}. In this study, all pretrained ResNet-50 parameters are updated using labelled images from the target task. DINOv2 provides pretrained visual representations that can remain fixed while supervised prediction heads are trained on local labels \parencite{oquab2023}. InternVL3 is a \ac{VLM} designed to process visual inputs and textual instructions \parencite{zhu2025}. In this study, the released InternVL3 model is used without additional parameter updates to generate building attribute estimates. These configurations therefore represent full adaptation, supervised prediction from a fixed visual representation, and inference through textual instructions using a fixed multimodal model.
 
-\subsection{Supervised Full Fine-Tuning}
-\label{sec:supervised_full_finetuning}
+The configurations differ in their use of labelled data, computational requirements, and dependence on prior visual knowledge. Results reported in separate studies cannot identify the most suitable configuration for building attribute enrichment because the datasets, attribute definitions, geographic contexts, and evaluation procedures also differ. Their suitability can therefore be compared only when the buildings, labels, image selection procedure, and data partitions are held constant.
 
-OpenFACADES compared \ac{CNN}, \acf{ViT}, and \ac{VLM} configurations using 31,180 labelled images from seven cities \parencite{liang2025}.
-Fine-tuned InternVL3-2B achieved an accuracy of 61.27\% for building type classification.
-For building-age regression, it achieved an $R^2$ of 0.710 and an MAE of 28.06 years, while the corresponding values for floor count regression were 0.789 and 2.13 floors.
-The study also applied the model to large-scale building-profile enrichment, demonstrating that a single image-processing framework can support multi-attribute inference.
-Full fine-tuning, however, still requires a labelled training corpus, and its applicability across cities or taxonomies must be established through independent transfer evaluation.
+\section{Direct Image Based Energy Class Prediction}
+\label{sec:direct_image_energy_class}
 
-\subsection{Frozen Self-Supervised Representations}
-\label{sec:frozen_ssl_representations}
+This section examines a different prediction task in which imagery is mapped directly to a registered energy class without producing explicit building attributes. Using official \ac{EPC} records as labels, \textcite{mayer2023uk} combined \ac{SVI}, aerial imagery, building footprints, and land surface temperature data for 39,605 buildings across four areas in England. The study grouped classes A to D and E to G into a binary task, for which the complete multimodal model achieved a macro F1 score of 64.64\%. \textcite{mayer2023dk} applied the same class grouping to 21,593 buildings in the Copenhagen metropolitan area and reported a macro F1 score of 58.79\% for the combined image model. \Ac{SVI} provided more useful information than aerial imagery in Copenhagen, although the two image sources alone were considered insufficient for reliable classification. Together, the studies show that exterior imagery contains information associated with registered energy performance, but that the available signal depends on the image source and supporting data.
 
-Self-supervised visual foundation models learn general-purpose representations from large-scale image corpora without manual annotation.
-DINOv2 provides visual features that can be used with task-specific prediction heads without updating the backbone parameters \parencite{oquab2023}.
-Compared with full fine-tuning, a frozen-backbone configuration reduces the number of parameters that must be updated and separates representation learning from downstream supervised fitting.
-However, the building-energy studies reviewed above do not provide controlled evidence that compares a frozen self-supervised backbone with a fully fine-tuned \ac{CNN} and \ac{VLM} inference on the same building population and traces their attribute errors through TABULA cell assignment to energy class classification.
+Subsequent studies extended direct prediction by adding structured information or additional sensing modalities. \textcite{liu2025} combined \ac{SVI} from Google Street View with geographic information system attributes and adapted the model with local samples to predict energy classes A to G. \textcite{sun2026} integrated \ac{SVI} with thermal infrared imagery, optical remote sensing, building morphology, and socioeconomic information for binary classification of building energy performance. Related work has also examined zero-shot visual assessment at the building component level. \textcite{pan_nd} evaluated GPT-4o on \ac{SVI} to predict \ac{EPC}-derived wall energy efficiency ratings without updating the model parameters for the target task. This prediction target differs from the \ac{EPC} bands assigned to whole buildings in the studies above. Together, these studies extend image based energy assessment through contextual attributes, additional observations of the building and its surroundings, and knowledge retained by a pretrained multimodal model. The image sources, supporting data, and prediction targets differ across studies.
 
-\subsection{VLM Inference Without Parameter Updating}
-\label{sec:vlm_inference}
+The reported results therefore cannot be interpreted as direct performance comparisons. The studies differ in class grouping, supporting data, study area, model adaptation, and evaluation protocol. Direct prediction also produces an energy class without retaining estimates of building type, construction year, floor count, or archetype parameters. It can provide an alternative source of energy class information, but it cannot establish whether the corresponding building attributes or archetype assignment are correct.
 
-\Acp{VLM} offer another route for building-attribute inference without updating model parameters.
-\textcite{zeng2024} used GPT-4 Vision for zero-shot classification of building-age epochs from London façade images, achieving an accuracy of 39.69\% and an epoch-class MAE of 0.85.
-The model was less reliable for very old buildings and for fine-grained distinctions between periods separated by no more than two decades.
-OpenFACADES also compared zero-shot and fine-tuned \ac{VLM} configurations, with its overall results showing that fine-tuning improved multi-attribute performance \parencite{liang2025}.
-Inference without parameter updating therefore reduces the need for task-specific training, but its results remain sensitive to model access, prompt design, output constraints, and geographic context.
-Furthermore, the term \enquote{zero-shot} does not necessarily mean that development examples played no role in prompt selection.
+\section{Comparative Synthesis and Research Gap}
+\label{sec:comparative_synthesis}
 
-\section{Archetype-Grounded and Semi-Synthetic Datasets}
-\label{sec:archetype_semi_synthetic_datasets}
+Attribute enrichment and direct image based energy class prediction retain different information, as shown in Figure~\ref{fig:literature_synthesis}. They also differ in the point at which official reference data enter the evaluation. Attribute enrichment retains estimates of specific building attributes, such as building type, construction year, and floor count, but the attributes included, reference labels, and validation levels vary across studies \parencite{dabrock2025,wurm2021,garbasevschi2021,liang2025,zeng2024}. Studies that predict \ac{EPC} bands directly use registered energy classes as targets but do not retain the intermediate building attributes or thermal parameters \parencite{mayer2023uk,mayer2023dk,liu2025,sun2026}. The Dutch study by \textcite{hettinga2023} shows what can be achieved when official building attributes, reconstructed geometry, neighbourhood information, and registered energy classes can be linked for individual buildings. Its random forest classifier achieved 71\% exact energy class accuracy and 93\% accuracy within one class on a test subset, while TABULA assignment achieved 26\% exact accuracy and 67\% accuracy within one class on the complete certificate dataset. The results were obtained from different evaluation populations and class ranges and therefore do not constitute a controlled comparison between the two methods.
 
-The routes reviewed above also produce different forms of building-level datasets.
-\textcite{dabrock2025} mapped predicted size and construction year classes to TABULA archetypes to construct a nationwide residential dataset.
-OpenFACADES, by contrast, extended image-derived attributes and captions to approximately 1.2 million images covering 500,000 buildings \parencite{liang2025}.
-These studies demonstrate archetype assignment and image-based data enrichment, respectively, but neither organises reference attributes, image-derived substitutes, deterministically assigned TABULA parameters, and reference energy classes within a single paired comparison.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/fig/fig_2_2_synthesis}
+	\caption{Comparison of attribute enrichment and direct image based energy class prediction workflows.}
+	\label{fig:literature_synthesis}
+\end{figure}
 
-The recent Building Energy Graphs (BEGs) preprint further combined OpenStreetMap footprints, Global Human Settlement Layer products, European building archetypes, and deterministic assumptions to construct simulation-ready building energy models, with EnergyPlus outputs supporting graph neural network surrogate prediction \parencite{dalach2025}.
-This work demonstrates that observed geospatial sources, archetype assumptions, and simulation outputs can be integrated into synthetic or semi-synthetic datasets for model development.
-Its target, however, is simulated energy-use intensity rather than administrative reference energy classes.
-Unlike the BEG dataset, the dataset developed in the present study supports analysis of attribute substitution against administrative reference energy classes rather than evaluation of a surrogate model against simulated outputs.
+The reviewed literature therefore leaves three connected comparisons unresolved. First, estimates of building type, construction year, and floor count have not been jointly compared with official values for the same buildings under common evaluation conditions. Second, the effects of errors in estimated building type and construction year on joint TABULA cell assignment and the associated thermal properties have not been evaluated for those buildings. Third, energy class predictions based on official building attributes, building attributes estimated from imagery, and imagery alone have not been compared using the same buildings, target definitions, data partitions, and evaluation conditions. Addressing these gaps requires a dataset in which imagery, official building attributes, reconstructed geometry, and registered energy classes refer to the same buildings.
+
+Related work has combined geospatial observations, archetype assumptions, and EnergyPlus simulations to construct a synthetic dataset for training graph neural networks to predict energy use intensity \parencite{dalach2026}. Its prediction targets consist of simulation outputs rather than registered energy classes linked to official building attributes. Semi-synthetic data construction is therefore an implementation strategy for the present study rather than a separate literature approach.
