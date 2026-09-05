@@ -13,7 +13,7 @@ $bibtex_use = 2;    # run biber and clean its output
 sub run_makeglossaries {
     my ($base, $path) = fileparse($_[0]);
     pushd $path;
-    my $ret = system("$MIKTEX/makeglossaries", $base);
+    my $ret = system("$MIKTEX/makeglossaries-lite", $base);
     popd;
     return $ret;
 }

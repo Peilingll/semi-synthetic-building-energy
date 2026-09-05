@@ -12,6 +12,7 @@ REM contents, or the list of abbreviations changed.
 REM ---------------------------------------------------------------------------
 
 set "MIKTEX=D:\MiKTeX\texmfs\install\miktex\bin\x64"
+set "PATH=%MIKTEX%;%PATH%"
 set "MAIN=thesis"
 set "PDFLATEX=%MIKTEX%\pdflatex.exe -interaction=nonstopmode -synctex=1 --enable-installer"
 
@@ -26,7 +27,7 @@ echo [1/5] pdflatex
 echo [2/5] biber
 "%MIKTEX%\biber.exe" %MAIN%
 echo [3/5] makeglossaries
-"%MIKTEX%\makeglossaries.exe" %MAIN% >nul
+"%MIKTEX%\makeglossaries-lite.exe" %MAIN% >nul
 echo [4/5] pdflatex
 %PDFLATEX% %MAIN%.tex >nul
 echo [5/5] pdflatex
