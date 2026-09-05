@@ -1,19 +1,17 @@
 """Intra-pand EPC label entropy audit (#6).
 
-Dutch EPCs are issued per dwelling unit (verblijfsobject); our unit of analysis
-is the building (pand). In an 88%-AB dev pool one pand holds many units whose
-labels may disagree (renovated flat A next to original D). If intra-pand
-disagreement is high, a single pand-level label is ill-defined and part of the
-low downstream ceiling is irreducible label noise ("observation-unit
-mismatch"), not missing features.
+Dutch EPCs are issued per dwelling unit (verblijfsobject); the unit of analysis
+is the building (pand). One building may contain several units whose registered
+energy classes differ. This audit quantifies the resulting difference between
+the certificate unit and the building-level prediction target.
 
 From the raw EP-Online CSV (ALL residential certificates, no dedup), restricted
-to manifest pand_ids, per pand:
+to pand_ids in the final experimental dataset, per pand:
   n_certs, n_unique labels, modal (majority) share, entropy(bits),
   latest label (the pipeline's y convention), latest == modal, PF spread.
 
-Reported for two universes: (a) all certificates, (b) NTA 8800 era only
-(Registratiedatum >= 2021, matching the pipeline's EPC filter).
+Reported for two certificate sets: (a) all certificates and (b) certificates
+registered in the NTA 8800 era (Registratiedatum >= 2021) as a sensitivity set.
 
 Oracle ceiling: mean modal share over pands = accuracy of a perfect model that
 predicts each pand's modal label, scored against a randomly drawn unit label.
@@ -82,7 +80,7 @@ def load_certificates(pand_ids: set) -> pd.DataFrame:
                 continue
             rows.append((pid, label, reg, reg_year, _num(row[iPF])))
     df = pd.DataFrame(rows, columns=["pand_id", "label", "reg", "reg_year", "pf"])
-    logger.info("certificates on manifest pands: %d rows / %d pands",
+    logger.info("certificates for experimental dataset: %d rows / %d pands",
                 len(df), df["pand_id"].nunique())
     return df
 
@@ -133,7 +131,7 @@ def summarize(pp: pd.DataFrame, gt_type: pd.Series, title: str) -> list[str]:
         f"| {multi['entropy_bits'].mean():.4f} |",
         f"| P(latest == modal) | {pp['latest_eq_modal'].mean():.4f} "
         f"| {multi['latest_eq_modal'].mean():.4f} |",
-        f"| median intra-pand PF std (kWh/m2.yr) | — "
+        f"| median intra-pand PF std (kWh/m2.yr) | not applicable "
         f"| {multi['pf_std'].median():.1f} |",
         "",
         "### by building type",
@@ -157,13 +155,18 @@ def summarize(pp: pd.DataFrame, gt_type: pd.Series, title: str) -> list[str]:
 
 def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    pand_ids = set(pd.read_parquet(MANIFEST)["pand_id"].unique())
-    logger.info("manifest pands: %d", len(pand_ids))
-    gt_type = pd.read_parquet(GT).set_index("pand_id")["building_type"]
+    manifest = pd.read_parquet(MANIFEST)
+    gt = pd.read_parquet(GT)
+    gt_ids = set(gt["pand_id"].astype(str))
+    pand_ids = set(manifest.loc[manifest["pand_id"].astype(str).isin(gt_ids), "pand_id"].astype(str))
+    logger.info("experimental dataset pands: %d", len(pand_ids))
+    gt_type = gt.assign(pand_id=gt["pand_id"].astype(str)).set_index("pand_id")["building_type"]
 
     certs = load_certificates(pand_ids)
     lines = [
-        "# Table 2d — Intra-pand EPC label entropy audit (manifest pands)",
+        "# Table 2d - Intra-pand EPC label consistency audit (experimental dataset)",
+        "",
+        f"Experimental dataset: **{len(pand_ids)}** buildings. Buildings linked back to at least one raw residential certificate: **{certs['pand_id'].nunique()}**.",
         "",
         "Labels normalised A+..A++++ -> A. modal share = fraction of a pand's",
         "certificates carrying its most common label. Oracle ceiling = accuracy of",
@@ -173,7 +176,7 @@ def main():
     lines += summarize(per_pand(certs), gt_type, "All certificates (any year)")
     nta = certs[certs["reg_year"] >= 2021]
     lines += summarize(per_pand(nta), gt_type,
-                       "NTA 8800 era only (reg >= 2021, matches pipeline filter)")
+                       "NTA 8800 era only (reg >= 2021; sensitivity set)")
 
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     logger.info("wrote %s", OUT)

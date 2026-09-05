@@ -1,4 +1,6 @@
-# Table 2d — Intra-pand EPC label entropy audit (manifest pands)
+# Table 2d - Intra-pand EPC label consistency audit (experimental dataset)
+
+Experimental dataset: **10086** buildings. Buildings linked back to at least one raw residential certificate: **10075**.
 
 Labels normalised A+..A++++ -> A. modal share = fraction of a pand's
 certificates carrying its most common label. Oracle ceiling = accuracy of
@@ -6,19 +8,19 @@ predicting each pand's modal label scored against a random unit's label.
 
 ## All certificates (any year)
 
-- pands with >=1 certificate: **10093**
-- pands with >=2 certificates: **5895** (58.4%)
+- pands with >=1 certificate: **10075**
+- pands with >=2 certificates: **5883** (58.4%)
 - certificates per pand (all): median 2, mean 3.2, max 235
-- among multi-cert pands, >=2 distinct labels: **4539** (77.0% of multi)
+- among multi-cert pands, >=2 distinct labels: **4532** (77.0% of multi)
 
 | quantity | all pands | multi-cert pands only |
 |---|---:|---:|
-| mean modal share (oracle acc ceiling) | **0.7918** | 0.6435 |
+| mean modal share (oracle acc ceiling) | **0.7917** | 0.6432 |
 | median modal share | 1.0000 | 0.5000 |
 | p25 modal share | 0.5000 | 0.5000 |
-| mean entropy (bits) | 0.5237 | 0.8966 |
-| P(latest == modal) | 0.8803 | 0.7951 |
-| median intra-pand PF std (kWh/m2.yr) | — | 35.8 |
+| mean entropy (bits) | 0.5240 | 0.8973 |
+| P(latest == modal) | 0.8802 | 0.7948 |
+| median intra-pand PF std (kWh/m2.yr) | not applicable | 35.9 |
 
 ### by building type
 
@@ -29,21 +31,21 @@ predicting each pand's modal label scored against a random unit's label.
 | SFH | 131 | 0.0% | 1 | 1.0000 | 0.0000 |
 | MFH | 46 | 95.7% | 6 | 0.7535 | 0.7112 |
 
-## NTA 8800 era only (reg >= 2021, matches pipeline filter)
+## NTA 8800 era only (reg >= 2021; sensitivity set)
 
-- pands with >=1 certificate: **10093**
-- pands with >=2 certificates: **5893** (58.4%)
+- pands with >=1 certificate: **10075**
+- pands with >=2 certificates: **5881** (58.4%)
 - certificates per pand (all): median 2, mean 3.2, max 235
-- among multi-cert pands, >=2 distinct labels: **4537** (77.0% of multi)
+- among multi-cert pands, >=2 distinct labels: **4530** (77.0% of multi)
 
 | quantity | all pands | multi-cert pands only |
 |---|---:|---:|
-| mean modal share (oracle acc ceiling) | **0.7919** | 0.6436 |
+| mean modal share (oracle acc ceiling) | **0.7918** | 0.6433 |
 | median modal share | 1.0000 | 0.5000 |
 | p25 modal share | 0.5000 | 0.5000 |
-| mean entropy (bits) | 0.5235 | 0.8965 |
-| P(latest == modal) | 0.8803 | 0.7950 |
-| median intra-pand PF std (kWh/m2.yr) | — | 35.8 |
+| mean entropy (bits) | 0.5238 | 0.8973 |
+| P(latest == modal) | 0.8802 | 0.7948 |
+| median intra-pand PF std (kWh/m2.yr) | not applicable | 35.9 |
 
 ### by building type
 
