@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Stage 1 record structure</title><style>body{margin:0;background:#fff}</style></head><body><svg xmlns="http://www.w3.org/2000/svg" width="1730" height="1398" viewBox="0 0 1730 1398"><style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #1F2A37; }
+      .stereo { font-size: 30px; fill: #FFFFFF; font-style: italic; }
+      .cname { font-size: 40px; font-weight: 700; fill: #FFFFFF; }
+      .attr { font-size: 30px; }
+      .mono { font-weight: 700; fill: #1F2A37; }
+      .typ { fill: #4B5563; }
+      .tag { font-weight: 700; fill: #E37222; }
+      .gloss { font-size: 30px; fill: #4B5563; }
+      .notehead { font-size: 30px; font-weight: 700; fill: #1F2A37; }
+      .note { font-size: 30px; fill: #1F2A37; }
+      .mult { font-size: 32px; font-weight: 700; fill: #005293; }
+      .assoc { font-size: 26px; font-weight: 700; fill: #005293; }
+      .assocsub { font-size: 22px; fill: #4B5563; }
+      .foot { font-size: 18px; fill: #6B7280; }
+    </style><rect width="1730" height="1398" fill="#FFFFFF"/><path d="M70,60 H768 L790,82 V364 H70 Z" fill="#F4F3EF" stroke="#9CA3AF" stroke-width="2.5"/>
+<path d="M768,60 V82 H790" fill="none" stroke="#9CA3AF" stroke-width="2.5"/>
+<text x="90" y="118" class="notehead">Sources</text>
+<text x="90" y="160" class="note">BAG (attributes and footprints)</text>
+<text x="90" y="202" class="note">3DBAG (reconstructed geometry)</text>
+<text x="90" y="244" class="note">EP-Online (building category, energy class)</text><path d="M940,60 H1638 L1660,82 V364 H940 Z" fill="#F4F3EF" stroke="#9CA3AF" stroke-width="2.5"/>
+<path d="M1638,60 V82 H1660" fill="none" stroke="#9CA3AF" stroke-width="2.5"/>
+<text x="960" y="118" class="notehead">Sources and processing</text>
+<text x="960" y="160" class="note">OpenStreetMap and Overture Maps</text>
+<text x="960" y="202" class="note">(candidate footprints)</text>
+<text x="960" y="244" class="note">Mapillary (panoramas)</text>
+<text x="960" y="286" class="note">OpenFACADES (image processing)</text>
+<text x="960" y="328" class="note">(Liang et al., 2025)</text><line x1="430.0" y1="364" x2="430.0" y2="434" stroke="#9CA3AF" stroke-width="2.5" stroke-dasharray="10 8"/><line x1="1300.0" y1="364" x2="1300.0" y2="434" stroke="#9CA3AF" stroke-width="2.5" stroke-dasharray="10 8"/><rect x="70" y="434" width="720" height="924" rx="6" fill="#F3F8FC" stroke="#005293" stroke-width="3"/>
+<rect x="70" y="434" width="720" height="124" rx="6" fill="#0065BD"/>
+<rect x="70" y="550" width="720" height="8" fill="#0065BD"/>
+<text x="430.0" y="482" class="stereo" text-anchor="middle">«table»</text>
+<text x="430.0" y="534" class="cname" text-anchor="middle">BuildingReferenceRecord</text>
+<line x1="70" y1="558" x2="790" y2="558" stroke="#005293" stroke-width="3"/>
+<text x="96" y="622" class="attr"><tspan class="mono">pand_id</tspan><tspan class="typ"> : str</tspan><tspan class="tag">  {PK}</tspan></text>
+<text x="126" y="662" class="gloss">BAG building identifier</text>
+<text x="96" y="716" class="attr"><tspan class="mono">city</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="756" class="gloss">Amsterdam, Delft, Rotterdam, Utrecht</text>
+<text x="96" y="810" class="attr"><tspan class="mono">bouwjaar</tspan><tspan class="typ"> : int</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="850" class="gloss">construction year (BAG)</text>
+<text x="96" y="904" class="attr"><tspan class="mono">Gebouwtype</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="944" class="gloss">residential category (EP-Online, Dutch)</text>
+<text x="96" y="998" class="attr"><tspan class="mono">building_type</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="1038" class="gloss">size class SFH / TH / MFH / AB</text>
+<text x="96" y="1092" class="attr"><tspan class="mono">num_floors</tspan><tspan class="typ"> : int</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="1132" class="gloss">floor count (3DBAG)</text>
+<text x="96" y="1186" class="attr"><tspan class="mono">Energieklasse</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="126" y="1226" class="gloss">registered energy class (EP-Online)</text><rect x="940" y="434" width="720" height="924" rx="6" fill="#F5F9FB" stroke="#005293" stroke-width="3"/>
+<rect x="940" y="434" width="720" height="124" rx="6" fill="#64A0C8"/>
+<rect x="940" y="550" width="720" height="8" fill="#64A0C8"/>
+<text x="1300.0" y="482" class="stereo" text-anchor="middle">«table»</text>
+<text x="1300.0" y="534" class="cname" text-anchor="middle">StreetViewImageRecord</text>
+<line x1="940" y1="558" x2="1660" y2="558" stroke="#005293" stroke-width="3"/>
+<text x="966" y="622" class="attr"><tspan class="mono">pand_id</tspan><tspan class="typ"> : str</tspan><tspan class="tag">  {FK}</tspan></text>
+<text x="996" y="662" class="gloss">BAG building identifier</text>
+<text x="966" y="716" class="attr"><tspan class="mono">panorama_id</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="756" class="gloss">Mapillary panorama</text>
+<text x="966" y="810" class="attr"><tspan class="mono">bdid</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="850" class="gloss">OpenFACADES footprint id (OSM / Overture)</text>
+<text x="966" y="904" class="attr"><tspan class="mono">file_path</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="944" class="gloss">cropped building image</text>
+<text x="966" y="998" class="attr"><tspan class="mono">city</tspan><tspan class="typ"> : str</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="1038" class="gloss">city of the panorama</text>
+<text x="966" y="1092" class="attr"><tspan class="mono">aov_geo</tspan><tspan class="typ"> : float</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="1132" class="gloss">angle of view to the building (degrees)</text>
+<text x="966" y="1186" class="attr"><tspan class="mono">distance</tspan><tspan class="typ"> : float</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="1226" class="gloss">camera-to-building distance (m)</text>
+<text x="966" y="1280" class="attr"><tspan class="mono">image_idx</tspan><tspan class="typ"> : int</tspan><tspan class="tag"></tspan></text>
+<text x="996" y="1320" class="gloss">crop index within the building</text><line x1="790" y1="611" x2="940" y2="611" stroke="#005293" stroke-width="4"/><text x="804" y="593" class="mult">1</text><text x="926" y="593" class="mult" text-anchor="end">1..8</text></svg></body></html>
