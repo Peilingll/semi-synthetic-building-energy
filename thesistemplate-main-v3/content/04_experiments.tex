@@ -97,7 +97,7 @@ The equation is evaluated twice for every building. One calculation uses U-value
 	{\sum_i\left(h_{tr,\mathrm{ref},i} - \overline{h_{tr,\mathrm{ref}}}\right)^2}.
 \end{equation}
 
-This study defines the floor-area-weighted relative difference as the aggregate transmission heat transfer coefficient calculated from predicted cells relative to that calculated from reference cells:
+Weighting each floor-area-normalised value by $A_{floor}$ converts it to the corresponding building-level contribution before aggregation. Dividing the aggregate difference by the reference aggregate expresses the result as a relative percentage. This study therefore defines the floor-area-weighted relative difference as
 
 \begin{equation}
 	\label{eq:area_weighted_difference}
@@ -106,7 +106,7 @@ This study defines the floor-area-weighted relative difference as the aggregate 
 	{\sum_i h_{tr,\mathrm{ref},i}A_{floor,i}} .
 \end{equation}
 
-A positive value means that cells assigned from image predictions produce a larger aggregate transmission heat transfer coefficient than cells assigned from reference attributes. The metric compares two archetype assignments and is not a validation against measured heat loss or energy use. Table~\ref{tab:htr_inputs} summarises the quantities that vary between the reference and predicted cell calculations and those held constant.
+A positive value means that cells assigned from image predictions produce a larger aggregate transmission heat transfer coefficient than cells assigned from reference attributes, while a negative value means the opposite. The metric compares two archetype assignments and is not a validation against measured heat loss or energy use. Table~\ref{tab:htr_inputs} summarises the quantities that vary between the reference and predicted cell calculations and those held constant.
 
 \begin{table}[htbp]
 	\centering
@@ -218,7 +218,7 @@ Figure~\ref{fig:svi_examples} provides one representative crop for each availabl
 	\label{fig:svi_examples}
 \end{figure}
 
-Figure~\ref{fig:distributions} shows the corresponding distributions of building type, floor count, construction period, and registered energy class. AB accounts for approximately 88\% of the experimental dataset, compared with approximately 54\% of the 124,784 buildings in the eligible reference set. Under the binary target, classes A to C account for 70.3\% of the experimental dataset and 76.5\% of the eligible reference set. The experimental results therefore describe buildings with eligible \ac{SVI} rather than the complete residential building stock of the four study areas.
+Figure~\ref{fig:distributions} shows the corresponding distributions of building type, floor count, construction period, and registered energy class. AB accounts for approximately 88\% of the experimental dataset, compared with approximately 54\% of the 124,784 buildings in the eligible reference set. Under the binary target, classes A to C account for 70.3\% of the experimental dataset and 76.5\% of the eligible reference set. The experimental results therefore describe buildings with at least one image meeting the Stage 1 selection rules rather than the complete residential building stock of the four study areas.
 
 \begin{figure}[htbp]
 	\centering
@@ -530,7 +530,7 @@ The seven-class results were low for all information sources when measured by ma
 \subsection{Validity, Limitations, and Future Evaluation}
 \label{sec:validity_limitations}
 
-The first limitation concerns the composition and geographic scope of the experimental dataset. Mapillary availability and image filtering produced a dataset dominated by Amsterdam and AB buildings, with few observations for several residential types, construction periods, archetype cells, and energy classes. The results therefore apply to the evaluated buildings with eligible \ac{SVI} and do not establish performance for a study area excluded from model development. Future geographic evaluation should exclude each study area from model development in turn and report the composition and class-specific performance of every target set. Application outside the Netherlands additionally requires explicit mappings among national registries, energy class definitions, and archetype taxonomies before model transfer can be assessed.
+The first limitation concerns the composition and geographic scope of the experimental dataset. Mapillary availability and image filtering produced a dataset dominated by Amsterdam and AB buildings, with few observations for several residential types, construction periods, archetype cells, and energy classes. The results therefore apply to the evaluated buildings with at least one image meeting the Stage 1 selection rules and do not establish performance for a study area excluded from model development. Future geographic evaluation should exclude each study area from model development in turn and report the composition and class-specific performance of every target set. Application outside the Netherlands additionally requires explicit mappings among national registries, energy class definitions, and archetype taxonomies before model transfer can be assessed.
 
 The second limitation arises from the difference between the certificate unit and the unit of analysis. EP-Online certificates are registered for dwellings, whereas this study evaluates BAG buildings. Stage 1 reduces the linked records to one registered energy class per BAG building, which gives every building one target label in the experimental dataset. However, 58.4\% of the 10,075 buildings linked back to the raw certificate records had multiple certificates, and 77.0\% of that group contained more than one class. Selecting the latest certificate provides one reproducible target but does not remove variation among dwelling units or registration dates. The target may therefore describe one unit or one recorded state rather than the facade and geometry observed for the complete building. Mapillary acquisition dates were also not systematically aligned with certificate registration dates, which can add temporal disagreement between an image and its target. Future evaluation should distinguish single unit and multiunit buildings, compare latest, modal, and unit level targets where linkage permits, and align image and certificate dates where possible.
 

@@ -11,11 +11,11 @@ Reference building attributes are obtained from EP-Online, BAG, and reconstructe
 The Dutch national building typology developed within the \acs{TABULA} project is referred to as TABULA-NL \parencite{loga2016,tabulawebtool}.
 
 The stages follow the information flow shown in Figure~\ref{fig:pipeline_overview}.
-Stage 1 constructs the experimental dataset from reference records and eligible street view images.
+Stage 1 constructs the experimental dataset from reference records and selected street view images.
 Stage 2 predicts building type, construction year, and floor count from the images.
 Stage 3 combines building type and construction year to assign a TABULA-NL archetype cell and its representative U-values.
 Stage 4 predicts the registered energy class either from building attributes and assigned U-values or directly from imagery.
-This sequence separates model prediction from deterministic archetype assignment and preserves the BAG building as the unit of comparison.
+This sequence separates model prediction from deterministic archetype assignment and uses the BAG building as the unit of comparison throughout.
 
 \begin{figure}[htbp]
 	\centering
@@ -39,8 +39,8 @@ The registered EP-Online energy class remains the prediction target and is not a
 \label{sec:dataset_construction}
 
 Stage 1 constructs the experimental dataset required for all subsequent operations.
-The reference branch produces one record per eligible BAG building, while the image branch produces one record per selected image.
-The branches are linked by the BAG building identifier, stored as \texttt{pand\_id}, so one building reference record may correspond to several street view image records.
+The reference branch produces one record per BAG building that passes the reference filters, while the image branch produces one record per selected image.
+The branches are linked by the BAG building identifier \texttt{pand\_id}, so one building reference record may correspond to several street view image records.
 Figure~\ref{fig:data_linkage_units} defines this record structure, and Table~\ref{tab:data_sources} identifies the contribution of each source.
 
 \subsection{Data Sources}
@@ -59,7 +59,7 @@ All spatial operations use the Dutch national coordinate reference system, EPSG:
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_3_2_record_structure_uml}
-	\caption[Simplified Stage 1 record structure.]{Simplified Stage 1 record structure. Each \texttt{BuildingReferenceRecord} represents one eligible BAG building and is linked through \texttt{pand\_id} to one to eight \texttt{StreetViewImageRecord} entries. Each image record represents one selected facade crop.}
+	\caption[Simplified Stage 1 record structure.]{Simplified Stage 1 record structure. Each \texttt{BuildingReferenceRecord} represents one BAG building that passes the reference filters and is linked through \texttt{pand\_id} to one to eight \texttt{StreetViewImageRecord} entries. Each image record represents one selected facade crop.}
 	\label{fig:data_linkage_units}
 \end{figure}
 
@@ -104,7 +104,8 @@ Records satisfying these criteria form the eligible reference set, with one reco
 
 Certificates are not filtered by calculation method.
 The registration date is included to assess whether a record falls within the period governed by NTA 8800, the Dutch method for determining building energy performance \parencite{NTA8800}, but a date alone does not verify the calculation method used for an individual certificate.
-The original EP-Online class is stored without modification during dataset construction.
+Dataset construction uses the registered EP-Online class from the most recent linked certificate.
+This class may describe one dwelling or the condition recorded on one registration date rather than the complete BAG building.
 The class groupings used as prediction targets are defined in Stage 4.
 
 \subsection{Street View Image Acquisition, Filtering, and Building Linkage}
@@ -113,19 +114,18 @@ The class groupings used as prediction targets are defined in Stage 4.
 The image branch adapts the acquisition and image processing workflow introduced by \textcite{liang2025} for OpenFACADES.
 The workflow uses OpenStreetMap as its primary footprint source and Overture Maps to supplement missing footprints.
 Mapillary supplies the 360\textdegree{} panoramas, and visibility analysis identifies candidate views of each building.
-This study adds a BAG residential filter and stores the BAG building identifier with every accepted crop, allowing the image records to be joined to the eligible reference set.
+This study adds a BAG residential filter to the image acquisition workflow.
 
 Mapillary was selected because its licence permits an open and reproducible image acquisition workflow \parencite{mapillary}.
-Its contributor-based coverage is not assumed to represent a random sample of the Dutch residential building stock.
-This limitation narrows the scope of the subsequent evaluation, but it does not change the image selection procedure.
+Its contributor-based coverage limits the evaluated buildings and does not represent a random sample of the Dutch residential building stock.
 
 Candidate footprints and BAG polygons are projected to EPSG:28992.
-The centroid of each candidate footprint is intersected with BAG polygons, and only footprints linked to a BAG building with a residential function proceed to image acquisition.
-The resulting mapping stores both the source footprint identifier and \texttt{pand\_id}, so the BAG identifier remains available after detection, reprojection, and cropping.
+The centroid of each candidate footprint is intersected with BAG polygons, and only footprints linked to a residential BAG building proceed to image acquisition.
+Each accepted crop is linked to the corresponding BAG building through \texttt{pand\_id}, which joins the image record to the eligible reference set.
 
 For each accepted footprint, Mapillary panorama metadata are queried within the study area.
 Candidate views are screened by camera distance, unobstructed visibility to the target building, and \acf{AoV}.
-The eligible views are ranked and limited at footprint level according to the criteria in Table~\ref{tab:data_criteria} and downloaded at 2,048 pixels.
+Views meeting the thresholds in Table~\ref{tab:data_criteria} are ranked, limited at footprint level, and downloaded at 2,048 pixels.
 Grounding DINO, an open-set object detector that localises objects from textual prompts, identifies the target building using the prompt \texttt{building} \parencite{liu2024groundingdino}.
 The implementation uses the Swin-T OGC checkpoint with a box threshold of 0.35 and a text threshold of 0.30.
 Perspective reprojection then converts the detected region into an individual facade crop.
@@ -150,7 +150,7 @@ The remaining crops are ranked by decreasing \ac{AoV} and increasing camera dist
 
 Final integration joins the eligible reference set to the \ac{SVI} manifest by \texttt{pand\_id}.
 The linked data product used in the experiments is termed the experimental dataset.
-It is restricted to buildings with at least one eligible image, processable 3DBAG geometry, and reference building attributes that permit TABULA-NL assignment.
+It is restricted to buildings with at least one image meeting the Stage 1 selection rules, processable 3DBAG geometry, and reference building attributes that permit TABULA-NL assignment.
 All images linked to one building inherit the same reference building attributes and registered energy class.
 Table~\ref{tab:data_criteria} provides the authoritative summary of the selection thresholds and outputs used throughout Stage 1.
 
@@ -180,7 +180,7 @@ This temporal difference is reported as a limitation because the available recor
 		Image & View selection & $10^\circ < \acs{AoV} < 130^\circ$, with at most three panoramas per source footprint ranked by decreasing \acs{AoV} \\
 		Image & Crop quality & Building pixel share at least 15\%, wall pixel share no more than 30\%, Laplacian variance above 30, file size at least 20\,kB, and classification as outdoor by the Places365 scene classifier \\
 		Image & Building image limit & Valid BAG assignment and at most eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance \\
-		Integration & Experimental dataset & Reference record and at least one eligible image available, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
+		Integration & Experimental dataset & Reference record and at least one image meeting the Stage 1 selection rules, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
 		\bottomrule
 	\end{tblr}
 \end{table}

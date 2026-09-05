@@ -29,7 +29,7 @@ This result indicates that the images contain information relevant to the regist
 Among the structured inputs, construction year made the largest marginal contribution to energy class prediction and should therefore be prioritised when improving building attribute prediction from \ac{SVI}.
 
 Overall, the findings support \ac{SVI} as a supplementary source of building information rather than a universal replacement for administrative records.
-When reference building attributes are incomplete, predictions of building type, construction year, and floor count can support preliminary building stock assessment and targeted data collection because the attributes remain available for inspection before archetype assignment.
+When reference building attributes are incomplete, predictions of building type, construction year, and floor count can support preliminary building stock assessment and targeted data collection because the predicted attributes can be inspected before archetype assignment and used in subsequent analyses.
 Administrative records and reconstructed geometry should remain the preferred sources where they are available, while \ac{SVI} can supplement building attributes that can be inferred from visible facades.
 When the registered energy class is the only required output, direct image prediction provided stronger class-balanced performance than prediction based on the evaluated structured inputs.
 However, neither procedure should replace an \ac{EPC}, a physical survey, or measured performance assessment.
@@ -46,7 +46,7 @@ The comparison evaluates a fully fine-tuned ResNet-50, a frozen DINOv2 backbone 
 The two supervised configurations produced predictions for all 2,018 holdout buildings, while two invalid InternVL3-2B records were excluded from its metrics. This design identifies the strengths and limitations of each complete configuration without implying that every metric has the same denominator.
 
 \textbf{The second contribution connects attribute errors to archetype assignment and thermal parameters.}
-The building-level dataset links Mapillary imagery, reference building attributes, reconstructed 3DBAG geometry, \ac{EPC} records, and TABULA-NL archetypes while preserving the data source of each value.
+The building-level dataset links Mapillary imagery, reference building attributes, reconstructed 3DBAG geometry, \ac{EPC} records, and TABULA-NL archetypes and identifies the data source of each field.
 Predicted building type and construction year are used to assign the joint archetype cell and its U-values, which are then included in the calculation of the floor-area-normalised transmission heat transfer coefficient $h_{tr}$.
 This structure separates attribute prediction errors from their effects on cell agreement, assigned thermal parameters, and aggregate transmission heat transfer.
 
