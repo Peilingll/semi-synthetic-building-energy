@@ -9,7 +9,7 @@ All model training and \ac{VLM} inference used one NVIDIA GeForce RTX 4060 Lapto
 \label{sec:appendix_b_vision_configs}
 
 The two supervised configurations use the same training procedure: the AdamW optimiser; weight decay of 0.01, excluding normalisation parameters and biases; a cosine-annealing learning-rate schedule with $T_{\max} = 30$; a maximum of 30 epochs; early stopping based on validation building type macro F1 with a patience of 10 epochs; and fp16 automatic mixed precision (AMP).
-The shared trunks use Gaussian error linear unit (GELU) activation.
+The attribute \acs{MLP} in each supervised model uses Gaussian error linear unit (GELU) activation.
 Input images are resized to 224 $\times$ 224 pixels and normalised using ImageNet statistics (mean = (0.485, 0.456, 0.406); standard deviation = (0.229, 0.224, 0.225)).
 Training augmentation comprises \texttt{RandomResizedCrop} with a scale range of 0.7--1.0, horizontal flipping with $p = 0.5$, and \texttt{ColorJitter} with brightness, contrast, and saturation set to 0.2.
 Validation and holdout inference use deterministic resizing to a short side of 256 pixels followed by a 224-pixel centre crop.
@@ -33,8 +33,8 @@ Construction year and floor count are standardised using the mean and standard d
 		\midrule
 		Pre-trained weights (\texttt{timm}) & \texttt{resnet50} (ImageNet)                                       & \texttt{vit\_base\_\allowbreak patch14\_\allowbreak dinov2.\allowbreak lvd142m}   \\
 		Backbone feature dimension       & 2048                                                                  & 768                                                                              \\
-		Shared trunk                     & Linear (2048 $\rightarrow$ 256) + GELU + Dropout 0.3                  & Linear (768 $\rightarrow$ 256) + GELU + Dropout 0.3                              \\
-		Parameters updated               & Backbone, shared trunk, and output heads                              & Shared trunk and output heads only                                               \\
+		Attribute \acs{MLP}              & Linear (2048 $\rightarrow$ 256) + GELU + Dropout 0.3                  & Linear (768 $\rightarrow$ 256) + GELU + Dropout 0.3                              \\
+		Parameters updated               & Backbone, attribute \acs{MLP}, and output heads                       & Attribute \acs{MLP} and output heads only                                       \\
 		Total parameters                 & 24.03\,M                                                              & 85.92\,M                                                                         \\
 		Trainable parameters             & 24.03\,M (100\%)                                                      & 0.20\,M (approximately 0.2\%)                                                    \\
 		Learning rate                    & Backbone $1\times10^{-4}$; trunk/heads $5\times10^{-4}$ (grouped)     & $5\times10^{-4}$                                                                 \\
@@ -48,18 +48,18 @@ Construction year and floor count are standardised using the mean and standard d
 	\end{tblr}
 \end{table}
 
-The M2 direct energy class configurations follow the same training procedure as \cref{tab:vision_hyperparams}, except that the three attribute heads are replaced by one energy class classification head and early stopping uses validation energy class macro F1.
-M2-ResNet-50 is fine-tuned end to end using the learning rates and batch size reported above.
-Because the DINOv2 backbone is frozen, M2-DINOv2 first extracts and caches building-level mean features using deterministic resizing and centre cropping without augmentation.
+The direct energy class models follow the same training procedure as \cref{tab:vision_hyperparams}, except that the three attribute heads are replaced by one energy class classification head and early stopping uses validation energy class macro F1.
+The direct ResNet-50 model is fine-tuned end to end using the learning rates and batch size reported above.
+The direct DINOv2 model first extracts and caches building level mean features because its backbone parameters are fixed. Image processing uses deterministic resizing and centre cropping without augmentation.
 The same classification-network structure is then trained on the cached features using AdamW, a learning rate of $5\times10^{-4}$, weight decay of 0.01, cosine annealing, early-stopping patience of 10 epochs, and a minibatch size of 256.
-Unlike the supervised attribute-extraction procedure in \cref{tab:vision_hyperparams}, this cached-feature route does not use training-time image augmentation.
+Unlike the supervised attribute prediction procedure in \cref{tab:vision_hyperparams}, this cached feature procedure does not use image augmentation during training.
 
 \section{LightGBM Configuration}
 \label{sec:appendix_b_lightgbm}
 
 \begin{table}[htbp]
 	\centering
-	\caption{Fixed LightGBM hyperparameters shared by all downstream runs.}
+	\caption{Fixed LightGBM hyperparameters used for both energy class tasks and all attribute input conditions.}
 	\label{tab:lightgbm_hyperparams}
 	\small
 	\begin{tblr}{
@@ -87,5 +87,5 @@ Unlike the supervised attribute-extraction procedure in \cref{tab:vision_hyperpa
 	\end{tblr}
 \end{table}
 
-The same hyperparameters are used for all attribute-based routes and both energy class tasks.
-Only the objective changes with the task; no route-specific tuning is performed.
+The same hyperparameters are used for all attribute based conditions and both energy class tasks.
+Only the objective changes with the task; no separate tuning is performed for individual input conditions.

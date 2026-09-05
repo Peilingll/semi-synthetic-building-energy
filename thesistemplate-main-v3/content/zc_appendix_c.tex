@@ -1,9 +1,9 @@
 \chapter{VLM Prompts and Output Parsing Rules}
 \label{ch:appendix_c}
 
-This appendix reproduces verbatim the three prompts used with InternVL3-2B: M3 attribute inference, M2 direct seven-class prediction, and M2 direct binary prediction.
+This appendix reproduces verbatim the three prompts used with InternVL3-2B: attribute inference, direct seven-class prediction, and direct binary prediction.
 It also specifies the output parsing rules.
-The prompts were developed using a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled, and were then frozen before evaluation (\cref{sec:vision_inference_strategies}).
+The prompts were developed using a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled, and were finalised before holdout evaluation (\cref{sec:vision_inference_strategies}).
 
 \textbf{The decoding configuration is specified below.}
 The model is loaded in bfloat16.
@@ -11,7 +11,7 @@ Each image is processed using dynamic tiling with no more than twelve 448 $\time
 Generation uses greedy decoding (\texttt{do\_sample = False}) with \texttt{max\_new\_tokens = 512}, making inference deterministic.
 The first three ranked images for each building are processed independently.
 
-\section{Attribute Inference Prompt (M3)}
+\section{Attribute Inference Prompt}
 \label{sec:appendix_c_attribute_prompt}
 
 \begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
@@ -49,7 +49,7 @@ give your best single estimate - never omit a key.
 Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}
 \end{lstlisting}
 
-\section{Direct Seven-Class Classification Prompt (M2)}
+\section{Direct Seven-Class Classification Prompt}
 \label{sec:appendix_c_sevenclass_prompt}
 
 The seven-class and binary prompts use the same description of visual evidence and differ only in the permitted answer space.
@@ -73,7 +73,7 @@ Required key:
 Example: {"energy_label": "C"}
 \end{lstlisting}
 
-\section{Direct Binary Classification Prompt (M2)}
+\section{Direct Binary Classification Prompt}
 \label{sec:appendix_c_binary_prompt}
 
 \begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]

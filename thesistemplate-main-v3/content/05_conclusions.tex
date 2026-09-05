@@ -1,119 +1,56 @@
-\chapter{Conclusions and Future Work}
+\chapter{Conclusions}
 \label{ch:conclusions}
 
-This thesis assessed whether building attributes inferred from \ac{SVI} can substitute for reference attributes in a TABULA-based building stock enrichment workflow.
-The integrated evaluation dataset enabled attribute extraction, archetype assignment, physically weighted archetype differences, and downstream energy class classification to be evaluated within one controlled framework.
-The findings answer the three research objectives within the evaluated scope.
+This thesis examined whether \ac{SVI} can provide building attributes that are useful for building energy assessment when administrative records are incomplete.
+The question was investigated through a Dutch case in which building type, construction year, and floor count inferred from \ac{SVI} were compared with administrative reference attributes, used for TABULA-NL archetype assignment, and evaluated as inputs to registered energy class prediction.
+TABULA-NL therefore provides the archetype framework used to assess the usefulness and consequences of image based attribute enrichment rather than the overarching goal of the thesis.
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-For Objective~1, \ac{SVI} provided predictive information for building type, construction year, and floor count, although the quality of extraction differed across attributes and classes.
-Performance varied across the three attribute extraction tasks and their evaluation metrics.
-Building type accuracy was influenced by the dominant Apartment Block class, and the narrow range represented in the sample limits the interpretation of the floor count result.
-Among the evaluated configurations, the frozen DINOv2 backbone with supervised prediction layers provided the most consistent overall results while requiring substantially fewer parameter updates than full ResNet-50 fine-tuning.
-The zero-shot InternVL3-2B configuration did not provide sufficient accuracy for the three-attribute extraction task under the evaluated protocol.
+Objective~1 assessed the predictive performance of \ac{SVI} for building type, construction year, and floor count.
+The three vision configurations produced estimates for all three attributes, but prediction quality differed by attribute, class, and model configuration.
+DINOv2 with a frozen backbone produced the most consistent overall results, achieving the best value in six of the seven principal attribute metrics.
+ResNet-50 attained the highest building type accuracy, but this result was influenced by strong performance for the dominant Apartment Block class, while DINOv2 achieved higher macro F1 and stronger recall for less frequent classes.
+InternVL3-2B without parameter updating did not provide sufficient accuracy for the three attribute tasks in the evaluated setup.
 
-For Objective~2, \ac{SVI}-derived attributes reproduced the dominant TABULA-NL archetype cells but did not provide balanced coverage of the complete matrix.
-The best joint-cell accuracy exceeded the majority-cell baseline by only approximately 3.5 percentage points, and recall remained low for sparsely represented cells.
-Physically weighted archetype-difference scoring distinguished the trained configurations more clearly from the zero-shot configuration, but the trained configurations still overestimated stock-level transmission heat loss by approximately 10\%.
-These results also separate two uses of the archetype assignment.
-The tabulated U-values add no independent information to energy class classification once building type and construction period are present, whereas heat loss estimation depends directly on the accuracy and bias of the assigned physical parameters.
-The comparison remains relative to reference archetypes and does not constitute validation against measured building performance.
+Objective~2 quantified how errors in predicted building type and construction year affect TABULA-NL archetype assignment and the associated thermal parameters.
+DINOv2 and ResNet-50 achieved joint cell accuracies of 0.825 and 0.826, respectively, but the majority cell baseline already reached 0.790.
+Their macro cell recalls of 0.180 and 0.128 show that the high overall agreement was concentrated in frequent combinations of building type and construction period rather than distributed across the occupied archetype cells.
+The errors also changed the assigned thermal parameters.
+Relative to calculations based on reference cells, the cells assigned from DINOv2 and ResNet-50 predictions produced aggregate transmission heat transfer coefficients that were 10.0\% and 10.5\% higher, while InternVL3-2B produced a value 16.6\% higher.
+These comparisons quantify the effect of attribute errors on archetype assignment, but they do not validate the assigned parameters against measured envelope properties or heat demand.
 
-For Objective~3, \ac{SVI}-derived attributes provided a conditional partial substitute when reference attributes were unavailable, but they were not an equivalent replacement.
-Under the pooled protocol with fixed buildings, data splits, and downstream classifier, replacing the reference attributes with DINOv2-derived attributes reduced binary macro F1 by 0.002.
-However, both routes achieved a recall of approximately 0.11 for classes D to G, so the small difference between them does not imply strong binary classification.
-The substitution cost was more apparent in the seven-class diagnostic task, where macro F1 decreased by 0.022.
-Feature ablation identified construction year as the largest marginal contributor among the existing downstream attributes, making construction year extraction the first priority for improving the attribute mediated route.
+Objective~3 determined how the source of building information affects registered energy class prediction.
+Changing from reference attributes to DINOv2 predicted attributes reduced binary macro F1 by only 0.002, but reduced seven class macro F1 by 0.022.
+The small binary difference does not indicate reliable classification because both attribute conditions had low recall for classes D to G.
+Direct image prediction with DINOv2 achieved the highest macro F1 for both targets, reaching 0.597 for the binary task and 0.213 for the seven class task.
+This result indicates that the images contain information relevant to the registered energy class that is not represented by building type, construction year, floor count, and the corresponding TABULA-NL U-values alone.
+Among the structured inputs, construction year made the largest marginal contribution to energy class prediction and should therefore be prioritised when improving visual attribute extraction.
 
-The Amsterdam holdout evaluation further limits the scope of this conclusion.
-Excluding Amsterdam from training increased construction year error, while both the reference and attribute mediated routes approached the uniform random expectation on the concentrated Amsterdam target sample.
-The pooled result therefore cannot be extended directly to a city excluded from training.
-Cross-city use requires separate evaluation of attribute transfer and target sample composition.
-
-Overall, \ac{SVI}-derived attributes can supplement missing reference metadata in a TABULA-based building stock workflow, but their suitability depends on the attribute, downstream task, and relationship between the training and target populations.
-Within the four-city sample evaluated here, frozen DINOv2 offered the most consistent source of the three visual attributes, and construction year provided the clearest downstream utility.
-The controlled comparison establishes how attribute contribution, substitution cost, physically weighted archetype difference, and cross-city performance can be evaluated separately rather than treating \ac{SVI}-derived information as either universally usable or unusable.
+Overall, the findings support \ac{SVI} as a supplementary source of building information rather than a universal replacement for administrative records.
+When administrative attributes are incomplete, predictions of building type, construction year, and floor count can support preliminary building stock assessment and targeted data collection because the attributes remain available for inspection before archetype assignment.
+Administrative records and reconstructed geometry should remain the preferred sources where they are available, while \ac{SVI} can supplement missing visible or semantic attributes.
+When the registered energy class is the only required output, direct image prediction provided stronger class balanced performance than prediction based on the evaluated structured attributes.
+However, neither procedure should replace an \ac{EPC}, a physical survey, or measured performance assessment.
+The appropriate use of \ac{SVI} therefore depends on whether the application requires explicit building attributes, archetype parameters, or an energy class prediction.
 
 \section{Contributions}
 \label{sec:contributions}
 
 This thesis makes three contributions to the evaluation of \ac{SVI}-derived attributes for building stock enrichment.
-These contributions concern the controlled assessment of attribute sources and their downstream consequences rather than the development of a new predictive architecture.
+These contributions concern the controlled assessment of attribute sources and their consequences for archetype assignment and energy class prediction rather than the development of a new predictive architecture.
 
-\textbf{The first contribution is a controlled evaluation of attribute extraction from SVI.}
-The comparison uses a common building population and attribute schema for a fully fine-tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction layers, and zero-shot InternVL3-2B.
-Evaluating all configurations on the same holdout buildings separates performance differences among construction year, building type, and floor count and identifies the relative strengths and limitations of the three inference strategies.
+\textbf{The first contribution is a controlled evaluation of building attribute prediction from SVI.}
+The comparison evaluates a fully fine tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction layers, and InternVL3-2B without parameter updating using the same holdout buildings and attribute definitions.
+Evaluating all three configurations on the same buildings distinguishes their performance for construction year, building type, and floor count and identifies the strengths and limitations of each configuration.
 
-\textbf{The second contribution provides traceable propagation from attributes to physical estimates based on archetypes.}
-The building-level dataset links Mapillary imagery, reference attributes, reconstructed 3DBAG geometry, EPC records, and TABULA-NL archetypes while retaining the provenance of each value.
-Predicted attributes are propagated through joint archetype assignment to the floor-area-normalised transmission heat transfer coefficient $h_{tr}$.
-This structure distinguishes extraction errors from their consequences for archetype coverage, physical parameter assignment, and stock-level heat loss bias.
+\textbf{The second contribution connects attribute errors to archetype assignment and thermal parameters.}
+The building level dataset links Mapillary imagery, administrative reference attributes, reconstructed 3DBAG geometry, \ac{EPC} records, and TABULA-NL archetypes while preserving the data source of each value.
+Predicted building type and construction year are used to assign the joint archetype cell and its U-values, which are then included in the calculation of the floor area normalised transmission heat transfer coefficient $h_{tr}$.
+This structure separates attribute prediction errors from their effects on cell agreement, assigned thermal parameters, and aggregate transmission heat transfer.
 
-\textbf{The third contribution is a controlled assessment of downstream substitution and its applicability.}
-Reference and \ac{SVI}-derived attributes are compared using the same buildings, data splits, and downstream classifier.
-The resulting comparison attributes the observed performance change to the replacement of the attribute source rather than to a different evaluation population or classifier.
-Feature ablation identifies the relative downstream contribution of the existing attributes, while the sample composition and Amsterdam holdout evaluations define the conditions under which the pooled substitution result does and does not apply.
-
-\section{Limitations}
-\label{sec:limitations}
-
-The representativeness of the experimental sample is constrained by uneven SVI coverage, imbalanced sample composition, and uncertainty in the energy class targets.
-Mapillary is a crowdsourced source with uneven spatial coverage, acquisition dates, viewpoints, and image quality.
-Buildings without suitable street view images are less likely to enter the experimental sample.
-The resulting sample is dominated by Amsterdam and apartment blocks, while several construction periods, building types, archetype cells, and energy classes remain sparsely represented.
-The diagnostic analyses show that this imbalance affects performance averaged across classes.
-Increasing the sample size without changing its distribution does not resolve this limitation.
-Energy class targets introduce further uncertainty because one building can be linked to multiple certificates that differ across units or registration dates.
-The mean modal share and the proportion of buildings for which the latest class equals the modal class describe the adopted aggregation rules rather than strict upper bounds on achievable prediction performance.
-Mapillary acquisition dates were not systematically aligned with EPC registration dates, so the imagery and certificate records may represent different states of the same building.
-
-The reported model performance is also limited to the predefined scope of model development.
-Supervised models and prediction layers were trained to compare the predefined inference configurations.
-The objective was not to introduce a new architecture or maximise attainable prediction performance.
-Model size, pretraining strategy, hyperparameters, training duration, and alternative image selection procedures were not evaluated exhaustively.
-InternVL3-2B was evaluated without parameter updates, and no \ac{VLM} was fine tuned using the experimental dataset.
-The reported accuracy and macro F1 values therefore characterise the selected configurations rather than the maximum performance attainable from \ac{SVI}.
-More representative training data, fine tuning for the target tasks, and broader optimisation may improve performance, but the present experiments do not establish the magnitude of such gains.
-Any improvement would also depend on increasing the representation of sparsely sampled groups rather than increasing the sample size alone.
-
-The archetype comparison depends on mapping decisions and physical assumptions that cannot be verified from \ac{SVI} alone.
-Converting reference or predicted attributes into TABULA-NL archetypes requires operational mapping decisions, including the assignment of semi-detached houses and flats to broader building types.
-These decisions were not examined through separate sensitivity tests.
-\Ac{SVI} may show visible changes to facades or windows but cannot reliably reveal concealed insulation, heating system upgrades, or renovations to individual units.
-The assigned TABULA parameters therefore represent archetypal as-built characteristics rather than verified current envelope conditions.
-In addition, the $h_{tr}$ analysis compares archetype assignments obtained from \ac{SVI} and reference data.
-It does not validate either assignment against measured heat loss or energy consumption.
-
-The geographical evidence is limited to four Dutch cities and supports an assessment of transfer only within this setting.
-Amsterdam is the only city that was excluded entirely from model development and used as the target city.
-Its target sample is concentrated in apartment blocks and one dominant archetype cell, so the resulting performance is not an average estimate of transfer to other cities.
-The reliance on national registries, Dutch energy class definitions, 3DBAG geometry, and the TABULA-NL taxonomy also limits direct application in other countries.
-Application in another country would require a separate assessment of the available data sources, archetype mappings, target definitions, and model performance.
-
-\section{Future Work}
-\label{sec:future_work}
-
-Future dataset construction should improve the representation of sparsely sampled groups and strengthen the alignment between imagery and energy certificate records.
-Additional data should target underrepresented construction periods, residential building types, archetype cells, energy classes, and urban contexts rather than preserve the current sample composition.
-Image acquisition and EPC registration dates should be aligned where possible.
-For apartment buildings, prediction for individual units and alternative aggregation rules at the building level should be evaluated to address the mismatch between observations of a shared facade and certificates issued for individual units.
-
-Further development of visual attribute extraction should prioritise construction year because it made the largest marginal contribution to downstream energy class classification among the evaluated attributes.
-Future comparisons should include an open source \ac{VLM} fine tuned on the experimental data, frozen DINOv2, and configurations in which the \ac{CNN} is fully fine tuned.
-These comparisons should use the same buildings, data partitions, attribute definitions, and downstream protocol.
-Further experiments should also evaluate more representative training data, objectives that account for class imbalance, ordinal formulations of construction period, calibration, and systematic hyperparameter optimisation.
-The results would help distinguish errors associated with model capacity, training design, target quality, and the visual evidence available in \ac{SVI}.
-
-Geographical validation should be extended beyond the Amsterdam holdout by excluding each city from model development in turn.
-This evaluation would help distinguish general transfer behaviour from effects associated with the composition of Amsterdam.
-Separate experiments could then evaluate calibration for each target city using a limited number of labelled buildings or suitable geospatial labels.
-Evaluation in other countries should begin with explicit mappings among national registries, energy class definitions, and TABULA taxonomies.
-Validation should first be conducted within each country before transfer across national contexts is assessed.
-
-Future physical validation should combine each attribute with the data source best suited to its observation.
-Reconstructed geospatial data should remain the preferred source for building geometry where equivalent 3D data are available, while \ac{SVI} analysis can focus on visible facade characteristics and semantic attributes that are outdated or unavailable in existing records.
-Renovation records, measured energy consumption, or thermal assessments of individual buildings are needed to distinguish archetypal as-built characteristics from current building conditions.
-If the residual between measured consumption and estimates based on archetypes is examined as a renovation signal, weather, occupancy, floor area, and heating systems must first be controlled.
-These data would allow the physical evaluation to progress from comparison with reference archetypes to validation against observed building performance.
+\textbf{The third contribution is a controlled comparison of information sources for energy class prediction.}
+Reference attributes and \ac{SVI}-derived attributes are compared on the same buildings and data partitions using the same fitted classifier.
+Direct image prediction is evaluated as a separate procedure that does not produce intermediate building attributes.
+The comparison therefore shows how energy class results change with the source and representation of building information, while feature ablation identifies the contribution of the structured inputs.

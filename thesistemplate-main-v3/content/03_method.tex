@@ -6,7 +6,7 @@
 
 This chapter defines a four-stage method for evaluating building information obtained from street view imagery against administrative and reconstructed reference data for the same buildings.
 The BAG building identifier is the unit of linkage throughout the method.
-It connects building attributes, reconstructed geometry, registered energy classes, and images while preserving the source of each field.
+It connects building attributes, reconstructed geometry, registered energy classes, and images, and the integrated dataset records the source of each field.
 The Dutch national building typology developed within the \acs{TABULA} project is referred to as TABULA-NL \parencite{loga2016,tabulawebtool}.
 
 The stages follow the information flow shown in Figure~\ref{fig:pipeline_overview}.
@@ -26,19 +26,19 @@ This sequence separates prediction by a model from deterministic archetype assig
 \subsection{Data Provenance}
 \label{sec:three_layer_structure}
 
-Throughout the four stages, the integrated dataset preserves the provenance of three field groups: reference data, model outputs, and archetype properties.
+Throughout the four stages, the integrated dataset records the provenance of three field groups: reference data, model outputs, and archetype properties.
 Reference data comprise administrative \acf{BAG} and EP-Online records and reconstructed 3DBAG geometry \parencite{kadasterbag,rvoeponline,threedbagdocs,peters2022,dukai2021}.
-The administrative fields represent registry records, while the 3DBAG fields are reconstructed geometric attributes rather than direct observations of physical building conditions.
+The administrative fields come from registry records. The 3DBAG fields describe geometry reconstructed from BAG and national elevation data.
 Model outputs comprise predicted building type, construction year, and floor count together with the corresponding model configuration.
 Archetype properties comprise the construction period, TABULA-NL cell, and representative U-values assigned from either reference or predicted building type and construction year.
-These properties describe a building stock subgroup rather than the envelope of an individual building \parencite{loga2016,tabulawebtool}.
+Every building assigned to the same archetype cell receives the same representative properties \parencite{loga2016,tabulawebtool}.
 The registered EP-Online energy class remains the prediction target and is not an output of the archetype lookup.
 
 \section{Stage 1: Dataset Construction}
 \label{sec:dataset_construction}
 
-Stage 1 constructs the population required for all subsequent operations.
-The reference data branch produces one record per eligible BAG building, while the image branch produces one record per retained image.
+Stage 1 constructs the linked dataset required for all subsequent operations.
+The reference data branch produces one record per eligible BAG building, while the image branch produces one record per selected image.
 The branches are linked by the BAG building identifier, stored as \texttt{pand\_id}, so one building reference record may correspond to several street view image records.
 Figure~\ref{fig:data_linkage_units} defines this record structure, and Table~\ref{tab:data_sources} identifies the contribution of each source.
 
@@ -57,7 +57,7 @@ All spatial operations use the Dutch national coordinate reference system, EPSG:
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_3_2_record_structure_uml}
-	\caption[Simplified Stage 1 record structure.]{Simplified Stage 1 record structure. Each \texttt{BuildingReferenceRecord} represents one eligible BAG building and is linked through \texttt{pand\_id} to one to eight \texttt{StreetViewImageRecord} entries. Each image record represents one retained facade crop.}
+	\caption[Simplified Stage 1 record structure.]{Simplified Stage 1 record structure. Each \texttt{BuildingReferenceRecord} represents one eligible BAG building and is linked through \texttt{pand\_id} to one to eight \texttt{StreetViewImageRecord} entries. Each image record represents one selected facade crop.}
 	\label{fig:data_linkage_units}
 \end{figure}
 
@@ -92,8 +92,8 @@ All spatial operations use the Dutch national coordinate reference system, EPSG:
 The reference branch first restricts BAG records to buildings that are in use and have a residential function.
 The BAG identifiers are normalised as 16-digit strings and used to join construction year and footprint data to EP-Online records and 3DBAG geometry.
 EP-Online records are restricted to existing residential buildings with a registered energy class.
-They are ordered by registration date so that repeated entries associated with the same recorded BAG identifier field are reduced to the most recent entry before linkage.
-Entries that list several BAG identifiers are then expanded, and one linked record is retained for each \texttt{pand\_id}.
+After the records are ordered by registration date, repeated entries associated with the same recorded BAG identifier field are reduced to the most recent entry before linkage.
+Entries that list several BAG identifiers are then expanded to produce one linked record for each \texttt{pand\_id}.
 
 The reference floor count is taken from the reconstructed 3DBAG floor attribute when available.
 If this field is missing, floor count is estimated by dividing the median reconstructed building height by an assumed floor height of 3.0\,m and rounding to the nearest integer.
@@ -101,8 +101,8 @@ Reference records are eligible when construction year is between 1800 and 2025, 
 The output is one record per building containing the reference attributes, reconstructed geometry, and original registered energy class.
 
 Certificates are not filtered by calculation method.
-The registration date is retained to assess whether a record falls within the period governed by NTA 8800 \parencite{NTA8800}, but a date alone does not verify the calculation method used for an individual certificate.
-The original EP-Online class is preserved during dataset construction.
+The registration date is included to assess whether a record falls within the period governed by NTA 8800 \parencite{NTA8800}, but a date alone does not verify the calculation method used for an individual certificate.
+The original EP-Online class is stored without modification during dataset construction.
 The class groupings used as prediction targets are defined in Stage 4.
 
 \subsection{Street View Image Acquisition, Filtering, and Building Linkage}
@@ -111,19 +111,19 @@ The class groupings used as prediction targets are defined in Stage 4.
 The image branch adapts the acquisition and image processing workflow introduced by \textcite{liang2025} for OpenFACADES.
 The workflow uses OpenStreetMap as its primary footprint source and Overture Maps to supplement missing footprints.
 Mapillary supplies the 360\textdegree{} panoramas, and visibility analysis identifies candidate views of each building.
-This study adds a BAG residential filter and retains the BAG building identifier with every accepted crop, allowing the image records to be joined to the reference table.
+This study adds a BAG residential filter and stores the BAG building identifier with every accepted crop, allowing the image records to be joined to the reference table.
 
 Mapillary was selected because its licence permits an open and reproducible image acquisition workflow \parencite{mapillary}.
 Its contributor-based coverage is not assumed to represent a random sample of the Dutch residential building stock.
-This limitation affects the population to which the subsequent evaluation applies, but it does not change the image selection procedure.
+This limitation narrows the scope of the subsequent evaluation, but it does not change the image selection procedure.
 
 Candidate footprints and BAG polygons are projected to EPSG:28992.
 The centroid of each candidate footprint is intersected with BAG polygons, and only footprints linked to a BAG building with a residential function proceed to image acquisition.
-The resulting mapping retains both the source footprint identifier and \texttt{pand\_id}, so the BAG identifier remains available after detection, reprojection, and cropping.
+The resulting mapping stores both the source footprint identifier and \texttt{pand\_id}, so the BAG identifier remains available after detection, reprojection, and cropping.
 
-For each retained footprint, Mapillary panorama metadata are queried within the study area.
+For each accepted footprint, Mapillary panorama metadata are queried within the study area.
 Candidate views are screened by camera distance, unobstructed visibility to the target building, and \acf{AoV}.
-The retained views are ranked and limited at footprint level according to the criteria in Table~\ref{tab:data_criteria} and downloaded at 2,048 pixels.
+The eligible views are ranked and limited at footprint level according to the criteria in Table~\ref{tab:data_criteria} and downloaded at 2,048 pixels.
 Grounding DINO, an open-set object detector that localises objects from textual prompts, identifies the target building using the prompt \texttt{building} \parencite{liu2024groundingdino}.
 The implementation uses the Swin-T OGC checkpoint with a box threshold of 0.35 and a text threshold of 0.30.
 Perspective reprojection then converts the detected region into an individual facade crop.
@@ -132,13 +132,13 @@ Figure~\ref{fig:svi_image_transformation} illustrates this transformation for on
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_3_3_image_transformation}
-	\caption[Image transformation from a 360\textdegree{} panorama to facade crops.]{Image transformation from a retained 360\textdegree{} panorama to facade crops for one building in Rotterdam. The sequence shows the raw panorama, candidate view selection, Grounding DINO detection, perspective reprojection, and the crops retained for the BAG building. Candidate crops are ranked by \ac{AoV}. Imagery \textcopyright{} Mapillary contributors (CC BY-SA 4.0).}
+	\caption[Image transformation from a 360\textdegree{} panorama to facade crops.]{Image transformation from a selected 360\textdegree{} panorama to facade crops for one building in Rotterdam. The sequence shows the raw panorama, candidate view selection, Grounding DINO detection, perspective reprojection, and the crops selected for the BAG building. Candidate crops are ranked by \ac{AoV}. Imagery \textcopyright{} Mapillary contributors (CC BY-SA 4.0).}
 	\label{fig:svi_image_transformation}
 \end{figure}
 
 Crops are screened by building pixel share, wall pixel share, image sharpness, file size, and scene type.
 Scene type is assessed with the ZenSVI implementation of Places365, a scene recognition model trained on 365 place categories.
-Only crops classified as outdoor are retained \parencite{zhou2018places,ito_zensvi_2025}.
+Only crops classified as outdoor are accepted \parencite{zhou2018places,ito_zensvi_2025}.
 Crops without a valid BAG identifier are excluded.
 The remaining crops are ranked by decreasing \ac{AoV} and increasing camera distance and are limited at building level according to Table~\ref{tab:data_criteria}.
 
@@ -147,13 +147,13 @@ The remaining crops are ranked by decreasing \ac{AoV} and increasing camera dist
 \label{sec:reference_data_integration}
 
 Final integration joins the eligible reference table to the image manifest by \texttt{pand\_id}.
-The joined population is restricted to buildings with at least one eligible image, processable 3DBAG geometry, and attributes that permit TABULA-NL assignment.
+The linked dataset is restricted to buildings with at least one eligible image, processable 3DBAG geometry, and attributes that permit TABULA-NL assignment.
 All images linked to one building inherit the same reference attributes and registered energy class.
 Table~\ref{tab:data_criteria} provides the authoritative summary of the selection thresholds and outputs used throughout Stage 1.
 
 The dates of the Mapillary images are not matched to the registration dates of the energy certificates.
 An image and its registered energy class may therefore describe the building at different points in time.
-This temporal difference is retained as a limitation of the linked data rather than resolved through an unverified date matching rule.
+This temporal difference is reported as a limitation because the available records do not support verified date matching.
 
 \begin{table}[htbp]
 	\centering
@@ -171,13 +171,13 @@ This temporal difference is retained as a limitation of the linked data rather t
 		Branch & Process & Selection rule and output \\
 		\midrule
 		Reference & Building eligibility & Existing residential BAG building with a registered energy class, construction year from 1800 to 2025, mapped residential category, and floor count from 1 to 30 \\
-		Reference & Record linkage & BAG, EP-Online, and 3DBAG records linked by normalised \texttt{pand\_id}, with one reference record retained per building \\
+		Reference & Record linkage & BAG, EP-Online, and 3DBAG records linked by normalised \texttt{pand\_id}, with one reference record selected per building \\
 		Image & Footprint filter & OpenStreetMap or Overture Maps footprint centroid contained within a residential BAG polygon \\
 		Image & Panorama matching & Camera distance no greater than 30\,m and unobstructed visibility to the target building \\
 		Image & View selection & $10^\circ < \acs{AoV} < 130^\circ$, with at most three panoramas per source footprint ranked by decreasing \acs{AoV} \\
 		Image & Crop quality & Building pixel share at least 15\%, wall pixel share no more than 30\%, Laplacian variance above 30, file size at least 20\,kB, and classification as outdoor by the Places365 scene classifier \\
 		Image & Building image limit & Valid BAG assignment and at most eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance \\
-		Integration & Linked population & Reference record and at least one eligible image available, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
+		Integration & Linked dataset & Reference record and at least one eligible image available, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -186,29 +186,28 @@ This temporal difference is retained as a limitation of the linked data rather t
 \label{sec:data_partitioning}
 
 Partitioning is performed on the final building-level dataset before model fitting.
-A two-stage protocol separates model development from final evaluation.
+A two-step partitioning procedure separates model development from final evaluation.
 
-First, the scikit-learn \texttt{StratifiedGroupKFold} splitter generates five shuffled folds with random seed 42 while attempting to preserve the distribution of a composite stratification label \parencite{pedregosa2011}.
-One fold is retained as the fixed holdout set, and the remaining four folds form the development set.
+First, the scikit-learn \texttt{StratifiedGroupKFold} splitter generates five shuffled subsets with random seed 42 while attempting to balance the distribution of a composite stratification label \parencite{pedregosa2011}.
+One subset is designated as the fixed holdout set, and the remaining four subsets form the development set.
 The composite stratification label combines study area, original EP-Online residential category, registered energy class, and TABULA-NL construction period.
 The split is generated from one record per building, using \texttt{pand\_id} as the grouping variable, and all images linked to that building inherit its assignment.
 Images of the same building therefore cannot occur in different subsets.
 This grouping prevents repeated images of one building from crossing subsets, but it does not remove spatial dependence between neighbouring buildings, which can make random-split performance optimistic \parencite{garbasevschi2021}.
 
-Second, the same splitter divides the development set into five folds using the same stratification variables, grouping key, and random seed.
-Trainable model configurations use these folds for fitting, model selection, and out-of-fold evaluation.
+Second, the same splitter divides the development set into five folds using the same stratification variables, grouping key, and random seed. Each trainable model is fitted five times, with four folds used for training and the remaining fold used for validation in each run. This procedure provides validation results for model and checkpoint selection without using the fixed holdout.
 The fixed holdout set is excluded from model fitting and hyperparameter selection.
-The same partitions are used for building attribute prediction, archetype assignment, and energy class prediction so that differences between methods are not caused by different building samples.
+Using the same partitions for building attribute prediction, archetype assignment, and energy class prediction prevents differences between methods from reflecting different building samples.
 
 \section{Stage 2: Building Attribute Prediction}
 \label{sec:vision_inference_strategies}
 
 Stage 2 estimates building type, construction year, and floor count from the street view images linked to each BAG building.
 Building type is represented by the four TABULA-NL size classes, while construction year and floor count are treated as continuous targets during supervised training.
-Stage 2 records the model configuration and predicted attributes for each building.
+The Stage 2 output records the model configuration and predicted attributes for each building.
 ResNet-50 and DINOv2 produce one set of three attributes for every building.
 InternVL3-2B produces a building-level estimate only when at least one image response can be parsed and all three values fall within the permitted ranges.
-Keeping these outputs explicit permits their evaluation before building type and construction year enter the deterministic TABULA-NL lookup.
+Reporting the three predicted attributes separately permits their evaluation before building type and construction year enter the deterministic TABULA-NL lookup.
 
 \subsection{Vision Model Configurations}
 \label{sec:vision_model_configurations}
@@ -222,7 +221,7 @@ Table~\ref{tab:vision_configs} defines the three complete configurations.
 They differ in architecture, pretraining, parameter updates, number of images, and aggregation procedure.
 The comparison therefore evaluates the complete configurations and does not isolate any one of these design choices.
 The two supervised configurations process at most eight images per building, whereas InternVL3-2B processes at most three because it performs a separate generative inference for each image.
-In the two supervised configurations, a shared \acf{MLP} transforms the aggregated image representation before the attribute-specific output heads.
+In the two supervised configurations, one \acf{MLP} transforms the aggregated image representation before it enters the three attribute-specific output heads.
 
 \begin{table}[htbp]
 	\centering
@@ -239,8 +238,8 @@ In the two supervised configurations, a shared \acf{MLP} transforms the aggregat
 		\toprule
 		Configuration & Parameters updated on the development set & Development labels used & Image limit & Building level aggregation \\
 		\midrule
-		ResNet-50 full fine tuning & Backbone, shared \acs{MLP}, and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
-		DINOv2 \acs{ViT}-B/14 with frozen backbone & Shared \acs{MLP} and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
+		ResNet-50 full fine tuning & Backbone, \acs{MLP}, and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
+		DINOv2 \acs{ViT}-B/14 with frozen backbone & \acs{MLP} and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
 		InternVL3-2B without parameter updating & None & Prompt design using a fixed subset of 200 development buildings & 3 & Type mode, year median, and rounded floor count median \\
 		\bottomrule
 	\end{tblr}
@@ -249,10 +248,10 @@ In the two supervised configurations, a shared \acf{MLP} transforms the aggregat
 \subsection{Supervised Attribute Prediction}
 \label{sec:supervised_attribute_prediction}
 
-ResNet-50 and DINOv2 use a common building level prediction structure.
+ResNet-50 and DINOv2 use the same building level prediction structure.
 Each available image is transformed to $224 \times 224$ pixels and converted by the relevant backbone into a feature vector.
 Feature vectors from at most eight images are averaged to produce one representation per building.
-The representation passes through the shared \acs{MLP} with a hidden dimension of 256 and then through separate heads for building type, construction year, and floor count.
+The representation passes through the \acs{MLP} with a hidden dimension of 256 and then through separate heads for building type, construction year, and floor count.
 
 The joint training objective is
 
@@ -267,11 +266,11 @@ The joint training objective is
 Building type uses cross entropy loss with weights inversely proportional to class frequency in the training fold.
 Construction year and floor count are standardised using the mean and standard deviation of that fold and use mean squared error loss.
 The three losses receive equal weight.
-ResNet-50 updates its backbone, shared \ac{MLP}, and output heads, while DINOv2 keeps the backbone frozen and updates only the shared \ac{MLP} and output heads.
+ResNet-50 updates its backbone, \ac{MLP}, and output heads, while DINOv2 keeps the backbone frozen and updates only the \ac{MLP} and output heads.
 The complete optimiser, learning rate, augmentation, and early stopping settings are reported in Appendix~\ref{ch:appendix_b}.
 
-Both supervised configurations are fitted separately in each development fold.
-Validation macro F1 for building type controls early stopping and determines the checkpoint retained within each fold.
+Both supervised model configurations are fitted separately in each development fold.
+Validation macro F1 for building type controls early stopping and selects one checkpoint within each fold.
 The checkpoint used on the fixed holdout set is selected only from validation performance in the development data.
 No holdout labels are used to fit parameters, choose hyperparameters, or select checkpoints.
 
@@ -283,7 +282,7 @@ The prompt instructs the model to return one JavaScript Object Notation object p
 Greedy decoding is used so repeated inference with the same input and environment follows a fixed decoding rule.
 
 Prompt wording and response constraints are developed with a fixed subset of 200 development buildings.
-The subset is stratified by reference building type, with minority types deliberately oversampled so that prompt failures are not assessed mainly on the dominant class.
+The subset is stratified by reference building type, with minority types deliberately oversampled to prevent prompt assessment from being dominated by the most frequent building type.
 Because reference labels inform prompt design and parsing rules, this configuration is described as inference without parameter updating, not as a strictly label-free zero-shot evaluation.
 The final prompt, valid ranges, and parsing rules are fixed before the holdout set is processed and are reported in Appendix~\ref{ch:appendix_c}.
 
@@ -317,7 +316,7 @@ The value level provenance and any differences between the workbook and WebTool 
 
 The four size classes are Single-Family House (SFH), Terraced House (TH), Multi-Family House (MFH), and Apartment Block (AB).
 No additional rule based on dwelling count or floor count is used to determine these classes.
-Table~\ref{tab:type_mapping} defines how the retained EP-Online categories are converted to the four TABULA-NL classes.
+Table~\ref{tab:type_mapping} defines how the selected EP-Online categories are converted to the four TABULA-NL classes.
 
 \subsection{Mapping Attributes to Archetypes}
 \label{sec:attribute_archetype_mapping}
@@ -333,7 +332,7 @@ The archetype cell is
 For assignment from reference attributes, the BAG construction year supplies $y_i$ and the EP-Online category is converted to $s_i$ using Table~\ref{tab:type_mapping}.
 For assignment from predicted attributes, the predicted construction year supplies $y_i$ and the predicted four-class building type supplies $s_i$ directly.
 Both input sets use the same construction period boundaries and lookup table.
-Floor count is retained for energy class prediction but does not enter Equation~\ref{eq:archetype_cell}.
+Floor count is included in energy class prediction but does not enter Equation~\ref{eq:archetype_cell}.
 
 \begin{table}[htbp]
 	\centering
@@ -398,8 +397,7 @@ Single-Family House, Multi-Family House, and Apartment Block share the same valu
 \end{table}
 
 Renovation status is not available consistently for individual buildings, so every assignment uses the unrenovated, as-built variant of its TABULA-NL cell.
-Buildings with the same size class and construction period consequently receive the same four U-values regardless of their current envelope condition \parencite{loga2016}.
-The assigned values are archetype assumptions, not measured properties of the individual buildings.
+Buildings with the same size class and construction period consequently receive the same four U-values \parencite{loga2016}. The lookup does not account for renovations or measured envelope properties of individual buildings.
 They are used directly as predictors in the attribute based energy class model and are combined with reconstructed 3DBAG envelope areas for the transmission heat transfer comparison.
 The U-values describe thermal transmittance of individual envelope elements.
 When combined with reconstructed element areas and divided by estimated floor area, they yield the floor-area-normalised transmission heat transfer coefficient $h_{tr}$ used in this study \parencite{loga2013calculation}.
@@ -410,7 +408,7 @@ When combined with reconstructed element areas and divided by estimated floor ar
 Stage 4 implements two procedures for predicting the registered energy class.
 The first uses building attributes, assigned TABULA-NL U-values, and study area as structured inputs.
 The second maps street view images directly to the energy class without producing intermediate attributes or an archetype cell.
-Both procedures use the same building partitions and target definitions, which allows their predictions to be compared without changing the evaluation population.
+Both procedures use the same building partitions and target definitions, which allows their predictions to be compared without changing the evaluation sample.
 
 EP-Online records the registered energy label of each dwelling.
 The residential scale runs from G, the lowest-performing class, to A++++, the highest-performing class, with additional plus signs distinguishing performance beyond class A \parencite{rvoenergielabel}.
@@ -418,7 +416,7 @@ The primary prediction target groups classes A to C and D to G.
 For labels determined under NTA 8800, this division corresponds to 250\,kWh/(m$^2\cdot$year), the upper limit of class C \parencite{rvoenergielabel2024}.
 This threshold is used to interpret the class boundary rather than to recalculate certificates issued under earlier calculation methods.
 Ratings from A+ through A++++ are included in the A to C group.
-A separate seven-class task, in which these ratings are combined with class A to produce classes A to G, is retained as a secondary assessment at a finer label resolution.
+A separate seven-class task combines these ratings with class A and evaluates prediction at the finer resolution of classes A to G.
 Separate models are fitted for the binary and seven-class targets.
 
 \subsection{Energy Class Prediction from Building Attributes}
@@ -444,7 +442,7 @@ The complete \acs{LightGBM} configuration is reported in Appendix~\ref{ch:append
 The direct image procedure predicts the registered energy class without first estimating building attributes.
 It follows earlier work that mapped building imagery directly to registered energy performance classes \parencite{mayer2023uk,mayer2023dk}.
 
-ResNet-50 and DINOv2 retain the image processing, feature aggregation, and parameter update settings used for attribute prediction, but replace the three attribute heads with one energy class head.
+ResNet-50 and DINOv2 use the same image processing, feature aggregation, and parameter update settings as attribute prediction, but replace the three attribute heads with one energy class head.
 Separate configurations are fitted for the two targets using cross entropy loss and class weights from the training fold.
 Validation macro F1 controls early stopping and checkpoint selection.
 
