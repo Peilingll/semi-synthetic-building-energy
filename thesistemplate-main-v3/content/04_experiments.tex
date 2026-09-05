@@ -38,6 +38,15 @@ The counts of 10,104 and 10,086 do not refer to the same data stage: the former 
 	\end{tblr}
 \end{table}
 
+Representative crops from the four study areas and four residential building types are shown in \cref{fig:svi_examples}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\linewidth]{figures/fig/fig_3_4_examples}
+	\caption{Representative cropped street view images across the four study areas and four residential building types.}
+	\label{fig:svi_examples}
+\end{figure}
+
 The experimental sample is highly concentrated geographically: Amsterdam contains 8,011 buildings, corresponding to 79.4\% of the dataset.
 Its building type composition also differs substantially from that of the eligible four-city registry reference pool, which contains 124,784 residential buildings with EPC records and valid TABULA-NL matches.
 Apartment Blocks (AB) account for approximately 88\% of the experimental sample, compared with approximately 54\% of the reference pool.
@@ -78,9 +87,9 @@ The M identifiers refer to inference routes rather than separate datasets or dow
 		Route & Inputs                                                                  & Inference procedure                                                               & Role in the comparison       \\
 		\midrule
 		M0    & No attributes or imagery                                                    & Assign equal probability to every class and report analytic expected metrics              & Uniform random baseline      \\
-		M1    & Reference attributes, four TABULA-NL U-values, and city                     & Apply the eight reference features to the fixed LightGBM classifier                    & Reference attribute baseline \\
+		M1    & Reference attributes, four TABULA-NL U-values, and city                     & Apply the eight reference features to the fixed \acs{LightGBM} classifier                    & Reference attribute baseline \\
 		M2    & \ac{SVI}                                                                    & Predict the energy label directly from imagery for both classification tasks              & Direct visual comparator     \\
-		M3    & Attributes predicted from \ac{SVI}, four TABULA-NL U-values, and city       & Apply the eight resulting features to the same fixed LightGBM classifier as M1            & Attribute mediated route     \\
+		M3    & Attributes predicted from \ac{SVI}, four TABULA-NL U-values, and city       & Apply the eight resulting features to the same fixed \acs{LightGBM} classifier as M1            & Attribute mediated route     \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -96,7 +105,7 @@ Where needed, the analysis also reports the majority class guess to show the eff
 Majority guessing yields a $\pm$1 accuracy of 0.612 and a binary accuracy of 0.702, so neither metric is interpreted in isolation.
 
 The M1 and M3 attribution comparison uses a shared fitted-model protocol.
-Separate LightGBM classifiers are trained for the binary and seven-class tasks.
+Separate \acs{LightGBM} classifiers are trained for the binary and seven-class tasks.
 In the pooled setting, each classifier is fitted once using reference-derived features from the complete development set.
 The same fitted parameters then receive the M1 reference features and each set of M3 vision-derived features.
 In the Amsterdam holdout setting, each classifier is refitted once using reference features from the source cities and is again shared by M1 and M3 within that setting.
@@ -160,7 +169,7 @@ For the binary task, performance is reported using macro precision, macro recall
 This selection is consistent with the reporting of macro averages in the comparison literature.
 Because aggregate metrics can conceal asymmetric predictions, precision and recall are also reported separately for each class, with particular attention to recall for classes D to G.
 Binary accuracy is interpreted relative to the majority baseline, which reaches 0.702 by assigning every building to classes A to C.
-The principal LightGBM protocol does not apply class weighting.
+The principal \acs{LightGBM} protocol does not apply class weighting.
 This setting preserves the observed class distribution and maintains a common model configuration across tasks.
 Appendix~\ref{ch:appendix_a} documents a sensitivity analysis using class weighting.
 
@@ -189,19 +198,21 @@ Let $N$ denote the number of evaluated buildings, $y_i$ the reference value, $\h
 The physically weighted metric distinguishes between archetype assignment errors according to their effects on transmission heat transfer.
 Metrics evaluated at the cell level record only whether an assignment is correct.
 They therefore assign equal weight to confusion between adjacent cells with similar U-values and confusion between distant cells with substantially different U-values.
-To account for this limitation, the transmission heat transfer coefficient $H'_{tr}$ is calculated for each building using the TABULA U-values of the assigned cell and the reconstructed 3DBAG envelope areas.
-Shared walls are treated as adiabatic, and the window-to-wall ratio (WWR) is the only assumed input.
+The TABULA calculation method distinguishes between the overall transmission heat transfer coefficient $H_{tr}$, expressed in $\mathrm{W/K}$, and the coefficient per square metre of reference floor area $h_{tr}$, expressed in $\mathrm{W/(K\,m^2)}$ \parencite{loga2013calculation}.
+Following this notation, $h_{tr}$ is calculated for each building using the TABULA U-values of the assigned cell, reconstructed 3DBAG envelope areas, and estimated floor area.
+The resulting quantity is a comparison metric rather than the complete TABULA transmission coefficient because thermal bridge surcharges and boundary adjustment factors are not included.
+Shared walls are treated as adiabatic, and the window-to-wall ratio (WWR) is fixed at 0.25 in the primary calculation.
 Values obtained from predicted and reference cells are compared using MAE and $R^2$ across buildings, together with a bias in aggregate transmission heat transfer weighted by floor area.
 The aggregate measure retains systematic error, although errors with opposite signs can offset one another.
 This analysis compares the physical implications of predicted and reference archetype assignments.
 It does not validate either assignment against measured heat loss or energy consumption.
 
-For building $i$, the transmission heat transfer coefficient is defined as
+For building $i$, the floor-area-normalised transmission heat transfer coefficient is defined as
 
 \begin{equation}
 	\label{eq:htr}
 	\begin{split}
-		H'_{tr,i} = \frac{1}{A_{floor,i}} \Bigl[
+		h_{tr,i} = \frac{1}{A_{floor,i}} \Bigl[
 		 & U_{wall,i}A_{wall,i}(1-\mathrm{WWR}) + U_{window,i}A_{wall,i}\,\mathrm{WWR}                     \\
 		 & + U_{roof,i}A_{roof,i} + U_{floor,i}A_{ground,i} \Bigr], \qquad [\mathrm{W/(K\,m^2)}] .
 	\end{split}
@@ -211,9 +222,9 @@ Agreement between the values obtained from predicted and reference cells is quan
 
 \begin{equation}
 	\label{eq:htr_r2}
-	R^2_{H'_{tr}}
-	= 1 - \frac{\sum_i\left(H'_{tr,\mathrm{pred},i} - H'_{tr,\mathrm{ref},i}\right)^2}
-	{\sum_i\left(H'_{tr,\mathrm{ref},i} - \overline{H'_{tr,\mathrm{ref}}}\right)^2},
+	R^2_{h_{tr}}
+	= 1 - \frac{\sum_i\left(h_{tr,\mathrm{pred},i} - h_{tr,\mathrm{ref},i}\right)^2}
+	{\sum_i\left(h_{tr,\mathrm{ref},i} - \overline{h_{tr,\mathrm{ref}}}\right)^2},
 \end{equation}
 
 and the signed bias in aggregate transmission heat transfer is defined as
@@ -221,8 +232,8 @@ and the signed bias in aggregate transmission heat transfer is defined as
 \begin{equation}
 	\label{eq:bias_stock}
 	\mathrm{Bias}_{stock}
-	= \frac{\sum_i H'_{tr,\mathrm{pred},i}A_{floor,i} - \sum_i H'_{tr,\mathrm{ref},i}A_{floor,i}}
-	{\sum_i H'_{tr,\mathrm{ref},i}A_{floor,i}} .
+	= \frac{\sum_i h_{tr,\mathrm{pred},i}A_{floor,i} - \sum_i h_{tr,\mathrm{ref},i}A_{floor,i}}
+	{\sum_i h_{tr,\mathrm{ref},i}A_{floor,i}} .
 \end{equation}
 
 \Cref{eq:htr} is evaluated twice for each building, once using the U-values retrieved from the reference cell and once using those retrieved from the predicted cell.
@@ -236,7 +247,7 @@ The inputs required by \cref{eq:htr} and their data sources are summarised in \c
 
 \begin{table}[htbp]
 	\centering
-	\caption{Inputs and data sources for calculating $H'_{tr}$.}
+	\caption{Inputs and data sources for calculating $h_{tr}$.}
 	\label{tab:htr_inputs}
 	\footnotesize
 	\begin{tblr}{
@@ -389,18 +400,18 @@ Because macro-cell recall gives each occupied cell equal weight, this value is s
 \label{sec:weighted_archetype_scoring}
 
 Joint-cell metrics record whether an assignment is correct but do not distinguish errors by the thermal differences between cells.
-\Cref{tab:htr_metrics} therefore reports the difference in $H'_{tr}$ defined in \cref{sec:weighted_archetype_metric}.
+\Cref{tab:htr_metrics} therefore reports the difference in $h_{tr}$ defined in \cref{sec:weighted_archetype_metric}.
 The separation between the trained and zero-shot configurations was larger on this scale than in joint accuracy.
-DINOv2 and InternVL3-2B achieved joint accuracies of 0.825 and 0.342, respectively, while their building-level $H'_{tr}$ MAEs differed by a factor of 3.2 (0.150 versus 0.474\,$\mathrm{W/(K\,m^2)}$).
+DINOv2 and InternVL3-2B achieved joint accuracies of 0.825 and 0.342, respectively, while their building-level $h_{tr}$ MAEs differed by a factor of 3.2 (0.150 versus 0.474\,$\mathrm{W/(K\,m^2)}$).
 The larger error indicates that the zero-shot assignments also produced greater differences in the associated thermal transmittance values.
 For example, the wall U-value decreases from 1.61\,$\mathrm{W/(m^2K)}$ in NL.01 to 0.27\,$\mathrm{W/(m^2K)}$ in NL.05 (\cref{tab:tabula_uvalues}).
-The $H'_{tr}$ $R^2$ values were 0.806 for DINOv2, 0.771 for ResNet-50, and 0.439 for InternVL3-2B.
+The $h_{tr}$ $R^2$ values were 0.806 for DINOv2, 0.771 for ResNet-50, and 0.439 for InternVL3-2B.
 Because this comparison does not use energy classes, it is independent of the building-level class consistency examined in \cref{sec:building_level_consistency}.
 
 All three configurations overestimated the floor-area-weighted stock total: the biases were $+10.0$\%~for DINOv2, $+10.5$\%~for ResNet-50, and $+16.6$\%~for InternVL3-2B (\cref{tab:htr_metrics}).
 The common direction is consistent with the construction year pattern in \cref{sec:upstream_attribute_extraction}.
 Newer buildings were often assigned to earlier periods with higher U-values, which increased estimated heat loss under the as-built archetype representation.
-The metric definition limits this interpretation: the $H'_{tr}$ difference is a physically weighted score relative to reference-cell assignment, not validation against measured heat loss or energy consumption.
+The metric definition limits this interpretation: the $h_{tr}$ difference is a physically weighted score relative to reference-cell assignment, not validation against measured heat loss or energy consumption.
 
 \begin{table}[htbp]
 	\centering
@@ -415,7 +426,7 @@ The metric definition limits this interpretation: the $H'_{tr}$ difference is a 
 			rowsep = 2pt,
 		}
 		\toprule
-		Vision configuration   & $H'_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) & $H'_{tr}$ $R^2$ & Stock-level total heat loss bias \\
+		Vision configuration   & $h_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) & $h_{tr}$ $R^2$ & Stock-level total heat loss bias \\
 		\midrule
 		DINOv2 (frozen)        & 0.150                                 & 0.806           & $+10.0$\%                        \\
 		ResNet-50 (fine-tuned) & 0.157                                 & 0.771           & $+10.5$\%                        \\

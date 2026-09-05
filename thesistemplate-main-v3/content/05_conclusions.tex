@@ -2,7 +2,7 @@
 \label{ch:conclusions}
 
 This thesis assessed whether building attributes inferred from \ac{SVI} can substitute for reference attributes in a TABULA-based building stock enrichment workflow.
-The traceable semi-synthetic dataset enabled attribute extraction, archetype assignment, physically weighted archetype differences, and downstream energy class classification to be evaluated within one controlled framework.
+The integrated evaluation dataset enabled attribute extraction, archetype assignment, physically weighted archetype differences, and downstream energy class classification to be evaluated within one controlled framework.
 The findings answer the three research objectives within the evaluated scope.
 
 \section{Conclusions}
@@ -48,7 +48,7 @@ Evaluating all configurations on the same holdout buildings separates performanc
 
 \textbf{The second contribution provides traceable propagation from attributes to physical estimates based on archetypes.}
 The building-level dataset links Mapillary imagery, reference attributes, reconstructed 3DBAG geometry, EPC records, and TABULA-NL archetypes while retaining the provenance of each value.
-Predicted attributes are propagated through joint archetype assignment to the transmission heat transfer coefficient $H'_{tr}$.
+Predicted attributes are propagated through joint archetype assignment to the floor-area-normalised transmission heat transfer coefficient $h_{tr}$.
 This structure distinguishes extraction errors from their consequences for archetype coverage, physical parameter assignment, and stock-level heat loss bias.
 
 \textbf{The third contribution is a controlled assessment of downstream substitution and its applicability.}
@@ -83,7 +83,7 @@ Converting reference or predicted attributes into TABULA-NL archetypes requires 
 These decisions were not examined through separate sensitivity tests.
 \Ac{SVI} may show visible changes to facades or windows but cannot reliably reveal concealed insulation, heating system upgrades, or renovations to individual units.
 The assigned TABULA parameters therefore represent archetypal as-built characteristics rather than verified current envelope conditions.
-In addition, the $H'_{tr}$ analysis compares archetype assignments obtained from \ac{SVI} and reference data.
+In addition, the $h_{tr}$ analysis compares archetype assignments obtained from \ac{SVI} and reference data.
 It does not validate either assignment against measured heat loss or energy consumption.
 
 The geographical evidence is limited to four Dutch cities and supports an assessment of transfer only within this setting.

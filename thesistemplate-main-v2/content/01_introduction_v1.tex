@@ -1,0 +1,58 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Background}
+\label{sec:background}
+
+Rapid growth in the global building stock continues to drive energy demand. Residential buildings account for 70\% of total buildings energy demand, while commercial and public buildings comprise the remaining 30\% \parencite{iea2025}. Additionally, the buildings and construction sector accounted for 28 \% of global energy consumption, reinforcing its position as one of the world’s largest energy users in 2024. \parencite{unep2026}
+
+In the European Union, the building sector accounts for approximately 40\% of final energy consumption  and 36\% of its energy-related greenhouse gas emissions \parencite{epbd2024}. Reducing the energy demand and emissions of existing buildings is therefore central to European climate policy. Accordingly, the 2024 recast of the Energy Performance of Buildings Directive establishes the objective of achieving a zero-emission building stock by 2050 \parencite{epbd2024}. Reaching this objective requires reliable information on the existing building stock to support large-scale in energy performance assessment and the prioritisation of renovation measures \parencite{hettinga2023}.
+
+The basic approach of \ac{UBEM} is to apply physical models of heat and mass flows in and around buildings to predict operational energy use as well as indoor and outdoor environmental conditions for groups of buildings \parencite{reinhart2016}. \ac{UBEM} requires the combination of several data sets as input, including climate data, building geometry, construction standards, and usage schedules. Figure~\ref{fig:ubem_workflow} illustrates a basic \ac{UBEM} workflow including input data, simulation, and output generation. Although such information can be collected in detail for individual buildings or small samples, doing so across larger urban areas is resource intensive and often impractical \parencite{reinhart2016}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/fig/fig_3_1_UBEM_workflow}
+	\caption{General workflow for urban building energy modelling. Geometry, semantic attributes, and archetype information provide inputs for simulation. The results support assessments of energy use, carbon emissions, and energy performance. Based on \textcite{ang2020}.}
+	\label{fig:ubem_workflow}
+\end{figure}
+
+To address these data constraints, \ac{UBEM} workflows commonly use building archetypes to represent groups of buildings with similar physical and operational characteristics \parencite{reinhart2016,shen_archetype_2024}. The archetype approach has been extensively used in the context of national or regional bottom-up building stock models. Archetype generation consists of two complementary steps, segmentation and characterisation. Segmentation divides the building stock into groups according to building shape, age, use, climate, and technical systems. During characterisation, archetype buildings are defined using a complete set of thermal properties, including construction assemblies, usage patterns, and building systems \parencite{reinhart2016}. Depending on the scale of application and the segmentation parameters chosen, an archetype may represent from fewer than 50 to as many as 500,000 buildings \parencite{reinhart2016}.
+
+In recent decades, typological approaches have been used to assess building energy performance at national, regional, and municipal scales across Europe \parencite{loga2016}. Among these approaches, the \ac{TABULA} project provides archetype matrices for 20 European countries that classify residential buildings by construction period and size class \parencite{loga2016}. Figure~\ref{fig:tabula_example} shows the \ac{TABULA} typology schema including national building stock models and exemplary buildings. Each archetype cell is associated with a set of representative as-built U-values for  building stock group rather than individual buildings. These national typologies provide a foundation for building stock models that estimate the energy consumption of the respective residential stocks \parencite{loga2016}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/fig/fig_1_1_tabula_example}
+	\caption{TABULA typology concept. Structural information and residential building stock data from 20 European countries support the development of national building stock models and exemplary buildings. Based on the TABULA WebTool \parencite{tabulawebtool}.}
+	\label{fig:tabula_example}
+\end{figure}
+
+\section{Motivation}
+\label{sec:motivation}
+
+Building type and construction year are therefore required to assign individual buildings to their corresponding archetypes, but these attributes are often incomplete or inaccessible at urban scale \parencite{milojevicdupont2023,dabrock2025}. \Ac{OSM}, a collaborative open geographic database, provides building data across European countries, but its coverage, descriptions, and attribute availability vary geographically \parencite{milojevicdupont2023}. Local building cadastres, commercial datasets, remote sensing data, and occupant surveys can provide alternative information, but differences in coverage, accessibility, and attribute definitions limit their consistent use across regions \parencite{dabrock2025}.
+
+Recent studies have inferred missing building attributes from census, geospatial, and image data. \textcite{dabrock2025} predicted residential size class and construction year across Germany and assigned TABULA archetypes, evaluating the models on a derived building-level test set and comparing the resulting distributions with official statistics for individual federal states. \textcite{wurm2021} combined aerial imagery and census data to derive building characteristics and estimate heat demand, which was compared with the Energy Atlas of North Rhine-Westphalia, an official regional dataset of modelled heat demand at the 100~m grid level. \textcite{liang2025} introduced OpenFACADES, a framework for inferring multiple building attributes from Mapillary, a crowdsourced street-level imagery platform. Its labels were assembled primarily from OpenStreetMap, with missing information supplemented from other sources, and the inferred attributes were not applied to an energy assessment.
+
+Rather than first estimating building attributes, another line of research predicts building energy classes directly from \acf{SVI}. Using official \acf{EPC} records as labels, \textcite{mayer2023uk} combined \ac{SVI}, aerial imagery, building footprints, and land surface temperature data for 39,605 buildings across four areas in England to distinguish classes A to D from E to G. \textcite{mayer2023dk} applied the same class grouping to 21,593 buildings in the Copenhagen metropolitan area and found that \ac{SVI} performed better than aerial imagery. Later studies combined \ac{SVI} with geographic information system (GIS) attributes or thermal images \parencite{liu2025,sun2026}. Related work by \textcite{pan_nd} used a \ac{VLM}, which processes images and text together, to predict EPC-derived wall energy efficiency ratings rather than the EPC band of the whole building.
+
+Overall, recent studies follow two related lines of research. Studies on building attribute enrichment estimate missing attributes but do not compare all attributes required for archetype assignment with official building records for the same buildings \parencite{dabrock2025,wurm2021,liang2025}. Studies on direct energy class prediction use imagery to predict registered energy classes but do not estimate building type and construction year for archetype assignment \parencite{mayer2023uk,mayer2023dk,liu2025,sun2026}. It therefore remains unclear how errors in estimates of building type and construction year from imagery affect archetype assignment and energy class prediction for the same buildings.
+
+In summary, this study compares building type and construction year estimated from imagery with official reference values and evaluates how the differences affect archetype assignment and energy class prediction. The Netherlands provides the required building-level data through the \ac{BAG}, the Dutch national register of addresses and buildings, 3DBAG, which provides reconstructed building geometry \parencite{peters2022,dukai2021}, Mapillary imagery, and EP-Online, the Dutch register of energy performance certificates. BAG provides construction year, while EP-Online provides residential building type and registered energy class for certified buildings; BAG, 3DBAG, and EP-Online can be linked through the BAG building identifier and associated with Mapillary imagery at the building level. Because registered energy performance data do not cover the entire Dutch building stock \parencite{hettinga2023}, this setting enables the proposed building-level evaluation and reflects the practical need to estimate energy performance for buildings without certificates.
+
+\section{Research Objectives}
+\label{sec:research_objectives}
+
+This study investigates whether building attributes predicted from \ac{SVI} can support building energy assessment when official reference attributes are unavailable. The evaluation uses the Dutch TABULA typology (TABULA-NL) to examine how errors in predicted attributes affect archetype assignment and energy class prediction. Building type and construction year determine the TABULA-NL archetype cell, while floor count is evaluated as an additional attribute for energy class prediction.
+
+Accordingly, this study addresses three research objectives:
+
+\begin{enumerate}
+	\item \textbf{Assess the predictive performance of \ac{SVI} for building type, construction year, and floor count.}
+
+	\item \textbf{Quantify how errors in predicted building type and construction year affect TABULA-NL archetype assignment and estimates of transmission heat transfer.}
+
+	\item \textbf{Determine how the source of building information affects energy class prediction.}
+	      The comparison includes official reference attributes, attributes predicted from \ac{SVI}, and energy classes predicted directly from imagery.
+\end{enumerate}
