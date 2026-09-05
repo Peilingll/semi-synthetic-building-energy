@@ -94,7 +94,7 @@ TABULA-NL provides the deterministic archetype lookup based on building type and
 		3DBAG     & \acf{LoD} 2.2 reconstructions of floor count, height, volume, and envelope areas            & Floor count reference, reconstructed building geometry, and area inputs for $H'_{tr}$                                \\
 		EP-Online & Energy class, residential building type, and certificate registration date                  & Reference energy class, building type reference, and certificate selection by date                                  \\
 		Mapillary & Crowdsourced street-view imagery and image metadata                                        & Vision-model input, \ac{SVI}-to-building pairing, and image provenance                                              \\
-		TABULA-NL & Six construction periods and four size classes, comprising 24 archetype cells               & Deterministic lookup from building type and period, providing as-built U-values for walls, roofs, floors, and windows \\
+		TABULA-NL & Study-specific lookup with six construction periods and four size classes, comprising 24 archetype cells & Deterministic lookup from building type and period, providing as-built U-values for walls, roofs, floors, and windows \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -321,7 +321,7 @@ Appendix~\ref{ch:appendix_b} reports the complete training hyperparameters, incl
 \subsection{VLM-Based Attribute Inference}
 \label{sec:vlm_attribute_inference}
 
-The pretrained InternVL3-2B checkpoint from the \texttt{OpenGVLab/\allowbreak InternVL3-2B} repository is used without updating its parameters on the study dataset \parencite{chen2024}.
+The pretrained InternVL3-2B checkpoint from the \texttt{OpenGVLab/\allowbreak InternVL3-2B} repository is used without updating its parameters on the study dataset \parencite{zhu2025}.
 For each image, the model uses greedy decoding and is instructed to return a single JavaScript Object Notation (JSON) object containing predictions for building type, construction year, and floor count.
 
 Prompt development used a fixed subset of 200 development buildings stratified by reference building type, with minority building types oversampled.
@@ -374,16 +374,17 @@ The valid responses for each building are combined by majority vote to obtain th
 \subsection{TABULA-NL Matrix Structure}
 \label{sec:tabula_nl_matrix}
 
-The TABULA matrix for the Netherlands comprises six construction periods and four size classes, forming 24 archetype cells in total (\cref{fig:tabula_matrix}).
+For the present analysis, the Dutch TABULA data are operationalised as a lookup with six construction periods and four size classes, forming 24 archetype cells in total (\cref{fig:tabula_matrix}).
 Each cell corresponds to a TABULA-NL archetype identifier that is subsequently used to retrieve the associated as-built thermal parameters.
-The construction-period boundaries and operational definitions of the size classes are taken from the national TABULA typology reports for the Netherlands, specifically the RVO \emph{Example Dwellings} series \parencite{rvo2011}.
+The period codes and as-built U-values are obtained from the TABULA values workbook and cross-checked against the TABULA WebTool \parencite{tabulawebtool}.
+The mapping from EP-Online residential categories to the four umbrella size classes is defined for this study in \cref{tab:type_mapping}.
 
 % TODO (author action): verify and add the exact source, year, and page number
 % for the TABULA-NL typology matrix reproduced in this figure.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.88\linewidth]{figures/fig/fig_3_6_tabula_matrix}
-	\caption[TABULA-NL residential building typology matrix.]{TABULA-NL residential building typology matrix comprising six construction periods and four size classes, for a total of 24 archetype cells. Each cell presents a representative dwelling and its TABULA-NL archetype identifier.}
+	\caption[Operational TABULA-NL lookup used in this study.]{Operational TABULA-NL lookup used in this study, comprising six construction periods and four size classes for a total of 24 archetype cells. Each cell presents a representative dwelling and its TABULA-NL archetype identifier.}
 	\label{fig:tabula_matrix}
 \end{figure}
 
