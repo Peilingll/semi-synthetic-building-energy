@@ -74,3 +74,6 @@ Thesis_reports/reviewer_comments_AD_JQ.md
 
 # Codex build output inside any thesis template copy
 **/thesistemplate-main*/.codex-build/
+
+# biber save-error leftovers
+**/thesistemplate-main*/**/*.bcf-SAVE-ERROR
