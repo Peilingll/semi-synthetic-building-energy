@@ -80,3 +80,7 @@ Thesis_reports/reviewer_comments_AD_JQ.md
 
 # Retired scripts and the v1 thesis template; kept locally only
 archive/
+
+# Codex scratch files and the thesis QA dump
+.codex-tmp/
+thesistemplate-main-v3/thesis_qa.txt
