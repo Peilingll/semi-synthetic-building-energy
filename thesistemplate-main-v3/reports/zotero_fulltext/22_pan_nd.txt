@@ -1,0 +1,308 @@
+Proceedings Paper Formatting Instructions – 1 – Rev. 10/2015
+Zero-Shot Learning with Vision-Language Models for Estimating Building
+Energy Efficiency from Street View Images
+Yuandong Pan1, Linjun Lu2, Mudan Wang3, Varun Kumar Reja4, Florian Noichl5,
+André Borrmann6, and Ioannis Brilakis, M.ASCE7
+1Department of Engineering, University of Cambridge, 7a JJ Thomson Ave, Cambridge CB3
+0FA, United Kingdom; e-mail: yp296@cam.ac.uk
+2Department of Engineering, University of Cambridge, 7a JJ Thomson Ave, Cambridge CB3
+0FA, United Kingdom; e-mail: ll718@cam.ac.uk
+3Department of Engineering, University of Cambridge, 7a JJ Thomson Ave, Cambridge CB3
+0FA, United Kingdom; e-mail: mw923@cam.ac.uk
+4Department of Engineering, University of Cambridge, 7a JJ Thomson Ave, Cambridge CB3
+0FA, United Kingdom; e-mail: varunreja7@gmail.com
+5Chair of Computation in Civil and Building Engineering, Technical University of Munich,
+Arcisstrasse 21, Munich, 80333, Germany; e-mail: florian.noichl@tum.de
+6Chair of Computation in Civil and Building Engineering, Technical University of Munich,
+Arcisstrasse 21, Munich, 80333 Germany; e-mail: andre.borrmann@tum.de
+7Department of Engineering, University of Cambridge, 7a JJ Thomson Ave, Cambridge CB3
+0FA, United Kingdom; e-mail: ib340@cam.ac.uk
+ABSTRACT
+The built environment significantly contributes to global energy use and CO2 emissions, with
+large-scale energy efficiency evaluations often hindered by cost and data inconsistencies. This
+study employs zero-shot learning with Vision-Language Models (VLMs) to classify building
+energy efficiency from images. Our methodology integrates advanced image processing with
+natural language understanding, enabling buildings to be classified into UK Energy Performance
+Certificate (EPC) grades based solely on visual inputs. By leveraging pre-trained knowledge in
+VLMs, the framework identifies energy efficiency levels using descriptive attributes without
+requiring prior training on labeled examples. Performance evaluation against traditional
+supervised learning models demonstrates VLMs can effectively categorize buildings into energy
+efficiency classes. Results highlight VLMs' potential as a scalable tool for building energy
+assessment to inform renovation planning and sustainable urban development.
+INTRODUCTION
+The buildings and construction sectors play a crucial role in addressing climate change. Together,
+they account for approximately 30% of global final energy consumption and 27% of total CO2
+
+
+Proceedings Paper Formatting Instructions – 2 – Rev. 10/2015
+emissions from the energy sector (IEA 2023). To support the United Nations' Sustainable
+Development Goals, particularly in advancing energy efficiency in buildings and accelerating the
+decarbonization process (Arora and Mishra 2019), many governments worldwide have
+implemented similar regulations. One common measure is requiring an energy performance
+certificate (EPC) for properties when they are sold or rented. In the European Union (EU), Under
+the Energy Performance of Buildings Directive (2010/31/EU), all EU member states are required
+to establish independent control systems for EPCs (EC 2010). In the United Kingdom, the Ministry
+of Housing, Communities, and Local Government established the Energy Performance of
+Buildings (England and Wales) Regulations 2012 to ensure compliance with energy efficiency
+standards (Regulations 2012).
+Evaluating the overall energy performance of buildings is a complex process, requiring
+consideration of multiple factors, such as the building type, age, number of habitable rooms, type
+and amount of glazing, construction materials, and wall insulation, among others (DCLG 2017).
+Collecting such detailed data is challenging, as it often involves substantial costs and effort,
+especially on a large scale. Most models for energy efficiency estimation require specific
+information about individual homes and communities, which is either unavailable or too expensive
+to obtain at large scale (Streltsov et al. 2020). This demands faster and more accessible methods
+to determine building energy efficiency levels. While energy-related predictions from historical or
+tabular data have proven effective, applying these methods on a large scale remains challenging
+due to the extensive workload required to prepare the datasets. Estimating building energy
+efficiency grades using imagery has emerged as a solution, especially with advancements in
+imagery collection technologies (e.g., street view and satellite images) and the application of deep
+learning for object recognition in recent years (Mayer et al. 2023). Since the building envelope 
+comprising facade walls, windows, and roof – significantly impacts energy efficiency, enhancing
+its thermal insulation properties is recognized as a key strategy for improving overall building
+energy performance (Nicolae and George-Vlad 2015). This relationship enables reasonable
+inference of building envelope properties from visual data to estimate energy efficiency levels.
+Many previous studies have used supervised learning approaches, curated custom datasets
+as input and trained classifiers, particularly deep learning models, to predict the energy efficiency
+levels of buildings. A commonly used approach is transfer learning (Weiss et al. 2016), which
+involves leveraging pre-trained models – initially trained on large, general-purpose datasets – and
+re-training them on custom datasets tailored to specific tasks (Pan et al. 2022). However, a
+significant challenge in this process is obtaining enough annotated image data to train models
+effectively for individual objectives. Pre-trained Large Language Models (LLMs), such as
+ChatGPT (OpenAI 2022), have demonstrated exceptional performance in natural language
+processing (NLP) tasks. With the advancement of large Visual Language Models (VLMs), such
+as GPT-4o (OpenAI 2024), these models now offer a different solution for addressing image
+interpretation tasks. By integrating visual and linguistic capabilities, pre-trained VLMs enable
+information extraction and analysis of image data.
+
+
+Proceedings Paper Formatting Instructions – 3 – Rev. 10/2015
+In this study, we utilize VLMs to predict building energy efficiency grades based on facade
+images. This approach utilizes the capabilities of large pre-trained VLMs to interpret visual data
+and offers a novel way of addressing the challenges associated with the limited availability of
+annotated datasets for energy efficiency prediction tasks.
+BACKGROUND
+Deep learning-based approaches have been extensively developed to estimate energy
+related characteristics of buildings. Tabular data is one of the commonly utilized data sources
+in this domain. For example, energy consumption has been predicted using the random forest
+algorithm on datasets of hourly building energy consumption (Pham et al. 2020). Image data serves
+as another key source of information for energy prediction. Overhead images, such as satellite and
+aerial images, are often employed in deep learning frameworks to segment and classify buildings;
+random forest regression models can then be applied to features extracted by neural networks to
+estimate energy consumption (Streltsov et al. 2020). A similar approach integrates contextual
+information from urban texture with satellite imagery to enhance energy consumption predictions
+using features derived from satellite images (Dougherty et al. 2021).
+Additionally, facade images combined with other factors, such as structural and
+morphological attributes, are used to improve the predictive performance of deep learning models
+(Sun et al. 2022). Moreover, diverse data sources, including aerial and street view images, have
+been leveraged to train classifiers for predicting electricity consumption of buildings (Rosenfelder
+et al. 2021) or for categorizing buildings into energy efficiency classes (Mayer et al. 2023).
+Multiple data sources generally yield better results than single data sources, as they allow the
+accumulation of information across modalities. Pre-trained Visual Language Models (VLMs)
+that process both images and text inputs have demonstrated their effectiveness across various
+fields. Notable models like CLIP (Shen et al. 2021), BLIP (Li et al. 2022), and GLIP (Li et al.
+2022) have excelled in visual understanding through zero-shot learning, matching or even
+exceeding the performance of traditional computer vision models. The Architecture, Engineering,
+and Construction (AEC) domain offers numerous applications for such approaches, which is why
+research in this area is rapidly evolving. For example, GPT-4 Vision has been successfully
+employed to predict building age classifications from facade images, demonstrating its ability to
+make accurate predictions without the need for specialized training (Zeng et al. 2024).
+In conclusion, the significant advantages and flexibility of using large pre-trained VLMs
+without requiring training data present vast potential for predicting building energy efficiency.
+This paper proposes a framework that utilizes VLMs to predict energy efficiency grades from
+street-view images of buildings. The research contributions of this paper are as follows: a) We
+propose a framework that utilizes large VLMs to predict the energy efficiency level of building
+facades from street view images, focusing specifically on facade-level analysis rather than whole
+building assessment. b) To evaluate the efficacy of the proposed approach, we conduct extensive
+
+
+Proceedings Paper Formatting Instructions – 4 – Rev. 10/2015
+experiments and compare the performance of our framework against a traditional supervised
+learning setup.
+METHODOLOGY
+This study estimates building envelope energy efficiency in Cambridge, UK, using a
+custom dataset. Images are obtained using the Google Street View Static API (Google 2024);
+energy efficiency ratings are sourced from the Energy Performance of Buildings Register
+(MHCLG 2020), which includes EPCs for properties in England and Wales from October 1, 2008,
+onward. As previously mentioned, numerous factors influence a building's energy efficiency.
+However, street view imagery provides information limited to the building envelope.
+Consequently, we focus on extracting energy efficiency ratings specifically for windows
+(WINDOWS_ENERGY_EFF) and walls (WALLS_ENERGY_EFF) from the EPC data to label
+the images appropriately. These envelope-specific ratings provide a targeted basis for analyzing
+the relationship between visible facade features and energy performance. The process of creating
+the dataset is illustrated in Figure 1. This process begins with inputting building addresses from
+the Energy Performance of Buildings Register database. Next, we use the Google Street View API
+to verify whether imagery exists for the specified locations. Following this, we compare the
+timestamp of the imagery captured by Google with the assessment date of the buildings. Since
+both datasets span long periods, only images captured within one year of the building assessment
+date are retained. This procedure results in a total of 9,720 images.
+Subsequently, we manually refine this dataset by removing unsuitable images.
+Specifically, we exclude images that 1) show buildings located far from the point of view, 2) have
+high levels of occlusion caused by traffic or vegetation, or 3) contain multiple buildings in the field
+of view. This manual curation ensures the quality and relevance of the dataset for further analysis
+and results in a dataset with 5,615 images, split into 4,371 images for training and 1,244 images
+for testing (approximately an 80/20 split). The corresponding labels for the energy efficiency
+ratings of walls are categorized as "very good", "good", "average", "poor", and "very poor". It is
+important to note that the training set is used to compute a baseline, providing a reference against
+which the predictions of the VLM can be evaluated.
+Figure 1. Process of preparing dataset.
+Based on the dataset we have prepared, we propose an approach to identify the energy
+efficiency ratings using the large pre-trained VLM GPT-4o model. This classifier is zero-shot (Liu
+and Tuytelaars 2020), and which does not require a training process.
+
+
+Proceedings Paper Formatting Instructions – 5 – Rev. 10/2015
+There are two types of inputs to the method: a prompt and an image. We use xx to represent
+the image and yy to represent the prompt. The VLM comprises two main modules: a visual module,
+denoted as VV(xx), which processes the image input, and a semantic module, represented as SS(yy),
+which processes the text of the prompt. These two modules each generate high-dimensional
+embeddings, which are subsequently combined and processed by further network structures to
+generate the response in text form. The prompt specifies the requirements for the response,
+including predictions of the energy efficiency level and an explanation of the reasoning behind the
+decision. This process can be mathematically represented as:
+(ll, RR) = PP(VV(xx), SS(yy)),
+where ll is the predicted label (e.g., the energy efficiency level of walls), RR is the reasoning
+text explaining the decision, and PP represents the network modules that process the combined
+visual and semantic embeddings to produce the final output. Two types of input are required here.
+The input images have been encoded in Base64 format for further processing with GPT-4o models.
+The input prompts are texts of two types: 1) the system prompt, a predefined prompt that controls
+the structure and content of the output and 2) the user prompt, a prompt that specifies a question
+and task for the model. Both prompts play critical roles in shaping the final response generated by
+the system. The system prompt and user prompt used in this study are depicted in Figure 2 and
+Figure 3, respectively.
+Figure 2. System prompt utilized for estimating energy efficiency levels.
+EXPERIMENT AND RESULTS
+In this study, we evaluate the predictive performance of the proposed framework by
+utilizing large pre-trained VLMs on a custom test set. As this approach is zero-shot, no additional
+training on images is performed. To assess its effectiveness, we compare its results with those of
+well-established neural network architectures commonly used for image classification tasks,
+including three versions of ResNet (He et al. 2015) and three versions of the Vision Transformer
+(ViT) (Dosovitskiy et al. 2020), both with and without pre-trained weights. Benchmark training
+was conducted on the introduced custom dataset for 100 epochs on an NVIDIA A100 GPU with
+80 GB of memory, while inference using GPT-4o was performed on a Linux subsystem running
+
+
+Proceedings Paper Formatting Instructions – 6 – Rev. 10/2015
+on a Windows desktop. The cost of zero-shot inference using GPT-4o API for approximately 1,200
+images was around USD 3.60.
+Figure 3. User prompt utilized for the classification of energy efficiency levels.
+Representative examples of input images and corresponding output prompts – including
+predicted energy efficiency levels of walls and the rationale behind these predictions – are
+
+
+Proceedings Paper Formatting Instructions – 7 – Rev. 10/2015
+illustrated in Figure 4. The outputs demonstrate that the framework successfully analyzes the
+visual information in images and integrates it with the requirements provided in the input prompt.
+Figure 4. Examples of output prompts with input images.
+Quantitative comparisons are presented in Table 1. Precision, recall, and F1-score metrics
+are reported as macro-averaged values, which calculate precision and recall independently for each
+class and then average the results. The proposed zero-shot framework achieves a prediction
+accuracy of 28.0%, which is significantly lower than the accuracies of all ResNet models (both
+trained from scratch and with pre-trained weights) and slightly lower than those of ViT models
+using pre-trained weights. However, our method outperforms ViT models trained from scratch.
+For a more detailed evaluation, the confusion matrix is presented in Figure 5a. It reveals that the
+GPT-4o-based framework tends to classify a very limited number of walls into the "Very Poor"
+category.
+Table 1. Quantitative evaluation for energy efficiency classification of “wall”
+(5 efficiency grades).
+Model Accuracy (%) Precision (%) Recall (%) F1 (%) ResNet18 (scratch) 69.6 57.6 56.1 56.4 ResNet18 (pretrain) 72.9 62.0 60.5 60.9 ResNet34 (scratch) 68.1 56.4 55.2 55.4 ResNet34 (pretrain) 72.3 61.4 59.6 60.1 ResNet50 (scratch) 68.2 56.7 54.5 54.9 ResNet50 (pretrain) 71.7 60.2 58.7 59.2 ViTsmall (scratch) 30.6 19.2 21.0 13.3 ViTsmall (pretrain) 45.8 38.4 32.6 30.0 ViTbase (scratch) 31.1 39.1 21.6 15.1 ViTbase (pretrain) 38.5 33.3 27.1 24.4
+
+
+Proceedings Paper Formatting Instructions – 8 – Rev. 10/2015
+ViTlarge (scratch) 29.5 37.0 20.1 10.6 ViTlarge (pretrain) 34.3 26.3 24.1 20.9 GPT-4o 28.0 38.7 32.4 25.3
+(a) 5 classes (b) 3 classes
+Figure 5 Confusion matrices for 5 and 3 classes.
+Table 2. Quantitative evaluation for energy efficiency classification of “wall”
+(3 efficiency grades).
+Model Accuracy (%) Precision (%) Recall (%) F1 (%) ResNet18 (scratch) 77.0 64.4 61.0 62.0 ResNet18 (pretrain) 79.7 67.5 64.4 65.5 ResNet34 (scratch) 75.5 62.2 59.9 60.7 ResNet34 (pretrain) 79.2 66.3 63.5 64.5 ResNet50 (scratch) 74.7 60.5 57.5 58.0 ResNet50 (pretrain) 78.7 66.1 62.7 63.7 ViTsmall (scratch) 52.0 66.8 35.5 34.4 ViTsmall (pretrain) 57.4 70.7 39.7 38.6 ViTbase (scratch) 49.9 65.2 34.0 32.9 ViTbase (pretrain) 57.9 48.6 40.8 39.5 ViTlarge (scratch) 49.8 65.3 34.1 33.1 ViTlarge (pretrain) 52.0 67.5 36.5 35.5 GPT-4o 65.6 57.4 57.9 54.2
+When the problem is reformulated into a more generalized classification setup – combining
+"Very Good" and "Good" into a single "Good" category, and "Very Poor" and "Poor" into a single
+"Poor" category – the performance of the framework utilizing GPT-4o improved significantly. The
+quantitative evaluation for this three-class classification problem is presented in Table 2, showing
+that the prediction accuracy of the GPT-4o model improves significantly to 65.6%. This
+improvement can also be observed from the corresponding confusion matrix, as illustrated in
+Figure 5b. In summary, the proposed zero-shot VLM framework using GPT-4o demonstrates the
+capability to classify the energy efficiency levels of walls based on image data. Although its
+performance does not match that of supervised deep learning models, it provides an efficient and
+cost-effective method for estimating energy efficiency without requiring any additional training.
+
+
+Proceedings Paper Formatting Instructions – 9 – Rev. 10/2015
+CONCLUSION
+This paper introduces a novel framework that leverages large pre-trained models to predict
+the energy efficiency levels of building facades from street view images. This zero-shot approach
+can not only predict energy efficiency levels but also provide reasons for its decisions without
+requiring any specific training data. Given its independence from custom datasets, the framework
+can be readily applied to large-scale datasets, such as images captured in cities worldwide. This
+capability makes it a valuable tool for stakeholders by offering insights into the energy efficiency
+of entire buildings, ultimately aiding in the reduction of energy consumption. Future work may
+include enriching the framework with additional data for an end-to-end estimation of whole
+buildings. Furthermore, fine-tuning large language models could be explored to enhance prediction
+accuracy.
+ACKNOWLEDGEMENT
+This project has received funding from the European Union’s Horizon 2020 research and
+innovation programme under the Marie Skłodowska-Curie grant agreement No 101034337.
+REFERENCES
+Arora, N. K., and Mishra, I. (2019). "United Nations Sustainable Development Goals 2030 and
+environmental sustainability: race against time." Environmental Sustainability, 2(4),
+DCLG (2017). "A Guide to Energy Performance Certificates for the Marketing, Sale and Let of
+Dwellings." Department for Communities Local Government (DCLG) London, UK.
+Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T.,
+Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., and Houlsby, N.
+(2020). "An Image is Worth 16x16 Words: Transformers for Image Recognition at
+Scale."
+Dougherty, T. R., Huang, T., Chen, Y., Jain, R. K., and Rajagopal, R. (2021). "SCHMEAR:
+scalable construction of holistic models for energy analysis from rooftops." Proceedings
+of the 8th ACM International Conference on Systems for Energy-Efficient Buildings,
+Cities, and Transportation, Association for Computing Machinery, Coimbra, Portugal,
+111–120.
+EC (2010). "Energy Performance of Buildings Directive (2010/31/EU)." European Commission.
+Google (2024). "Street View Static API overview."
+<https://developers.google.com/maps/documentation/streetview/overview>.
+He, K., Zhang, X., Ren, S., and Sun, J. (2015). "Deep Residual Learning for Image Recognition."
+IEA (2023). "The energy efficiency policy package: key catalyst for building decarbonisation
+and climate action." International Energy Agency (IEA), Paris.
+Li, J., Li, D., Xiong, C., and Hoi, S. "Blip: Bootstrapping language-image pre-training for unified
+vision-language understanding and generation." Proc., International conference on
+machine learning, PMLR, 12888-12900.
+
+
+Proceedings Paper Formatting Instructions – 10 – Rev. 10/2015
+Li, L. H., Zhang, P., Zhang, H., Yang, J., Li, C., Zhong, Y., Wang, L., Yuan, L., Zhang, L., and
+Hwang, J.-N. "Grounded language-image pre-training." Proc., Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition, 10965-10975.
+Liu, Y., and Tuytelaars, T. (2020). "A Deep Multi-Modal Explanation Model for Zero-Shot
+Learning | IEEE Journals & Magazine | IEEE Xplore." IEEE Transactions on Image
+Processing, 29.
+Mayer, K., Haas, L., Huang, T., Bernabé-Moreno, J., Rajagopal, R., and Fischer, M. (2023).
+"Estimating building energy efficiency from street view imagery, aerial imagery, and
+land surface temperature data." Applied Energy, 333, 120542.
+MHCLG, T. (2020). "Energy performance of buildings data: England and Wales." Ministry of
+Housing, Communities and Local Government (MHCLG).
+Nicolae, B., and George-Vlad, B. (2015). "Life cycle analysis in refurbishment of the buildings
+as intervention practices in energy saving." Energy and Buildings, 86, 74-85.
+OpenAI (2022). "Introducing ChatGPT." <https://openai.com/index/chatgpt/>. (Dec. 04, 2024).
+OpenAI (2024). "GPT-4o." <https://openai.com/index/hello-gpt-4o/>. (Dec. 04, 2024).
+Pan, Y., Braun, A., Brilakis, I., and Borrmann, A. (2022). "Enriching geometric digital twins of
+buildings with small objects by fusing laser scanning and AI-based image recognition."
+Automation in Construction, 140.
+Pham, A.-D., Ngo, N.-T., Truong, T. T. H., Huynh, N.-T., and Truong, N.-S. (2020). "Predicting
+energy consumption in multiple buildings using machine learning for improving energy
+efficiency and sustainability." Journal of Cleaner Production, 260.
+Regulations, E. (2012). "The Energy Performance of Buildings (England and Wales) Regulations
+(No: 3118)." London: The National Archives. Available from: https://www. legislation.
+gov
+Rosenfelder, M., Wussow, M., Gust, G., Cremades, R., and Neumann, D. (2021). "Predicting
+residential electricity consumption using aerial and street view images." Applied Energy.
+Shen, S., Li, L. H., Tan, H., Bansal, M., Rohrbach, A., Chang, K.-W., Yao, Z., and Keutzer, K.
+(2021). "How much can clip benefit vision-and-language tasks?" arXiv preprint
+arXiv:2107.06383.
+Streltsov, A., Malof, J. M., Huang, B., and Bradbury, K. (2020). "Estimating residential building
+energy consumption using overhead imagery." Applied Energy, 280, 116018.
+Sun, M., Han, C., Nie, Q., Xu, J., Zhang, F., and Zhao, Q. (2022). "Understanding building
+energy efficiency with administrative and emerging urban big data by deep learning in
+Glasgow." Energy and Buildings, 273.
+Weiss, K., Khoshgoftaar, T. M., Wang, D., Weiss, K., Khoshgoftaar, T. M., and Wang, D.
+(2016). "A survey of transfer learning." Journal of Big Data 2016 3:1, 3(1).
+Zeng, Z., Goo, J. M., Wang, X., Chi, B., Wang, M., and Boehm, J. (2024). "Zero-Shot Building
+Age Classification from Facade Image Using GPT-4." arXiv preprint arXiv:2404.09921.

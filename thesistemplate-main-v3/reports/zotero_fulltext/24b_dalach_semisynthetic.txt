@@ -1,0 +1,34 @@
+Chair of Computing in Civil and Building Engineering TUM School of Engineering and Design Technical University of Munich
+Page 1 of 2
+Master Thesis Proposal
+Semi-Synthetic Dataset
+of Building Energy Archetypes
+Background
+The rapid development of Artificial Intelligence (AI) and Machine Learning (ML) is increasingly impacting the field of building design and engineering. However, one of the main obstacles is the lack of high-quality data suitable for training. Fortunately, architecture and urban planning are wellestablished fields, with extensive information available on building typologies and characteristics.
+One valuable resource is the TABULA database, developed within the IEE Project TABULA. This database categorizes European residential buildings into archetypes and presents their characteristics in a structured, tabular format. These include the construction time, floor area, building systems and the yearly energy demands.
+While there are existing attempts to create machine-learning-ready datasets based on TABULA, they typically rely only on the textual data provided in the original source. By leveraging recent advances in Large Language Models (LLMs) and Computer Vision (CV), there is potential to enhance this data. For instance, geometric models, materials, or building systems could be predicted and added to the archetypes based on images or descriptive data.
+The main goal of this thesis is to develop a dataset that can be used for ML applications - for example, predicting one building characteristic given others (for example, predicting annual energy demands given the information about a building). The specific research focus will be discussed and defined together before the official submission of the exposé.
+Objectives
+This thesis aims to develop a method for creating a semi-synthetic dataset based on building archetypes, enhanced through AI techniques. The student will review relevant literature on synthetic data generation and the use of Large Language Models (LLMs) and Computer Vision (CV) for predicting building characteristics. Based on this, they will propose a new data processing approach and implement a clean, automated workflow. They will split the data and use it for training a simple ML model of choice. The work will combine theoretical analysis with practical implementation, resulting in a functional prototype and documented code.
+
+
+Chair of Computing in Civil and Building Engineering TUM School of Engineering and Design Technical University of Munich
+Page 2 of 2
+Figure 1 TABULA Web Tool: https://webtool.building-typology.eu/#bm
+Expected Outcomes
+• A scientific master’s thesis that includes a comprehensive review of existing methods and
+technologies.
+• A working prototype that demonstrates the automated creation of an enhanced dataset
+based on TABULA.
+• A case study, using a simple ML model of choice.
+• An evaluation of the generated dataset and AI model performance using predefined metrics
+or criteria.
+Prerequisites
+• Programming skills in Python or a similar language.
+• Data processing skills.
+• Proficiency in German or English (the thesis may be written in either language).
+• Basic knowledge of machine learning (using and adapting existing models).
+• Familiarity with energy modeling is highly desirable.
+• Supervisors: Agata Dalach, Chair of Computing in Civil and Building Engineering,
+agata.dalach@tum.de, Jose Quesada Allerhand, Chair of Computing in Civil and Building
+Engineering, jose.quesada@tum.de

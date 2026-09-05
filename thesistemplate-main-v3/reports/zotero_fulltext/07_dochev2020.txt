@@ -1,0 +1,411 @@
+The header is left blank
+Assigning energetic archetypes to a digital cadastre and estimating building heat demand. An example from Hamburg, Germany
+Ivan DOCHEV1*, Hannes SELLER2, Irene PETERS3
+1,2,3 HafenCity University Hamburg, Germany
+Abstract – In view of the relatively large energy consumption of national building stocks, many cities and municipalities start to prepare energetic building stock models to monitor energy efficiency and plan policies at city or regional scales. In many cases, data on individual buildings is not available. A usual approach to this is the “archetype” approach – classifying the building stock into energetic types (archetypes). This classification is usually based on non-energetic properties available in digital cadastres (construction type, year of construction etc.) and can be a large source of error. We present our research into the difficulties and pitfalls associated with such an approach using the city of Hamburg as an example. In the end, we compare the modelled estimates with consumption data at three different levels to evaluate model performance.
+Keywords – Urban heat demand; UBEMs (Urban building energy models); Energetic archetypes
+Nomenclature
+IWU „Institut Wohnen und Umwelt“. A scientific institute based in Darmstadt, Germany EFH row-house, terraced house
+RH multi-family building, apartment block
+GMH large multifamily building
+HH high-rise building (eight or more stories)
+EnEV German energy efficiency legislature – “Energieeinsparverordnung”
+KfW German national investment bank – „Kreditanstalt für Wiederaufbau“
+ALKIS
+German cadastral system (nation-wide) - Amtliches Liegenschaftskataster Informationssystem
+AdV Organisation of the German state authorities for land surveying and cadastre
+1. INTRODUCTION
+In the context of the European climate goals and the German Energy Transition, the demand for heat energy is beginning to receive much attention. Thus, the understanding of the building stock, being one of the main consumers of energy in general and of heat energy in particular, becomes a key issue for many European cities – smart cities need smart energy planning. This, on the other hand, requires information on building heat demand, not only in the totals but also spatially distributed. There are two general approaches to urban energy modelling – top-down and bottomup. The top-down approach usually involves distributing a total energy amount to spatial units buildings, census tracts etc. based on floor areas, population or similar. These models are easier to set up, potentially more realistic, but less flexible and therefore less suitable for policy analysis
+* Corresponding author. E-mail address: ivan.dochev@hcu-hamburg.de
+
+
+The header is left blank
+than the bottom-up models. The latter involve usually a digital cadastre with non-energetic information about buildings (size, location, age etc.) which is used for deriving energetic properties based on “archetypes” – representative buildings, with known energetic characteristics. Setting up the building model then comes down to matching or assigning the archetypes to the buildings in the cadastre so that energetic properties for each building can be estimated. The next step is energy simulation.
+2. OBJECTIVE
+The purpose of this paper is to present our work and experience in using the “archetype” approach to urban heat demand modelling at the building scale in Hamburg, Germany. We aim at presenting a comprehensive and detailed description of the steps we took, the difficulties we encountered and the solutions we came up with, in the hope that it would be useful for others in the field.
+3. LITERATURE OVERVIEW
+Keirstead, Jennings et al [1] present a review of the broader field of urban energy modelling, identifying six key areas of practice: technology design, building design, urban climate, systems design, policy analysis and land-use and transportation modelling. Reinhart and Cerezo [2] give a good overview of the more concrete area of urban building energy modelling with applications in building and policy design. Their conclusions are that the field is emerging and going in the direction of energy flow modelling on neighbourhood level. The challenges are the definition and description of archetypes, the unavailability of measured data for validation and the deterministic modelling of user behaviour. Further, Cerezo et al compared four approaches [3] to archetype modelling – deterministic with a single archetype, deterministic with four archetypes, deterministic with a probabilistic handling of user behaviour and a Bayesian approach to building characteristics combined with the same probabilistic handling of the user behaviour. They report best results with the fourth one. Kristensen et al [4] also make use of Bayesian statistics for a hierarchical calibration of archetypes and dynamic energy modelling of an aggregate of 100 buildings. They report errors of 2.9% and 7.8%. Monteiro et al. [5] present a method for archetype characterization and analyse the impact of the number of archetypes on model performance. Their results vary between 55.2 GWh and 64 GWh for a specific area, noting that the percent difference is relatively small, but 8.8 GWh in absolute terms make a difference for energy supply. A slightly different problem – data standardization and integration in urban energy modelling is discussed by Chen et al [6]. They analyse four US cities and report that all four local datasets are suitable for energy modelling, however they require standardized formats and workflow. The literature overview shows that various scientific groups are working on different ends of this emerging field, tackling issues like number of archetypes, archetype definitions and user behaviour. We aim at exploring the intermediate step in the general process – the assigning of the archetypes to the buildings.
+4. METHODS AND PROCEDURES
+In this chapter we first describe the two sets of archetypes that we use (one for residential and one for non-residential buildings). Then we describe the features and properties of the digital cadastre that we use and lastly the challenges of assigning the archetypes to the individual buildings in the cadastre. We also discuss the pitfalls when dealing with building uses, mixed-use buildings and floor areas. A python script for automating the whole process is available on GitHub:
+
+
+The header is left blank
+https://github.com/ivandochev/assigning-energetic-types-to-buildings
+4.1 Data and archetypes
+4.1.1 The IWU Typology
+The IWU residential building typology was prepared by the Institut Wohnen und Umwelt Darmstadt (IWU) [7] as part of the European TABULA Project and deals with residential buildings and demand for space heating and hot water only. It is based on a sample study of the German residential building stock. It makes use of three building characteristics which are used to classify a building into a specific energetic “archetype”: the construction epoch (e.g. epoch ‘B’: 1860 ... 1918), construction type (e.g. “single-family house” or “apartment building”) and a renovation level. An overview of the archetypes of the IWU Typology is presented in Table 1. below (see Nomenclature for the meaning of the abbreviations). Note that there are missing positions, for example, there is no archetype for RH_A. We address this issue in section 4.2.3..
+TABLE 1. OVERVIEW OF ALL IWU TYPES
+Epoch Construction
+epoch code Construction types
+... 1859 A EFH - MFH - 1860 ... 1918 B EFH RH MFH GMH
+
+1919 ... 1948 C EFH RH MFH GMH 1949 ... 1957 D EFH RH MFH GMH 1958 ... 1968 E EFH RH MFH GMH HH 1969 ... 1978 F EFH RH MFH GMH HH 1979 ... 1983 G EFH RH MFH
+
+1984 ... 1994 H EFH RH MFH 1995 ... 2001 I EFH RH MFH 2002 ... 2009 J EFH RH MFH 2010 ... 2015 K EFH RH MFH 2016 ... L EFH RH MFH
+The typology includes all of the listed types in three renovation levels: ‘0’ or “baseline”, ‘1’ corresponding to the energy efficiency standard of the German energy efficiency legislature (Energieeinsparverordnung, EnEV 2014) and ‘2’ which is the “Passive House” standard developed at the TU Darmstadt in the 1990s. “Passive” in this sense means it building does not require active heating due to very high levels of insulation and can be heated via the ventilation system. Note that “baseline” in this context differs from “original state”. “Baseline” means the energetic state in which a certain archetype is currently mostly to be found. It does not assume only original building characteristics. For example, the “baseline” state of a single-family house built prior to 1859 includes windows with a two-pane insulated glazing and a U-value of 2.8 W/(m2K) [7], which is not with what the building was originally built with. Since the original windows were no more to be found, according to the sample survey of IWU, the “baseline” state does not contain original windows, but the most common ones currently, for the respective archetype. For newer buildings (epochs K and L) the “renovation level” translates to the energy efficiency standard of construction with ‘0’ being the current minimum standard for new buildings according to the EnEV. The next two levels (‘1’ and ‘2’) correspond to the “KfW-Effizienzhaus 70” and “KfW-Effizienzhaus 40” standards. These were defined by the KfW (Kreditanstalt für Wiederaufbau), which is the German national investment bank. The numbers 70 and 40 mean 70%, respectively 40% less primary energy demand (per sq. meter) compared to the current energy efficiency standard.
+
+
+The header is left blank
+IWU described the energetic characteristics (U-values, A/V ratios etc.) and calculated specific heat demand (kWh/m2*a) by using a “reference building” – a building that mostly represents a given archetype. Although IWU calculated the specific heat demand for each archetype they also provide a “consumption” correction – an empirical function to reduce the discrepancy between “demand” (calculated with a standard, usually static, heat balancing method) and “consumption“ (measured empirically). Thus, the values for the archetypes are comparable with consumption data. Still, since the demand is calculated (albeit with a consumption correction), IWU could provide values at different points in the heating system - for “useful heat” (emitted by radiators, water taps), for “demand at generation” (Wärmeerzeugung, amount needed as output of heat generator) and for “final energy” (amount needed as input to heat generator). All specific heat demands have the heated residential floor area (Wohnfläche) as the reference area.
+We chose this typology because: a) it is well-documented, b) is well established in Germany, c) is part of an international EU project (TABULA/EPISCOPE [8]), where similar typologies are prepared for more than 20 European countries and d) includes a consumption correction to allow comparison with measured data.
+4.1.2 VDI 3807-2
+The German VDI 3807-2 (Characteristic consumption values for buildings) [9] is a publication by the Association of German Engineers (Verein Deutscher Ingenieure). It includes a classification of non-residential buildings into building uses and specific consumption values for each. We view the building uses as ‘archetypes’ in the context of this paper. The main goal of the publication is to allow the comparison between non-residential buildings of the same archetype and thus provide building owners, or energy auditors with an idea how energy efficient a building is.
+For each of the archetypes, the VDI includes a sample of buildings with measured consumption of water, electricity and heat (including domestic hot water). The heat consumption is for space heating and hot water only, process heat is not included, although some VDI archetypes can be classified as “industrial” buildings. The VDI publication includes mean, mode and median values as well as a frequency distribution. The specific values (per sq. meters) use the mode value of the frequency distribution. The publication also includes a “reference value” (we call it “target value”, to avoid confusion with “reference area”) – the arithmetic mean of the lower quartile. In a sense, the mode value is where most buildings currently are and the target value is the value that buildings should “strive for”. All specific values have the heated gross floor area as the reference area. We use the mode value of the VDI as an equivalent to the IWU “baseline” renovation level and the “target value” as an equivalent to “renovation level 1”. For non-residential buildings we do not have an equivalent of renovation level 2. All values from the VDI are, per definition, final energy, since they are based on measured consumption. The IWU consumption correction allows the use of the IWU archetypes alongside the VDI archetypes, since both in the end reflect consumption.
+We chose this typology for the non-residential archetypes, because it is well documented, consumption-based and derived from a sample with available frequency distribution. The latter means the suspected heterogeneity of archetypes is more quantifiable and transparent. Modelling non-residential buildings is a more difficult task than modelling residential ones exactly because these buildings vary greatly. The cadastres in Germany are not rich enough in detail to allow the assigning of more finely defined archetypes. Therefore we decided not to search for more detailed non-residential archetypes, but to rely on average consumptions for heterogenic archetypes, so that at least at an aggregated level we can be have more realistic results.
+
+
+The header is left blank
+4.1.3 ALKIS
+The Hamburg digital cadastre (ALKIS - Amtliches Liegenschaftskataster Informationssystem) is the target for the assigning of the building archetypes. The ALKIS is a standardized cadastral system used throughout Germany. We make use of the building objects (AX_Gebäude) in the cadastre, stored as polygon geometry and attributes. There are approximately 300 000 building objects in Hamburg. The attributes relevant for our purposes are: building use, construction year, construction type, number of stories, roof type and footprint area. The ALKIS of Hamburg is freely available in CityGML format from the “transparency portal” of Hamburg [10].
+4.2 Assigning the archetypes
+This chapter deals with the interpretation of the attributes and the logic used for assigning both sets of archetypes (IWU and VDI) to each building object, based on its attributes.
+4.2.1 Building uses
+In order to assign an archetype to a building polygon, the first thing to decide is whether the building is residential or non-residential, since we have two sets of archetypes. This immediately poses a problem with mixed-use buildings. In the ALKIS, each mixed-use building has its own use-name. For example “Residential building with Commerce and Services” (Wohngebäude mit Handel und Dienstleistungen) is a distinct building use. Rather than defining “custom-made” archetypes for mixed-use buildings, we view each building polygon as having two zones – a residential and a non-residential. Purely residential buildings have zero non-residential area, while purely non-residential buildings have zero residential area. Mixed-use buildings have both. Respectively, mixed-use buildings have both an IWU and a VDI archetype assigned, while buildings of a single use, only one archetype. We consider only a mix of residential and another type of building use. Other mix of uses is simplified by assigning only a VDI archetype.
+To tackle the mixed-use buildings, we had to decide what non-residential use to assign, based on the building’s name and definition in the cadastre. Additionally we had to define the ratio between the residential and non-residential area (the two zones). Table 2. shows how we tackled this. The table starts with four single-use building uses, which is an excerpt from the total of 232 building uses (see github repository for full table). Out of these 232 uses, 13 are mixed-use buildings and are presented below the four examples of single-use buildings. We operationalize the assigning of types by first assigning an “Overall use class”, which can be “residential”, “commerce and industry”, “public”, “mixed-residential” and “irrelevant”. Since the VDI differentiates only between building uses, the assigning of a VDI archetype to the ALKIS is simply mapping the appropriate VDI use-name to the respective ALKIS use-name, as shown in Table 2. For residential buildings, we further differentiate between the archetypes of IWU. This means that a polygon with “residential” overall use class is taken to a second step where we assign the appropriate IWU archetype. Mixed-use buildings receive a non-residential archetype as shown in Table 2, but is also taken later to assign an appropriate IWU archetype. “Irrelevant” buildings are buildings that we assume have none or negligible amount of heat demand. The “public” overall use class does not affect the assigning of archetypes. We added it for quicker querying and further analysis after the types are assigned and the building model is prepared. The assumed share of residential area is based on our experience and knowledge of the Hamburg building stock. It is clear that heterogeneity is highly likely to be present within a single ALKIS use code, but this is an innate problem of the archetype approach. An extreme example of such heterogeneity is the Gemischt genutztes Gebäude mit Wohnen (Code 1100, “mixed-use building with residential”). Some large shopping centres (Billstedt Zentrum) have this building use in the ALKIS, but also some much
+
+
+The header is left blank
+smaller 1-2 storey buildings that can be viewed as single-family houses. Since the name does not hint towards a specific share, we took some of the largest such buildings and looked at each to get an idea about the possible split. Based on this, we assumed a share of 15% residentially used area. This represents our best guess from a non-representative sample.
+TABLE 2. ASSUMPTIONS ABOUT MIXED-USE BUILDINGS (EXCERPT)
+4.2.2 Construction epoch
+The construction epoch is used to differentiate between different residential archetypes. The logic behind using the epoch as a proxy for building characteristics lies in the assumption that buildings built within one epoch were similar, therefore allow classification into archetypes. For older
+ALKIS Name ALKIS
+Code
+Overall
+building use* VDI Name Assumed share of
+residential area
+Wohngebäude 1000 residential - 100%
+Gebäude für Wirtschaft oder Gewerbe
+2000 commerce and
+industry Werkstätten 0%
+Verwaltungsgebäude 3000 public Verwaltungsgebäude allg 0%
+Gartenhaus 1313 irrelevant - 
+... ...... ... ...
+Wohngebäude mit Handel und Dienstleistungen
+1120 mixed
+residential Verkaufsstätten 100% minus the area
+of the ground floor
+Wohn- und
+Geschäftsgebäude 1123 mixed
+residential Verkaufsstätten 100% minus the area
+of the ground floor
+Wohngebäude mit
+Gemeinbedarf 1110 mixed
+residential Gemeindehäuser 50%
+Wohn- und
+Verwaltungsgebäude 1121 mixed
+residential Verwaltungsgebäude allg 50%
+Wohn- und
+Bürogebäude 1122 mixed
+residential Verwaltungsgebäude allg 50%
+Wohngebäude mit Gewerbe und Industrie
+1130 mixed
+residential Betriebsgebäude/-höfe 50%
+Wohn- und
+Betriebsgebäude 1131 mixed
+residential Betriebsgebäude/-höfe 50%
+Land- und forstwirtschaftliches Wohngebäude
+1210 mixed
+residential Betriebsgebäude/-höfe 50%
+Land- und forstwirtschaftliches Wohn- und Betriebsgebäude
+1220 mixed
+residential Betriebsgebäude/-höfe 50%
+Wohn- und
+Wirtschaftsgebäude 1222 mixed
+residential Betriebsgebäude/-höfe 50%
+Gemischt genutztes
+Gebäude mit Wohnen 1100 mixed
+residential Verwaltungsgebäude allg 15%
+Gebäude für Handel und Dienstleistung mit Wohnen
+2310 mixed
+residential Verkaufsstätten 15%
+Gebäude für Gewerbe und Industrie mit Wohnen
+2320 mixed
+residential Betriebsgebäude/-höfe 15%
+
+
+The header is left blank
+epochs, the assumption mostly relies upon typical materials and construction. For newer epochs, after the oil crisis in the late 1970s, it lies in the energy efficiency legislature that saw energy efficiency standards being increasingly demanding. That is why newer epochs encompass fewer years – because legislation to increase energy efficiency changed (and changes) more rapidly in the last 10-15 years.
+Although information on the construction year of buildings is part of the ALKIS, its quality varies throughout Germany. In the concrete case of Hamburg, the ALKIS provides data on the construction year of roughly 50% of the residential buildings. These 50% however cover approximately 80% of the floor area, since most multi-family buildings have this entry. Whether these construction years in the ALKIS are correct is out of the scope of this paper, but we are further researching this question. Since most of the floor area of residential buildings has construction year entries, we decided to tackle the buildings without construction year in a simplistic way. We define a generic IWU archetype for each IWU construction type as an average of the heat demand for all epochs. For example, the generic single-family house type we define as EFH_ and its specific heat demand is equal to the arithmetic mean of all single family house types (EFH_A to EFH_I). Note that the average excludes epochs J, K, and L, spanning 2002 to 2016. We found out after personal talks with the local administration, that an obligation to note down the construction year was introduced after 1998, so it is unlikely that a building without a construction year in the ALKIS would have been built after this date. We take 2002 as the cut-off as a precaution.
+4.2.3 Construction type (‘Bauweise’)
+In order to assign the IWU archetypes, the construction type of each polygon has to be defined. The ALKIS includes an attribute “Bauweise”, which can be translated as “construction type”. However, the “Bauweise” is not the same as the IWU definition of construction type. When assigning their types to German Census data, IWU came up with the following allocation of types to data in the census [7]:
+TABLE 3. DEFINITIONS OF THE CONSTRUCTION TYPES OF THE IWU ARCHETYPES
+Type Description
+Einfamilienhaus (EFH) Detached residential building with 1 or 2 dwellings
+Reihenhaus (RH) Semi-detached residential building or row house with 1 or 2 dwellings
+Mehrfamilienhaus (MFH) Residential building with between 3 and 12 dwellings
+Großes Mehrfamilienhaus (GMH) Residential building with more than 13 dwellings
+IWU explicitly states that this logic is not to be followed strictly if other building data is available [7]. For example, the distinction between MFH and GMH is set at twelve dwelling units, only because this was the threshold in the census statistics. However, this approach cannot be taken for Hamburg since the ALKIS does not record number of dwellings per building. Therefore, we assigned the construction types of IWU based on the Bauweise and the number of stories of a building polygon.
+An overview of the Bauweise and some explanations are presented in Table 4. Establishing the connection between the Bauweise and the IWU construction type requires some explanations. The definitions of the Bauweise types for the ALKIS in the ALKIS documentation give some insights. For example, the Bauweise “Gruppenhaus” is defined by the AdV (Organisation of the German state authorities for land surveying and cadastre - Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland) as:
+
+
+The header is left blank
+‘‘Gruppenhaus’ is one of more than two attached buildings of the same kind, with usually up to 21⁄2 stories, which are arranged in such a way that no single axis exists between them
+[„Gruppenhaus‘ ist eines von mehr als 2 gleichartigen, aneinandergebauten Wohnhäusern mit in der Regel bis zu 21⁄2 Geschossen, die so gegeneinander verschoben sind, dass keine gemeinsame Achse gegeben ist“] [11]
+However, there is a discrepancy between this definition and the reality of most buildings with this “Bauweise” in Hamburg. Although these Gruppenhaus buildings should usually have up to 21⁄2 stories, in 11 000 cases in Hamburg, the buildings have three or more stories (as noted in the cadastre). In most cases these buildings can be viewed as rows of multi-family buildings, so the “no single axis exists between them” is also not applicable.
+We traced this inconsistency between the official definitions of the Bauweise and the Hamburg ALKIS to when Hamburg adopted the ALKIS (around 2010). Before this, Hamburg had a digital cadastre that used a building use classification that was a mixture between “use” and “Bauweise”. For example, single-family residential buildings had the use name – “detached single-family house” (Einfamilienhaus–Einzelhaus). Therefore, a building use included three pieces of information: a) the building is residential, b) the building is detached and c) the building is a single-family house. When Hamburg opted for the ALKIS, these former use names were translated into the building uses of the ALKIS and the Bauweise of the ALKIS, as two separate attributes. As part of this transformation however, discrepancies occurred between the official definition of the different Bauweise and the actual characteristics of the buildings, which were given these Bauweise types. Because of this we view the Bauweise as a translation of the older building use types and not as defined by the AdV. We found the most probable correspondence between the older cadastre and the ALKIS by spatially joining the ALKIS with a version of the older cadastre.
+TABLE 4. THE "BAUWEISE" ATTRIBUTE IN THE HAMBURG ALKIS
+Bauweise
+Code Name Description and use code prior
+to ALKIS IWU construction type
+1100 Freistehendes
+Einzelgebäude
+Usually used for detached singlefamily houses, this corresponds to
+the “Einfamilienhaus–Einzelhaus” in the digital cadastre of Hamburg before the ALKIS was adopted
+Can be regarded as EFH (singlefamily house) in the IWU typology. However some buildings have more than two stories. It is unlikely that a building with three or four stories is a single-family house. Therefore, it could be closer to a MFH in some cases.
+1200 Freistehender
+Gebäudeblock
+Usually used for detached multifamily houses, this corresponds to the “Mehrfamilienhaus–Einzelhaus”
+Can be regarded as MFH, GMH or HH (multi-family building, large multi- family building or high-rise).
+1300 Einzelgarage
+1400 Doppelgarage Not relevant, we consider garages as non-heated.
+1500 Sammelgarage
+2100 Doppelhaushälfte
+Twin-buildings, usually used for single-family houses; corresponds to the “Einfamilienhaus–Doppelhaus”
+Can be regarded as RH (row-house) or EFH.
+2200 Reihenhaus
+Row-houses, usually single-family houses; corresponds to
+“Einfamilienhaus–Gruppenhaus”
+Regarded as RH
+2300 Haus in Reihe Not present in Hamburg ALKIS Can be regarded as MFH, GMH or
+HH
+
+
+The header is left blank
+2400 Gruppenhaus Corresponds to “Mehrfamilienhaus
+Gruppenhaus” Generally regarded as MFH, GMH
+or HH
+2500
+Gebäudeblock in geschlossener Bauweise
+Corresponds to “MehrfamilienhausWohnblock”
+4000 Offene Halle
+Not relevant, considered as “Missing Bauweise” if building function is residential.
+9999 Sonstiges
+0 K.A.
+We use Table 2. as a starting point. However, we need other building information to decide between the three multi-family types (MFH, GMH and HH), between EFH and RH for the Bauweise “Doppelhaushälfte” and between EFH and MFH for “Freistehendes Einzelgebäude”. For this, we use the number of stories. Since the purpose of the assigning of archetypes is to assign the one archetype that is most similar to a given building polygon, we looked at the number of stories of the reference buildings of IWU (Table 5). Additionally we looked at the “typical number of stories” as given by IWU in the description of their typology [7].
+Note that deciding between EFH, MFH and GMH could be done using the gross floor area, since, for example, a GMH is, by definition, a large MFH. This, however, quickly becomes problematic, since the borders between connected buildings are not systematic in the ALKIS. A building with three entrances is sometimes split into three polygon objects, sometimes not. Multiple row-houses are sometimes given as a single polygon object with the “Bauweise” “Reihenhaus”. This will result in gross floor area much larger than that of a row-house and could lead to assigning a MFH type. For such reasons we do not consider the gross floor area as a signal when assigning an IWU construction type.
+TABLE 5: OVERVIEW OF THE TYPICAL NUMBER OF FLOORS ABOVE GROUND OF THE CONSTRUCTION TYPES
+Years Epoch
+IWU Construction Types - Number of stories above ground
+EFH RH MFH GMH HH
+typical Ref. typical Ref. typical Ref. typical Ref. typical Ref.
+... 1859 A 1-2 2 - 2-4 4 - 
+1860 ...
+1918 B 1-2 2 2 2 3-4 4 4-5 5 
+1919 ...
+1948 C 1-2 2 2 2 3-4 3 5-6 5 
+1949 ...
+1957 D 1-2 1 2 2 3-4 3 5-8 5 
+1958 ...
+1968 E 1-2 1 2 2 3-5 4 5-8 8 >8 15
+1969 ...
+1978 F 1-2 1 2 2 3-5 4 5-8 8 >8 15
+1979 ...
+1983 G 1-2 2 2 2 3-5 3 - 
+1984 ...
+1994 H 1-2 1 2-3 2 3-5 3 - 
+1995 ...
+2001 I 1-2 1 2-3 2 3-5 4 - 
+
+
+The header is left blank
+2002 ...
+2009 J 1-2 2 2-3 2 3-5 3 - 
+2010 ...
+2015 K - 2 - - - 
+2016 ... L - 2 - / 2 - / 5 - 
+In most cases, a distinction between MFH, GMH and HH can be made based on the typical number of stories. In the cases where the typical number of stories in one epoch overlaps for two types, we take the construction type with number of stories closest to the reference building. For example, in epoch E (1958 ... 1968), a MFH typically has four or five stories while a GMH – five to eight stories. If a building is a multi-family building with five stories, it could be categorized as both MFH and GMH. However, looking at the reference buildings, for these two epochs – MFH_E and MFH_F have four stories, while GMH_E and GMH_F have eight stories. We consider that the characteristics of a five-storey building probably are more similar to those of a four-storey one than to an eight-storey one (both in the same epoch). We assign MFH. This constitutes a “best guess”.
+Some buildings with Bauweise “Freistehendes Einzelgebäude” have more than two stories in the ALKIS, which is unlikely for a single-family house. Since all reference buildings of the IWU typology for type EFH are up to two stories, while MFH starts at three in many cases we assign EFH only if it has up to two stories.
+The Doppelhaushälfte, or “twin buildings” are closest to an “end-house” from a row of rowhouses. Since there is no such IWU construction type, we assign a row-house type and assume that the characteristics are closer to a row house than to a detached single-family house. IWU also classifies these buildings as row-houses [7].
+Lastly, Tables 1 and 5, indicate an additional problem – there are some combinations of IWU construction type and epoch that are undefined. For example, there is no archetype RH_A, we assign EFH_A, since they are both single-family houses, although one is detached, the other is not. For the other construction types – GMH, HH, also not present in epoch A, we assign MFH. Having a building with more than eight stories (HH) before 1859 (epoch A) is highly unlikely, therefore we view this as unproblematic.
+We approach the other missing combinations in a similar way – epoch-wise. This means we fill out the gaps with different construction types of the same epoch, rather than with the “appropriate” construction type from another epoch. The majority of relevant missing combinations are GMH and HH for epochs after F. These combinations are more likely to exist. Although typically the high-rise buildings in Hamburg were built in the 60s and 70s, there are some built after that and it is unreasonable to assume that they would be only a few. For all of these combinations we assign MFH for the appropriate epoch and not GMH or HH from another epoch. Our choice lies in the energy efficiency legislation after the 1970s. It is stated in §2 of the first German thermal insulation ordinance (WärmeschutzV) from 1977 [12] that the (then) new residential buildings (and some non-residential ones) were required to adhere to standards regarding the U-values of outer walls and windows. The minimal U-values were, however, dependent upon the Area-toVolume ratio (“A/V”) of a building – higher minimal U-values were set for lower A/Vs. Generally, larger buildings have a lower A/V ratio making them more energy-efficient. Considering that the U-value standard for larger buildings started being proportional to the A/V, means that the overall energy-efficiency of buildings started to even out between smaller and larger buildings after 1977. At least when geometry and transmissivity is viewed. Larger buildings had higher U-values, smaller buildings lower U-values. For this reason, we fill the missing combinations of construction
+
+
+The header is left blank
+type and epoch “horizontally” – retaining the epoch, and not “vertically” retaining the construction type. We are not aware if this was the reasoning for the lack of these combinations in the first place. There are some building polygons in the ALKIS without a “Bauweise” entry. For these we use only the number of stories. An overview of all archetype-assignment rules for residential buildings is given in Table 6.
+TABLE 6. OVERVIEW OF ASSIGNING RULES
+Epoch Epoch
+Code Bauweise Bauweise
+Code Number of stories Assigned type
+before
+1859 A
+Freistehendes Einzelgebäude 1100 ≤2, else regarded
+as missing bauweise
+Doppelhaushälfte 2100 EFH_A
+Reihenhaus 2200
+Freistehender Gebäudeblock 1100
+any MFH_A
+Haus in Reihe * 2300
+Gruppenhaus 2400
+Gebäudeblock in geschlossener
+Bauweise 2500
+Missing Bauweise - 1,2
+>2
+EFH_A MFH_A
+1860 1957
+B, C, D
+Freistehendes Einzelgebäude 1100 ≤2, else regarded
+as missing Bauweise
+EFH_B/C/D
+Doppelhaushälfte 2100 RH_ B/C/D
+Reihenhaus 2200
+Freistehender Gebäudeblock 1100
+≤4 ≥5
+MFH_B/C/D GMH_B/C/D
+Haus in Reihe 2300
+Gruppenhaus 2400
+Gebäudeblock in geschlossener
+Bauweise 2500
+Missing Bauweise 
+1,2 3,4 ≥5
+EFH_B/C/D MFH_B/C/D GMH_B/C/D
+1958 
+1978 E, F
+Freistehendes Einzelgebäude 1100 ≤2, else regarded
+as missing Bauweise
+EFH_E/F
+Doppelhaushälfte 2100 RH_E/F
+Reihenhaus 2200
+Freistehender Gebäudeblock 1100
+≤5 6,7,8 >8
+MFH_E/F GMH_E/F HH_E/F
+Haus in Reihe 2300
+Gruppenhaus 2400
+Gebäudeblock in geschlossener
+Bauweise 2500
+Missing Bauweise 
+1,2 3,4,5 6,7,8 >8
+EFH_E/F MFH_E/F GMH_E/F HH_E/F
+1979 2016
+G, H, I, J, K, L
+Freistehendes Einzelgebäude 1100 ≤2, else regarded
+as missing Bauweise
+EFH_G/H/I/J/K/L
+Doppelhaushälfte 2100 RH_G/H/I/J/K/L
+Reihenhaus 2200
+
+
+The header is left blank
+4.2.4 Reference areas
+After we assign the IWU and VDI archetypes to each building polygon, we have to estimate the reference area to calculate the total heat demand. Residential archetypes of IWU have the residential floor area as reference area. The VDI archetypes use the heated gross floor area (“beheizbare Bruttogrundfläche”) [9]. Note that there is another German term that can also be translated as heated gross floor area - Nutzfläche EnEV according to the German Energy Saving Ordinance EnEV. According to it the Nutzfläche EnEV is calculated using the entire heated volume (measured from the outside) of the envelope of a building and then multiplying with 0.32†. Although “Nutzfläche” means “useable” area, per definition, it is very similar to the “beheizbare Bruttogrundfläche” for the majority of buildings. The difference is in that one is volume-based (Nutzfläche EnEV), the other area-based. This can lead to large discrepancies with buildings with atriums or similar non-standard volumes. Since we use a two-dimensional cadastre, we can only estimate both the volume and the floor area based on footprint and number of stories. Therefore, for our purposes, we cannot differentiate between Nutzfläche EnEV and beheizbare Bruttogrundfläche and take them as equivalent and equal to the heated gross floor area.
+For both sets of archetypes, we first estimate the heated gross floor area by multiplying the number of stories with the footprint areas. For residential buildings, we also consider heated attics, since they are not included in the number of stories. To estimate the area of heated attics, we list the roof forms, which could have a heated attic - Table 7. Flat roofs and more uncommon types (domes) are not considered.
+TABLE 7 OVERVIEW OF ROOF TYPES THAT COULD BE “HEATED”
+Then, from these four roof types we define different rules to estimate if they are heated. The Mansard Roof we assume to be always heated, because Mansard roofs were generally invented in order to provide living space beneath the roof shell. Similarly, the Half-hip Roof we also always consider heated. For the other two types – Gable/Saddle Roof and Hip Roof a reference to the IWU Typology is made [7]. We consider a building polygon with Gable/Saddle Roof as having a heated attic, if the IWU archetype of the building polygon is listed in the typology description as having a heated attic ("EFH_A","EFH_B","EFH_C", "EFH_D", "EFH_E", "RH_B", "RH_C", "RH_D", "RH_E", "MFH_A") [7].
+† Or in a more complicated way for more extraordinary floor heights – outside the 2.5-3 metre range. We, however, neglect this for the purpose of this paper.
+Freistehender Gebäudeblock 1100
+any MFH_G/H/I/J/K/L
+Haus in Reihe 2300
+Gruppenhaus 2400
+Gebäudeblock in geschlossener
+Bauweise 2500
+Missing Bauweise - 1,2
+>2
+EFH_G/H/I/J/K/L MFH_G/H/I/J/K/L
+English Term German Term Roof Type Code
+Gable/Saddle Roof Satteldach 3100
+Hip Roof Walmdach 3200
+Half-hip Roof Krüppelwalmdach 3300
+Mansard Roof Mansardendach 3400
+
+
+The header is left blank
+All residential buildings for which the attic is thusly considered heated receive an additional area of 75% of the footprint area. This is 25% less than an additional floor to compensate for the reduced volume beneath the roof shell and possible false assumption whether the attic is heated. Expressed as a formula this amounts to (1) for residential buildings with heated roofs and (2) for all others (including non-residential).
+(1) A = a(s + 0.75)
+(2) A = as
+where: A – heated gross floor area a – footprint area s – number of stories
+After we estimate the heated gross floor area, we apply the coefficients for share of residential area (Table 2) and tackle residential and non-residential buildings differently. Non-residential buildings use the heated gross floor area as reference area, therefore we do not calculate further. Residential buildings use the residential floor area as reference area and we use the coefficients in Table 8 to convert heated gross floor area to residential area. For mixed-use buildings we take the non-residential share of the area as it is, and apply the conversion coefficients only to the residential part of the area. The numbers in Table 8 are based on our analysis of a sample of residential buildings with energy certification, where both areas are noted.
+TABLE 8. OVERVIEW OF COEFFICIENTS USED FOR CONVERTING HEATED GROSS FLOOR AREA TO RESIDENTIAL AREA
+4.2.5 3D Data and “building parts”
+There are two issues with using the number of stories and the footprint area for estimating gross floor area. Firstly, the storey height is relevant for heat demand, since the same gross floor area can have different total volumes based on how high each storey is. This is somewhat tackled by the archetype approach and the reference buildings behind it. We argue, that given that the specific heat demands assigned to the polygons come from a reference building, the floor heights would be implicitly in the archetype. IWU simulated the reference buildings with measured floor heights from construction plans, therefore the reference building has a “typical” floor height encoded in the specific heat demand of the archetype.
+A bigger issue is the presence of buildings with multiple “bodies” with different number of stories, all within the same building footprint. In this case, only the maximum number of stories is usually found in the ALKIS for the given polygon. This leads to large overestimations of building volume. An example is presented in Figure 1. Interestingly, official 3D data for Hamburg [13] even in the
+Construction type (IWU Typology)
+Conversion
+coefficient Note
+EFH 0.77 Equals the average ratio for all the reference buildings in the IWU typology with this construction type (all EFHs and RHs respectively)
+RH 0.81
+MFH 0.8 The average ratio is 0.84. However 4% were removed since some “purely” residential buildings according to the ALKIS actually have non-residential uses within them which leads to an overestimation of the total living space.
+GMH 0.8
+HH 0.8
+
+
+The header is left blank
+second level of detail (LoD2), which includes roof forms, also fails to tackle this problem.
+Figure 1 False volume estimations. Left to right: ALKIS, 3D model (LoD2) and Google Earth.
+Using 3D data has the advantage of more precise volumes of simpler buildings, however simpler buildings are the ones where using number of stories and footprint is most plausible. In a way, 3D fails where needed most – complex and extraordinary buildings. For this reason, we do not use 3D data for our model currently.
+However, the 2D ALKIS actually provides for such situations, where additional cadastral objects “building parts” describe higher, lower or overarching building bodies within the same building (Figure 2).
+Figure 2 Example of "building parts" in the ALKIS. Adapted from the official documentation of the ALKIS [14]
+Building parts have a separate number of stories. We use this to either increase (higher building part - “Hoehergeschossiger Gebaeudeteil (nicht Hochhaus)” or “Hochhausgebaeudeteil”) or decrease (lower building part “Geringergeschossiger Gebaeudeteil”) the heated gross floor area. In this way, we correct for the over- or underestimation of the gross floor area due to different heights within the same building footprint.
+Note that, regrettably, “building parts” are not always consistently noted in the ALKIS of Hamburg and there are buildings with different number of stories that are not properly described. The quality of this aspect of the ALKIS seems to be regional specific. We analysed the ALKIS buildings in the “Moabit” neighbourhood of Berlin, for example, and found it to be more complete with respect to building parts. The Berlin ALKIS is available from the Berlin geoportal [15].
+4.2.6 Renovation levels
+The issue of a building’s renovation level is one of the most difficult due to the lack of data. Although the building archetypes are based on the state a building is to be found “currently”
+
+
+The header is left blank
+(actually, the IWU sample is from 2010, the VDI most probably prior to that - 2007), there are probably many buildings with much higher energy efficiency. Using the ALKIS we cannot model this and expect the model to overestimate the heat demand.
+5. RESULTS
+5.1 Reference area plausibility
+As a major correlator to total heat demand, we first check the plausibility of our reference area estimations. For the residential floor area, this is possible using census data. We sum up all areas of the buildings according to “city quarters” (Stadtteil) which is an official administrative division. Hamburg is divided into approximately 100 such quarters. At this level of aggregation census data on total residential floor area is available from the Hamburg statistics office [16]. A correlation analysis of our estimation of the residential floor area and the census data (Figure 3) produced a very good fit.
+Figure 3. Correlation between estimated residential floor area and official statistics at the "Stadtteil" level (an administrative division of Hamburg)
+Validating the non-residential floor area at these scales is not possible, since there are no official statistics on this.
+5.2 Heat Demand Plausibility
+A good estimation of the living space is necessary for the estimation of the total heat demand, however the latter is of more importance for the purposes of this paper. We check heat demand plausibility at three different scales: city, neighbourhood and building.
+5.2.1 City-scale
+Since Hamburg is a city-state within the German Federation, state-level data is equivalent to citylevel data. The Hamburg Statistics Office publishes a state-level energy balances for different years [17–19]. We look at the years 2014-16, the three most recent for which data is published. The statistics office derives this data from measurements from energy providers. Public bodies usually use this data for reference for policy analysis and CO2 target tracking. However, the data
+
+
+The header is left blank
+differentiates and cross-tabulates between fuel-type and user-type, but not usage. This means the total amount of kWh used by households, commercial and business sector and industrial sector in Hamburg is present in the statistics. The fuel-type (gas, district heating, electricity, oil etc.) used for this energy is also present. The end usage (space heating, domestic hot water, cooking, appliances etc.) is not. Since we model only heat demand, we need to estimate how much each of the user groups uses for this purpose. For this we use a national split estimated and published by the Working Group on Energy Balances (Energy Balances Group) [20]. This is a German association including energy industry and research institutes. According to their publication from 2017, on average, households in Germany use 86%, 81,3%, 6,6%, 91,9%, 100% and 87,3% of their oil, gas, electricity, district heating, coal and renewable energy consumption respectively for space heating. Figures for domestic hot water are also available in the same publication. Using the local statistics for years 2014-16, we first calculate the kWh used for space heating and hot water for each year using the above split (which is an average for Germany). We then correct the space heating for weather conditions using degree-days. In the end, we average the consumption for the three years.
+We consider that our heat demand estimation for the residential gross floor area in Hamburg corresponds to the heat consumption of households in the statistics. Similarly, we consider our heat demand estimation for the non-residential gross floor area as comparable with the consumption of the user group “commerce, services, business” and “industry”. Note that we model only space heating and domestic hot water. In addition, for this comparison we used “useful heat” for residential buildings. Comparing final energy would be more appropriate, however information on types of heating systems is not available for the whole city and therefore we could not model final energy. For non-residential buildings the specific heat demand of the archetypes is consumption-based - the mode of a sample distribution - therefore it averages over the losses of the different heating systems of the sample.
+TABLE 9. COMPARISON OF TOTAL ESTIMATED HEAT DEMAND AND ENERGY STATISTICS
+Heat Demand of Hamburg [GWh] Source Households CBS* Industry Total
+Space Heating (weather corrected)
+Statistics Office
+7297 6354 424 14074
+Domestic Hot Water 1513 503 43 2059
+Space Heating + DHW 8810 7324 16134
+Space Heating (Useful Heat) Model 9559 9314 18873
+The results in Table 9 show that the model is overall plausible. As expected, the model overestimates the data in the statistics. Note that since the model does not account for recent renovations, but uses useful energy instead of final energy (for residential buildings) some averaging out effects are present. The non-residential heat demand is consumption-based and as expected is overestimated in the model. This can be due to the presence of recently renovated buildings, but also due to an overestimated reference area (we could not validate the reference area of non-residential buildings).
+5.2.2 Neighbourhood scale
+As second plausibility check we use an energetic planning report, for a part of the Bergedorf neighbourhood in Hamburg [21]. The report gives 38.8 GWh as measured heat consumption for the whole territory of the neighbourhood (~0,3 km2, secondary urban centre with a mixture of residential and non-residential buildings). For the same territory, our model gives a value of 41.1 GWh. No distinction is made between residential and non-residential consumption in the report,
+
+
+The header is left blank
+so we cannot validate separately.
+5.2.3 Building scale
+Lastly, we compare our estimation of heat demand for seven non-residential building complexes in Hamburg (Table 10) with energy audits obtained as part of the GEWISS Project [22]. Out of data protection reasons we name the complexes A to F. Each complex has between two and seven buildings. The uses vary between educational buildings, sport facilities, small-scale production facilities and large manufacturing plants.
+TABLE 10. COMPARISON BETWEEN MEASURED CONSUMPTIONS AND MODEL ESTIMATES AT BUILDING/COMPLEX LEVEL
+Measured from energy audit Estimated by model
+Building Complex
+Heat Consumption [MWh]
+Useable Area [m2]
+Specific Consumption [kWh/m2]
+Heat Demand [MWh]
+Heated floor Area [m2]
+Specific Demand [kWh/m2]
+A 2097 15691 133,7 1788 16059 111,4
+B 1160 5850 198,3 1140 8124 140,3
+C 224 1018 219,6 60 600 100,3
+D 532 3300 161,1 318 3225 98,7
+E 388 4650 83,5 614 6556 93,6
+F 12767 85331 149,6 25127 339558 74,0
+Total (excluding F)
+4401 30509 144,2 3920 34564 113,4
+This comparison shows that there are discrepancies at the building level, in terms of not only specific heat demand but also floor areas. In some cases, errors in area and specific heat demand cancel each other out and the total demand is close to the actual consumption (A, B). In other cases, the specific heat demand is close, but the area estimation leads to large discrepancies (E). Complex F has a hugely overestimated floor area, however the useable area noted in the energy audit has in places large floor heights – more than 20 meters. Our heated floor area always assumes a standard floor height, it is, therefore, not comparable. Summing up all demands and areas for complexes A to E shows that on average the estimation is plausible although far from precise. We exclude complex F, since it is two orders of magnitude larger than the rest and it has to be viewed separately or it will overshadow all other examples if aggregated with them.
+Overall, the model performs plausibly at the city and neighbourhood scales with discrepancies in range of 20%. This is similar to other such models in the literature [2].
+6. CONCLUSION
+As shown, although at first glance straightforward, the task of assigning an energetic archetype to a digital cadastre can quickly become complex and ridden with assumptions. In many cases, we based our assumptions on experience and the peculiarities of German digital cadastres, however, the problems we encountered are, most probably, not specific only to Germany. Although performing plausibly, our model is far from perfect. The main problem with residential buildings is the lack of a systematic, exhaustive register or accounting of which buildings have undergone
+
+
+The header is left blank
+renovations already. This is true for non-residential buildings as well, however their heterogeneity goes also against the archetype approach in general. Nevertheless, at an aggregated level our model performed reasonably.
+ACKNOWLEDGEMENTS
+This paper was prepared as part development of the Hamburg Heat Demand Cadastre (Wärmekataster) and the GEWISS Project in Hamburg [22], financed by the Federal Ministry for Economic Affairs and Energy and the Hamburg Ministry of Environment and Energy. We would like to thank Ms. Lubow Deck, Mr. Arne Werner and Mr. Roland Schwörer from the Hamburg Ministry of Environment and Energy for the fruitful cooperation.
+REFERENCES
+[1] J. Keirstead, M. Jennings, A. Sivakumar, A review of urban energy system models: Approaches, challenges and opportunities, Renewable and Sustainable Energy Reviews 16 (2012) 3847–3866. https://doi.org/10.1016/j.rser.2012.02.047. [2] C.F. Reinhart, C.D. Cerezo, Urban building energy modeling – A review of a nascent field, Building and Environment 97 (2016) 196–202. https://doi.org/10.1016/j.buildenv.2015.12.001. [3] C. Cerezo, J. Sokol, S. AlKhaled, C. Reinhart, A. Al-Mumin, A. Hajiah, Comparison of four building archetype characterization methods in urban building energy modeling (UBEM): A residential case study in Kuwait City, Energy and Buildings 154 (2017) 321–334. https://doi.org/10.1016/j.enbuild.2017.08.029. [4] M.H. Kristensen, R.E. Hedegaard, S. Petersen, Hierarchical calibration of archetypes for urban building energy modeling, Energy and Buildings 175 (2018) 219–234. https://doi.org/10.1016/j.enbuild.2018.07.030. [5] C.S. Monteiro, A. Pina, C. Cerezo, C. Reinhart, P. Ferrão, The Use of Multi-detail Building Archetypes in Urban Energy Modelling, Energy Procedia 111 (2017) 817–825. https://doi.org/10.1016/j.egypro.2017.03.244. [6] Y. Chen, T. Hong, X. Luo, B. Hooper, Development of city buildings dataset for urban building energy modeling, Energy and Buildings 183 (2019) 252–265. https://doi.org/10.1016/j.enbuild.2018.11.008. [7] T. Loga, B. Stein, N. Diefenbach, R. Born, Deutsche Wohngebäudetypologie [German residential building typology]: Beispielhafte Maßnahmen zur Verbesserung der Energieeffizienz von typischen Wohngebäuden, 2015. http://www.building-typology.eu/downloads/public/docs/brochure/DE_TABULA_TypologyBrochure_IWU.pdf. [8] B. Stein, T. Loga, N. Diefenbach (Eds.), Monitor progress towards climate targets in European housing stocks: Main results of the EPISCOPE Projekt final project report, Institut Wohnen und Umwelt GmbH, Darmstadt/Germany, 2016. [9] The Association of German Engineers, Characteristic consumption values for buildings: Characteristic heatingenergy, electrical-energy and water consumption values, Beuth Verlag, Berlin 91.140.10, 91.140.50, 91.140.60, 2018. http://www.vdi.eu/nc/guidelines/vdi_3807_blatt_2verbrauchskennwerte_fuer_gebaeude_verbrauchskennwerte_fuer_heizenergie_strom_und_wasser (accessed 16 May 2018). [10] Landesbetrieb Geoinformation und Vermessung, ALKIS - ausgewählte Daten Hamburg [ALKIS data excerpt for Hamburg]. gml, 2018. http://datenhamburg.de/geographie_geologie_geobasisdaten/ALKIS_Liegenschaftskarte/ALKIS_Liegenschaftskarte_ausgew aehlteDaten_HH_2018-10-06.zip (accessed 30 January 2019). [11] Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland, AFIS-ALKISATKIS Anwendungsschema [AFIS-ALKIS-ATKIS Application Schema], 2015. http://www.adv-online.de/aaaModell/binarywriterservlet?imgUid=dc860f61-34ab-4a41-52cf-b581072e13d6&uBasVariant=11111111-11111111-1111-111111111111#_C11588-_A11588_50133 (accessed 30 January 2019). [12] Verodnung über einen energiesparenden Wärmeschutz bei Gebäuden (Wärmeschutzverordnung) [Building thermal insulation ordinance]: WäremeschutzV, in: Bundesgesetzblatt, pp. 1554–1564. [13] Landesbetrieb Geoinformation und Vermessung, 3D-Stadtmodell LoD2-DE Hamburg. xml, 2017. http://datenhamburg.de/geographie_geologie_geobasisdaten/3d_stadtmodell_lod2/LoD2-DE_HH_2017-12-31.zip (accessed 30.02.2019). [14] Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland, Dokumentation zur Modellierung der Geoinformationen des amtlichen Vermessungswesens (GeoInfoDok) [Documentation on the Modeling of Geoinformation of Official Surveying and Mapping]: Erläuterungen zu ALKIS, 2006. http://www.adv-online.de/aaa-modell/alkis/binarywriterservlet?imgUid=6ae60b36-de06-8a01-e1f3351ec0023010&uBasVariant=11111111-1111-1111-1111-111111111111&isDownload=true (accessed 30 January 2019).
+
+
+The header is left blank
+[15] Senatsverwaltung für Stadtentwicklung und Wohnen, ALKIS Berlin (Amtliches Liegenschaftskatasterinformationssystem), 2015. [16] Statistics Office for Hamburg and Schleswig-Holstein, Stadtteil Profile 2015, 2015. https://www.statistiknord.de/fileadmin/Dokumente/Datenbanken_und_Karten/Stadtteilprofile/Stadtteilprofile-Berichtsjahre-20072015.xlsx (accessed 16 May 2018). [17] Statistics Office for Hamburg and Schleswig-Holstein, Energiebilanz und CO2-Bilanzen für Hamburg 2014 [Energy and CO2 balance for Hamburg 2014], 2016. https://www.statistiknord.de/fileadmin/Dokumente/Sonderver%C3%B6ffentlichungen/Energie-_und_CO2Bilanz_Hamburg/EB_CO2_HH_2014.pdf (accessed 17 July 2018). [18] Statistics Office for Hamburg and Schleswig-Holstein, Energiebilanz und CO2-Bilanzen für Hamburg 2015 [Energy balance and CO2 balance for Hamburg 2015], 2017. https://www.statistiknord.de/fileadmin/Dokumente/Sonderver%C3%B6ffentlichungen/Energie-_und_CO2Bilanz_Hamburg/EB_CO2_HH_2015.pdf (accessed 17 July 2018). [19] Statistics Office for Hamburg and Schleswig-Holstein, Energiebilanz und CO2-Bilanzen für Hamburg 2016 [Energy balance and CO2 balance for Hamburg 2016], 2018. https://www.statistiknord.de/fileadmin/Dokumente/Sonderver%C3%B6ffentlichungen/Energie-_und_CO2Bilanz_Hamburg/EB_CO2_HH_2016.pdf (accessed 17 July 2018). [20] Arbeitsgemeinschaft Energiebilanzen e.V., Anwendungsbilanzen für die Endenergiesektoren in Deutschland in den Jahren 2013 bis 2016 [Final energy consumption by sector and type of use in Germany in the period 2013 2016], 2017. https://ag-energiebilanzen.de/#ageb__zusammenfassender_bericht_fu____r_die_endenergiesektoren_2013_-_2016 (accessed 17 July 2018). [21] H. Diemann, M. Wulf, J. Bärschneider, J. Schülecke, C. von Lindenfels, M. Bonacker, P.C. Kowalsky, Energetische Stadtsanierung Bergedorf-Süd [Energetic urban renovation Bergedorf-South], Hamburg, 2013. [22] GEWISS Project, GEWISS Geographisches Wärmeinformations- und Simulationssystem [Geographical Heat Information and Simulation System], 2018. http://gewiss.haw-hamburg.de/.
+Ivan Dochev has a M.Sc. in urban planning from HafenCity University Hamburg and is currently a PhD student with the topic “Energy policy analysis with a building stock model based on spatial interpolation and microsimulation”. He is currently part of the GEWISS Project Hamburg, financed by the German Federal Ministry of Economic Affairs and Energy and the Hamburg Ministry of Environment and Energy. His interests and expertise lie in building simulation, GIS and energy efficiency. Contact: ivan.dochev@hcu-hamburg.de, ORCID: https://orcid.org/0000-0002-0299-3558
+Hannes Seller has a M.Sc. in Resource Efficiency in Architecture and Planning (REAP) from HafenCity University Hamburg and is currently a PhD student with the topic “Typologies of Urban Form for Urban Sustainability Planning”. He is currently part of the GEWISS Project Hamburg, financed by the German Federal Ministry of Economic Affairs and Energy and the Hamburg Ministry of Environment and Energy. His interests and expertise lie in data visualization, GIS and energy efficiency. Contact: hannes.seller@hcuhamburg.de
+Irene Peters studied economics and philosophy in Germany and the U.S. and holds a Ph.D. in economics from Clark University, MA (1994), with a focus on econometrics and modelling. She spent her work life at Tellus Institute for Resource and Environmental Strategies in Boston, U.S. (1985-1997), EAWAG (Swiss Federal Institute of Aquatic Science and Technology) (1997-2002), and as professor for Infrastructure Planning at TUHH (Hamburg University of Technology) (since 2003) and HCU (HafenCity University Hamburg) (since 2006). She teaches in Urban Planning and Resource Efficiency in Architecture and Planning, an interdisciplinary international M.Sc. programme. Her research interests are technical urban services planning and urban modelling. Her work in advisory committees includes (to name a few) „System Integration for Novel Sanitation Systems“ of the German Association for Urban Water, „Climate Protection and Energy“ of the International Building Exhibition Hamburg, Institute for Housing and Environment, Darmstadt. Contact: irene.peters@hcu-hamburg.de

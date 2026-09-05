@@ -1,0 +1,2408 @@
+Typology Approach for Building Stock Energy Assessment
+TABULA Calculation Method
+– Energy Use for Heating
+and Domestic Hot Water 
+Reference Calculation
+and Adaptation to the Typical Level
+of Measured Consumption
+– TABULA Documentation 
+TABULA Project Team
+January 2013
+www.building-typology.eu
+Contract N°: IEE/08/495
+Coordinator: Institut Wohnen und Umwelt, Darmstadt / Germany Project duration: June 2009 - May 2012
+The sole responsibility for the content of this publication lies with the authors. It does not necessarily reflect the opinion of the European Communities. The European Commission is not responsible for any use that may be made of the information contained therein.
+
+
+2
+Authors:
+Tobias Loga Nikolaus Diefenbach
+IWU Institut Wohnen und Umwelt / Institute for Housing and Environment
+Darmstadt, Germany
+in collaboration with:
+Elena Dascalaki Costas Balaras
+NOA National Observatory of Athens Athens, Greece
+Marjana Šijanec Zavrl Andraž Rakušček
+ZRMK Building and Civil Engineering Institute ZRMK Ljubljana, Slovenia
+Vincenzo Corrado Stefano Corgnati Ilaria Ballarini
+POLITO Politecnico di Torino ‐ Department of Energetics Torino, Italy
+Hubert Despretz ADEME Agence de l'Environnement et de la Maîtrise de l'Energie / French Energy and Environment Agency
+Valbonne, France
+Charles Roarty Michael Hanratty Bill Sheldrick
+Energy Action
+Energy Action Limited Dublin, Ireland
+Marlies van Holm Nele Renders
+VITO Flemish Institute of Technological Research Mol, Belgium
+Małgorzata Popiołek NAPE Narodowa Agencja Poszanowania Energii SA / National Energy Conservation Agency
+Warszawa, Poland
+Maria Amtmann AEA Austrian Energy Agency Wien, Austria
+Zdravko Georgiev SOFENA SOFIA ENERGY AGENCY Sofia, Bulgaria
+Tomáš Vimmr Otto Villatoro
+STU‐K STU‐K Prague, Czech Republic
+Karin Spets MDH Mälardalens University (MDH) Sweden
+Kim B. Wittchen Jesper Kragh
+SBi Danish Building Research Institute, AAU Hørsholm, Denmark
+Leticia Ortega IVE Instituto Valenciano de la Edificación Spain
+Milica Jovanovic Popovic Dusan Ignjatovic
+Uni Belgrade Faculty of Architecture ‐ University of Belgrade Serbia
+published by Institut Wohnen und Umwelt GmbH Rheinstraße 65 / D‐64295 Darmstadt / GERMANY www.iwu.de
+IWU order code 01/13
+ISBN 978‐3‐941140‐31‐8
+January 2013
+TABULA website: www.building‐typology.eu
+
+
+3
+Contents
+1 The TABULA Calculation Procedure.................................................................................................. 5
+1.1 Principles ...................................................................................................................................................... 5
+1.2 Methodical Basis of the Reference Calculation Procedure .......................................................................... 5
+1.3 Relation to Measured Consumption ............................................................................................................ 6
+1.4 Relation to National Calculation Procedures ............................................................................................... 6
+2 Calculation of the Energy Need for Space Heating ............................................................................ 7
+2.1 Energy Need for Heating .............................................................................................................................. 7
+2.2 Transmission Heat Losses............................................................................................................................. 9
+2.3 Ventilation Heat Losses .............................................................................................................................. 12
+2.4 Internal and Solar Heat Gains..................................................................................................................... 14
+2.5 Gain Utilisation Factor for Heating............................................................................................................. 15
+2.6 Non-Uniform Heating................................................................................................................................. 16
+3 Calculation of the Delivered Energy ............................................................................................... 17
+3.1 Domestic Hot Water (DHW) System .......................................................................................................... 17
+3.2 Heating System .......................................................................................................................................... 18
+4 Assessment of Energywares .......................................................................................................... 20
+4.1 Non-Renewable and Total Primary Energy ................................................................................................ 20
+4.2 Carbon Dioxide Emissions .......................................................................................................................... 21
+4.3 Energy Costs ............................................................................................................................................... 21
+5 Adaptation Method ...................................................................................................................... 22
+6 Climatic Data ................................................................................................................................ 24
+6.1 General Approach ...................................................................................................................................... 24
+6.2 Simplified Determination of Seasonal Climate by Use of Monthly Average Data ..................................... 26
+7 Common Reference Area .............................................................................................................. 27
+8 Appendix ...................................................................................................................................... 29
+8.1 References.................................................................................................................................................. 29
+8.2 Used Quantities.......................................................................................................................................... 30
+8.3 Exemplary Climatic Data ............................................................................................................................ 35
+8.4 TABULA Supply System Codes.................................................................................................................... 36
+8.5 Default Values for Heat Supply Components............................................................................................. 39
+8.6 Calculation Sheets and Examples ............................................................................................................... 44
+
+
+4
+
+
+The TABULA Calculation Procedure 5
+1 The TABULA Calculation Procedure
+1.1 Principles
+The methodology presented in this report has been developed in the course of the Intelligent Energy Europe project TABULA. It was primarily designed to collect and compare data of example buildings which represent different building sizes and construction year classes of the respective national building stocks. The method consists of
+− a harmonised data structure which is the foundation of a building data base;
+− a standard reference calculation procedure for determining the heat need and the delivered energy demand;
+− a scheme for assessing the calculated energy wares in terms of primary energy, carbon dioxide emissions and heating costs;
+− a scheme for adapting the calculated energy use to the level of energy consumption which is typical for the respective building types and energy performance levels of the different countries.
+The method is focused on the energy use for space heating and domestic hot water of residential buildings. Cooling, air conditioning, lighting, electric appliances are until now not considered in the concept but can of course later be supplemented.
+The TABULA maxim is to image the relevant parameters determining the energy consumption of a building in a realistic way and to keep at the same time the method as simple as possible. In consequence, averages are used when applicable, which of course can be determined by more detailed methods.
+The objective of simplification is to ensure transparency of the calculation, so that the procedure can be easily understood by experts in each country. It is also the precondition for a traceable online calculation, implemented in form of the [TABULA WebTool], and for an easy handling of the calculation of large numbers of building datasets by realising a row by row Excel spreadsheet.
+The common approach was implemented by use of an Excel workbook "TABULA.xls" which consists of two tables for the calculation of the building and supply system balance and about 60 referenced tables with constant and variable input data (e.g. construction element types by construction year classes including Uvalues, heat generator types including energy expenditure factors, ...). A simplified version "tabulacalculator.xls" which abstains from referenced tables and can therefore easily be used by third parties is available at the website [TABULA Spreadsheets]. In parallel to the Excel workbook a webtool was developed which enables an online calculation according to the TABULA method [TABULA WebTool]. In all mentioned tools both can be traced at the same time: the formulas and the current values of the selected building / system combination.
+The calculation procedure is defined in accordance with the relevant CEN standards and takes into account standard values for the utilisation as well as national or regional climatic data. The details are documented in the next chapters.
+1.2 Methodical Basis of the Reference Calculation Procedure
+The energy need for space heating is calculated by applying the seasonal method according to EN ISO 13790 on the basis of a one-zone model. The external boundary conditions (air temperature, external temperature / solar radiation) are defined by each partner for his own country for a standard base temperature. In case of significant climatic differences between regions of a country several climate datasets are
+
+
+6 TABULA Calculation Method
+supposed to be provided. Standard values are used for the utilisation conditions (room temperature, air exchange rate, internal heat sources) and for the solar radiation reduction factors (shading).1
+The basis of the envelope area calculation is the buildings’ external dimension, as already established as a harmonised approach in the framework of the Intelligent Energy Europe project DATAMINE [DATAMINE FR]. As regards the thermal transfer coefficient tables are available for all participating countries with Uvalues of typical construction elements, differentiated by construction period, supplemented by explanations in national language and in English. A detailed description of the input data and formulas for calculating the energy need for space heating can be found in chapter 2.
+The energy performance of the supply system is calculated by use of tabled values for the different subsystems (approach according to EN 15316, Level B). The respective energy expenditure factors of typical heat generators and floor area related distribution and storage heat losses as well as auxiliary electricity demands were determined distinguishing between heating and DHW systems. This has been done by the TABULA experts for their countries by use of the respective national energy performance certificate methods. The details of the supply system calculation and energy carrier assessment are described in chapter 3.
+1.3 Relation to Measured Consumption
+Physical models should usually be verified and calibrated by measurements. Due to lack of information about the real utilisation conditions (indoor temperatures, air exchange rates) and the exact thermal properties of existing buildings (construction elements, supply system elements) it is difficult to calibrate all these input values to realistic levels, even for the average of building types. In consequence, systematic deviations of the calculated energy use from the typical level of measured consumption can be expected.
+Nevertheless, it is necessary to provide realistic numbers for the possible savings of delivered and primary energy, energy costs, and carbon dioxide emissions. As a starting point information about the typically measured energy consumption of existing buildings of different types and energy performance levels is needed for all countries. By setting these consumption benchmarks in relation to the calculated energy use adaptation factors can be determined which enable a calibration of the theoretical to empirical values. Thus, the TABULA method provides – apart from the standard reference calculation – a second type of calculation result: the typical level of measured consumption. This type of energy performance indicator can also be seen as “expectation values of the measured consumption”.
+In the long run it will of course be useful to also provide realistic numbers of the different calculation input parameters in order to make assessments of single saving measures as realistic as possible. In the best case the empirical calibration factors will converge towards the value 1.0.
+1.4 Relation to National Calculation Procedures
+The specific relation of the TABULA method to the results of the respective national calculation procedure should be determined in an empirical way for each country: Both calculation procedures are applied for a number of buildings with different energy related properties. The ratio of the calculated energy use of both methods are documented in the national scientific reports of the TABULA partners [TABULA NSR].
+1 However, the Excel workbook “TABULA.xls” also enables a change of input parameters in the context of national applications which do not imply a comparison with other countries.
+
+
+Calculation of the Energy Need for Space Heating 7
+2 Calculation of the Energy Need for Space Heating
+2.1 Energy Need for Heating
+The calculation of the energy need for space heating is based on the seasonal method of the standard EN 13790 “Energy performance of buildings - Calculation of energy use for space heating and cooling”.
+The building energy need for space heating, QH ,nd is calculated as given by equation (1):
+QH ,nd = Qht − ηh,gn QH ,gn [kWh/a] (1)
+where
+QH ,nd is the building energy need for heating, assumed to be greater than or equal to 0
+[kWh/a]
+ht
+Q is the total heat transfer for the heating mode, determined in accordance with equation (2)
+[kWh/a]
+QH ,gn gives the total heat gains for the heating mode, determined in accordance with equation (7)
+[kWh/a]
+h , gn
+η is the dimensionless gain utilization factor, determined in accordance with equation (10)
+[-]
+The total heat transfer ht
+Q for the heating mode is given by equation (2):
+ht ht tr ht ve (Htr Hve ) Fnu ( e ) dhs
+d
+kh
+Q = Q , + Q , = 0.024 + θint −θ [kWh/a] (2)
+where
+ht tr
+Q , is the total heat transfer by transmission during the heating season
+[kWh/a]
+ht ve
+Q , is the total heat transfer by ventilation during the heating season
+[kWh/a]
+tr
+H is the overall heat transfer coefficient by transmission, determined in accordance with equation (2)
+[W/K]
+ve
+H is the total heat transfer by ventilation, determined in accordance with equation (5)
+[W/K]
+nu
+F is the dimensionless correction factor for non-uniform heating, taking into account systematic deviations of the set-point temperature and the actual average temperature (time average over night and day as well as space average over living areas and reduced or indirectly heated spaces), see chapter equation (14)
+[-]
+int
+θ is the internal temperature (set-point temperature for space heating)
+TABULA standard value int
+θ = 20° C
+[°C]
+
+
+8 TABULA Calculation Method
+e,hs
+θ is the temperature of the external environment
+(average value during heating season) determined in accordance with equation (28)
+[°C]
+hs
+d is the length of the heating season expressed in days, determined in accordance with equation (27)
+[d/a]
+Table 1: Boundary conditions – TABULA standard values
+Quantity Description TABULA standard values*
+Single-unit housing
+Multi-unit housing
+int
+θ internal temperature [°C] 20
+nu
+F reduction factor, considering non-uniform heating (effect of night setback and unheated space) for two values of the floor area related heat transfer coefficient by transmission, linear interpolation is applied between them (see chapter 2.6):
+• htr = 1 W/(m2K) (high thermal quality)
+• htr = 4 W/(m2K) (low thermal quality)
+[°C]
+0.90
+0.80
+0.95
+0.85
+air use
+n , average air change rate, related to the utilisation of the
+building
+[1/h] 0.4
+room ve ref
+h , ventilation reference room height [m] 2.5
+int
+φ average internal heat sources per m2 reference area [W/m2] 3
+Fsh reduction factor external shading,
+• horizontal orientation
+• vertical orientations
+[-] 0.8
+0.6
+FF frame area fraction of a window [ - ] 0.3
+FW reduction factor, considering radiation non
+perpendicular to the glazing
+[ - ] 0.9
+cm internal heat capacity per m2 reference area [Wh/(m2K)] 45
+qw,nd net energy need domestic hot water [kWh/(m2a)] 10 15
+* to be used in case of cross-country comparisons
+
+
+Calculation of the Energy Need for Space Heating 9
+2.2 Transmission Heat Losses
+In accordance with equation (2) the annual transmission heat losses are:
+ht tr Htr Fnu ( e ) dhs
+d
+kh
+Q , = 0.024 θint −θ [kWh/a] (3)
+The overall heat transfer coefficient by transmission tr
+H is calculated as given by equation (4):
+tbr i
+env i i
+H tr btr i Aenv iU eff i A ∆U
+
+
+ 
+
+= ∑ , , , + ∑ , [W/K] (4)
+where
+btr is the adjustment factor soil
+for TABULA standard values see Table 2
+[-]
+env i
+A , is the area of envelope element i, determined in accordance with chapter 2.2.1
+[m2]
+eff i
+U , is the effective U-value, determined in accordance with chapter 2.2.2
+[W/(m2K)]
+tbr
+∆U is the surcharge on all U-values, taking into account the additional loses caused by thermal bridging determined in accordance with chapter 2.2.3
+[W/(m2K)]
+Table 2: Classification of construction borders
+TABULA code of the construction border situation
+Description of the construction border situation
+TABULA standard values
+Additional thermal resistance due to unheated space bordering at the construction element
+add
+R
+Adjustment factor soil
+btr
+[m2K/W]
+Ext construction bordering on external
+air 0 1
+Unh construction bordering on un
+heated rooms (e.g. unheated attic) 0.3 1
+Cellar construction bordering on un
+heated cellar 0.3 0.5
+Soil construction bordering on soil 0 0.5
+
+
+10 TABULA Calculation Method
+2.2.1 Thermal envelope area
+The thermal envelope area env
+A consisting of the elements env i
+A , completely encloses the whole condi
+tioned volume of the building. In principle, the determination of the surface area of a building can be based on different types of length elevations: starting from the inner or from the outer edges, but also from the centre of the construction element junctions.2 These definitions are different from country to country. In case of the TABULA method the convention is to determine the thermal envelope area on the basis of the external dimensions of the building. For countries where – according to the national standards – envelope areas are calculated by other rules the envelope surface areas cannot be directly entered into the TABULA database but must be adequately corrected before.
+In case variants of a building are calculated by considering insulation measures applied at the outside of the elements the envelope area of the unrefurbished building can be used without modification, in order to simplify the procedure.
+In case of unheated rooms the thermal envelope is to be considered as positioned at the construction element of the lowest thermal transmittance (highest thermal resistance). In consequence, the surface
+a) separating heated rooms and unheated rooms, or
+b) separating unheated rooms and external air
+can alternatively be selected as the relevant boundary plane. For existing buildings the very envelope plane should be selected where insulation measures would preferably be installed in case of refurbishment.
+The area and U-value of the selected envelope plane are considered as intake quantities in the energy balance calculation. In accordance with EN ISO 6946 additional thermal resistances are applied to consider the respective unheated spaces. The resulting temperature and area related transmission losses, the “effective
+U-values”, are defined in the following clause. TABULA standard values of add
+R can be found in Table 2.
+2.2.2 Effective U-value
+As a simplified approach additional thermal resistances of unheated rooms and additionally applied refurbishment measures are taken into account by modifying the respective U-values. The resulting effective Uvalue eff i
+U , of an envelope element i is determined as follows:
+add i ins i
+ins i
+i
+eff i i measure i add i
+eff i
+R
+d
+U
+R RR R
+U
+, ,
+,
+0,
+, 0, , ,
+,1
+11 1
+++
+=
+++
+==
+λ
+[W/(m2K)] (5)
+where
+eff i
+U , eff i
+R , are the effective U-value and the effective thermal resistance of the envelope element i
+[W/(m2K)] [m2K/W]
+2 The different definitions are in principle equivalent – as far as the thermal losses at the element junctions are assessed in an adequate way. Thermally homogenous elements bordering at each other will for example result in positive surcharges on the non-distorted U-values in case of internal dimensions, and in negative surcharges in case of external dimensions.
+
+
+Calculation of the Energy Need for Space Heating 11
+i
+U 0, i
+R0, are the U-value and the thermal resistance of the envelope element i in the original state, calculated according to EN ISO 6946
+[W/(m2K)] [m2K/W]
+measure i
+R , is the (additional) thermal resistance of a thermal refurbishment measure applied to the element i
+in case of a simple insulation measure (additional layer
+of insulation) measure i
+R , is calculated by a quotient of the
+insulation thickness ins i
+d , and the thermal conductivity
+ins ,i
+λ ; in other cases (e.g. in case of insulation between
+rafters) the thermal resistance is calculated by the rules of EN ISO 6946
+[m2K/W]
+add i
+R , is the additional thermal resistance due to unheated space bordering at the construction element i
+for TABULA standard values see Table 2
+[m2K/W]
+When values for i
+U 0, are determined for elements bordering at soil or cellar the heat transfer through soil
+must not be taken into account. The relevant outside surface for the calculation of U-values i
+U 0, is the bot
+tom surface of the element. The TABULA method considers cellar rooms in the effective U-value eff i
+U , by
+an additional thermal resistance add i
+R , , the decrease of heat flow through soil is considered in the balance
+equation by the supplemental reduction factor btr .
+For countries where – according to the national standards – U-values of elements bordering at cellar or soil are calculated including the thermal resistance of cellar or soil the respective U-values of these elements can not be directly entered to the TABULA database but must be adequately corrected before.
+2.2.3 Thermal bridging
+Since according to the TABULA method the thermal envelope area of a building is calculated on the basis of external dimensions (see clause 2.2.1) the thermal losses are in general slightly overestimated at the linkages of construction elements made of homogeneous material (e.g. at the edges of masonry). Therefore only constructive thermal bridging is taken into account by the categories of thermal bridging surcharge.
+Three categories (low / medium / high) of thermal bridging are defined depending on the effect of constructional thermal bridging. The assessment takes into account the amount of penetration of the thermal envelope by punctual or linear construction elements with significantly higher thermal conductivity not considered in the U-values. The respective additional losses are incorporated in the calculation procedure in the form of an addend on the heat transfer coefficient by transmission (see equation (4)).
+
+
+12 TABULA Calculation Method
+Table 3: Classification of thermal bridging
+TABULA code for classification of thermal bridging
+Thermal bridging classification
+Description TABULA standard values
+Additional losses of the thermal envelope caused by thermal bridging (surcharge on all U-values)
+tbr
+∆U
+[W/(m2K)]
+Minimal no relevant effect of constructional thermal bridging
+thermally relevant layers of the envelope are not penetrated by elements with higher thermal conductivity; indication: additional transmission losses <= 0 W/K per m2 envelope; examples: masonry building with wood beam ceilings, insulated building with thermally optimised junctions
+0
+Low low effect of constructional thermal bridging
+only small parts of the envelope are penetrated by elements with higher thermal conductivity; indication: additional transmission losses <= 0,05 W/K per m2 envelope; examples: existing buildings which do not have concrete ceilings penetrating the outer walls, buildings with later applied insulation and relevant thermal bridging only at the junction of cellar ceiling and outer wall
+0.05
+Medium medium effect of constructional thermal bridging
+parts of the envelope are penetrated by elements with higher thermal conductivity; indication: additional transmission losses > 0,05 and <= 0,15 W/K per m2 envelope; example: inside thermal insulation of walls in buildings with wood beam ceilings
+0.1
+High high effect of constructional thermal bridging
+relevant parts of the envelope are penetrated by elements with relative high thermal conductivity; indication: additional transmission losses > 0,15 W/K per m2 envelope; example: concrete ceilings are penetrating insulation
+0.15
+2.3 Ventilation Heat Losses
+In accordance with equation (2) the annual ventilation heat losses are:
+ht ve Hve Fnu ( e ) dhs
+d
+kh
+Q , = 0.024 θint −θ [kWh/a] (6)
+The overall heat transfer coefficient by ventilation ve
+H is calculated as given by equation (7):
+Hve = cp,air (nair,use + nair,infiltr ) AC,ref hroom, ve ref [W/K] (7)
+
+
+Calculation of the Energy Need for Space Heating 13
+where
+c p,air is the volume-specific heat capacity of air
+standard value 0.34 Wh/(m3K)
+[Wh/(m3K)]
+air use
+n , average air change rate during heating season, related to the utilisation of the building
+TABULA Standard value:
+air use
+n , = 0.4 1/h (see Table 1)
+[1/h]
+air,infiltr
+n air change rate by infiltration
+TABULA standard values: see Table 4
+[1/h]
+AC,ref is the reference area of the building,
+determined in accordance with chapter 7
+[m2]
+room ve ref
+h , ventilation reference room height
+TABULA standard value:
+room
+h = 2.50 m
+[m]
+Since the average air change rate by utilisation of the building does in principle not depend on the room
+height, room ve ref
+h , is only a calculation value and does not reflect the actual room heights of the buildings.3
+The reduction of the ventilation heat losses attained by heat recovery units of ventilation systems is considered in the heating system section of the energy balance (chapter 3.2). The overall heat transfer coefficient by ventilation defined by Equation (7) is thus valid for the difference between the temperature of the air exhausted from the rooms and the external air introduced into the building.
+Table 4: Classification of building air-tightness
+TABULA code for classification of airtightness
+Air tightness classification Description TABULA standard values
+Additional air exchange rate, caused by infiltration (surcharge on air exchange rate)
+air,infiltr
+n
+[1/h]
+Minimal minimal air infiltration, very tight building
+indication: blower door
+result n_50 <= 0.6 1/h 0.05
+Low low effect of air infiltration indication: blower door
+result n_50 <= 1.0 1/h 0.1
+Medium medium effect of air infiltration
+indication: blower door
+result n_50 <= 3.0 1/h 0.2
+High high effect of air infiltration indication: blower door
+result n_50 > 3.0 1/h 0.4
+3 The appropriate definition of the air exchange rate induced by the building usage would be an air volume flow related to the building’s reference area in m3/(m2h), if a standard value for the number of persons per reference area is considered. Since this quantity is not very illustrative, the air exchange rate is related to a standard volume, defined by the product of reference floor area and standard room height (“reference ventilation room height”).
+
+
+14 TABULA Calculation Method
+2.4 Internal and Solar Heat Gains
+The total heat gains during the heating season QH ,gn is calculated as follows:
+QH ,gn = QSol + Qint [kWh/a] (8)
+The internal heat gains during the heating season int
+Q is calculated as given by equation (9):
+Qint int d hs AC,ref
+d
+kh
+= 0.024 φ [kWh/a] (9)
+where
+int
+φ is the average thermal output of internal heat sources
+TABULA standard value: 3 W/m2 (see Table 1)
+[W/m2]
+hs
+d is the length of the heating season expressed in days, determined in accordance with equation (27)
+[d/a]
+AC,ref is the reference area of the building,
+determined in accordance with chapter 7
+[m2]
+The solar heat load during the heating season, Sol
+Q is calculated as given by equation (10):
+() ∑
+=−
+j
+Qsol Fsh FF FW g gl,n Awindow, j I sol, j
+1 [kWh/(m2a)] (10)
+where
+Fsh is the reduction factor external shading
+TABULA standard values: 0,6 for vertical / 0,8 for horizontal windows (see Table 1)
+[-]
+FF is the frame are fraction of the windows
+TABULA standard value: 0,3 (see Table 1)
+[-]
+FW is a reduction factor, considering radiation non
+perpendicular to the glazing
+TABULA standard value: 0,9 (see Table 1)
+[-]
+gl n
+g , is the total solar energy transmittance for radiation per
+pendicular to the glazing
+[-]
+window j
+A , is the area of all windows with orientation j [m2]
+Sol j
+I , average global irradiation on surfaces with orientation j
+during the heating season, determined in accordance with chapter 6
+[m2]
+
+
+Calculation of the Energy Need for Space Heating 15
+2.5 Gain Utilisation Factor for Heating
+The gain utilisation factor for heating h,gn
+η is calculated as given by equation (11):
+1
+,1
+1
++
+−
+−
+=
+H
+H
+a
+a
+h gn γ
+γ
+η [kWh/a] (11)
+where the heat balance ratio for the heating mode h,gn
+γ and the parameter aH are defined as follows:
+ht
+H gn h gn Q
+Q,
+γ , = [kWh/a] (12)
+,0
+,0
+H
+aH aH τ
+τ
+= + [ - ] (13)
+where
+ht
+Q is the total heat transfer for the heating mode, determined in accordance with equation (2)
+[kWh/a]
+QH ,gn gives the total heat gains for the heating mode,
+determined in accordance with equation (7)
+[kWh/a]
+τ is the time constant of the building (see below) [h]
+aH ,0 is a constant parameter
+standard value for the seasonal method:
+aH ,0 = 0.8 (according to EN 13790)
+[-]
+τH ,0 is a constant parameter
+standard value for the seasonal method:
+τH ,0 = 30 h (according to EN 13790)
+[h]
+The time constant of a building τ is calculated as given by equation (14):
+tr ve
+m C ref
+HH
+cA
++
+=,
+τ [kWh/a] (14)
+where
+cm is the internal heat capacity per m2 reference area
+Standard TABULA value: cm = 45 Wh/(m2K) (see Table 1)
+[Wh/m2K]
+tr
+H is the overall heat transfer coefficient by transmission, determined in accordance with (4)
+[W/K]
+ve
+H is the total heat transfer by ventilation, determined in accordance with (7)
+[W/K]
+
+
+16 TABULA Calculation Method
+aH ,0 is a constant parameter
+standard value for the seasonal method:
+aH ,0 = 0.8 (according to EN 13790)
+[-]
+τH ,0 is a constant parameter
+standard value for the seasonal method:
+τH ,0 = 30 h (according to EN 13790)
+[h]
+AC,ref is the reference area of the building,
+determined in accordance with $$
+[m2]
+2.6 Non-Uniform Heating
+The thermal losses of a building are calculated by considering the difference between the internal tempera
+ture int
+θ (set-point temperature) and the external temperature e,hs
+θ averaged over the heating season.
+However, a reduced internal temperature will occur during the times of intermittent heating (night-time and/or weekend reduced set-point or switch-off) and in spaces of the building where a reduced set-point temperature is applied or where no heat emission system is installed (but which are nevertheless located inside the thermal envelope of the building).
+The effects of non-uniform heating can be calculated by use of detailed methods by considering the time constants of the building and the thermal resistance of the not directly heated spaces.
+Usually the effect of non-uniform heating is significant in buildings with poor insulation standards. In contrast, the effect is smaller in well insulated buildings and can be neglected in passive houses.
+In case of the TABULA calculation procedure a simplified linear approach is followed: A linear interpolation is made starting from two base values of the heat transfer coefficient by transmission:
+Fnu (htr ) Fnu,A
+= for htr ≤ hA
+() ( )
+BA
+tr A nu tr nu A nu B nu A h h
+hh
+Fh F F F −
+−
+= , + , − , for hA < htr < hB
+Fnu (htr ) Fnu,B
+= for htr ≥ hB
+[ - ] (15)
+where
+htr is the heat transfer coefficient by transmission
+per m2 reference floor area C ref
+tr
+A
+H
+,
+=
+[W/(m2K)]
+hA , hB are constants, depending on the building type
+TABULA standard values: see Table 1
+[W/(m2K)]
+
+
+Calculation of the Delivered Energy 17
+3 Calculation of the Delivered Energy
+The energy performance of the supply system is calculated on the basis of tabled values for different subsystems (EN 15316, Level B). In the case of heat generators energy expenditure coefficients are used which are defined as the ratio of delivered energy use to produced heat. As already agreed in the DATAMINE project, values for the delivered energy are always based on the gross calorific value. In case of heat storage and heat distribution, values for the annual losses in kWh/(m2a) are listed in the respective tables. The auxiliary energy is considered by values representing the annual electric consumption in kWh/(m2a). The above mentioned tables are created for both: space heating systems and dhw systems. The tabled values were determined for typical supply systems according to the respective national standards.
+3.1 Domestic Hot Water (DHW) System
+The energy use for DHW heat generator i is determined as follows:
+qdel,w,i =αnd ,w,i q g,w,out eg,w,i [kWh/(m2a)] (16)
+where
+nd ,w,i
+α fraction of heat generator i [ - ]
+qg,w,out heat output of heat generator i [kWh/(m2a)]
+eg,w,i heat generation expenditure factor of heat generator i [ - ]
+The heat output of all heat generators qg,w,out is the DHW energy need plus the heat losses for storage and
+distribution:
+qg,w,out = qnd ,w + qd ,w + qs,w [kWh/(m2a)] (17)
+where
+nd w
+q , is the annual energy need for domestic hot water (useful heat) per m2 reference floor area
+[kWh/(m2a)]
+qd ,w is the annual heat loss of the DHW distribution system per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+qs,w is the annual heat loss of the DHW storage per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+
+
+18 TABULA Calculation Method
+The part qw,h of the heat losses which is produced inside the thermal envelope during the heating season is
+recoverable:
+qw,h = qg,w,h + qs,w,h + qd ,w,h [kWh/(m2a)] (18)
+where
+qg,w,h is the recoverable heat loss of the heat generators per m2 reference floor area
+TABULA standard value = 0 kWh/(m2a) (simplification)
+[kWh/(m2a)]
+qs,w,h is the recoverable heat loss of the storages per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+qd,w,h is the recoverable heat loss of the heat distribution system per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+3.2 Heating System
+The energy use for heat generator i of the heating system is determined as follows:
+qdel,h,i = αnd ,h,i qg,h,out eg,h,i [kWh/(m2a)] (19)
+where
+nd ,h,i
+α fraction of heat generator i [ - ]
+qg,h,out heat output of heat generator i [kWh/(m2a)]
+eg,h,i heat generation expenditure factor of heat generator i [ - ]
+The heat output of all heat generators qg,h,out is the energy need for heating plus the effective heat losses
+for distribution and storage (in case a heat storage is installed):
+qg,h,out = qnd ,h −ηh,gn (qw,h + qve,h,rec ) + qd ,h + qs,h [kWh/(m2a)] (20)
+where
+nd h
+q , is the annual energy need for heating (useful heat) per m2 reference floor area
+[kWh/(m2a)]
+h , gn
+η is the dimensionless gain utilization factor, for simplification use of value determined by equation (10) in the context of the energy need for heating
+[-]
+qw,h is the recoverable heat loss of the DHW system per m2 reference floor area, determined in accordance with equation (8)
+[kWh/(m2a)]
+qve,h,rec is the space heating contribution of the ventilation heat [kWh/(m2a)]
+
+
+Calculation of the Delivered Energy 19
+recovery unit per m2 reference floor area, determined in accordance with equation (21)
+qd ,h is the annual effective heat loss of the space heating distribution system per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+qs,h is the annual effective heat loss of the heating system storage per m2 reference floor area
+(national tabled values)
+[kWh/(m2a)]
+The “effective heat losses” only take into account the fraction of losses which are not reducing the annual energy need for heating. They are calculated by summing up the heat losses of the respective system components caused by the relevant temperature differences during the heating season and then reducing it by the part of heat losses inside the thermal envelope multiplied with the relevant gain utilisation factor.
+The space heating contribution of the ventilation heat recovery unit qve,h,rec is determined as follows:
+qve,h,rec =ηve,rec qht,ve [kWh/(m2a)] (21)
+where
+ve,rec
+η is the efficiency of ventilation heat recovery (weighted average during heating season)
+(national tabled values)
+[-]
+qht,ve is the annual heat transfer by ventilation per m2 reference floor area, determined in accordance with equation (6)
+[kWh/(m2a)]
+
+
+20 TABULA Calculation Method
+4 Assessment of Energywares
+4.1 Non-Renewable and Total Primary Energy
+The annual non-renewable primary energy demand for heating and hot water is calculated:
+del h i p nonren aux del h aux i
+q p,nonren,h = ∑ f p,nonren,h,i q , , + f , , q , ,
+del w j p nonren aux del w aux j
+q p,nonren,w = ∑ f p,nonren,w, j q , , + f , , q , ,
+[kWh/(m2a)]
+[kWh/(m2a)]
+(22)
+where
+f p,nonren,h,i
+f p,nonren,w, j
+are the non-renewable primary energy factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+European standard values (EN 15603 Annex E) or national values
+[-]
+f p,nonren,aux is the non-renewable primary energy factor of electricity used for auxiliary devices
+European standard values (EN 15603 Annex E) or national values
+[-]
+del h i
+q ,,
+del w j
+q ,,
+is the annual energy use (delivered energy) of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area
+[kWh/(m2a)]
+del h aux
+q ,,
+del w aux
+q ,,
+is the annual auxiliary energy use of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area
+[kWh/(m2a)]
+The total primary energy demand also includes the energy amount resulting from renewable energy sources (for example in the case of firewood it includes the combustion energy):
+del h i p total aux del h aux i
+q p,total,h = ∑ f p,total,h,i q , , + f , , q , ,
+del w j p total aux del w aux j
+q p,total,w = ∑ f p,total,w, j q , , + f , , q , ,
+[kWh/(m2a)]
+[kWh/(m2a)]
+(23)
+where
+f p,total ,h,i
+f p,total ,w, j
+are the total primary energy factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+European standard values (EN 15603 Annex E) or national values
+[-]
+f p,total,aux is the total primary energy factor of electricity used for auxiliary devices
+European standard values (EN 15603 Annex E) or national values
+[-]
+
+
+Assessment of Energywares 21
+4.2 Carbon Dioxide Emissions
+The annual carbon dioxide emissions for space heating and domestic hot water are determined as follows:
+ 
+
+ 
+=  ∑ del h i + co aux del h aux i
+mco2,h 0.001 fco2,h,i q , , f 2, q , ,
+
+
+
+
+
+=  ∑ del w j + co aux del w aux j
+mco2,w 0.001 fco2,w, j q , , f 2, q , ,
+[kg/(m2a)]
+[kg/(m2a)]
+(24)
+where
+f co2,h,i
+f co2,w, j
+are the carbon dioxide emission factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+European standard values (EN 15603 Annex E) or national values
+[g/kWh]
+fco2,aux is the carbon dioxide emission factor of electricity used for auxiliary devices
+European standard values (EN 15603 Annex E) or national values
+[g/kWh]
+4.3 Energy Costs
+The annual energy costs for space heating and domestic hot water are determined as follows:
+del h i aux del h aux i
+ch = ∑ ph,i q , , + p q , ,
+del w j aux del w aux j
+cw = ∑ pw, j q , , + p q , ,
+[€/(m2a)]
+[€/(m2a)]
+(25)
+where
+ph,i
+pw, j
+are the prices of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+national values
+[€/kWh]
+aux
+p is the price of electricity used for auxiliary devices
+national values
+[€/kWh]
+
+
+22 TABULA Calculation Method
+5 Adaptation Method
+Due to a number of reasons systematic discrepancies between the calculated and measured energy consumption can be found in practice: There are always uncertainties regarding the actual transmission losses, since the construction materials of an existing building are usually not known in detail and may also be inhomogeneous. In addition, the heat transfer at external and internal surfaces may vary depending on different influences (neighbouring buildings, greened facades, wind protection, furniture near the walls, ...) which are difficult to determine. Further uncertainties result from unknown details of the supply system (length, insulation and average temperature of heat pipes, ...).
+Apart from technical properties of the building envelope and the supply system a further cause for discrepancies of calculated and measured consumption is the user behaviour. An indicator for this influence is the broad spread of consumption values which can be observed in thermally similar buildings and which is the result of different thermal comfort levels.
+Systematic dependencies of average indoor conditions can be found in practice: The average winter indoor temperature will typically decrease with rising living space per person (higher probability of unused rooms), with increasing envelope area per living space and with increasing U-values. Apart from a lower temperature also the demand for fresh air would typically be smaller if fewer people were living on the same space. In consequence, it can be expected to find significantly different average indoor conditions for specific building types of a national building typology.
+In practice also the type of heating system can influence systematically the average relation between actual and calculated consumption. In dwellings heated by wood or coal stoves a lower average temperature than in centrally heated buildings is experienced as the effort to heat the rooms is much higher (buy and carry the fuel, start a fire) and there is no automatic and continuous system to hold a given indoor temperature. A dependency on the heat or fuel price can be expected: The higher the price of the produced heat the lower the comfort level – of course depending on the income level of the inhabitants. In addition, it can be assumed that the comfort traditions are different from country to country.
+It is difficult to include all these aspects in the energy assessment of buildings and in the calculation of the possible energy savings. Therefore the energy performance is usually calculated by making certain simplifications regarding the technical building properties and by determining standard boundary conditions. This helps to keep the effort for data acquisition acceptable. The use of standard values for indoor conditions can also be justified by the need for comparability. The energy performance and heating costs of different buildings should be compared by assuming the same thermal comfort.
+One of the main objectives of the creation of national building typologies is to project the actual energy consumption of the building stock and to develop and evaluate strategies for possible reductions. In consequence, the actual consumption of the buildings has to be taken into account – it is the overall target quantity. Information is needed regarding the typical relationship of asset to operational rating – for all national methods as well as for the common calculation method. This knowledge constitutes an important precondition for a reliable determination of energy savings (reduction of energy costs and carbon dioxide emissions), in case of energy advice (typically achievable savings) and in case of building stock modelling (total or average energy savings).
+
+
+Adaptation Method 23
+In consequence the TABULA calculation method consists of two different types of energy performance indicators:
+1. "standard calculation": values determined by the standard reference calculation procedure
+2. "typical level of measured consumption": calculated values adapted to the typical level of measured consumption
+As a simple approach to determine the typical level of measured consumption an adaptation factor is used which depends on the calculated energyware use. The expectation value of the measured consumption is:
+qdel,h,adapt,i = f adapt,k (qdel ) qdel,h,i
+qdel,w,adapt, j = f adapt,k (qdel ) qdel,w, j
+= ∑ +∑
+j
+del w j i
+qdel qdel,h,i q , ,
+[kWh/(m2a)]
+[kWh/(m2a)]
+[kWh/(m2a)]
+(26)
+where
+del h adapt i
+q ,, ,
+del w adapt j
+q ,, ,
+is the annual energy use of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area, adapted to the typical level of measured consumption
+[kWh/(m2a)]
+()
+fadapt,k qdel is the adaptation factor of type k, as a function of the
+delivered energy del
+q (sum of energywares without
+auxiliary electricity) determined by standard calculation method; according to the TABULA method the adaptation function is given in form of tabled values for 6
+nodes of del
+q : 0, 100, 200, 300, 400 and 500
+kWh/(m2a), interim values should be interpolated; different types k of adaptation factors may be used, depending on the type of energyware and supply system
+[-]
+del h i
+q ,,
+del w j
+q ,,
+is the annual energy use of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area, calculated by applying the standard boundary conditions
+[kWh/(m2a)]
+The empirical calibration factor describes a typical ratio of the energy uses determined by measurements for a large number of buildings and by the TABULA method for the given value of the TABULA method. Information about this correlation may be available from different kinds of sources. It is of course desirable to rely on statistically accurate determinations (representative samples, census). Nevertheless, not in all countries such investigations have been performed so far – and in none of the countries information is available for all types of supply systems. Therefore an indicator for the accuracy of the adaptation functions is introduced, which can assume the following levels:
+accuracy level A: determined for the whole building stock or a representative sample;
+accuracy level B: determined by a large number of example buildings;
+accuracy level C: estimated (e.g. on the basis of few example buildings)
+
+
+24 TABULA Calculation Method
+6 Climatic Data
+6.1 General Approach
+The length of the heating season hs
+d (number of "heating days" ) of a year is defined as follows:
+ei eb i
+dhs di for , ,
+365
+1
+= = ∑ θ ≤ θ
+[d/a] (27)
+where
+i is the index of the days of a year [ - ]
+di duration of day i = 1 d [d]
+e,i
+θ temperature of the external environment,
+average value for the respective day i
+[°C]
+e,b
+θ is the heating base temperature;
+standard TABULA value: e,b
+θ = 12°C
+[°C]
+hs
+d length of the heating season, expressed in days [h/a]
+For simplification reasons the heating base temperature is set to a constant value for all types and energy performance levels of buildings and for all climates. 4
+4 The physical model would of course be more precise if the heating season balance was determined by use of a variable base temperature or if a monthly method was implemented. However, the simplification was chosen due to the following reasons:
+- Only one climatic dataset is necessary for each country or region. It only contains 7 quantities and is therefore easy to unde rstand and to compare.
+- An implementation of the calculation of large numbers of buildings or variants in spreadsheets is much easier.
+- A constant base temperature also enables a simple handling of heat supply system losses (distribution and storage, see chapter 3).
+- The correct balance (and correct base temperature) much depends on the solar and internal gains for which in practice a strong variation can be observed and which cannot be determined for a large number of buildings sufficiently exact. A detailed method with a large uncertainty of input parameters does not necessarily produce results which are more realistic.
+- The systematic deviations of the seasonal method from the monthly method have been determined in [Loga 2003]: They are – considering the other uncertainties of the calculation of large building portfolios – not significant.
+- In theory old buildings would be expected to show a higher base temperature than well insulated buildings, due to the lower loss/gain ratio. But this is only true if the indoor temperatures are the same. In practice, the average winterly room temperature of old buildings is typically much lower (“prebound effect” see [Sunikka-Blank/Galvin 2012]), caused by the influence of night setback and not directly heated spaces as well as by considerably higher costs per degree of temperature increase. This effect counteracts the higher base temperature to a certain extent, because it is only the difference of room and base temperature which depends on the thermal building quality.
+- Since the TABULA concept includes an adaptation to the typical level of measured consumption a possible systematic deviation would be neutralised, anyway.
+
+
+Climatic Data 25
+The average temperature during the heating season e,hs
+θ is given by equation (28):
+ei b HS
+i
+ei
+e hs for
+d θθ
+θ
+θ= ≤
+∑
+= ,
+365
+1
+,
+,
+[d/a] (28)
+where
+i is the index of the days of a year [ - ]
+e,i
+θ temperature of the external environment,
+average value for the respective day i
+[°C]
+hs
+d length of the heating season, expressed in days [d]
+θb is the heating base temperature;
+standard TABULA value: θb = 12°C
+[°C]
+The global solar radiation on a surface of orientation k during the heating season sol k hs
+I , , is given by equa
+tion (29):
+ei b HS
+i
+sol k i
+sol k hs for
+d
+I
+I = θ ≤θ
+∑
+= ,
+365
+1
+,,
+,,
+[d/a] (29)
+where
+i is the index of the days of a year [ - ]
+k is the orientation of the respective surface [ - ]
+sol k hs
+I , , global solar radiation on 1 m2 surface of orientation k during the heating season
+[kWh/(m2a)]
+sol k i
+I , , global solar radiation on 1 m2 surface of orientation k during day i
+[kWh/(m2d)]
+hs
+d length of the heating season, expressed in days [d]
+θb is the heating base temperature;
+standard TABULA value: θb = 12°C
+[°C]
+
+
+26 TABULA Calculation Method
+6.2 Simplified Determination of Seasonal Climate by Use of Monthly Average Data
+The above mentioned climatic data for the heating season will usually be determined on the basis of average daily data. In case that daily averages of the external temperature and the solar radiation are not available for a region or country they can be estimated by use of monthly data. For this purpose the daily values are determined by linear interpolation between the monthly averages as sketched in Fig. 1. In a similar manner the global solar radiation during the heating season is determined on the basis of monthly values. 5
+Fig. 1: Determination of seasonal climatic data on the basis of monthly averages
+-5
+0
+5
+10
+15
+20
+25
+0 50 100 150 200 250 300 350
+days of the year
+temperature [°C]
+external temperature
+Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+heating season heating season
+θi,setpoint
+θb
+internal temperature
+base temperature
+average external temperature during heating season
+θe
+5 The formulas for this approximation can be found in the calculation sheet "tabula-calculator.xls" at: http://www.building-typology.eu/ .
+
+
+Common Reference Area 27
+7 Common Reference Area
+In order to compare different buildings it is convenient to relate the energy consumption to a quantity representing the size of the building, usually the conditioned floor area or volume of the building. However, different types of reference areas or volumes are being used in different countries and there is no type which is available for all countries. Therefore a common reference area is needed which is used for the purpose of cross-country comparison and which is derived from the available reference quantities.
+In general those sections of a building are considered which are supposed to provide thermal conditions different from the external climate. In the context of this method referring to the energy service "space heating", the conditioned area includes all zones which are heated directly or indirectly during the heating season.
+The definition of reference areas is based on the DATAMINE data structure. It contains the following types of floor areas (see [DATAMINE FR]):
+Table 5: Definition of different reference quantities according to the DATAMINE data structure [DATAMINE FR]
+The common reference area used in the DATAMINE concept is the conditioned floor area based on internal dimensions. The reason for this choice is that the values are typically in the middle of the variation range (between AC,extdim and AC,use or AC,living). In consequence the area related energy performance indicators are closer to those which are known in the different countries and can therefore be more easily compared with well-known values without converting.
+Quantity symbol Description
+conditioned gross floor area
+AC,extdim m2 conditioned floor area determined on the basis of external dimensions (measured from edges at the outside surface of external walls).
+conditioned floor area
+AC,intdim m2 conditioned floor area calculated on the basis of internal dimensions (measured from edges at the inside surface of external walls).
+The floor area may be the gross internal area (= total building area measured inside external walls) or the net internal area (= total building area measured inside external and internal walls) - since the difference is small we don't distinguish between both.
+conditioned useful floor area
+AC,use m2 section of the conditioned net floor area primarily dedicated to the utilisation of the building, excluding functional and circulation areas (excluding e.g. stair cases in all buildings, corridors in non-residential buildings).
+In office buildings the conditioned useful floor area is equivalent to the net lettable area.
+conditioned living area
+AC,living m2 section of the conditioned net floor area inside of the apartments of the building (only relevant for buildings which are completely or at least partly used as residential buildings)
+conditioned building volume
+VC m3 conditioned volume of the building (external dimensions)
+
+
+28 TABULA Calculation Method
+If this area is available for a building the reference area AC,ref will be derived directly from AC,intdim. If it is not available, AC,ref is estimated by use of the available reference quantities using the following adaptation factors (and the given sequence of queries):
+Table 6: Conversion factors for the determination of the common reference area AC,ref used for
+cross-country comparisons [DATAMINE FR]
+Available quantity AC,ref [m2]
+conditioned floor area based on internal dimensions = AC,intdim
+conditioned floor area based on external dimensions = 0,85 · AC,extdim
+conditioned living area = 1,1 · AC,living
+conditioned useful floor area = 1,4 · AC,use
+conditioned building volume = 0.85/3.0 [1/m] · VC = 0,283 [1/m] · VC
+
+
+Appendix 29
+8 Appendix
+8.1 References
+[DATAMINE FR] DATAMINE – Collecting Data from Energy Certification to Monitor Performance Indicators for New and Existing Buildings; Final Report of the EIE project DATAMINE; IWU Darmstadt, January 2009
+http://www.iwu.de/fileadmin/user_upload/dateien/energie/DATAMINE_Public_Final_Report.pdf executive summary: http://www.iwu.de/fileadmin/user_upload/dateien/energie/DATAMINE_Executive_Summary.pdf more information at the project website: http://env.meteo.noa.gr/datamine/
+[Sunikka-Blank/Galvin 2012] Sunikka-Blank, Minna; Galvin, Ray: Introducing the prebound effect: the gap between performance and actual energy consumption; Building Research & Information, 40:3, 260-273 http://dx.doi.org/10.1080/09613218.2012.690952
+[Loga 2003] Loga, Tobias: Heizgrenztemperaturen für Gebäude unterschiedlicher energetischer Standards; in: Bauphysik 25 (2003) Heft 1
+Download of the long version of this publication (in German language):
+http://www.iwu.de/fileadmin/user_upload/dateien/energie/werkzeuge/iwu-heizperiodenbilanzdez_2004.pdf
+[TABULA NSR] National scientific reports of the TABULA partners, download from TABULA website www.building-typology.eu/tabulapublications.html
+[TABULA Spreadsheets] TABULA workbook "tabula-calculator.xls" consisting of spreadsheets for the row-by-row calculation, including datasets of all example buildings of the national residential building typologies (elaborated in the framework of the IEE project TABULA, simplified version of the Excel workbook "TABULA.xls"). Download at www.building-typology.eu/tabulapublications.html .
+[TABULA WebTool] TABULA WebTool; a) standard version for online calculation of predefined building/system combinations; b) expert version for arbitrary building/system combinations, data access and online comparison of calculation results; the webtool was elaborated in the framework of the IEE project TABULA (online version of the Excel workbook "TABULA.xls"). Online access and user guide: www.webtool.building-typology.eu .
+[TABULA DataEval 2012] Loga, Tobias; Müller, Kornelia: Evaluation of the TABULA Database – Comparison of Typical Buildings and Heat Supply Systems from 12 European Countries; TABULA Work Report; IWU, Darmstadt 2012 http://www.building-typology.eu/tabulapublications.html#Download_Data_Tool
+[TABULA FR 2012] Loga, T., Diefenbach, N. (Ed.): TABULA Final Report. With contributions by NOA/Greece, ZRMK/Slovenia, POLITO/Italy, ADEME/France, Energy Action/Ireland, VITO/Belgium, NAPE/Poland, AEA/Austria, SOFENA/Bulgaria, STU-K/Czech Republic, SBi/Denmark, IWU/Germany. Darmstadt, November 2012 http://www.building-typology.eu/downloads/public/docs/report/TABULA_FinalReport.pdf
+[TABULA FR 2012 AppVol] Loga, T., Diefenbach, N. (Ed.): TABULA Final Report – Appendix Volume. With contributions by NOA/Greece, ZRMK/Slovenia, POLITO/Italy, ADEME/France, Energy Action/Ireland, VITO/Belgium, NAPE/Poland, AEA/Austria, SOFENA/Bulgaria, STU-K/Czech Republic, SBi/Denmark, IWU/Germany. Darmstadt, November 2012 http://www.building-typology.eu/downloads/public/docs/report/TABULA_FinalReport_AppendixVolume.pdf
+
+
+30 TABULA Calculation Method
+8.2 Used Quantities
+Quantity Explanation Unit Chapter
+aH ,0 constant parameter
+standard value for the seasonal method:
+aH ,0 = 0.8 (according to EN 13790)
+[ - ] 2.5
+nd ,h,i
+α fraction of heat generator i used for space heating [ - ] 3.2
+nd ,w,i
+α fraction of DHW heat generator i [ - ] 3.1
+tbr
+∆U surcharge on all U-values, taking into account the additional loses caused by thermal bridging
+[W/(m2K)] 2.2
+h , gn
+η dimensionless gain utilization factor [ - ] 2.1
+int
+φ average thermal output of internal heat sources [W/m2] 2.4
+h , gn
+η dimensionless gain utilization factor, [ - ] 3.2
+ve,rec
+η efficiency of ventilation heat recovery (weighted average during heating season)
+[ - ] 3.2
+e,b
+θ heating base temperature [°C] 6
+e,hs
+θ temperature of the external environment (average value during heating season)
+[°C] 2.1
+e,i
+θ temperature of the external environment,
+average value for the respective day i
+[°C] 6
+int
+θ internal temperature (set-point temperature for space heating)
+[°C] 2.1
+τ time constant of the building (see below) [h] 2.5
+τH ,0 is a constant parameter
+standard value for the seasonal method:
+τH ,0 = 30 h (according to EN 13790)
+[h] 2.5
+τH ,0 is a constant parameter
+standard value for the seasonal method:
+τH ,0 = 30 h (according to EN 13790)
+[h] 2.5
+AC,extdim conditioned floor area based on external dimensions [m2] 7
+AC,intdim conditioned floor area based on internal dimensions [m2] 7
+AC,living conditioned living area [m2] 7
+AC,ref reference area of the building [m2] 2.3, 2.4, 7
+AC,use conditioned useful floor area [m2] 7
+window j
+A , area of all windows with orientation j [m2] 2.4
+btr adjustment factor soil [ - ] 2.2
+
+
+Appendix 31
+ch cw annual energy costs for space heating and domestic hot water
+[€/(m2a)] 4.3
+cm internal heat capacity per m2 reference area [Wh/m2K] 2.5
+c p,air volume-specific heat capacity of air [Wh/(m3K)] 2.3
+hs
+d length of the heating season expressed in days [d/a] 2.1, 2.4, 6
+di duration of day i = 1 d i index of the days of a year
+[d] 6
+eg,h,i heat generation expenditure factor of heat generator i used for space heating
+[ - ] 3.2
+eg,w,i heat generation expenditure factor of DHW heat generator i
+[ - ] 3.1
+env i
+A , area of envelope element i [m2] 2.2
+()
+fadapt,k qdel adaptation factor of type k, as a function of the delivered
+energy del
+q (sum of energywares without auxiliary elec
+tricity) determined by standard calculation method
+[-] 5
+fco2,aux carbon dioxide emission factor of electricity used for auxiliary devices
+[g/kWh] 4.2
+f co2,h,i
+f co2,w, j
+carbon dioxide emission factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+[g/kWh] 4.2
+FF frame are fraction of the windows [ - ] 2.4
+nu
+F dimensionless correction factor for non-uniform heating, taking into account systematic deviations of the set-point temperature and the actual average temperature (time average over night and day as well as space average over living areas and reduced or indirectly heated spaces)
+[ - ] 2.1
+f p,nonren,aux non-renewable primary energy factor of electricity used for auxiliary devices
+[-] 4
+f p,nonren,h,i
+f p,nonren,w, j
+non-renewable primary energy factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+[ - ] 4.1
+f p,total,aux total primary energy factor of electricity used for auxiliary devices
+[ - ] 4.1
+f p,total ,h,i
+f p,total ,w, j
+total primary energy factors of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+[ - ] 4.1
+Fsh reduction factor external shading [ - ] 2.4
+FW is a reduction factor, considering radiation non
+perpendicular to the glazing
+[ - ] 2.4
+gl n
+g , total solar energy transmittance for radiation perpen
+dicular to the glazing
+[ - ] 2.4
+
+
+32 TABULA Calculation Method
+room ve ref
+h , ventilation reference room height [m] 2.3
+tr
+H overall heat transfer coefficient by transmission [W/K] 2.1, 2.5
+htr heat transfer coefficient by transmission per m2 reference floor area
+[W/(m2K)] 2.6
+hA , hB are constants, depending on the building type [W/(m2K)] 2.6
+ve
+H total heat transfer by ventilation [W/K] 2.5, 2.1
+Sol j
+I , average global irradiation on surfaces with orientation j
+during the heating season
+[m2] 2.4
+sol k hs
+I , , global solar radiation on 1 m2 surface of orientation k during the heating season
+[kWh/(m2a)] 6
+sol k i
+I , , global solar radiation on 1 m2 surface of orientation k during day i
+[kWh/(m2d)] 6
+k orientation of a transparent surface [ - ] 6
+co h
+m 2,
+co w
+m 2,
+annual carbon dioxide emissions for space heating and domestic hot water
+[kg/a] 4.2
+air,infiltr
+n air change rate by infiltration [1/h] 2.3
+air use
+n , average air change rate during heating season, related to the utilisation of the building
+[1/h] 2.3
+aux
+p price of electricity used for auxiliary devices [€/kWh] 4.3
+ph,i
+pw, j
+prices of the energyware used by heat generator i of the heating system and by heat generator j of the hot water system
+[€/kWh] 4.3
+del h adapt i
+q ,, ,
+del w adapt j
+q ,, ,
+expectation value of the measured consumption for space heating and DHW
+[kWh/(m2a)] 5
+del h adapt i
+q ,, ,
+del w adapt j
+q ,, ,
+annual energy use of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area, adapted to the typical level of measured consumption
+[kWh/(m2a)] 5
+del h aux
+q ,,
+del w aux
+q ,,
+annual auxiliary energy use of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area
+[kWh/(m2a)] 4
+del h i
+q ,,
+del w j
+q ,,
+annual energy use (delivered energy) of heat generator i of the heating system and of heat generator j of the hot water system per m2 reference floor area, calculated by applying the standard boundary conditions
+[kWh/(m2a)] 4, 5
+qd,h annual effective heat loss of the space heating distribution system per m2 reference floor area
+[kWh/(m2a)] 3.2
+qd ,w annual heat loss of the DHW distribution system per m2 reference floor area
+[kWh/(m2a)] 3.1
+qd,w,h recoverable heat loss of the DHW distribution system per m2 reference floor area
+[kWh/(m2a)] 3.1
+
+
+Appendix 33
+qg,h,out heat output of heat generator i used for space heating [kWh/(m2a)] 3.2
+qg,w,h recoverable heat loss of the DHW heat generators per m2 reference floor area
+[kWh/(m2a)] 3.1
+qg,w,out heat output of DHW heat generator i [kWh/(m2a)] 3.1
+QH ,gn total heat gains for the heating mode [kWh/a] 2.1, 2.4
+QH ,nd building energy need for heating, assumed to be greater than or equal to 0
+[kWh/a] 2.1
+ht
+Q total heat transfer for the heating mode [kWh/a] 2.1, 2.4
+ht tr
+Q , total heat transfer by transmission during the heating season
+[kWh/a] 2.1
+ht ve
+Q , total heat transfer by ventilation during the heating season
+[kWh/a] 2.1
+qht,ve annual heat transfer by ventilation per m2 reference floor area
+[kWh/(m2a)] 3.2
+nd h
+q , annual energy need for heating (useful heat) per m2 reference floor area
+[kWh/(m2a)] 3.2
+nd w
+q , annual energy need for domestic hot water (useful heat) per m2 reference floor area
+[kWh/(m2a)] 3.1
+q p,nonren,h
+q p,nonren,w
+non-renewable primary energy demand for heating and hot water
+4.1
+q p,total ,h
+q p,total ,w
+total primary energy demand for heating and hot water [kWh/(m2a)] 4.1
+qs,h annual effective heat loss of the heating system storage per m2 reference floor area
+[kWh/(m2a)] 3.2
+qs,w annual heat loss of the DHW storages per m2 reference floor area
+[kWh/(m2a)] 3.1
+qs,w,h recoverable heat loss of the DHW storages per m2 reference floor area
+[kWh/(m2a)] 3.1
+qw,h recoverable heat loss of the DHW system per m2 reference floor area
+[kWh/(m2a)] 3.2
+qve,h,rec space heating contribution of the ventilation heat recovery unit per m2 reference floor area
+[kWh/(m2a)] 3.2
+i
+R0, thermal resistance of the envelope element i in the original state, calculated according to EN ISO 6946
+[m2K/W] 2.2
+add i
+R , additional thermal resistance due to unheated space bordering at the construction element i
+[m2K/W] 2.2
+eff i
+R , effective thermal resistance of the envelope element i [m2K/W] 2.2
+measure i
+R , (additional) thermal resistance of a thermal refurbishment measure applied to the element i
+in case of a simple insulation measure (additional layer of
+[m2K/W] 2.2
+
+
+34 TABULA Calculation Method
+insulation) measure i
+R , is calculated by a quotient of the
+insulation thickness ins i
+d , and the thermal conductivity
+ins ,i
+λ ; in other cases (e.g. in case of insulation between
+rafters) the thermal resistance is calculated by the rules of EN ISO 6946
+i
+U 0, U-value of the envelope element i in the original state, calculated according to EN ISO 6946
+[W/(m2K)] 2.2
+eff i
+U , effective U-value of the envelope element i [W/(m2K)] 2.2
+VC conditioned building volume [m3] 7
+
+
+Appendix 35
+8.3 Exemplary Climatic Data
+The following climatic data were compiled during the TABULA project. The current version of this table is available at: [TABULA Spreadsheets].
+Table 7: Exemplary climatic data
+TABULA Code Climate Region
+National Name
+Remarks
+e,b
+θ hs
+d e,b
+θ Sol H
+I , Sol E
+I , Sol S
+I , Sol W
+I , Sol N
+I,
+°C d °C kWh/a kWh/a kWh/a kWh/a kWh/a
+AT.N national / whole country Standard
+Österreich
+Source: ÖNORM B
+8110-5 12 212 3,9 403 246 401 246 148 AT.mountain Central Alps Zentralalpen Source: ÖNORM B
+8110-5 12 260 2,8 657 436 261 436 993
+BE.N national / whole country Belgie - Ukkel Ukkel 12 210 6,2 336 202 340 202 110
+CZ.N Czech Republic Česka Republi
+ka 12 217 3,8 374 225 396 225 99 CZ.NW North West. Liberec - Usti
+Nad Labem - Karlovy Varzy 12 221 4,0 385 231 407 234 104 CZ.SW South West. Prague - Plzen
+- České Budejovice 12 215 3,8 369 223 382 220 96 CZ.NC North Center. Hradec
+Kralove - Pardubice 12 217 3,8 372 226 399 227 100
+CZ.SC South Center. Jihlava 12 226 3,4 416 249 398 248 111
+CZ.NE North East. Olomouc 
+Ostrava 12 212 3,5 355 212 390 213 94
+CZ.SE South East. Brno - Zlin 12 208 3,6 354 211 385 212 94
+DE.N Germany Standard
+Deutschland Source: DIN V 18599 12 222 4,4 403 271 392 271 160
+DK.N national / whole country Danmark Be06 klimadata 12 246 4,2 447 313 524 313 150
+ES.B3 zone B3 Alicante 18 34 11,7 112 52 115 45 24
+ES.B4 zone B4 Valencia 17 84 10,9 211 141 285 116 66
+FR.N National N National 12 209 7,1 419 265 423 265 160
+FR.H1 ZoneH1 H1 ZoneH1 12 229 6,4 422 265 396 265 172
+FR.H2 ZoneH2 H2 ZoneH2 12 216 7,6 407 252 371 252 167
+FR.H3 ZoneH3 H3 ZoneH3 12 181 9,5 301 161 358 192 108
+GR.A zone A KENAK 2009 12 57 11,3 139 88 165 88 40
+GR.B zone B KENAK 2009 12 104 10,0 244 160 301 160 73
+GR.C zone C KENAK 2009 12 150 7,5 351 232 424 232 106
+GR.D zone D KENAK 2009 12 168 6,0 420 278 497 278 127
+IE.N national / whole country Ireland Souce: DEAP 12 243 7,6 475 306 485 306 185
+IT.MidClim Climatic Middle Zone
+(Italian Climatic Zone E)
+Zona Climatica
+Media (Zona E) Source: UNI 10349 12 174 5,2 378 290 496 290 122
+PL.N country Poland 12 242 2,8 647 462 560 448 391
+RS.N national / whole country Srbija 12 185 5,6 398 310 455 310 145
+SE.Zone3 Zone III Klimatzon 3 Sourse: BBR (Building
+Regulations, BBR ) 12 261 2,2 450 328 496 328 138
+SE.Zone2 Zone II Klimatzon 2 Sourse: BBR (Building
+Regulations, BBR ) 12 286 0,3 492 372 524 372 161 SE.Zone1 Zone I Klimatzon 1 Sourse: BBR (Building
+Regulations, BBR ) 12 365 -1,2 711 628 725 628 309
+SI.N national / whole country Slovenija 12 206 4,3 375 241 292 218 98
+
+
+36 TABULA Calculation Method
+8.4 TABULA Supply System Codes
+In order to identify different types of heat supply components and energy carriers in a uniform way codes have been defined. The basic set of codes was developed in the framework of the Intelligent Energy Europe project DATAMINE [DATAMINE FR]. Further definitions have been supplemented for the purposes of the TABULA project.
+Table 8: Heating System: Heat Generator Types
+Code_Type_SysHG Name_Type_SysHG Description_Type_SysHG code of the heat generator type (heating system)
+name of the heat generator type (heating system)
+description of the heat generator type (heating system) B boiler boiler (type unknown) B_NC boiler, non-condensing non-condensing boiler (further details unknown) B_NC_CT boiler, non-condensing, constant temperature constant temperature non-condensing boiler B_NC_LT boiler, non-condensing, low temperature low temperature non-condensing boiler B_C boiler, condensing condensing boiler B_WP wood-pellets boiler boiler for combustion of wood pellets G_IWH gas-fired instantaneous water heater instantaneous water heater, fired by gas (tankless) G_IWH_NC gas-fired instantaneous water heater, noncondensing
+instantaneous water heater, fired by gas (tankless) G_IWH_C gas-fired instantaneous water heater, condensing
+instantaneous water heater, fired by gas (tankless), condensing G_SH gas-fired space heater gas-fired space heater E direct electric heat generator direct electric, not specified: any device which uses electricity for direct heat generation, e.g. electric stoves (no heat pumps which use also heat from the environment) E_Immersion electric immersion heater electric heating rod or coil, immersed in a water storage E_Storage electrical night storage space heater electrical night storage space heater (off-peak storage heating), heat emission by convection E_UnderFloor electrical underfloor heating electrical underfloor heating E_SH electrical space heater electrical space heater: radiative heater or (forced) convection heater HP heat pump heat pump (type unknown), remark: also reversible engines that work as a cold generator in summer are to be considered here or (if heat source is known) below HP_Air heat pump, heat source external air air source heat pump: heat pump, using the external air as the heat source HP_Ground heat pump, heat source ground ground source heat pump (or geothermal heat pump): heat pump, using the ground as the heat source HP_ExhAir heat pump, heat source exhaust air heat pump, using exhaust air of a ventilation system as the heat source HP_Water heat pump, heat source ground water heat pump, using ground water or a water stream as the heat source HP_Other heat pump, other heat sources heat pump, using more than one or other heat sources (e.g. industrial exhaust heat, lowtemperature district heat) Stove stove stove, fuel fired Stove_L stove for liquid fuels stove for liquid fuels, especially oil stove Stove_S stove for solid fuels stove for solid fuels, especially wood and coal OpenFire open fire open fire (fireplace, mantle) TS district heating transfer station heat exchanger (heat transfer station, heat substation) of a district heating system CHP combined heat and power generation cogeneration system: combined heat and (electric) power generation Solar thermal solar plant thermal solar plant Steam steam generator steam generator (any type) Other other other generator type
+
+
+Appendix 37
+Table 9: DHW System: Heat Generator Types
+Code_Type_SysWG Name_Type_SysWG Description_Type_SysWG code of the heat generator type (domestic hot water system)
+name of the heat generator type (domestic hot water system)
+description of the heat generator type (domestic hot water system)
+B boiler boiler (type unknown) B_NC boiler, non-condensing non-condensing boiler (further details unknown) B_NC_CT boiler, non-condensing, constant temperature constant temperature non-condensing boiler B_NC_LT boiler, non-condensing, low temperature low temperature non-condensing boiler B_C boiler, condensing condensing boiler B_WP wood-pellets boiler boiler for combustion of wood pellets G_IWH gas-fired instantaneous water heater instantaneous water heater, fired by gas (tankless) G_IWH_NC gas-fired instantaneous water heater, noncondensing
+instantaneous water heater, fired by gas (tankless) G_IWH_C gas-fired instantaneous water heater, condensing
+instantaneous water heater, fired by gas (tankless), condensing G_Tank gas burner for directly heated DHW tank gas burner as a heating element of a domestic hot water tank (separately from space heating system) E direct electric heat generator, not specified direct electric, not specified: any device which uses electricity for direct heat generation, e.g. electric heating element in water storage, instantaneous water heater E_Immersion electric immersion heater electric heating rod or coil, immersed in a water storage E_IWH electric instantaneous water heater electric instantaneous water heater (tankless) HP heat pump heat pump (type unknown), remark: also reversible engines that work as a cold generator in summer are to be considered here or (if heat source is known) below HP_Air heat pump, heat source external air air source heat pump: heat pump, using the external air as the heat source HP_Ground heat pump, heat source ground ground source heat pump (or geothermal heat pump): heat pump, using the ground as the heat source HP_ExhAir heat pump, heat source exhaust air heat pump, using exhaust air of a ventilation system as the heat source HP_Water heat pump, heat source ground water heat pump, using ground water or a water stream as the heat source HP_Cellar heat pump, heat source: cellar air heat pump, using cellar air as heat source HP_Other heat pump, other heat sources heat pump, using more than one or other heat sources (e.g. industrial exhaust heat, lowtemperature district heat) TS district heating transfer station heat exchanger (heat transfer station, heat substation) of a district heating system CHP combined heat and power generation cogeneration system: combined heat and (electric) power generation Solar thermal solar plant thermal solar plant Steam steam generator steam generator (any type) Other other other generator type
+
+
+38 TABULA Calculation Method
+Table 10: Energyware Types
+Code_EnergyCarrier Name_EnergyCarrier Description_EnergyCarrier identification of the energy carrier
+name of the energy carrier detailed description of the energy carrier
+Gas natural gas natural gas, type unknown Gas_E natural gas E natural gas E Gas_LL natural gas LL natural gas LL Gas_Liquid liquid gas liquid gas Oil heating oil heating oil Coal coal coal, type unknown Coal_Hard hard coal hard coal Coal_Lignite lignite coal lignite coal
+Bio biomass biomass, type unknown Bio_FW firewood firewood Bio_WP wood pellets wood pellets Bio_WC wood chips wood chips Bio_Other other biomass biomass, if different from firewood or wood pellets El electricity electricity
+El_OP off-peak electricity off-peak electricity El_Prod electricity production electricity production by combined heat-power generation DH district heating district heating, type unknown
+DH_Gas_NoCHP district heating gas without chp district heating, fuel gas, heat generation without combined heat and power (chp) DH_Gas_CHP33 district heating gas with 33% chp district heating, fuel gas, heat generation with combined heat and power (chp) fraction 33% DH_Gas_CHP67 district heating gas with 67% chp district heating, fuel gas, heat generation with combined heat and power (chp) fraction 67% DH_Gas_CHP100 district heating gas with 100% chp district heating, fuel gas, heat generation with combined heat and power (chp) fraction 100% DH_Oil_NoCHP district heating oil without chp district heating, fuel oil, heat generation without combined heat and power (chp) DH_Oil_CHP33 district heating oil with 33% chp district heating, fuel oil, heat generation with combined heat and power (chp) fraction 33% DH_Oil_CHP67 district heating oil with 67% chp district heating, fuel oil, heat generation with combined heat and power (chp) fraction 67% DH_Oil_CHP100 district heating oil with 100% chp district heating, fuel oil, heat generation with combined heat and power (chp) fraction 100% DH_Coal_NoCHP district heating coal without chp district heating, fuel coal, heat generation without combined heat and power (chp) DH_Coal_CHP33 district heating coal with 33% chp district heating, fuel coal, heat generation with combined heat and power (chp) fraction 33% DH_Coal_CHP67 district heating coal with 67% chp district heating, fuel coal, heat generation with combined heat and power (chp) fraction 67% DH_Coal_CHP100 district heating coal with 100% chp district heating, fuel coal, heat generation with combined heat and power (chp) fraction 100% DH_Bio_NoCHP district heating biomass without chp district heating, fuel biomass, heat generation without combined heat and power (chp) DH_Bio_CHP33 district heating biomass with 33% chp
+district heating, fuel biomass, heat generation with combined heat and power (chp) fraction 33% DH_Bio_CHP67 district heating biomass with 67% chp
+district heating, fuel biomass, heat generation with combined heat and power (chp) fraction 67% DH_Bio_CHP100 district heating biomass with 100% chp
+district heating, fuel biomass, heat generation with combined heat and power (chp) fraction 100% Other other other energy carriers - not existent not existent or no energyware (e.g. solar heat produced in the building)
+
+
+Appendix 39
+8.5 Default Values for Heat Supply Components
+During the TABULA project data for heat generators, storages and distribution of space heating and DHW systems were elaborated by the partners for their countries. Since these data refer to the same definitions it was possible to make comparisons and create averages. The details of this evaluation are described in [TABULA DataEval 2012].
+The following tables are listing the averaged national values for each supply system component. Such "default values" might be helpful in case national values do not yet exist. The averages may also contribute to the elaboration of transnational building stock models.
+Table 11: Heat generation of heating systems / derived default values (simplified common values)
+TABULA Code Description heat generation expenditure factor (heating systems)
+electricity generation expenditure factor (heating systems)
+delivered energy demand (HS) devided by produced heat
+electricity demand devided by produced heat
+eg,h eg,el,h
+[-] [-]
+energy efficiency poor medium high poor medium high
+B_NC boiler, non-condensing 1,92 1,36 1,13 - - 
+B_C boiler, condensing 1,31 1,13 1,06 - - 
+B_WP wood-pellets boiler 2,12 1,52 1,31 - - 
+G_IWH_NC gas-fired instantaneous water
+heater, non-condensing 1,27 1,24 1,20 - - 
+G_IWH_C gas-fired instantaneous water
+heater, condensing 1,17 1,13 1,10 - - 
+G_SH gas-fired space heater 1,50 1,41 1,29 - - 
+E_Immersion electric immersion heater 1,08 1,03 1,00 - - 
+E direct electric heat generator 1,25 1,02 1,00 - - 
+HP_Air heat pump, heat source external
+air 0,50 0,37 0,30 - - 
+HP_Ground heat pump, heat source ground 0,52 0,31 0,21 - - 
+HP_ExhAir heat pump, heat source exhaust
+air 0,36 0,33 0,31 - - 
+Stove stove 2,96 1,92 1,40 - - 
+OpenFire open fire 4,44 3,39 2,44 - - 
+TS district heating transfer station 1,34 1,13 1,06 - - 
+CHP combined heat and power gene
+ration 1,67 1,67 1,67 3,33 3,33 3,33
+Solar thermal solar plant 0,00 0,00 0,00 - - 
+
+
+40 TABULA Calculation Method
+Table 12: Annual heat loss of the space heating storage / derived default values (simplified common values)
+TABULA code description heat loss of the space heating storage
+annual heat losses during heating season per m2 reference area
+qs,h
+[kWh/(m2a)]
+energy efficiency poor medium high
+- no heat storage 0,0 0,0 0,0
+BS buffer storage 15,9 6,5 2,2
+Table 13: Annual heat loss of the space heating distribution / derived default values (simplified common values)
+TABULA code description heat loss of the space heating distribution
+annual heat losses during heating season per m2 reference area
+qd,h
+[kWh/(m2a)]
+energy efficiency poor medium high
+D decentral system 0,0 0,0 0,0
+C_Int central heating, all pipes inside of thermal
+envelope 21,4 6,5 1,7
+C_Ext central heating, fraction of pipeline outside of
+thermal envelope 39,0 13,0 3,1
+Table 14: Annual auxiliary electricity demand of space heating systems / derived default values (simplified common values)
+TABULA code description auxiliary energy demand (electricity) of heating systems
+annual values in kWh per m2 reference area for heat generation (blower, control), storage (pump), distribution (pump) and heat emission (fan), as far as available
+qdel,h,aux
+[kWh/(m2a)]
+energy efficiency poor medium high
+D decentral system, no distribution ducts avai
+lable 0,0 0,0 0,0
+C central heating, distribution by pipeline 8,9 3,6 0,9
+
+
+Appendix 41
+Table 15: Heat generation of dhw systems / derived default values (simplified common values)
+TABULA Code Description heat generation expenditure factor (dhw systems)
+electricity generation expenditure factor (dhw systems)
+delivered energy demand (HS) devided by produced heat
+electricity demand devided by produced heat
+eg,w eg,el,w
+[-] [-]
+energy efficiency poor medium high poor medium high
+B_NC boiler, non-condensing 2,49 1,41 1,14 - - 
+B_C boiler, condensing 1,56 1,19 1,08 - - 
+B_WP wood-pellets boiler 1,76 1,40 1,24 - - 
+G_IWH_NC gas-fired instantaneous water
+heater, non-condensing 1,96 1,34 1,23 - - 
+G_IWH_C gas-fired instantaneous water
+heater, condensing 1,27 1,22 1,17 - - 
+G_Tank gas burner for directly heated
+DHW tank 1,28 1,23 1,11 - - 
+E_Immersion electric immersion heater 1,52 1,10 1,03 - - 
+E direct electric heat generator, not
+specified 1,19 1,04 1,02 - - 
+HP_Air heat pump, heat source external
+air 0,65 0,44 0,38 - - 
+HP_Ground heat pump, heat source ground 0,35 0,30 0,26 - - 
+HP_ExhAir heat pump, heat source exhaust
+air 0,32 0,31 0,30 - - 
+HP_Cellar heat pump, heat source: cellar
+air 0,37 0,34 0,31 - - 
+TS district heating transfer station 1,81 1,22 1,10 - - 
+CHP combined heat and power gene
+ration 1,54 1,39 1,28 3,33 3,33 3,33
+Solar thermal solar plant 0,00 0,00 0,00 - - 
+
+
+42 TABULA Calculation Method
+Table 16: Annual heat loss of the dhw heat storage / derived default values (simplified common values)
+TABULA code
+description heat loss of the dhw distribution
+thereof recoverable portion
+annual heat losses per m2 reference area
+contribution to space heating per m2 reference area
+qd,w qd,w,h
+[kWh/(m2a)] [kWh/(m2a)]
+energy efficiency poor medium high poor medium high
+S_D decentral electric hot water
+storage 6,7 3,1 1,3 2,8 1,6 1,6
+S_C_Int central hot water storage,
+inside of thermal envelope 31,2 5,8 0,9 24,5 2,8 2,8
+S_C_Ext central hot water storage,
+outside of thermal envelope 10,2 4,3 0,9 0,0 0,0 0,0
+S_Gas directly gas heated hot water
+storage 18,4 14,2 8,2 0,0 0,0 0,0
+Table 17: Annual heat losses of the dhw distribution / derived default values (simplified common values)
+TABULA code
+description heat loss of the dhw distribution
+thereof recoverable portion
+annual heat losses per m2 reference area
+contribution to space heating per m2 reference area
+qd,w qd,w,h
+[kWh/(m2a)] [kWh/(m2a)]
+energy efficiency poor medium high poor medium high
+D decentral DHW system 4,5 3,1 1,6 2,0 1,1 1,1
+C_NoCirc_Int central DHW distribution, all pipes inside of thermal envelope, no circulation
+9,7 4,4 2,1 2,4 1,1 1,1
+C_NoCirc_Ext central DHW distribution, fraction of pipeline outside of thermal envelope, no circulation
+12,7 7,8 3,3 3,6 1,7 1,7
+C_Circ_Int central DHW distribution with circulation, all pipes inside of thermal envelope
+20,3 7,3 2,1 3,6 1,4 1,4
+C_Circ_Ext central DHW distribution with circulation, fraction of pipeline outside of thermal envelope
+35,0 15,7 5,7 7,9 2,5 2,5
+
+
+Appendix 43
+Table 18: Annual auxiliary electricity demand of DHW systems / derived default values (simplified common values)
+TABULA code description auxiliary energy demand (electricity) of dhw systems
+annual values in kWh per m2 reference area for heat generation (blower, control), storage (pump), distribution (pump), as far as available
+qdel,w,aux
+[kWh/(m2a)]
+energy efficiency poor medium high
+D decentral DHW system 0,0 0,0 0,0
+C_NoCirc central DHW system, no circulation 1,9 0,4 0,1
+C_Circ central DHW system with circulation 3,2 1,4 0,7
+C_NoCirc_Sol central DHW system with solar thermal system, no
+circulation 1,9 1,1 0,7
+C_Circ_Sol central DHW system with solar thermal system and
+circulation 3,9 2,4 1,3
+Table 19: Performance of ventilation systems / derived default values (simplified common values)
+TABULA code description heat recovery by ventilation systems
+auxiliary energy demand (electricity) of ventilation systems
+overall performance ratio of heat recovery by the heat exchanger
+annual values in kWh per m2 reference area
+ηve,rec qdel,ve,aux
+[ - ] [kWh/(m2a)]
+energy efficiency poor medium high poor medium high
+Exh exhaust air system 0,00 0,00 0,00 1,7 1,3 1,2
+Bal balanced ventilation system 0,00 0,00 0,00 3,3 2,2 1,5
+Bal_Rec balanced ventilation system
+with heat recovery 0,62 0,73 0,83 5,3 2,6 2,0
+Bal_GroundRec balanced ventilation system, preheated by ground heat exchanger + heat recovery
+0,90 0,90 0,90 2,6 2,6 2,6
+
+
+44 TABULA Calculation Method
+8.6 Calculation Sheets and Examples
+On the following pages illustrative calculations are shown for an exemplary building considering three states of the energy performance. The pages can be reproduced for this and for other example buildings by use of the Excel workbook "tabula-calculator.xls" [TABULA Spreadsheets] and of the [TABULA WebTool].
+Description of the calculation sheets
+ Sheet „Thermal Insulation Measures“: Determination of the effective U-values used in the energy balance calculation
+Consideration of additional thermal resistances for the U-values of construction elements: − for unheated spaces, if available (here: unheated attic and cellar); − for thermal protection measues (measure package 1 and 2).
+ Sheet „Energy Balance Calculation – Building Performance“: Calculation of the energy need for space heating
+Balance according to the TABULA reference calculation procedure / standard boundary conditions and national climate.
+ Sheet „Energy Balance Calculation – System Performance“: Calculation of the delivered energy by energyware
+Balance according to the TABULA reference calculation procedure / standard boundary conditions.
+ Sheet „Energy Balance Calculation – Energy Carriers“: Assessment of energywares / realistic level of energy consumption
+Determination of the primary energy demand, of the carbon dioxide emissions and of the heating costs on the basis of the delivered energy.
+Determination of the adaptation factor for calibrating the calculated energy demand to the typical level of measured energy consumption.
+
+
+Appendix 45
+Example Building – Existing State
+Thermal Insulation Measures U-values
+Building code DE.N.MFH.05.Gen.ReEx.001
+Roof 1 Roof 2 Wall 1 Wall 2 Wall 3 Floor 1 Floor 2 Window 1 Window 2 Door 1
+Aenv,i 0 971 2039 0 0 971 0 507 0 2 m2
+Construction Element
+Code DE.Ceilin g.ReEx.0 6.01
+DE.Wall.R eEx.04.0 1
+DE.Floor. ReEx.05. 01
+DE.Windo w.ReEx.0 6.03
+DE.Door. ReEx.01. 01
+Uoriginal,i 0,60 1,20 1,60 3,50 3,00 W/(m2K)
+dinsulation,i 5,0 0,0 1,0 cm
+border type Unh Ext Cellar
+Radd,i 0,30 0,00 0,30 m2K/W
+Refurbishment Measure
+Code
+Rmeasure,i 0,00 0,00 0,00 0,00 0,00 m2K/W
+Result
+type of refurbishment
+Rbefore,i 1,97 0,83 0,93 0,29 0,33 m2K/W
+Ractual,i 1,97 0,83 0,93 0,29 0,33 m2K/W
+Uactual,i 0,51 1,20 1,08 3,50 3,00 W/(m2K)
+thermal resistance before measures
+thermal resistance of refurbishment measure
+U-value original state
+included insulation thickness
+additional thermal resistance
+envelope area
+
+
+46 TABULA Calculation Method
+Energy Balance Calculation Building Performance
+Standard Reference Calculation - based on: EN ISO 13790 / seasonal method
+Building DE.N.MFH.05.Gen.ReEx.001 (1958...1968) reference area AC,ref 3129,1 m2
+Climate DE.N (Germany) (conditioned floor area)
+Uoriginal,i Uactual,i Aenv,i btr,i Htr,i W/(m2K) W/(m2K) m2 W/K Roof 1 x x = 0,0 0,00 Roof 2 0,60 0,51 x 971,1 x 1,00 = 493,8 12,1 0,16 Wall 1 1,20 1,20 x 2039,0 x 1,00 = 2446,8 60,0 0,78 Wall 2 x x = 0,0 0,00
+Wall 3 x x = 0,0 0,00 Floor 1 1,60 1,08 x 971,1 x 0,50 = 524,9 12,9 0,17 Floor 2 x x = 0,0 0,00 Window 1 3,50 3,50 x 507,5 x 1,00 = 1776,2 43,5 0,57 Window 2 x x = 0,0 0,00 Door 1 3,00 3,00 x 2,0 x 1,00 = 6,0 0,1 0,00
+∆Utb Σ Aenvelope,i Htr,tb thermal bridging: surcharge on the U-values 0,10 × 4490,7 × 1,00 = 449,1 11,0 0,14
+Heat transfer coefficient by transmission Htr sum 5697 139,6 1,82
+cp,air nair,use nair,infiltration AC,ref hroom
+Heat transfer coefficient Wh/(m3K) 1/h 1/h m3 m W/K
+by ventilation Hve 0,34 x ( 0,40 + 0,20 ) × 3129,1 × 2,50 = 1596 39,1 0,51
+θi θe dhs °C °C d/a Kd/a ( 20,0 – 4,4 ) × 222 = 3463
+Htr Hve Fred x 0,024 W/K W/K (htr= 1,82 W/(m2K)) kKh/a kWh/a
+Total heat transfer Qht ( 5697 + 1596 ) × 0,92 × 83,1 = 559250 178,7 2,33
+Window
+Orientation m2 kWh/(m2a) kWh/a
+1. Horizontal 0,80 × (1 - 0,30 ) × 0,90 × 0,75 × × 403 = 0,0 2. East 0,60 × (1 - 0,30 ) × 0,90 × 0,75 × 22,2 × 271 = 1709 0,5 3. South 0,60 × (1 - 0,30 ) × 0,90 × 0,75 × 243,2 × 392 = 27032 8,6 4. West 0,60 × (1 - 0,30 ) × 0,90 × 0,75 × 22,2 × 271 = 1709 0,5 5. North 0,60 × (1 - 0,30 ) × 0,90 × 0,75 × 219,8 × 160 = 9968 3,2
+Solar heat load during heating season Qsol sum 40418 12,9
+φi dhs AC,ref
+kh/d W/m2 d/a m2 kWh/a
+Internal heat sources Qint 0,024 × 3,00 × 222 × 3129,1 = 50015 16,0
+internal heat capacity per m2 AC,ref cm 45 Wh/(m2K)
+= 0,162 = 19 h
+parameter = 1,44 = 0,94
+kWh/a
+Energy need for heating QH,nd Qht – ηh,gn × (Qsol + Qint) = 474344 151,6
+solar global radiation Isol,i
+code construction element
+original U-value
+actual U-value
+area (basis: external dimensions)
+adjustment factor soil
+annual heat loss related to AC,Ref
+kWh/(m2a)
+accumulated differences between internal and external temperature
+reduction factors window area Awindow,i
+external shading Fsh
+frame area fraction FF
+non-perpendicular FW
+solar energy transmittance ggl,n
+Qsol+Qint QL
+γh,gn = ––––––
+heat balance ratio for the heating mode
+cm · AC,ref Htr + Hve
+τ = –––––––
+time constant of the building
+τ τH,0
+aH = aH,0 + ––– ηh,gn = ––––––
+1 – γaH
+1 – γaH+1
+gain utilisation factor for heating
+measure type
+applied refurbishment measure
+volume-specific heat capacity air
+air change rate by use by infiltration
+room height (standard value)
+internal temp. external temp. heating days
+internal heat sources heating days
+temperature reduction factor
+heat transfer coefficients related to AC,Ref
+W/(m2K)
+
+
+Appendix 47
+Energy Balance Calculation System Performance
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.001 conditioned floor area 3129,1 m2
+System DE.<Oil.B_NC_LT.MUH.01>.<El.E_IWH.Gen.01>.<-.Gen.01>.<Gen>
+Domestic Hot Water System
+code System DE.El.E_IWH.Gen.01
+energy need hot water qnd,w 15,0 thereof recoverable for space heating:
++ losses distrib. qd,w 1,4 qd,w,h 0,8
++ losses storage qs,w 0,0 qs,w,h 0,0
+qg,w,out = qnd,w + qd,w + qs,w 16,4 qw,h = qd,w,h + qs,w,h 0,8 kWh/(m2a) kWh/(m2a)
+code code αnd,w,i qg,w,out eg,w,i qdel,w,i eg,el,w,i qprod,el,w,i
+1 100% x x 1,00 = 16,4 : 0,00 = 0,0 2 0% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0 kWh/(m2a) kWh/(m2a)
+code qdel,w,aux
+aux DE.D.Gen.1 0,0 kWh/(m2a)
+Heating System
+code System DE.Oil.B_NC_LT.MUH.01
+energy need space heating qnd,h 151,6 kWh/(m2a) ηh,gn
+– usable contribution of hot water system qw,h 0,8 kWh/(m2a) 94% x ηve,rec qht,ve
+– usable contribution of ventilation heat recovery qve,h,rec 0,0 kWh/(m2a) 94% x 0% x 39,1
++ qd,h 15,1 kWh/(m2a) kWh/(m2a)
++ losses storage qs,h 0,0 kWh/(m2a)
+qg,h,out = qnd,h - qw,h - qve,h,rec + qd,h + qs,h 165,9 kWh/(m2a)
+code code αnd,h,i qg,h,out eg,h,i qdel,h,i eg,el,h,i qprod,el,h,i
+1 100% x x 1,23 = 204,1 : 0,00 = 0,0 2 0% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0 kWh/(m2a) kWh/(m2a)
+code qdel,h,aux
+aux DE.C.MUH.1 1,8
+code qdel,ve,aux
+aux DE.-.Gen.01 0,0 kWh/(m2a)
+16,4
+165,9
+DE.E_IWH.Gen.01
+DE.B_NC_LT.SUH.03
+El
+el
+el
+el
+Oil
+DE.D.Gen.2
+DE.C_Ext.MUH.03
+delivered energy
+expenditure factor
+heat generator output
+energyware for domestic hot water
+heat generator
+heat generator output
+auxiliary energy
+delivered energy
+expenditure factor
+heat generator
+electricity production
+expenditure factor electricity generation
+combined heat and power
+electricity production
+expenditure factor electricity generation
+combined heat and power energyware for space heating
+auxiliary energy
+ventilation system
+gain utilisation factor for heating
+heating system
+ventilation heat recovery
+losses distribution and heat emission
+
+
+48 TABULA Calculation Method
+Energy Balance Calculation Energy Carriers
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.001 conditioned floor area 3129,1 m2
+System DE.<Oil.B_NC_LT.MUH.01>.<El.E_IWH.Gen.01>.<-.Gen.01>.<Gen>
+Assessment of Energywares
+version of energy carrier specification Gen
+Standard Calculation
+qdel,i fp,total,i qp,total,i fp,nonren,i qp,nonren,i fCO2,i mCO2,i pi ci
+Heating (+ Ventilation) System Oil
+auxiliary energy
+electricity production / export Domestic Hot Water System El
+auxiliary energy
+electricity production / export
+kWh/(m2a)
+Summary qnd Σqdel ep,total qp,total ep,nonren qp,nonren fCO2,heat mCO2,i pheat c
+and Expenditure Factors = = = =
+heating (+ ventilation) system
+domestic hot water system
+total
+kWh/(m2a) kWh/(m2a) kWh/(m2a) kWh/(m2a) g/kWh kg/(m2a) Cent/kWh Euro/(m2a)
+Typical Values of the Measured Consumption - Empirical Calibration
+code DE.M.01
+application field central heating systems: fuels and district heating
+determination method experience values
+accuracy level C = estimated (e.g. on the basis of few example buildings)
+empirical relation current value 0 100 200 300 400 500 220,5
+adaptation factor 1,10 1,00 0,84 0,70 0,60 0,50 3 0,81
+Standard Calculation Typical Measured Consumption
+Summary (including subcategories) heating dhw sum heating dhw sum
+Gas qdel,Σgas
+Oil qdel,Σoil
+Coal qdel,Σcoal
+Bio qdel,Σbio
+El qdel,Σel
+DH qdel,Σdh
+Other qdel,Σother
+Auxiliary Electricity qdel,Σaux
+Produced / exported electricity qexp,Σel
+0,0
+204,1
+0,0
+0,0
+0,0
+0,0
+0,0
+0,0
+1,8
+0,0
+16,4 16,4 0,0
+0,0 0,0 0,0 0,0
+13,3 13,3
+0,0
+0,0 204,1 165,6 0,0 165,6
+0,0 0,0 0,0 0,0
+0,0 0,0
+0,0 0,0 0,0 0,0 0,0
+0,0 0,0 0,0
+0,0 0,0 0,0 0,0 0,0
+1,5
+0,0 0,0 0,0 0,0 0,0
+0,0 1,8 1,5 0,0
+204,1
+0,0
+0,0
+1,8
+0,0
+1,10 224,5 1,10
+0,00
+3,00 0,0 2,60
+3,00 5,4 2,60
+224,5 310 63,3 6,0
+0,00
+0,00 0,0 0,00 0,0
+0,0 0,00
+12,25
+0 0,0 0,0 0,00
+20,0
+0 0,0 0,0
+0,36
+0,0
+0,0 680 0,0 20,0 0,00
+4,7 680 1,2
+16,4 3,00 49,2 2,60 42,6 680 11,2 20,0 3,28
+0,0 0,00 0,0 0,00 0,0 0 0,0 0,0 0,00
+0,0 0,00 0,0 0,00 0 0,0 0,0
+0,0 3,00 0,0 2,60
+3,00 0,0 2,60
+0,00
+0,0 680 0,0 20,0 0,00
+0,0
+0,00
+205,9 1,52 229,9 1,51
+0,0 0,0 680 0,0 20,0
+21,9 3,28
+229,2 425 64,5 8,3
+279,1 1,63
+12,61
+16,4 3,28 49,2 2,84 42,6 743 11,2
+15,89
+151,6
+15,0
+166,6 222,3 1,68 271,8 454 75,6 9,5
+delivered energy
+total primary energy
+non-renewable primary energy
+carbon dioxide emissions
+energy costs
+delivered energy (without auxiliary electricity) according to standard calculation method
+The empirical calibration factor describes a typical ratio of the energy uses determined by measurements for a large number of buildings and by the TABULA method for the given value of the TABULA method.
+heat need
+= qdel,i · fp,total,i
+qp,total qnd
+= Σqp,total
+qp,nonren qnd
+= Σqp,nonren,l
+mCO2 qnd
+= ΣmCO2,i
+cl qnd
+= Σci
+(energywar e price)
+= qdel,i · fp,nonren,i
+= qdel,i · fCO2,i
+= qdel,i · pi
+
+
+Appendix 49
+Example Building – Refurbishment Package 1 / "Standard" Measures
+Thermal Insulation Measures U-values
+Building code DE.N.MFH.05.Gen.ReEx.001
+Roof 1 Roof 2 Wall 1 Wall 2 Wall 3 Floor 1 Floor 2 Window 1 Window 2 Door 1
+Aenv,i 0 971 2039 0 0 971 0 507 0 2 m2
+Construction Element
+Code DE.Ceilin g.ReEx.0 6.01
+DE.Wall.R eEx.04.0 1
+DE.Floor. ReEx.05. 01
+DE.Windo w.ReEx.0 6.03
+DE.Door. ReEx.01. 01
+Uoriginal,i 0,60 1,20 1,60 3,50 3,00 W/(m2K)
+dinsulation,i 5,0 0,0 1,0 cm
+border type Unh Ext Cellar
+Radd,i 0,30 0,00 0,30 m2K/W
+Refurbishment Measure
+Code DE.Ceilin g.Insulati on12cm.0 1
+DE.Wall.I nsulation 12cm.01
+DE.Floor. Insulation 08cm.01
+DE.Windo w.2pLowEarg.01
+DE.Windo w.2pLowEarg.01
+Rmeasure,i 3,43 3,45 2,29 0,77 0,77 m2K/W
+Result
+type of refurbishment Add Add Add Replace Replace
+Rbefore,i 1,97 0,83 0,93 0,29 0,33 m2K/W
+Ractual,i 5,40 4,28 3,21 0,77 0,77 m2K/W
+Uactual,i 0,19 0,23 0,31 1,30 1,30 W/(m2K)
+thermal resistance before measures
+thermal resistance of refurbishment measure
+U-value original state
+included insulation thickness
+additional thermal resistance
+envelope area
+
+
+50 TABULA Calculation Method
+Energy Balance Calculation Building Performance
+Standard Reference Calculation - based on: EN ISO 13790 / seasonal method
+Building DE.N.MFH.05.Gen.ReEx.001 (1958...1968) reference area AC,ref 3129,1 m2
+Climate DE.N (Germany) (conditioned floor area)
+Uoriginal,i Uactual,i Aenv,i btr,i Htr,i W/(m2K) W/(m2K) m2 W/K Roof 1 x x = 0,0 0,00 Roof 2 0,60 0,19 x 971,1 x 1,00 = 180,0 4,5 0,06 Wall 1 1,20 0,23 x 2039,0 x 1,00 = 476,3 12,0 0,15 Wall 2 x x = 0,0 0,00
+Wall 3 x x = 0,0 0,00 Floor 1 1,60 0,31 x 971,1 x 0,50 = 151,2 3,8 0,05 Floor 2 x x = 0,0 0,00 Window 1 3,50 1,30 x 507,5 x 1,00 = 659,7 16,6 0,21 Window 2 x x = 0,0 0,00 Door 1 3,00 1,30 x 2,0 x 1,00 = 2,6 0,1 0,00
+∆Utb Σ Aenvelope,i Htr,tb thermal bridging: surcharge on the U-values 0,10 × 4490,7 × 1,00 = 449,1 11,3 0,14
+Heat transfer coefficient by transmission Htr sum 1919 48,4 0,61
+cp,air nair,use nair,infiltration AC,ref hroom
+Heat transfer coefficient Wh/(m3K) 1/h 1/h m3 m W/K
+by ventilation Hve 0,34 x ( 0,40 + 0,20 ) × 3129,1 × 2,50 = 1596 40,3 0,51
+θi θe dhs °C °C d/a Kd/a ( 20,0 – 4,4 ) × 222 = 3463
+Htr Hve Fred x 0,024 W/K W/K (htr= 0,61 W/(m2K)) kKh/a kWh/a
+Total heat transfer Qht ( 1919 + 1596 ) × 0,95 × 83,1 = 277530 88,7 1,12
+Window
+Orientation m2 kWh/(m2a) kWh/a
+1. Horizontal 0,80 × (1 - 0,30 ) × 0,90 × 0,60 × × 403 = 0,0 2. East 0,60 × (1 - 0,30 ) × 0,90 × 0,60 × 22,2 × 271 = 1367 0,4 3. South 0,60 × (1 - 0,30 ) × 0,90 × 0,60 × 243,2 × 392 = 21625 6,9 4. West 0,60 × (1 - 0,30 ) × 0,90 × 0,60 × 22,2 × 271 = 1367 0,4 5. North 0,60 × (1 - 0,30 ) × 0,90 × 0,60 × 219,8 × 160 = 7974 2,5
+Solar heat load during heating season Qsol sum 32334 10,3
+φi dhs AC,ref
+kh/d W/m2 d/a m2 kWh/a
+Internal heat sources Qint 0,024 × 3,00 × 222 × 3129,1 = 50015 16,0
+internal heat capacity per m2 AC,ref cm 45 Wh/(m2K)
+= 0,297 = 40 h
+parameter = 2,14 = 0,95
+kWh/a
+Energy need for heating QH,nd Qht – ηh,gn × (Qsol + Qint) = 199604 63,8
+Add
+Add
+Add
+Replace
+DE.Floor.Insulation08cm.01
+DE.Window.2p-LowE-arg.01
+DE.Ceiling.Insulation12cm.01
+DE.Wall.Insulation12cm.01
+Replace DE.Window.2p-LowE-arg.01
+solar global radiation Isol,i
+code construction element
+original U-value
+actual U-value
+area (basis: external dimensions)
+adjustment factor soil
+annual heat loss related to AC,Ref
+kWh/(m2a)
+accumulated differences between internal and external temperature
+reduction factors window area Awindow,i
+external shading Fsh
+frame area fraction FF
+non-perpendicular FW
+solar energy transmittance ggl,n
+Qsol+Qint QL
+γh,gn = ––––––
+heat balance ratio for the heating mode
+cm · AC,ref Htr + Hve
+τ = –––––––
+time constant of the building
+τ τH,0
+aH = aH,0 + ––– ηh,gn = ––––––
+1 – γaH
+1 – γaH+1
+gain utilisation factor for heating
+measure type
+applied refurbishment measure
+volume-specific heat capacity air
+air change rate by use by infiltration
+room height (standard value)
+internal temp. external temp. heating days
+internal heat sources heating days
+temperature reduction factor
+heat transfer coefficients related to AC,Ref
+W/(m2K)
+
+
+Appendix 51
+Energy Balance Calculation System Performance
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.002 conditioned floor area 3129,1 m2
+System DE.<Oil.B_C.MUH.01>.<Oil.B_C+Solar.MUH.01>.<-.Gen.01>.<Gen>
+Domestic Hot Water System
+code System DE.Oil.B_C+Solar.MUH.01
+energy need hot water qnd,w 15,0 thereof recoverable for space heating:
++ losses distrib. qd,w 6,4 qd,w,h 2,9
++ losses storage qs,w 1,0 qs,w,h 0,0
+qg,w,out = qnd,w + qd,w + qs,w 22,4 qw,h = qd,w,h + qs,w,h 2,9 kWh/(m2a) kWh/(m2a)
+code code αnd,w,i qg,w,out eg,w,i qdel,w,i eg,el,w,i qprod,el,w,i
+1 60% x x 1,18 = 15,9 : 0,00 = 0,0 2 40% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0
+kWh/(m2a) kWh/(m2a)
+code qdel,w,aux
+aux DE.C_Circ_Sol.MUH.1 1,3 kWh/(m2a)
+Heating System
+code System DE.Oil.B_C.MUH.01
+energy need space heating qnd,h 63,8 kWh/(m2a) ηh,gn
+– usable contribution of hot water system qw,h 2,7 kWh/(m2a) 95% x ηve,rec qht,ve
+– usable contribution of ventilation heat recovery qve,h,rec 0,0 kWh/(m2a) 95% x 0% x 40,3
++ qd,h 5,7 kWh/(m2a) kWh/(m2a)
++ losses storage qs,h 0,0 kWh/(m2a)
+qg,h,out = qnd,h - qw,h - qve,h,rec + qd,h + qs,h 66,7 kWh/(m2a)
+code code αnd,h,i qg,h,out eg,h,i qdel,h,i eg,el,h,i qprod,el,h,i
+1 100% x x 1,13 = 75,4 : 0,00 = 0,0 2 0% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0
+kWh/(m2a) kWh/(m2a)
+code qdel,h,aux
+aux DE.C.MUH.1 1,8
+code qdel,ve,aux
+aux DE.-.Gen.01 0,0 kWh/(m2a)
+22,4
+66,7
+DE.B_C.MUH.03
+DE.Solar.Gen.01
+DE.B_C.MUH.03
+Oil
+el
+el
+el
+Oil
+DE.C_Circ_Ext.MUH.3
+DE.S_C_Ext.MUH.02
+DE.C_Ext.MUH.04
+delivered energy
+expenditure factor
+heat generator output
+energyware for domestic hot water
+heat generator
+heat generator output
+auxiliary energy
+delivered energy
+expenditure factor
+heat generator
+electricity production
+expenditure factor electricity generation
+combined heat and power
+electricity production
+expenditure factor electricity generation
+combined heat and power energyware for space heating
+auxiliary energy
+ventilation system
+gain utilisation factor for heating
+heating system
+ventilation heat recovery
+losses distribution and heat emission
+
+
+52 TABULA Calculation Method
+Energy Balance Calculation Energy Carriers
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.002 conditioned floor area 3129,1 m2
+System DE.<Oil.B_C.MUH.01>.<Oil.B_C+Solar.MUH.01>.<-.Gen.01>.<Gen>
+Assessment of Energywares
+version of energy carrier specification Gen
+Standard Calculation
+qdel,i fp,total,i qp,total,i fp,nonren,i qp,nonren,i fCO2,i mCO2,i pi ci
+Heating (+ Ventilation) System Oil
+auxiliary energy
+electricity production / export Domestic Hot Water System Oil
+auxiliary energy
+electricity production / export
+kWh/(m2a)
+Summary qnd Σqdel ep,total qp,total ep,nonren qp,nonren fCO2,heat mCO2,i pheat c
+and Expenditure Factors = = = =
+heating (+ ventilation) system
+domestic hot water system
+total
+kWh/(m2a) kWh/(m2a) kWh/(m2a) kWh/(m2a) g/kWh kg/(m2a) Cent/kWh Euro/(m2a)
+Typical Values of the Measured Consumption - Empirical Calibration
+code DE.M.01
+application field central heating systems: fuels and district heating
+determination method experience values
+accuracy level C = estimated (e.g. on the basis of few example buildings)
+empirical relation current value 0 100 200 300 400 500 91,3
+adaptation factor 1,10 1,00 0,84 0,70 0,60 0,50 1 1,01
+Standard Calculation Typical Measured Consumption
+Summary (including subcategories) heating dhw sum heating dhw sum
+Gas qdel,Σgas
+Oil qdel,Σoil
+Coal qdel,Σcoal
+Bio qdel,Σbio
+El qdel,Σel
+DH qdel,Σdh
+Other qdel,Σother
+Auxiliary Electricity qdel,Σaux
+Produced / exported electricity qexp,Σel
+0,0
+75,4
+0,0
+0,0
+0,0
+0,0
+0,0
+0,0
+1,8
+0,0
+0,0 0,0 0,0
+0,0 0,0 0,0 0,0
+0,0 0,0
+0,0
+15,9 91,3 76,1 16,0 92,1
+0,0 0,0 0,0 0,0
+0,0 0,0
+0,0 0,0 0,0 0,0 0,0
+0,0 0,0 0,0
+0,0 0,0 0,0 0,0 0,0
+3,1
+0,0 0,0 0,0 0,0 0,0
+1,3 3,1 1,8 1,3
+75,4
+0,0
+0,0
+1,8
+0,0
+1,10 83,0 1,10
+0,00
+3,00 0,0 2,60
+3,00 5,4 2,60
+83,0 310 23,4 6,0
+0,00
+0,00 0,0 0,00 0,0
+0,0 0,00
+4,53
+0 0,0 0,0 0,00
+20,0
+0 0,0 0,0
+0,36
+0,0
+0,0 680 0,0 20,0 0,00
+4,7 680 1,2
+15,9 1,10 17,4 1,10 17,4 310 4,9 6,0 0,95
+0,0 0,00 0,0 0,00 0,0 0 0,0 0,0 0,00
+0,0 0,00 0,0 0,00 0 0,0 0,0
+1,3 3,00 3,9 2,60
+3,00 0,0 2,60
+0,00
+3,4 680 0,9 20,0 0,26
+0,0
+0,00
+77,2 1,39 88,4 1,37
+0,0 0,0 680 0,0 20,0
+8,1 1,21
+87,6 386 24,6 7,7
+109,7 1,38
+4,89
+17,2 1,42 21,3 1,39 20,8 387 5,8
+6,10
+63,8
+15,0
+78,8 94,4 1,39 108,5 386 30,4 7,7
+delivered energy
+total primary energy
+non-renewable primary energy
+carbon dioxide emissions
+energy costs
+delivered energy (without auxiliary electricity) according to standard calculation method
+The empirical calibration factor describes a typical ratio of the energy uses determined by measurements for a large number of buildings and by the TABULA method for the given value of the TABULA method.
+heat need
+= qdel,i · fp,total,i
+qp,total qnd
+= Σqp,total
+qp,nonren qnd
+= Σqp,nonren,l
+mCO2 qnd
+= ΣmCO2,i
+cl qnd
+= Σci
+(energywar e price)
+= qdel,i · fp,nonren,i
+= qdel,i · fCO2,i
+= qdel,i · pi
+
+
+Appendix 53
+Example Building – Refurbishment Package 2 / "Advanced" Measures
+Thermal Insulation Measures U-values
+Building code DE.N.MFH.05.Gen.ReEx.001
+Roof 1 Roof 2 Wall 1 Wall 2 Wall 3 Floor 1 Floor 2 Window 1 Window 2 Door 1
+Aenv,i 0 971 2039 0 0 971 0 507 0 2 m2
+Construction Element
+Code DE.Ceilin g.ReEx.0 6.01
+DE.Wall.R eEx.04.0 1
+DE.Floor. ReEx.05. 01
+DE.Windo w.ReEx.0 6.03
+DE.Door. ReEx.01. 01
+Uoriginal,i 0,60 1,20 1,60 3,50 3,00 W/(m2K)
+dinsulation,i 5,0 0,0 1,0 cm
+border type Unh Ext Cellar
+Radd,i 0,30 0,00 0,30 m2K/W
+Refurbishment Measure
+Code DE.Ceilin g.Insulati on30cm.0 4
+DE.Wall.I nsulation 24cm.02
+DE.Floor. Insulation 12cm.01
+DE.Windo w.3pInsul atedFram e.01
+DE.Windo w.3pInsul atedFram e.01
+Rmeasure,i 8,57 6,88 3,43 1,25 1,25 m2K/W
+Result
+type of refurbishment Add Add Add Replace Replace
+Rbefore,i 1,97 0,83 0,93 0,29 0,33 m2K/W
+Ractual,i 10,54 7,71 4,35 1,25 1,25 m2K/W
+Uactual,i 0,09 0,13 0,23 0,80 0,80 W/(m2K)
+thermal resistance before measures
+thermal resistance of refurbishment measure
+U-value original state
+included insulation thickness
+additional thermal resistance
+envelope area
+
+
+54 TABULA Calculation Method
+Energy Balance Calculation Building Performance
+Standard Reference Calculation - based on: EN ISO 13790 / seasonal method
+Building DE.N.MFH.05.Gen.ReEx.001 (1958...1968) reference area AC,ref 3129,1 m2
+Climate DE.N (Germany) (conditioned floor area)
+Uoriginal,i Uactual,i Aenv,i btr,i Htr,i W/(m2K) W/(m2K) m2 W/K Roof 1 x x = 0,0 0,00 Roof 2 0,60 0,09 x 971,1 x 1,00 = 92,2 2,3 0,03 Wall 1 1,20 0,13 x 2039,0 x 1,00 = 264,5 6,7 0,08 Wall 2 x x = 0,0 0,00
+Wall 3 x x = 0,0 0,00 Floor 1 1,60 0,23 x 971,1 x 0,50 = 111,5 2,8 0,04 Floor 2 x x = 0,0 0,00 Window 1 3,50 0,80 x 507,5 x 1,00 = 406,0 10,2 0,13 Window 2 x x = 0,0 0,00 Door 1 3,00 0,80 x 2,0 x 1,00 = 1,6 0,0 0,00
+∆Utb Σ Aenvelope,i Htr,tb thermal bridging: surcharge on the U-values 0,05 × 4490,7 × 1,00 = 224,5 5,7 0,07
+Heat transfer coefficient by transmission Htr sum 1100 27,8 0,35
+cp,air nair,use nair,infiltration AC,ref hroom
+Heat transfer coefficient Wh/(m3K) 1/h 1/h m3 m W/K
+by ventilation Hve 0,34 x ( 0,40 + 0,10 ) × 3129,1 × 2,50 = 1330 33,6 0,43
+θi θe dhs °C °C d/a Kd/a ( 20,0 – 4,4 ) × 222 = 3463
+Htr Hve Fred x 0,024 W/K W/K (htr= 0,35 W/(m2K)) kKh/a kWh/a
+Total heat transfer Qht ( 1100 + 1330 ) × 0,95 × 83,1 = 191887 61,3 0,78
+Window
+Orientation m2 kWh/(m2a) kWh/a
+1. Horizontal 0,80 × (1 - 0,30 ) × 0,90 × 0,50 × × 403 = 0,0 2. East 0,60 × (1 - 0,30 ) × 0,90 × 0,50 × 22,2 × 271 = 1139 0,4 3. South 0,60 × (1 - 0,30 ) × 0,90 × 0,50 × 243,2 × 392 = 18021 5,8 4. West 0,60 × (1 - 0,30 ) × 0,90 × 0,50 × 22,2 × 271 = 1139 0,4 5. North 0,60 × (1 - 0,30 ) × 0,90 × 0,50 × 219,8 × 160 = 6645 2,1
+Solar heat load during heating season Qsol sum 26945 8,6
+φi dhs AC,ref
+kh/d W/m2 d/a m2 kWh/a
+Internal heat sources Qint 0,024 × 3,00 × 222 × 3129,1 = 50015 16,0
+internal heat capacity per m2 AC,ref cm 45 Wh/(m2K)
+= 0,401 = 58 h
+parameter = 2,73 = 0,95
+kWh/a
+Energy need for heating QH,nd Qht – ηh,gn × (Qsol + Qint) = 118857 38,0
+Add
+Add
+Add
+Replace
+DE.Floor.Insulation12cm.01
+DE.Window.3pInsulatedFrame.01
+DE.Ceiling.Insulation30cm.04
+DE.Wall.Insulation24cm.02
+Replace DE.Window.3pInsulatedFrame.01
+solar global radiation Isol,i
+code construction element
+original U-value
+actual U-value
+area (basis: external dimensions)
+adjustment factor soil
+annual heat loss related to AC,Ref
+kWh/(m2a)
+accumulated differences between internal and external temperature
+reduction factors window area Awindow,i
+external shading Fsh
+frame area fraction FF
+non-perpendicular FW
+solar energy transmittance ggl,n
+Qsol+Qint QL
+γh,gn = ––––––
+heat balance ratio for the heating mode
+cm · AC,ref Htr + Hve
+τ = –––––––
+time constant of the building
+τ τH,0
+aH = aH,0 + ––– ηh,gn = ––––––
+1 – γaH
+1 – γaH+1
+gain utilisation factor for heating
+measure type
+applied refurbishment measure
+volume-specific heat capacity air
+air change rate by use by infiltration
+room height (standard value)
+internal temp. external temp. heating days
+internal heat sources heating days
+temperature reduction factor
+heat transfer coefficients related to AC,Ref
+W/(m2K)
+
+
+Appendix 55
+Energy Balance Calculation System Performance
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.003 conditioned floor area 3129,1 m2
+System DE.<Bio_WP.B_WP.MUH.01>.<Bio_WP.B_WP+Solar.MUH.01>.<Bal_Rec.Gen.02>.<Gen>
+Domestic Hot Water System
+code System DE.Bio_WP.B_WP+Solar.MUH.01
+energy need hot water qnd,w 15,0 thereof recoverable for space heating:
++ losses distrib. qd,w 6,4 qd,w,h 2,9
++ losses storage qs,w 1,0 qs,w,h 0,0
+qg,w,out = qnd,w + qd,w + qs,w 22,4 qw,h = qd,w,h + qs,w,h 2,9 kWh/(m2a) kWh/(m2a)
+code code αnd,w,i qg,w,out eg,w,i qdel,w,i eg,el,w,i qprod,el,w,i
+1 60% x x 1,32 = 17,7 : 0,00 = 0,0 2 40% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0
+kWh/(m2a) kWh/(m2a)
+code qdel,w,aux
+aux DE.C_Circ_Sol.MUH.1 1,3 kWh/(m2a)
+Heating System
+code System DE.Bio_WP.B_WP.MUH.01
+energy need space heating qnd,h 38,0 kWh/(m2a) ηh,gn
+– usable contribution of hot water system qw,h 2,8 kWh/(m2a) 95% x ηve,rec qht,ve
+– usable contribution of ventilation heat recovery qve,h,rec 25,5 kWh/(m2a) 95% x 80% x 33,6
++ qd,h 5,7 kWh/(m2a) kWh/(m2a)
++ losses storage qs,h 7,2 kWh/(m2a)
+qg,h,out = qnd,h - qw,h - qve,h,rec + qd,h + qs,h 22,7 kWh/(m2a)
+code code αnd,h,i qg,h,out eg,h,i qdel,h,i eg,el,h,i qprod,el,h,i
+1 100% x x 1,25 = 28,3 : 0,00 = 0,0 2 0% x x 0,00 = 0,0 : 0,00 = 0,0 3 0% x x 0,00 = 0,0 : 0,00 = 0,0
+kWh/(m2a) kWh/(m2a)
+code qdel,h,aux
+aux DE.C.SUH.1 6,1
+code qdel,ve,aux
+aux DE.Bal_Rec.Gen.02 2,6 kWh/(m2a)
+22,4
+22,7
+DE.B_WP.MUH.03
+DE.Solar.Gen.01
+DE.B_WP.MUH.03
+Bio_WP
+el
+el
+el
+Bio_WP
+DE.C_Circ_Ext.MUH.3
+DE.S_C_Ext.MUH.02
+DE.C_Ext.MUH.04
+DE.BS_Wood.Gen.02
+delivered energy
+expenditure factor
+heat generator output
+energyware for domestic hot water
+heat generator
+heat generator output
+auxiliary energy
+delivered energy
+expenditure factor
+heat generator
+electricity production
+expenditure factor electricity generation
+combined heat and power
+electricity production
+expenditure factor electricity generation
+combined heat and power energyware for space heating
+auxiliary energy
+ventilation system
+gain utilisation factor for heating
+heating system
+ventilation heat recovery
+losses distribution and heat emission
+
+
+56 TABULA Calculation Method
+Energy Balance Calculation Energy Carriers
+code A_C_ref Building DE.N.MFH.05.Gen.ReEx.001.003 conditioned floor area 3129,1 m2
+System DE.<Bio_WP.B_WP.MUH.01>.<Bio_WP.B_WP+Solar.MUH.01>.<Bal_Rec.Gen.02>.<Gen>
+Assessment of Energywares
+version of energy carrier specification Gen
+Standard Calculation
+qdel,i fp,total,i qp,total,i fp,nonren,i qp,nonren,i fCO2,i mCO2,i pi ci
+Heating (+ Ventilation) System Bio_WP
+auxiliary energy
+electricity production / export
+Domestic Hot Water System Bio_WP
+auxiliary energy
+electricity production / export
+kWh/(m2a)
+Summary qnd Σqdel ep,total qp,total ep,nonren qp,nonren fCO2,heat mCO2,i pheat c
+and Expenditure Factors = = = =
+heating (+ ventilation) system
+domestic hot water system
+total
+kWh/(m2a) kWh/(m2a) kWh/(m2a) kWh/(m2a) g/kWh kg/(m2a) Cent/kWh Euro/(m2a)
+Typical Values of the Measured Consumption - Empirical Calibration
+code DE.M.01
+application field central heating systems: fuels and district heating
+determination method experience values
+accuracy level C = estimated (e.g. on the basis of few example buildings)
+empirical relation current value 0 100 200 300 400 500 46,1
+adaptation factor 1,10 1,00 0,84 0,70 0,60 0,50 1 1,05
+Standard Calculation Typical Measured Consumption
+Summary (including subcategories) heating dhw sum heating dhw sum
+Gas qdel,Σgas
+Oil qdel,Σoil
+Coal qdel,Σcoal
+Bio qdel,Σbio
+El qdel,Σel
+DH qdel,Σdh
+Other qdel,Σother
+Auxiliary Electricity qdel,Σaux
+Produced / exported electricity qexp,Σel
+0,0
+0,0
+0,0
+28,3
+0,0
+0,0
+0,0
+0,0
+8,7
+0,0
+0,0 0,0 0,0
+0,0 0,0 0,0 0,0
+0,0 0,0
+0,0
+0,0 0,0 0,0 0,0 0,0
+0,0 0,0 0,0 0,0
+0,0 0,0
+17,7 46,1 29,8 18,7 48,5
+0,0 0,0 0,0
+0,0 0,0 0,0 0,0 0,0
+10,5
+0,0 0,0 0,0 0,0 0,0
+1,3 10,0 9,2 1,4
+28,3
+0,0
+0,0
+8,7
+0,0
+1,20 34,0 0,20
+0,00
+3,00 0,0 2,60
+3,00 26,1 2,60
+5,7 40 1,1 5,0
+0,00
+0,00 0,0 0,00 0,0
+0,0 0,00
+1,42
+0 0,0 0,0 0,00
+20,0
+0 0,0 0,0
+1,74
+0,0
+0,0 680 0,0 20,0 0,00
+22,6 680 5,9
+17,7 1,20 21,3 0,20 3,5 40 0,7 5,0 0,89
+0,0 0,00 0,0 0,00 0,0 0 0,0 0,0 0,00
+0,0 0,00 0,0 0,00 0 0,0 0,0
+1,3 3,00 3,9 2,60
+3,00 0,0 2,60
+0,00
+3,4 680 0,9 20,0 0,26
+0,0
+0,00
+37,0 1,58 60,1 0,74
+0,0 0,0 680 0,0 20,0
+7,6 1,15
+28,3 186 7,0 8,3
+85,3 0,66
+3,16
+19,0 1,68 25,2 0,46 6,9 106 1,6
+4,30
+38,0
+15,0
+53,0 56,1 1,61 35,2 163 8,6 8,1
+delivered energy
+total primary energy
+non-renewable primary energy
+carbon dioxide emissions
+energy costs
+delivered energy (without auxiliary electricity) according to standard calculation method
+The empirical calibration factor describes a typical ratio of the energy uses determined by measurements for a large number of buildings and by the TABULA method for the given value of the TABULA method.
+heat need
+= qdel,i · fp,total,i
+qp,total qnd
+= Σqp,total
+qp,nonren qnd
+= Σqp,nonren,l
+mCO2 qnd
+= ΣmCO2,i
+cl qnd
+= Σci
+(energywar e price)
+= qdel,i · fp,nonren,i
+= qdel,i · fCO2,i
+= qdel,i · pi

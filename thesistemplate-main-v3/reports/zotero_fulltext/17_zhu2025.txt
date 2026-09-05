@@ -1,0 +1,610 @@
+InternVL3: Exploring Advanced Training and Test-Time Recipes for Open-Source Multimodal Models
+Jinguo Zhu1∗, Weiyun Wang5,1∗†, Zhe Chen4,1∗†, Zhaoyang Liu1∗†, Shenglong Ye1∗, Lixin Gu1∗, Hao Tian2∗, Yuchen Duan6,1∗†, Weijie Su1, Jie Shao4,1†, Zhangwei Gao7,1†, Erfei Cui7,1†, Xuehui Wang7,1†, Yue Cao4,1†, Yangzhou Liu4,1†, Xingguang Wei1†, Hongjie Zhang1, Haomin Wang7,1†, Weiye Xu1†, Hao Li1†, Jiahao Wang1†, Nianchen Deng1, Songze Li1, Yinan He1, Tan Jiang2, Jiapeng Luo2, Yi Wang1, Conghui He1, Botian Shi1, Xingcheng Zhang1, Wenqi Shao1, Junjun He1, Yingtong Xiong1, Wenwen Qu1, Peng Sun1, Penglong Jiao1, Han Lv1, Lijun Wu1, Kaipeng Zhang1, Huipeng Deng1, Jiaye Ge1, Kai Chen1, Limin Wang4,1, Min Dou1, Lewei Lu2, Xizhou Zhu3,1, Tong Lu4, Dahua Lin6,1, Yu Qiao1, Jifeng Dai3,1B, Wenhai Wang6,1B
+1Shanghai AI Laboratory 2SenseTime Research 3Tsinghua University 4Nanjing University 5Fudan University 6The Chinese University of Hong Kong 7Shanghai Jiao Tong University
+Code: https://github.com/OpenGVLab/InternVL Model: https://huggingface.co/OpenGVLab/InternVL3-78B Data: https://huggingface.co/datasets/OpenGVLab/InternVL-Data
+Abstract
+We introduce InternVL3, a significant advancement in the InternVL series featuring a native multimodal pre-training paradigm. Rather than adapting a text-only large language model (LLM) into a multimodal large language model (MLLM) that supports visual inputs, InternVL3 jointly acquires multimodal and linguistic capabilities from both diverse multimodal data and pure-text corpora during a single pre-training stage. This unified training paradigm effectively addresses the complexities and alignment challenges commonly encountered in conventional post-hoc training pipelines for MLLMs. To further improve performance and scalability, InternVL3 incorporates variable visual position encoding (V2PE) to support extended multimodal contexts, employs advanced post-training techniques such as supervised fine-tuning (SFT) and mixed preference optimization (MPO), and adopts test-time scaling strategies alongside an optimized training infrastructure. Extensive empirical evaluations demonstrate that InternVL3 delivers superior performance across a wide range of multi-modal tasks. In particular, InternVL3-78B achieves a score of 72.2 on the MMMU benchmark, setting a new state-of-the-art among open-source MLLMs. Its capabilities remain highly competitive with leading proprietary models, including ChatGPT-4o, Claude 3.5 Sonnet, and Gemini 2.5 Pro, while also maintaining strong pure-language proficiency. In pursuit of open-science principles, we will publicly release both the training data and model weights to foster further research and development in next-generation MLLMs.
+1 Introduction
+Multimodal large language models (MLLMs) [32, 66, 121, 21, 19, 123, 68, 114, 97, 136, 71, 31, 85, 117, 18, 89, 105, 69] have recently achieved or even surpassed human-level performance in a broad spectrum of tasks, underscoring their potential as a significant stride toward artificial general intelligence (AGI). Yet, the majority of leading MLLMs—both open-source and proprietary—are adapted from text-only large language models through sophisticated multi-stage pipelines [21, 19, 18, 5, 121, 7]. These “post-hoc” approaches are built upon the
+* equal contribution; † interns at OpenGVLab, Shanghai AI Laboratory; B corresponding authors (daijifeng@tsinghua.edu.cn, wangwenhai@pjlab.org.cn).
+arXiv:2504.10479v3 [cs.CV] 19 Apr 2025
+
+
+InternVL2.5 78B
+InternVL3 8B
+InternVL3 78B
+Qwen2.5-VL 72B
+Other Open-Source MLLMs
+Claude-3.5 Sonnet
+ChatGPT4o-latest
+Gemini-2.5 Pro
+Model Weights ✓ ✓ ✓ ✓ ✓ ✗ ✗ ✗
+Training Data ✗ ✓ ✓ ✗ - ✗ ✗ ✗
+MMMU
+Multi-discipline 70.1% 65.6% 72.2% (2.1 ↑) 70.2% 64.5% 66.4% 72.9% 74.7%
+MathVista
+Math 72.3% 75.2% 79.6% (7.3 ↑) 74.8% 70.5% 65.1% 71.6% 80.9%
+AI2D
+Diagrams 89.1% 85.2% 89.7% (0.6 ↑) 88.7% 88.1% 81.2% 86.3% 89.5%
+ChartQA
+Charts 88.3% 86.6% 89.7% (1.4 ↑) 89.5% 88.3% 90.8% - 
+DocVQA
+Documents 95.1% 92.7% 95.4% (0.3 ↑) 96.4% 96.5% 95.2% - 
+InfographicVQA
+infographics 84.1% 76.8% 85.2% (1.1 ↑) 87.3% 84.7% 74.3% - 
+HallusionBench
+Hallucination 57.4% 49.9% 59.1% (1.7 ↑) 55.2% 58.1% 55.5% 57.0% 64.1%
+OCRBench
+OCR 854 880 906 (52↑) 885 877 - 894 862
+LongVideoBench
+Video 63.6% 58.8% 65.7%(2.1↑) 60.7% 61.3% - - 
+Figure 1: Multimodal performance of the InternVL series and other advanced MLLMs. The InternVL series has consistently exhibited progressive enhancements in multimodal capabilities. The newly released InternVL3 significantly outperforms existing open-source MLLMs. Moreover, even in comparison with state-ofthe-art closed-source commercial models, InternVL3 continues to demonstrate highly competitive performance.
+original text-based pre-training processes, thereby introducing alignment challenges when integrating additional modalities such as vision. In practice, bridging modality gaps often necessitates incorporating auxiliary data from specialized domains (e.g., optical character recognition scenarios) and intricate parameter-freezing or multi-stage fine-tuning schedules to ensure that core linguistic capacities remain uncompromised [73, 7, 5, 18]. Such resource-intensive strategies highlight the need for more efficient multimodal training paradigms.
+In this report, we introduce InternVL3, the latest milestone in the InternVL series [21, 20, 18], which is distinguished by its native multimodal pre-training strategy. Rather than first pre-training a text-only large language model and subsequently retrofitting it via multimodal alignment to support visual processing, InternVL3 learns multimodal capabilities from the pre-training stage by jointly exposed to both text-only corpora and diverse multimodal datasets. This unified approach enables the model to simultaneously acquire linguistic and multimodal competencies in a more efficient and integrated manner.
+InternVL3 further excels through multiple innovations that reinforce both performance and scalability. We employ a variable visual position encoding (V2PE) mechanism [42] to accommodate longer multimodal contexts. Furthermore, advanced post-training strategies—comprising supervised fine-tuning (SFT) and mixed preference optimization (MPO) [124]—together with test-time scaling strategies [125] and an optimized training infrastructure [15], significantly enhance InternVL3’s efficiency and performance.
+Comprehensive empirical evaluations demonstrate that InternVL3 surpasses its predecessors (e.g., InternVL2.5 [18]) across a wide range of tasks, including multi-discipline reasoning, document understanding, multi-image / video understanding, real-world comprehension, multimodal hallucination detection, visual grounding, and multilingual capabilities. Notably, by incorporating expanded domain-specific datasets, InternVL3 also exhibits marked improvements in tool usage, GUI agents, industrial image analysis, and spatial reasoning, thus substantially extending the multimodal scenarios addressed by the InternVL series. It proves highly competitive with other open-source MLLMs such as Qwen2.5-VL [7] and remains on par with closed-source models (e.g., ChatGPT-4o [98], Claude-3.5 Sonnet [3], Gemini-2.5 Pro [117]). This versatility is evidenced by its 72.2-point performance on the MMMU benchmark [141], setting a new standard among open-source MLLMs. Additionally, InternVL3 demonstrates language capabilities comparable to other advanced LLMs of similar scale.
+2
+
+
+InternVL2-Llama3-76B
+InternVL2-40B 26B
+8B
+4B
+Qwen2-VL-72B
+2B
+1B
+InternVL2.5-78B 38B
+26B
+8B
+4B
+2B
+1B
+Qwen2-VL-7B LLaVA-OV-72B
+LLaVA-OV-7B
+Ovis1.6-27B
+2B
+CogVLM2-19B-Chat
+NVLM-D-72B
+LLaVA-Next-Yi-34B
+Yi-VL-34B
+Yi-VL-6B
+VILA1.5-40B
+VILA1.5-13B
+VILA1.5-8B
+VILA1.5-3B
+Cambrian-13B
+8B
+34B
+LLaVA-Next-Vicuna-13B 7B
+0.5B
+Llama-3.2-90B-Vision
+11B
+InternVL-Chat-V1.5
+4B
+2B
+Molmo-72B
+7B
+MiniCPM-V-2.6
+InternVL3-78B
+InternVL3-8B
+2B
+1B
+Qwen2.5-VL-72B
+8B
+4B
+InternVL3-14B
+38B
+Figure 2: Performance of various MLLMs on the OpenCompass multimodal academic leaderboard. The enhanced InternVL series—InternVL3—demonstrates outstanding multimodal capabilities, significantly outperforming both the Qwen2.5-VL series and closed-source models such as Step-1o, GLM-4v-Plus, and GPT-4o. Remarkably, InternVL3-78B also remains highly competitive with the state-of-the-art Gemini-2.5-Pro.
+To foster further advancements within the open-source community, we will release the training data1 and model weights alongside this work, thereby ensuring transparency and reproducibility for the continued development of next-generation MLLMs.
+2 InternVL3
+Building upon the prior InternVL series [21, 19, 18], we propose InternVL3, a new generation within the InternVL model family. InternVL3 is specifically designed to streamline the training pipeline while significantly enhancing multimodal capabilities. In this section, we first delineate the core components of InternVL3, including its model architecture, training procedures, test-time scaling strategies, and infrastructure-level optimizations.
+2.1 Model Architecture
+The architecture of InternVL3 follows the same general framework as its predecessors, adhering to the “ViTMLP-LLM” paradigm [66, 18, 41, 20]. Detailed architectural specifications are summarized in Table 1.
+Although the native pre-training paradigm discussed later could enable training MLLMs from scratch, we choose to initialize the ViT and LLM components with pre-trained model weights to reduce computational costs. The vision encoder is available in two configurations: InternViT-300M and InternViT-6B. For the language model, we leverage pre-trained large language models (LLMs), specifically the Qwen2.5 series and InternLM3-8B. Importantly, our LLM components are initialized solely from pre-trained base models, without employing instruction-tuned variants. The multilayer perceptron (MLP) utilized in the model is a two-layer network with random initialization. In line with the approach taken in InternVL2.5, InternVL3 incorporates a pixel unshuffle operation to enhance scalability for processing high-resolution images. This operation reduces the visual token count to one-quarter of its original value, representing each 448×448 image tile with 256 visual tokens.
+Variable Visual Position Encoding. InternVL3 also integrates the Variable Visual Position Encoding (V2PE) [42], which utilizes smaller, more flexible position increments for visual tokens. This modifica
+1The open-source data are being organized, and a comprehensive list will be included in a future revision of this report.
+3
+
+
+Model Name #Param Vision Encoder Language Model OpenCompass Academic InternVL3-1B 0.9B InternViT-300M-448px-V2.5 Qwen2.5-0.5B 57.4 InternVL3-2B 1.9B InternViT-300M-448px-V2.5 Qwen2.5-1.5B 63.9 InternVL3-8B 8.1B InternViT-300M-448px-V2.5 Qwen2.5-7B 73.3 InternVL3-9B 9.2B InternViT-300M-448px-V2.5 InternLM3-8B 72.4 InternVL3-14B 15.1B InternViT-300M-448px-V2.5 Qwen2.5-14B 75.5 InternVL3-38B 38.4B InternViT-6B-448px-V2.5 Qwen2.5-32B 77.3 InternVL3-78B 78.4B InternViT-6B-448px-V2.5 Qwen2.5-72B 79.5
+Table 1: Pre-trained models used in the InternVL3 series. The OpenCompass scores for the InternVL3 series were obtained through our local testing.
+tion facilitates the handling of longer multimodal contexts without excessively extending the position window. Specifically, each training sample for the MLLM is represented as:
+x = x1, x2, . . . , xL , (1)
+where each token xi can be a textual token embedding, a visual embedding, or another modality-specific representation (e.g., video patch embeddings). The position index pi for any token xi can be computed sequentially as follows:
+pi = 0, if i = 1,
+fpos(pi−1, xi), for i = 2, 3, . . . , N. (2)
+In contrast to traditional MLLMs, where position indices increment uniformly by 1 for each token, irrespective of modality, V2PE employs a modality-specific recursive function for position index computation. This results in distinct position index assignments for textual and visual tokens:
+pi = pi−1 + 1, if xi is a textual token,
+δ, if xi is a visual token, (3)
+where δ is a smaller increment (δ < 1), reducing the rate at which position indices increase for visual tokens. The standard increment of 1 is retained for textual tokens to preserve their positional distinctions. In line with the original V2PE design, we maintain that δ remains constant within a single image to preserve the relative positional relationships. During training, δ is randomly chosen for each image from a predefined set of fractional values:
+δ ∈ ∆ = 1, 1
+2, 1
+4, 1
+8, 1
+16 , 1
+32 , 1
+64 , 1
+128 , 1
+256 . (4)
+During inference, δ can be flexibly selected based on the input sequence length, enabling a balance between task performance and ensuring that position indices remain within the model’s valid context range. Notably, when δ = 1, V2PE reverts to the conventional positional encoding used in InternVL2.5.
+2.2 Native Multimodal Pre-Training
+We propose a native multimodal pre-training approach that consolidates language pre-training and multi-modal alignment training into a single pre-training stage. Unlike conventional paradigms—where a language-only large model is first trained (typically with language pre-training followed by language post-training) and subsequently adapted to accommodate additional modalities—our method performs integrated optimization by interleaving multimodal data (e.g., image–text, video–text, or interleaved image–text sequences) with large-scale textual corpora during the pre-training process. This unified training scheme enables the pre-trained model to learn both linguistic and multimodal capabilities simultaneously, ultimately enhancing its capability to handle vision-language tasks without introducing additional bridging modules or subsequent inter-model alignment procedures.
+Multimodal Autoregressive Formulation. Let M denote a Transformer-based model parameterized by θ that can process text, image, and video simultaneously. Specifically, for an arbitrary training sample x = x1, x2, . . . , xL with the token length of L, we adopt the standard left-to-right autoregressive objective:
+Lfull(θ) = −
+L
+X
+i=2
+wi · log pθ xi x1, . . . , xi−1 , (5)
+4
+
+
+where wi denotes the loss weight of token i. Although this formulation naturally propagates gradients through tokens of all modalities, we restrict the loss computation exclusively to text tokens, resulting in:
+Ltext-only(θ) = −
+L
+X
+i=2
+xi ∈ Text
+wi · log pθ xi x1, . . . , xi−1 . (6)
+Under this selective objective, visual tokens serve as conditioning context for text prediction and are not directly predicted. Consequently, the model learns to embed multimodal information in a manner that is beneficial for downstream language decoding tasks. Notably, regarding the design choice of the token weight wi, as discussed in InternVL2.5 [18], the widely used token averaging and sample averaging strategies can lead to gradients biased toward longer and shorter responses, respectively. To mitigate this issue, we adopt square averaging, which is defined as:
+wi =
+
+
+
+1
+l0 , for token averaging
+1
+l0.5 , for square averaging
+1
+l1 , for sample averaging,
+(7)
+where l denotes the number of tokens in the training sample on which the loss needs to be calculated.
+Joint Parameter Optimization. Unlike the conventional “language-only training followed by multimodal adaptation” paradigm, our method updates all model parameters jointly during multimodal pre-training. Specifically, let
+θ∗ = arg min
+θ
+Ex ∈ Dmulti Ltext-only(θ) , (8)
+where Dmulti is the union of large-scale text-only and multimodal corpora (e.g., image–text or video–text pairs). We thus optimize a single model to handle these combined data sources. This multi-task joint optimization ensures that text representations and visual features are learned in concert, reinforcing alignment across modalities.
+Moreover, this integrated optimization departs from conventional “language-only training followed by multimodal adaptation” pipelines, which often freeze or partially fine-tune certain layers in the LLM component or even in the ViT encoder when adapting to MLLM. In contrast, our method trains every layer jointly, allowing all parameters to be jointly optimized on large-scale multimodal corpora and ensuring that both linguistic and visual features evolve synchronously. As a result, the final parameters are primed for high performance on both pure language and multimodal tasks, without additional tuning steps.
+Data. The pre-training data utilized in InternVL3 is broadly classified into two categories: multimodal data and pure language data. The multimodal dataset comprises a synthesis of pre-existing datasets alongside newly acquired real-world data. Specifically, we leverage the pre-training corpus from InternVL2.5, which covers a diverse range of domains such as image captioning, general question answering, mathematics, charts, optical character recognition (OCR), knowledge grounding, document understanding, multi-turn dialogue, and medical data. Although the overall data scale was not increased, the utility of this dataset was significantly improved by updating not only to the MLP module weights but also to those associated with the ViT and LLM components. In addition, to enhance the model’s ability to generalize in real-world applications, additional data is incorporated from tasks related to graphical user interfaces (GUI), tool usage, 3D scene understanding, and video comprehension.
+To compensate for the relatively short and less diverse textual content typically found in multimodal datasets, we integrate pure language data into the pre-training process. This helps preserve and amplify the model’s capabilities in language understanding and generation. The language corpus is primarily constructed on the pre-training data from InternLM2.5 and is further augmented with various open-source text datasets [8, 77, 79]. This enhancement aims to improve the model’s performance on knowledge-intensive tasks, as well as its proficiency in mathematical and reasoning tasks.
+Given the complexity of balancing these heterogeneous data sources, determining an appropriate sampling strategy is non-trivial. In InternVL3, we adopt a two-stage strategy to establish the optimal sampling ratio between multimodal and language data. Initially, we train separate models on the multimodal and language datasets and evaluate their performance on corresponding benchmarks, allowing us to identify optimal sampling ratios within each modality. Then, under a fixed total training budget, we combine the two modalities and determine their relative sampling ratio. Empirical studies show that a 1:3 ratio of language to multimodal data
+5
+
+
+yields the best overall performance across both unimodal and multimodal benchmarks. Under this configuration, the total number of training tokens is approximately 200 billion, comprising 50 billion from language data and 150 billion from multimodal data.
+2.3 Post-Training
+After the Native Multimodal Pre-Training, we apply a two-stage post-training strategy to further enhance the multimodal conversation and reasoning abilities of our models. This strategy consists of Supervised Fine-Tuning (SFT) and Mixed Preference Optimization (MPO). In the SFT phase, the model is trained to imitate the highquality responses under positive supervision signals. In the subsequent MPO phase, we introduce additional supervision from both positive and negative samples, thereby further improving its overall abilities.
+Supervised Fine-Tuning. In this phase, the techniques of random JPEG compression, square loss re-weighting, and multimodal data packing proposed in InternVL2.5 [18] are also employed in the InternVL3 series. The main advancement of the SFT phase in InternVL3 compared to InternVL2.5 lies in the use of higher-quality and more diverse training data. Specifically, we further extend training samples for tool usage, 3D scene understanding, GUI operations, long context tasks, video understanding, scientific diagrams, creative writing, and multimodal reasoning.
+Mixed Preference Optimization. During Pre-training and SFT, the model is trained to predict the next token conditioned on previous ground-truth tokens. However, during inference, the model predicts each token based on its own prior outputs. This discrepancy between ground-truth tokens and model-predicted tokens introduces a distribution shift, which can impair the model’s Chain-of-Thought (CoT) reasoning capabilities. To mitigate this issue, we employ Mixed Preference Optimization (MPO) [124], which introduces additional supervision from both positive and negative samples to align the model response distribution with the ground-truth distribution, thereby improving reasoning performance. Specifically, the training objective of MPO is a combination of preference loss Lp, quality loss Lq, and generation loss Lg, which can be formulated as follows:
+L = wpLp + wqLq + wgLg, (9)
+where w∗ represents the weight assigned to each loss component. Specifically, the DPO loss [101] serves as the preference loss to enable the model to learn the relative preference between chosen and rejected responses:
+Lp = − log σ β log πθ (yc | x)
+π0 (yc | x) − β log πθ (yr | x)
+π0 (yr | x) , (10)
+where β is the KL penalty coefficient, and x, yc, and yr are user query, chosen response, and rejected response, respectively. The policy model πθ is initialized from model π0. After that, the BCO loss [53] is employed as the quality loss, which helps the model to understand the absolute quality of individual responses:
+Lq = L+
+q + L−
+q , (11)
+where Lq+ and Lq− represent the loss for chosen and rejected responses, respectively. They are calculated independently, requiring the model to differentiate the absolute quality of individual responses. The loss terms are given by:
+L+
+q = − log σ β log πθ (yc | x)
+π0 (yc | x) − δ , (12)
+L−
+q = − log σ − β log πθ (yr | x)
+π0 (yr | x) − δ , (13)
+where δ represents the reward shift, calculated as the moving average of previous rewards to stabilize training. Finally, the LM loss is used as the generation loss to help the model learn the generation process of preferred responses. The loss function is defined in Equation 6.
+Data. For SFT data, we construct the training corpora based on those used in InternVL2.5 [18] while introducing additional tool usage, 3D scene understanding, GUI operations, scientific diagrams, creative writing, and multimodal reasoning samples. As a result, the number of training samples grows from 16.3M in InternVL2.5 to 21.7M in InternVL3. For MPO data, we construct preference pairs based on the data pipeline and samples proposed in MMPR v1.2 [124], which cover a wide range of domains, including general visual question answering (VQA) [43, 50, 90, 83, 127, 126], science [57, 16, 82], chart [91, 54, 11], mathematics [72, 104, 10, 81, 55, 40, 147, 106], OCR [92, 107, 9, 49, 96], and document [24]. We use the SFT versions of InternVL3-8B, 38B, and 78B to generate rollouts. During the MPO phase, all models are trained on the same dataset, which comprises about 300K samples.
+6
+
+
+2.4 Test-Time Scaling
+Test-Time Scaling has been shown to be an effective method to enhance the reasoning abilities of LLMs and MLLMs [108, 94, 87, 70, 120, 36, 152, 125]. In this work, we use the Best-of-N evaluation strategy and employ VisualPRM-8B [125] as the critic model to select the best response for reasoning and mathematics evaluation.
+Visual Process Reward Model. VisualPRM first assigns a quality score to each step of the given solution and then averages these scores to obtain the overall score for this solution. This process is formulated as a multi-turn chat task so that we can effectively leverage the generation ability of MLLMs. The image I, question q, and the first step s0 of the step-by-step solution s = {s0, s1, · · · , sn} ∈ S to this question are included in the first turn and a new step is presented in each subsequent turn. During the training stage, the model is required to predict the correctness of the given step in each turn as follows:
+ci ∼ M (yi | I, q, s≤i), (14)
+where ci ∈ {+, −} denotes the correctness of i-th step. During the inference stage, the score for each step is defined as the probability of generating “+”.
+Data. VisualPRM400K [125] is used to train VisualPRM, which is constructed based on multimodal questions collected from MMPR v1.2 [124]. Following the data pipeline in VisualPRM400K, we further expand VisualPRM400K by sampling rollouts from the 8B and 38B variants of InternVL3.
+2.5 Infrastructure
+To facilitate model training, we extend the InternEVO framework [15]—originally designed to optimize the Zero Redundancy Optimizer (ZeRO) for large-scale LLM training—to support the training of our InternVL models. This extension enables efficient scaling to hundreds of billions of parameters across thousands of GPUs. The enhanced framework introduces flexible and decoupled sharding strategies for the ViT, MLP, and LLM components, significantly improving training efficiency by overlapping communication and computation. It further supports a comprehensive range of parallelism strategies—including data, tensor, sequence, and pipeline parallelism—as well as their arbitrary combinations.
+A key challenge in MLLM training is the imbalance in computational load caused by the varying proportions of visual and textual tokens. Such imbalances can lead to inefficiencies by overburdening either the ViT or LLM modules. To address this, we introduce a suite of techniques that dynamically balance computational workloads across modules, ensuring efficient and equitable resource utilization.
+For InternVL models of varying scales, the extended InternEVO framework formulates an optimization objective that identifies the optimal configuration to minimize both memory consumption and communication overhead across different module dimensions. To support sequences of up to 32K tokens, our approach incorporates both head-parallel and sequence-parallel techniques, effectively overcoming scalability bottlenecks while preserving computational efficiency. Compared to the training of InternVL2.5, the application of InternEVO in InternVL3 results in a training speedup of 50% to 200% for models of comparable size, given the same computational budget.
+3 Experiments
+In this section, we first compare the overall multimodal capabilities of InternVL3 with those of current advanced MLLMs using widely adopted multimodal benchmarks. Subsequently, we evaluate the performance of InternVL3 in various domains, including multimodal reasoning, mathematics, optical character recognition (OCR), chart and document understanding, multi-image understanding, real-world comprehension, comprehensive multimodal evaluation, multimodal hallucination evaluation, visual grounding, multimodal multilingual understanding, video understanding, and other multimodal tasks, most of which were tested using VLMEvalKit [33]. Additionally, we provide a detailed evaluation of the language capabilities of InternVL3. Finally, we analyze the advantages of several key modifications in InternVL3 compared to its predecessor, InternVL2.5, including the naive multimodal pre-training, the V2PE positional encoding, and the improvements brought by the post-training technique.
+3.1 Overall Comparison to Other Advanced MLLMs
+Figure 1 provides a detailed assessment of InternVL3’s performance across a diverse set of benchmarks, including MMMU [141], MathVista [80], AI2D [57], ChartQA [91], DocVQA [93], InfographicVQA [92],
+7
+
+
+HallusionBench [45], OCRBench [76], and LongVideoBench [129]. Compared with previous models, InternVL3 demonstrates substantial improvements across a wide range of task categories. These advancements can be primarily attributed to enhanced training strategies, refined testing methodologies, and the expanded training corpus.
+More specifically, InternVL3 achieves an impressive score of 72.2 on the MMMU benchmark, underscoring its superior capacity to manage complex multimodal challenges. Beyond its performance on MMMU, InternVL3 consistently outperforms earlier versions of the InternVL series on a variety of tasks, thereby emphasizing its broad applicability to real-world scenarios that require sophisticated multimodal comprehension and reasoning.
+In addition to surpassing its open-source counterparts, InternVL3 exhibits competitive performance relative to leading closed-source commercial models, such as ChatGPT-4o-latest [98] and Claude-3.5 Sonnet [3]. In many cases, the performance gap between InternVL3 and these proprietary models is notably narrowed—and in certain benchmarks, such as AI2D and ChartQA, InternVL3 even surpasses them. Nonetheless, our results further reveal that Gemini2.5 Pro [117] maintains a performance edge on select tasks (e.g., on HallusionBench), indicating that despite the notable progress in InternVL3, there remains room for further refinement of our InternVL series.
+3.2 Multimodal Reasoning and Mathematics
+To comprehensively evaluate the multimodal reasoning and mathematical capabilities of InternVL3, we conduct experiments on a series of benchmarks, including MMMU [141] for multidisciplinary reasoning, MathVista [80], MathVision [119], MathVerse [146] for mathematical reasoning, as well as DynaMath [155], WeMath [99] and LogicVista [131] for complementary evaluation on logical reasoning.
+As shown in Table 2, InternVL3 exhibits strong performance across all tested benchmarks. Specifically, on the MMMU benchmark, InternVL3-based models consistently outperform smaller-scale competitors. For instance, with increasing model size, InternVL3-78B reaches a score over 72 on MMMU, indicating robust understanding and reasoning capability in handling abstract multidisciplinary concepts. In the mathematical domain, InternVL3 demonstrates significant gains across various benchmarks. On MathVista, InternVL3-78B records a performance close to 79.0, while on MathVision and MathVerse, the results are also competitive, evidencing the model’s enhanced ability to tackle challenging mathematical problems. Furthermore, performance on DynaMath, WeMath, and LogicVista consistently improves with scaling. The overall score—a mean calculated across all benchmarks—shows that InternVL3 models achieve a balanced enhancement across different aspects, surpassing many of the preceding open-source methods.
+A notable characteristic of InternVL3 is the efficiency of the best-of-N evaluation strategy [125]. When applying this method, even models with relatively smaller parameter sizes (e.g., InternVL3-1B and InternVL3-2B) exhibit substantial improvements in reasoning performance. Specifically, in the Vision-Only split of MathVerse, the best-of-8 strategy leads to increases of approximately 6.0 and 3.2 percentage points for InternVL3-38B and InternVL3-78B, respectively. This improvement underscores the effectiveness of test-time scaling.
+3.3 OCR, Chart, and Document Understanding
+To assess the model’s integrated vision–language understanding in tasks involving text, document, and chart comprehension, we perform a comprehensive evaluation over nine benchmarks, including AI2D [57], ChartQA [91], TextVQA [107], DocVQA [93], InfoVQA [92], OCRBench [76], SEED-2-Plus [61], CharXiv [128], and VCR [148]. As illustrated in Table 3, the InternVL3 series not only maintains robust performance across these benchmarks but also demonstrates competitive or superior results when compared to other open-source and closed-source counterparts.
+At the 1B scale, InternVL3-1B achieves performance that is roughly on par with previous lower-scale models. At the 2B scale, InternVL3-2B not only improves its absolute scores—for instance, reaching 78.7/87.4 on AI2D and 88.3 on DocVQA—but also exhibits a performance edge over similarly parameterized models such as Qwen2-VL-2B [121]. Although its TextVQA performance (77.0) remains comparable to that of Qwen2-VL-2B, the enhancements in document and chart understanding suggest that the proposed native multimodal pre-training are particularly effective in tasks requiring precise visual–textual integration.
+The benefits of the new pre-training protocol become even more pronounced at larger scales. Mid-scale models like InternVL3-8B and InternVL3-9B deliver substantial gains, with InternVL3-8B achieving 85.2/92.6 on AI2D, 92.7 on DocVQA, and VCR scores of 94.5/98.1. Moreover, when compared with heavyweight systems such as Qwen2-VL-72B [121] or even closed-source models like GPT-4o-20240513 [97], the high-scale variants
+8
+
+
+Model MMMU MathVista MathVision MathVerse DynaMath WeMath LogicVista Overall LLaVA-OV-0.5B [60] 31.4 34.8 − − − − − − InternVL2.5-1B [18] 41.2 47.1 21.1 16.4 5.6 11.1 26.0 24.1 InternVL3-1B 43.4 45.8 18.8 18.7 5.8 13.4 29.8 25.1 w/ VisualPRM-Bo8 [125] 55.4 62.1 21.7 28.9 13.4 28.5 34.9 35.0 Aquila-VL-2B [44] 46.9 59.1 17.9 17.4 5.0 15.9 30.6 27.5 Qwen2.5-VL-3B [7] 51.2 61.2 21.9 31.2 13.2 22.9 40.3 34.6 Ovis-2B [84] 45.6 64.1 17.7 29.4 10.0 9.9 34.7 30.2 Ovis-4B [84] 49.0 69.6 21.5 38.5 18.0 16.9 35.3 35.5 InternVL2.5-2B [18] 43.2 51.1 14.0 22.3 4.4 8.0 27.3 24.3 InternVL2.5-4B [18] 51.8 64.1 18.4 27.7 15.2 21.2 34.2 33.2 InternVL3-2B 48.6 57.0 21.7 25.3 14.6 22.4 36.9 32.4 w/ VisualPRM-Bo8 [125] 57.8 70.5 26.6 36.7 21.4 38.5 40.5 41.7 LLaVA-OV-7B [60] 47.9 58.6 18.3 19.3 9.0 20.9 33.3 29.6 MiniCPM-V2.6 [135] 49.8 60.8 23.4 18.9 9.8 16.4 27.5 29.5 MiniCPM-o2.6 [135] 50.9 73.3 21.7 35.0 10.4 25.2 36.0 36.1 Ovis-8B [84] 57.4 71.8 25.9 42.3 20.4 27.2 39.4 40.6 Qwen2.5-VL-8B [7] 55.0 67.8 25.4 41.1 21.0 35.2 44.1 41.4 InternVL2.5-8B [18] 56.2 64.5 17.0 22.8 9.4 23.5 36.0 32.8 InternVL3-8B 62.7 71.6 29.3 39.8 25.5 37.1 44.1 44.3 w/ VisualPRM-Bo8 [125] 66.0 75.2 37.5 46.3 28.5 48.1 49.7 50.2 InternVL3-9B 57.7 71.5 27.6 35.3 26.7 33.8 49.2 43.1 w/ VisualPRM-Bo8 [125] 63.7 76.2 33.9 45.8 29.1 46.6 50.6 49.4 Ovis2-16B [84] 60.7 73.7 30.1 45.8 26.3 45.0 47.4 47.0 InternVL2.5-26B [18] 60.7 68.2 23.4 24.0 11.4 30.9 39.6 36.9 InternVL3-14B 67.1 75.1 37.2 44.4 31.3 43.0 51.2 49.9 w/ VisualPRM-Bo8 [125] 69.3 77.9 40.1 47.7 33.1 52.0 56.2 53.8 Cambrian-34B [116] 49.7 53.2 − − − − − − VILA-1.5-40B [71] 55.1 49.5 − − − − − − Ovis2-34B [84] 66.7 76.1 31.9 50.1 27.5 51.9 49.9 50.6 InternVL2.5-38B [18] 63.9 71.9 32.2 36.9 20.0 38.3 47.9 44.4 InternVL3-38B 70.1 75.1 34.2 48.2 35.3 48.6 58.4 52.8 w/ VisualPRM-Bo8 [125] 71.0 79.4 41.8 54.2 36.1 55.2 58.4 56.6 GPT-4o-20241120 [97] 70.7 60.0 31.2 40.6 34.5 45.8 52.8 47.9 Claude-3.7-Sonnet [3] 75.0 66.8 41.9 46.7 39.7 49.3 58.2 53.9 Gemini-2.0-Flash [30] 72.6 70.4 43.6 47.8 42.1 47.4 52.3 53.7 Gemini-2.0-Pro [29] 69.9 71.3 48.1 67.3 43.3 56.5 53.2 58.5 LLaVA-OV-72B [60] 55.7 67.1 25.3 27.2 15.6 32.0 40.9 37.7 QvQ-72B-Preview [115] 70.3 70.3 34.9 48.2 30.7 39.0 58.2 50.2 Qwen2.5-VL-72B [7] 68.2 74.2 39.3 47.3 35.9 49.1 55.7 52.8 InternVL2.5-78B [18] 70.0 72.3 32.2 39.2 19.2 39.8 49.0 46.0 InternVL3-78B 72.2 79.0 43.1 51.0 35.1 46.1 55.9 54.6 w/ VisualPRM-Bo8 [125] 72.2 80.5 40.8 54.2 37.3 52.4 57.9 56.5
+Table 2: Comparison of multimodal reasoning and mathematical performance. MMMU [141] is a multidisciplinary reasoning benchmark. MathVista [80], MathVision [119], MathVerse [146], DynaMath [155], and WeMath [99] are mathematics benchmarks. For MathVerse, we report the performance on Vision-Only split. LogicVista [131] is a logical reasoning benchmark. Part of the results are collected from the OpenCompass leaderboard [26]. The overall score is the average score of the above benchmarks. “w/ VisualPRM-Bo8” denotes that the model is evaluated with Best-of-8 settings, where VisualPRM [125] serves as the critic model.
+of InternVL3—particularly InternVL3-38B and InternVL3-78B—push the envelope further. For instance, InternVL3-78B attains a remarkable OCRBench score of 906 and VCR scores of 96.0/98.6, clearly surpassing the corresponding metrics of comparable models.
+3.4 Multi-Image Understanding
+we evaluate the multi-image relation perception and understanding capabilities of InternVL3 across a suite of widely recognized benchmarks, including BLINK [39], Mantis-Eval [51], MMIU [95], MuirBench [118], MMT-Bench [137], and MIRB [153], as presented in Table 4. These benchmarks comprehensively assess skills such as cross-image reasoning and context integration, all of which are crucial for effective multimodal interaction.
+InternVL3 consistently outperforms its earlier counterparts across different parameter scales. For instance, at the 1B scale, InternVL3-1B exhibits a modest yet consistent improvement over preceding models, achieving a BLINK score of 42.9 and an MMT-Bench score of 52.9. The performance gains become even more pronounced
+9
+
+
+Model Name AI2D
+(w / wo M)
+ChartQA (test avg)
+TextVQA (val)
+DocVQA (test)
+InfoVQA (test)
+OCR Bench
+SEED-2 Plus
+CharXiv (RQ / DQ)
+VCR-EN-Easy
+(EM / Jaccard) Overall LLaVA-OneVision-0.5B [60] 57.1 / – 61.4 – 70.0 41.8 565 – – – InternVL2-1B [19] 64.1 / 70.5 72.9 70.5 81.7 50.9 754 54.3 18.1 / 30.7 21.5 / 48.4 54.9 InternVL2.5-1B [18] 69.3 / 77.8 75.9 72.0 84.8 56.0 785 59.0 19.0 / 38.4 91.5 / 97.0 68.3 InternVL3-1B 69.4 / 78.3 75.3 74.1 81.9 53.7 790 58.2 21.0 / 47.1 89.3 / 96.2 68.6 Qwen2-VL-2B [121] 74.7 / 84.6 73.5 79.7 90.1 65.5 809 62.4 – 81.5 / – Qwen2.5-VL-3B [7] 81.6 / – 84.0 79.3 93.9 77.1 797 67.6 31.3 / 58.6 – Aquila-VL-2B [44] 75.0 / – 76.5 76.4 85.0 58.3 772 63.0 – 70.0 / – InternVL2-2B [19] 74.1 / 82.3 76.2 73.4 86.9 58.9 784 60.0 21.0 / 40.6 32.9 / 59.2 62.0 InternVL2.5-2B [18] 74.9 / 83.5 79.2 74.3 88.7 60.9 804 60.9 21.3 / 49.7 93.2 / 97.6 72.1 InternVL3-2B 78.7 / 87.4 80.2 77.0 88.3 66.1 835 64.6 28.3 / 54.7 91.2 / 96.9 74.7 Ovis1.6-Gemma2-9B [84] 84.4 / – – – – – 830 – – – MiniCPM-V2.6 [135] 82.1 / – 82.4 80.1 90.8 – 852 65.7 31.0 / 57.1 73.9 / 85.7 Molmo-7B-D [31] – / 93.2 84.1 81.7 92.2 72.6 694 – – – Qwen2-VL-7B [121] 83.0 / 92.1 83.0 84.3 94.5 76.5 866 69.0 – 89.7 / 93.8 Qwen2.5-VL-7B [7] 83.9 / – 87.3 84.9 95.7 82.6 864 70.4 42.5/73.9 – InternVL2-8B [19] 83.8 / 91.7 83.3 77.4 91.6 74.8 794 67.5 31.2 / 56.1 37.9 / 61.5 69.7 InternVL2.5-8B [18] 84.5 / 92.8 84.8 79.1 93.0 77.6 822 69.7 32.9 / 68.6 92.6 / 97.4 79.6 InternVL3-8B 85.2 / 92.6 86.6 80.2 92.7 76.8 880 69.7 37.6 / 73.6 94.5 / 98.1 81.3 InternVL3-9B 84.6 / 92.9 86.2 79.4 93.6 79.6 877 68.8 38.0 / 72.5 94.2 / 97.9 81.3 InternVL3-14B 86.0 / 93.7 87.3 80.5 94.1 83.6 875 70.3 43.1 / 82.2 94.8 / 98.2 83.4 InternVL-Chat-V1.5 [19] 80.7 / 89.8 83.8 80.6 90.9 72.5 724 66.3 29.2 / 58.5 14.7 / 51.4 65.9 InternVL2-26B [19] 84.5 / 92.5 84.9 82.3 92.9 75.9 825 67.6 33.4 / 62.4 74.5 / 86.7 76.7 InternVL2.5-26B [18] 86.4 / 94.4 87.2 82.4 94.0 79.8 852 70.8 35.9 / 73.5 94.4 / 98.0 81.8 Qwen2.5-VL-32B [7] – – – 94.8 83.4 – – – – Cambrian-34B [116] 79.5 / – 75.6 76.7 75.5 46.0 600 – 27.3 / 59.7 79.7 / 89.3 VILA-1.5-40B [71] 69.9 / – 67.2 73.6 – – 460 – 24.0 / 38.7 – InternVL2-40B [19] 86.6 / 94.5 86.2 83.0 93.9 78.7 837 69.2 32.3 / 66.0 84.7 / 92.6 79.3 InternVL2.5-38B [18] 87.6 / 95.1 88.2 82.7 95.3 83.6 842 71.2 42.4 / 79.6 94.7 / 98.2 83.6 InternVL3-38B 88.9 / 95.5 89.2 83.9 95.4 85.0 886 71.6 46.4 / 87.2 96.1 / 98.7 85.5 GPT-4V [97] 78.2 / 89.4 78.5 78.0 88.4 75.1 645 53.8 37.1 / 79.9 52.0 / 65.4 70.0 GPT-4o-20240513 [97] 84.6 / 94.2 85.7 77.4 92.8 79.2 736 72.0 47.1 / 84.5 91.6 / 96.4 81.6 Claude-3-Opus [3] 70.6 / 88.1 80.8 67.5 89.3 55.6 694 44.2 30.2 / 71.6 62.0 / 77.7 67.3 Claude-3.5-Sonnet [3] 81.2 / 94.7 90.8 74.1 95.2 74.3 788 71.7 60.2 / 84.3 63.9 / 74.7 78.7 Gemini-1.5-Pro [102] 79.1 / 94.4 87.2 78.8 93.1 81.0 754 – 43.3 / 72.0 62.7 / 77.7 LLaVA-OneVision-72B [60] 85.6 / – 83.7 80.5 91.3 74.9 741 – – – NVLM-D-72B [28] 85.2 / 94.2 86.0 82.1 92.6 – 853 – – – Molmo-72B [31] – / 96.3 87.3 83.1 93.5 81.9 – – – – Qwen2-VL-72B [121] 88.1 / – 88.3 85.5 96.5 84.5 877 – – 91.3 / 94.6 Qwen2.5-VL-72B [7] 88.7 / – 89.5 83.5 96.4 87.3 885 73.0 49.7 / 87.4 – InternVL2-Llama3-76B [19] 87.6 / 94.8 88.4 84.4 94.1 82.0 839 69.7 38.9 / 75.2 83.2 / 91.3 81.1 InternVL2.5-78B [18] 89.1 / 95.7 88.3 83.4 95.1 84.1 854 71.3 42.4 / 82.3 95.7 / 94.5 83.9 InternVL3-78B 89.7 / 96.0 89.7 84.3 95.4 86.5 906 71.9 46.0 / 85.1 96.0 / 98.6 85.8
+Table 3: Comparison of OCR, chart, and document understanding performance. We evaluate OCRrelated capabilities across 9 benchmarks, including AI2D [57], ChartQA [91], TextVQA [107], DocVQA [93], InfoVQA [92], OCRBench [76], SEED-2-Plus [61], CharXiv [128], and VCR [148]. Part of results are collected from [34, 31, 3, 128, 148] and the OpenCompass leaderboard [26].
+at the 2B scale; InternVL3-2B attains a remarkable 65.9 on Mantis-Eval, representing an improvement of over 11 points relative to InternVL2.5-2B, and also boosts its MMT-Bench performance to 59.5. Such enhancements indicate that the advanced pre-training strategies and enhanced training datasets in InternVL3 significantly elevate its capability to capture and reason over inter-image relationships.
+At higher scales, the trend continues. InternVL3-8B and its subsequent larger variants not only secure steady improvements on BLINK and MMT-Bench but also demonstrate substantial gains on the MIRB and MuirBench benchmarks. In particular, InternVL3-78B reaches a BLINK score of 66.3 and an MMT-Bench score of 73.2, positioning it as a competitive alternative to leading closed-source models like GPT-4o. These results suggest that the learning multimodal capabilities via native multimodal pre-training and the scaling of model parameters are key contributors to the elevated performance observed across diverse evaluation settings. Despite these encouraging outcomes, a noticeable performance gap between our InternVL3 and other MLLMs like Qwen2.5VL still exists on certain benchmarks, such as MuirBench, implying that future work may benefit from further enhancements in training data curation and additional model refinements.
+10
+
+
+Model Name BLINK
+(val)
+Mantis
+Eval MMIU Muir
+Bench
+MMT (val)
+MIRB
+(avg) Overall RealWorld
+QA
+MME-RW (EN)
+WildVision (win rate)
+R-Bench
+(dis) Overall
+LLaVA-OneVision-0.5B [60] 52.1 39.6 – 25.5 – – – 55.6 – – – InternVL2-1B [19] 38.6 46.1 37.3 29.3 49.5 31.5 38.7 50.3 40.2 17.8 55.6 41.0 InternVL2.5-1B [18] 42.0 51.2 38.5 29.9 50.3 35.6 41.3 57.5 44.2 43.4 59.0 51.0 InternVL3-1B 42.9 50.2 39.3 31.2 52.9 36.1 42.1 58.2 46.0 43.8 60.4 52.1 Qwen2-VL-2B [121] 44.4 – – – 55.1 – – 62.6 – – – Qwen2.5-VL-3B [6] 47.6 – – 47.7 – – – 65.4 53.1 – – InternVL2-2B [19] 43.8 48.4 39.8 32.5 50.4 32.1 41.2 57.3 47.3 31.8 56.8 48.3 InternVL2.5-2B [18] 44.0 54.8 43.5 40.6 54.5 36.4 45.6 60.1 48.8 44.2 62.2 53.8 InternVL3-2B 50.3 65.9 43.0 38.8 59.5 42.9 50.1 64.3 53.8 48.8 67.5 58.6 Qwen2-VL-7B [121] 53.2 – – – 64.0 – – 70.1 56.5 – 64.0 Qwen2.5-VL-7B [6] 56.4 – – 59.6 – – – 68.5 57.4 – – MiniCPM-V2.6 [135] 53.0 69.0 – – 60.8 – – 65.0 – – – InternVL2-8B [19] 50.9 65.4 42.0 48.7 60.0 50.0 52.8 64.4 53.5 54.4 67.9 60.1 InternVL2.5-8B [18] 54.8 67.7 46.7 51.1 62.3 52.5 55.9 70.1 59.1 62.0 70.1 65.3 InternVL3-8B 55.5 70.1 46.8 55.0 65.0 56.8 58.2 70.8 62.0 69.8 74.1 69.2 InternVL3-9B 58.6 70.1 50.4 51.4 65.4 58.6 59.1 70.5 61.3 63.8 70.3 66.5 InternVL3-14B 60.3 76.0 50.9 56.2 70.3 59.3 62.2 70.7 64.0 69.8 69.3 68.5 InternVL-Chat-V1.5 [19] 46.6 66.8 37.4 38.5 58.0 50.3 49.6 66.0 49.4 56.6 67.9 60.0 InternVL2-26B [19] 56.2 69.6 42.6 50.6 60.6 53.7 55.6 68.3 58.7 62.2 70.1 64.8 InternVL2.5-26B [18] 61.8 75.6 49.4 61.1 66.9 55.7 61.8 74.5 61.8 65.2 72.9 68.6 Cambrian-34B [116] – – – – – – – 67.8 44.1 – – InternVL2-40B [19] 57.2 71.4 47.9 54.4 66.2 55.2 58.7 71.8 61.8 63.2 73.3 67.5 InternVL2.5-38B [18] 63.2 78.3 55.3 62.7 70.0 61.2 65.1 73.5 64.0 66.4 72.1 69.0 InternVL3-38B 64.0 77.9 57.4 63.8 71.8 62.3 66.2 75.6 67.3 71.6 73.3 72.0 GPT-4V [97] 54.6 62.7 – 62.3 64.3 53.1 – 61.4 – 71.8 65.6 GPT-4o-20240513 [97] 68.0 – 55.7 68.0 65.4 – – 75.4 45.2 80.6 77.7 69.7 Claude-3.5-Sonnet [3] – – 53.4 – – – – 60.1 51.6 – – Gemini-1.5-Pro [102] – – 53.4 – 64.5 – – 67.5 38.2 – – LLaVA-OneVision-72B [60] 55.4 77.6 – 54.8 – – – 71.9 – – – Qwen2-VL-72B [121] – – – – 71.8 – – 77.8 – – – Qwen2.5-VL-72B [6] 64.4 – – 70.7 – – – 75.7 63.2 – – InternVL2-Llama3-76B [19] 56.8 73.7 44.2 51.2 67.4 58.2 58.6 72.2 63.0 65.8 74.1 68.8 InternVL2.5-78B [18] 63.8 77.0 55.8 63.5 70.8 61.1 65.3 78.7 62.9 71.4 77.2 72.6 InternVL3-78B 66.3 79.3 60.4 64.5 73.2 64.3 68.0 78.0 65.4 73.6 77.4 73.6
+Table 4: Comparison of multi-image and real-world understanding performance. Multi-image benchmarks include BLINK [39], Mantis-Eval [51], MMIU [95], MuirBench [118], MMT-Bench [137], and MIRB [153]. Real-world benchmarks encompass RealWorldQA [27], MME-RealWorld [151], WildVision [86], and RBench [62]. Part of the results are sourced from the benchmark papers and the OpenCompass leaderboard [26].
+3.5 Real-World Comprehension
+We evaluate the InternVL3 series on four real-world comprehension benchmarks—RealWorldQA [27], MMERealWorld [151], WildVision [86], and R-Bench [62]—to assess its ability to tackle realistic and complex tasks. As shown in Table 4, even the smallest variant in the InternVL3 family (InternVL3-1B) demonstrates promising performance with a RealWorldQA score of 58.2, an MME-RealWorld score of 46.0, a WildVision win rate of 43.8, and an R-Bench score of 60.4. Scaling up the model yields further enhancements across all metrics. Mid-sized variants such as InternVL3-8B and InternVL3-14B continue this positive trend, with InternVL3-8B reporting a RealWorldQA score of 70.8 and an R-Bench score of 74.1. These improvements highlight the effectiveness of scaling, as larger models provide more robust representations and enhanced comprehension capabilities in real-world scenarios.
+At the higher end of the scale, the InternVL3-38B and InternVL3-78B models achieve top-tier results among the InternVL3 series. Notably, InternVL3-78B records a RealWorldQA score of 78.0, an MME-RealWorld score of 65.4, a WildVision win rate of 73.6, and an R-Bench score of 77.4. When compared with competitive models, such as GPT-4o [97]—which scores 75.4 on RealWorldQA and 80.6 on WildVision—the InternVL3 series exhibits competitive strengths. InternVL3-78B not only surpasses GPT-4o on RealWorldQA and closely matches its R-Bench performance but also considerably outperforms it on MME-RealWorld, indicating an overall robust performance on tasks demanding both perceptual precision and comprehensive understanding.
+11
+
+
+Model Name MME
+(sum)
+MMB (EN / CN)
+MMBv1.1 (EN)
+MMVet (turbo)
+MMVetv2
+(0613) MMStar Overall HallBench
+(avg)
+MMHal (score)
+CRPE (relation)
+POPE
+(avg) Overall
+LLaVA-OneVision-0.5B [60] 1438.0 61.6 / 55.5 59.6 32.2 – 37.7 – 27.9 – – – InternVL2-1B [19] 1794.4 65.4 / 60.7 61.6 32.7 36.1 45.7 51.7 34.0 2.25 57.5 87.3 45.3 InternVL2.5-1B [18] 1950.5 70.7 / 66.3 68.4 48.8 43.2 50.1 58.9 39.0 2.49 60.9 89.9 48.1 InternVL3-1B 1934.4 72.6 / 67.9 69.9 59.5 47.5 51.5 61.9 41.4 2.59 64.0 90.7 49.7 Qwen2-VL-2B [121] 1872.0 74.9 / 73.5 72.2 49.5 – 48.0 – 41.7 – – – Qwen2.5-VL-3B [6] 2157 79.1 / 78.1 77.4 61.8 – 55.9 – 46.3 – 73.6 – InternVL2-2B [19] 1876.8 73.2 / 70.9 70.2 39.5 39.6 50.1 58.0 37.9 2.52 66.3 88.3 48.8 InternVL2.5-2B [18] 2138.2 74.7 / 71.9 72.2 60.8 52.3 53.7 65.3 42.6 2.94 70.2 90.6 51.6 InternVL3-2B 2221.2 81.1 / 78.4 78.6 62.2 53.9 60.7 69.8 42.5 3.26 71.5 89.6 51.7 Qwen2-VL-7B [121] 2326.8 83.0 / 80.5 80.7 62.0 – 60.7 – 50.6 3.40 74.4 88.1 54.1 Qwen2.5-VL-7B [6] 2347 83.5 / 83.4 82.6 67.1 – 63.9 – 52.9 – 76.4 – MiniCPM-V2.6 [135] 2348.4 81.5 / 79.3 78.0 60.0 – 57.5 – 48.1 3.60 75.2 87.3 53.6 InternVL2-8B [19] 2210.3 81.7 / 81.2 79.5 54.2 52.3 62.0 69.2 45.2 3.33 75.8 86.9 52.8 InternVL2.5-8B [18] 2344.1 84.6 / 82.6 83.2 62.8 58.1 62.8 73.2 50.1 3.65 78.4 90.6 55.7 InternVL3-8B 2415.4 83.4 / 82.2 81.7 81.3 66.3 68.2 77.7 49.9 3.61 76.3 91.1 55.2 InternVL3-9B 2372.8 83.4 / 82.2 81.7 76.2 65.4 66.3 76.3 51.2 3.47 75.0 90.4 55.0 InternVL3-14B 2478.3 85.6 / 84.1 83.5 80.2 68.4 68.8 79.0 55.1 3.49 77.3 90.2 56.5 InternVL-Chat-V1.5 [19] 2194.2 82.2 / 82.0 80.3 61.5 51.5 57.3 69.7 50.3 3.11 75.4 88.4 54.3 InternVL2-26B [19] 2260.7 83.4 / 82.0 81.5 62.1 57.2 61.2 71.8 50.7 3.55 75.6 88.0 54.5 InternVL2.5-26B [18] 2373.3 85.4 / 85.5 84.2 65.0 60.8 66.5 75.2 55.0 3.70 79.1 90.6 57.1 Cambrian-34B [116] – 80.4 / 79.2 78.3 53.2 – 54.2 – 41.6 – – – InternVL2-40B [19] 2307.5 86.8 / 86.5 85.1 65.5 63.8 65.4 75.7 56.9 3.75 77.6 88.4 56.7 InternVL2.5-38B [18] 2455.8 86.5 / 86.3 85.5 68.8 62.1 67.9 77.0 56.8 3.71 78.3 90.7 57.4 InternVL3-38B 2523.6 87.6 / 86.8 86.9 83.9 69.6 71.5 81.5 57.1 3.77 77.1 90.6 57.1 GPT-4V [97] 1926.6 81.0 / 80.2 80.0 67.5 66.3 56.0 70.7 46.5 – – – GPT-4o-20240513 [97] – 83.4 / 82.1 83.1 69.1 71.0 64.7 – 55.0 4.00 76.6 86.9 55.6 Claude-3-Opus [3] 1586.8 63.3 / 59.2 60.1 51.7 55.8 45.7 55.5 37.8 – – – Claude-3.5-Sonnet [3] – 82.6 / 83.5 80.9 70.1 71.8 65.1 – 55.5 – – – Gemini-1.5-Pro [102] – 73.9 / 73.8 74.6 64.0 66.9 59.1 – 45.6 – – – LLaVA-OneVision-72B [60] 2261.0 85.8 / 85.3 85.0 60.6 – 65.8 – 49.0 – – – Qwen2-VL-72B [121] 2482.7 86.5 / 86.6 85.9 74.0 66.9 68.3 78.7 58.1 – – – Qwen2.5-VL-72B [6] 2448.0 88.6 / 87.9 88.4 76.2 – 70.8 – 55.2 – 79.2 – InternVL2-Llama3-76B [19] 2414.7 86.5 / 86.3 85.5 65.7 68.4 67.4 77.2 55.2 3.83 77.6 89.0 56.4 InternVL2.5-78B [18] 2494.5 88.3 / 88.5 87.4 72.3 65.5 69.5 79.2 57.4 3.89 78.8 90.8 57.7 InternVL3-78B 2549.8 89.0 / 88.7 87.7 81.3 70.0 72.5 82.0 59.1 3.85 79.2 90.3 58.1
+Table 5: Comparison of comprehensive multimodal understanding and hallucination performance. Comprehensive multimodal benchmarks include MME [37], MMBench series [75], MMVet series [138, 139], and MMStar [13]. Hallucination benchmarks encompass HallusionBench [45], MMHal [111], CRPE [126], and POPE [67]. Part of the results are sourced from the benchmark papers and the OpenCompass leaderboard [26].
+3.6 Comprehensive Multimodal Evaluation
+The comprehensive multimodal evaluation is based on established benchmarks including MME [37], MMBench (evaluating both English and Chinese tasks) [75], MMBench v1.1 (English) [75], MMVet [138], MMVet v2 [139], and MMStar [13], as summarized in Table 5. Specifically, InternVL3-1B achieves an MMBench score of 72.6/67.9 (English/Chinese) and improves the MMBench v1.1 score to 69.9, compared to the InternVL2.5-1B baseline (70.7/66.3 and 68.4, respectively). The improvements become more pronounced at the 2B scale, where InternVL3-2B records an MME of 2221.2 and reaches an MMBench performance of 81.1/78.4, along with an MMBench v1.1 score of 78.6.
+At larger scales, InternVL3 models consistently demonstrate superior performance. For example, the InternVL38B model achieves an MME of 2415.4, while the InternVL3-38B and InternVL3-78B models record MME scores of 2523.6 and 2549.8, respectively. The corresponding MMBench and MMBench v1.1 scores also show steady improvements, with InternVL3-78B attaining 89.0/88.7 for English/Chinese and 87.7 for English-only tasks. When compared with other competitive models, such as Qwen2-VL-72B and Qwen2.5-VL-72B, the InternVL3 series—especially the 78B variant—offers a consistent performance advantage on the multimodal understanding benchmarks.
+12
+
+
+Model Name RefCOCO RefCOCO+ RefCOCOg Overall
+val test-A test-B val test-A test-B val test Grounding-DINO-L [74] 90.6 93.2 88.2 82.8 89.0 75.9 86.1 87.0 86.6 UNINEXT-H [133] 92.6 94.3 91.5 85.2 89.6 79.8 88.7 89.4 88.9 ONE-PEACE [122] 92.6 94.2 89.3 88.8 92.2 83.2 89.2 89.3 89.8 Qwen2.5-VL-3B [6] 89.1 91.7 84.0 82.4 88.0 74.1 85.2 85.7 85.0 InternVL3-1B 85.8 90.1 81.7 76.6 84.1 69.2 82.8 82.6 81.6 InternVL3-2B 89.8 92.6 86.4 84.0 89.2 76.5 87.6 87.2 86.7 Shikra-7B [12] 87.0 90.6 80.2 81.6 87.4 72.1 82.3 82.2 82.9 Ferret-v2-13B [144] 92.6 95.0 88.9 87.4 92.1 81.4 89.4 90.0 89.6 CogVLM-Grounding [123] 92.8 94.8 89.0 88.7 92.9 83.4 89.8 90.8 90.3 MM1.5 [143] – 92.5 86.7 – 88.7 77.8 – 87.1 Qwen2-VL-7B [121] 91.7 93.6 87.3 85.8 90.5 79.5 87.3 87.8 87.9 Qwen2.5-VL-7B [6] 90.0 92.5 85.4 84.2 89.1 76.9 87.2 87.2 86.6 TextHawk2 [140] 91.9 93.0 87.6 86.2 90.0 80.4 88.2 88.1 88.2 InternVL2-8B [19] 87.1 91.1 80.7 79.8 87.9 71.4 82.7 82.7 82.9 InternVL2.5-8B [18] 90.3 94.5 85.9 85.2 91.5 78.8 86.7 87.6 87.6 InternVL3-8B 92.5 94.6 88.0 88.2 92.5 81.8 89.6 90.0 89.6 InternVL3-9B 91.8 93.2 86.6 86.4 91.0 79.9 88.0 88.5 88.2 InternVL3-14B 92.0 94.4 87.8 87.4 92.1 81.5 88.6 89.3 89.1 Qwen2-VL-72B [121] 93.2 95.3 90.7 90.1 93.8 85.6 89.9 90.4 91.1 Qwen2.5-VL-72B [6] 92.7 94.6 89.7 88.9 92.2 83.7 89.9 90.3 90.3 InternVL2-Llama3-76B [19] 92.2 94.8 88.4 88.8 93.1 82.8 89.5 90.3 90.0 InternVL2.5-78B [18] 93.7 95.6 92.5 90.4 94.7 86.9 92.7 92.2 92.3 InternVL3-38B 93.2 95.1 90.2 89.8 93.2 85.2 91.4 91.5 91.2 InternVL3-78B 93.4 95.4 90.3 90.1 93.8 85.3 91.5 91.5 91.4
+Table 6: Comparison of visual grounding performance. We evaluate InternVL’s visual grounding capability on RefCOCO, RefCOCO+, and RefCOCOg datasets [56, 88]. Parts of the results are collected from [121].
+3.7 Multimodal Hallucination Evaluation
+We evaluate InternVL’s propensity for hallucinations on four established benchmarks—HallusionBench [45], MMHal-Bench [111], CRPE [126], and POPE [67]—as detailed in Table 5. In comparison with previous InternVL series, the new InternVL3 models demonstrate overall competitive performance across varying scales, while providing consistent improvements in handling multimodal hallucination challenges. In the small-parameter regime, InternVL3-1B attains a HallusionBench score of 41.4, representing an appreciable gain over the InternVL2.5-1B baseline, which scored 39.0. Similarly, the 2B variant of InternVL3 shows a comparable HallusionBench performance (42.5) to its InternVL2.5 counterpart (42.6), while registering a modest improvement in CRPE performance (71.5 vs. 70.2).
+In the large-scale setting, InternVL3-38B and InternVL3-78B are particularly noteworthy. InternVL3-38B obtains a HallusionBench score of 57.1, while InternVL3-78B reaches 59.1, accompanied by a CRPE improvement to 79.2. These figures position the InternVL3 series as competitive with leading closed- and open-source models such as GPT-4o and the Qwen2.5-VL series. Despite these advancements, minor declines on certain benchmarks, such as MMHal, indicate that although the InternVL3 series has made overall progress, optimizing data and training strategies to achieve more consistent improvements remains an important direction for future work.
+3.8 Visual Grounding
+We evaluate InternVL’s visual grounding capability on the RefCOCO [56], RefCOCO+[56], and RefCOCOg[88] datasets, where the model is tasked with accurately localizing target objects in images from given textual descriptions. Table 6 shows a comprehensive comparison across various models, including several specialized grounding models as well as multiple MLLLMs.
+Among the smaller-scale models, we observe that while Qwen2.5-VL-3B achieves an average score of 85.0, the InternVL3-1B and InternVL3-2B models yield average scores of 81.6 and 86.7, respectively. Notably, when scaling up, the InternVL3 series exhibits promising improvements. InternVL3-8B, InternVL3-9B, and InternVL3-14B yield average scores around 88.2–89.6, reflecting a consistent trend of performance gains as the model size increases. However, when reaching larger scales, the performance gains appear to plateau. For instance, InternVL2.5-78B reaches an average score of 92.3, and InternVL3-78B only shows a score of 91.4. We speculate that this is because InternVL3’s training data expansion does not include additional grounding-specific data and the relative reduction in grounding-targeted data could have restricted the localization capabilities.
+13
+
+
+Model Name MMMB Multilingual MMBench MTVQA Overall
+en zh pt ar tr ru en zh pt ar tr ru (avg) InternVL2-1B [19] 73.2 67.4 55.5 53.5 43.8 55.2 67.9 61.2 50.8 43.3 31.8 52.7 12.6 40.7 InternVL2.5-1B [18] 78.8 70.2 61.5 55.0 45.3 61.1 72.5 64.7 57.0 43.0 37.8 53.2 21.4 46.0 InternVL3-1B 79.4 70.1 62.3 58.0 47.6 61.9 72.6 66.2 62.3 48.0 39.5 60.3 22.2 47.9 Qwen2-VL-2B [121] 78.3 74.2 72.6 68.3 61.8 72.8 72.1 71.1 69.9 61.1 54.4 69.3 20.0 52.6 Qwen2.5-VL-3B [6] – – – – – – – – – – – – 24.8 InternVL2-2B [19] 79.4 71.6 54.0 43.5 46.4 48.1 73.8 69.6 51.4 29.8 31.3 42.3 10.9 39.3 InternVL2.5-2B [18] 81.4 74.4 58.2 48.3 46.4 53.2 76.5 71.6 55.9 37.3 33.9 44.8 21.8 45.2 InternVL3-2B 81.9 78.3 75.4 68.6 62.9 74.6 81.3 77.8 75.9 66.4 59.5 70.7 26.7 57.4 mPLUG-Owl2 [136] 67.3 61.0 59.7 45.8 45.4 62.6 66.2 59.4 58.2 37.9 47.7 60.4 – Qwen2-VL-7B [121] 83.9 82.4 81.2 79.0 74.7 82.4 81.8 81.6 79.1 75.6 74.5 79.3 25.6 61.6 Qwen2.5-VL-7B [6] – – – – – – – – – – – – 29.2 InternVL2-8B [19] 83.4 81.5 76.1 66.3 69.2 75.7 82.9 81.8 76.0 60.5 66.0 74.4 20.9 56.6 InternVL2.5-8B [18] 84.3 83.1 78.6 69.3 71.5 79.5 83.8 83.2 79.4 64.3 67.8 77.3 27.6 60.4 InternVL3-8B 85.1 83.1 82.5 81.6 76.2 83.4 85.5 85.6 83.2 79.2 75.9 82.6 30.2 64.7 InternVL3-9B 84.8 83.7 80.6 69.9 68.5 80.8 86.5 85.2 79.1 64.3 68.3 79.1 27.1 60.7 InternVL3-14B 85.7 84.7 83.1 83.7 79.3 83.6 86.7 85.8 83.2 81.1 80.7 83.8 31.6 66.2 InternVL-Chat-V1.5 [19] 82.6 80.8 76.3 65.2 68.6 74.0 81.1 80.2 76.9 56.2 66.7 71.0 20.5 55.7 InternVL2-26B [19] 83.8 81.7 78.0 68.8 69.3 76.3 82.7 81.8 77.8 61.9 69.6 74.4 17.7 56.2 InternVL2.5-26B [18] 86.2 83.8 81.6 73.3 73.7 82.8 86.1 85.5 80.7 67.5 75.0 79.6 28.5 62.6 InternVL2-40B [19] 85.3 84.1 81.1 70.3 74.2 81.4 86.2 85.8 82.8 64.0 74.2 81.8 20.6 59.7 InternVL2.5-38B [18] 86.4 85.1 84.1 84.3 82.8 84.9 87.5 88.6 85.3 84.5 84.0 85.9 31.7 67.4 InternVL3-38B 86.7 85.6 84.5 84.8 82.6 85.1 89.0 89.3 87.1 84.6 84.3 87.4 32.4 68.1 GPT-4V [97] 75.0 74.2 71.5 73.5 69.0 73.1 77.6 74.4 72.5 72.3 70.5 74.8 22.0 56.1 GPT-4o [97] – – – – – – – – – – – – 27.8 Gemini-1.0-Pro [114] 75.0 71.9 70.6 69.9 69.6 72.7 73.6 72.1 70.3 61.1 69.8 70.5 – Qwen2-VL-72B [121] 86.8 85.3 85.2 84.8 84.2 85.3 86.9 87.2 85.8 83.5 84.4 85.3 30.9 67.2 Qwen2.5-VL-72B [6] – – – – – – – – – – – – 31.7 InternVL2-Llama3-76B [19] 85.3 85.1 82.8 82.8 83.0 83.7 87.8 87.3 85.9 83.1 85.0 85.7 22.0 63.9 InternVL2.5-78B [18] 86.3 85.6 85.1 84.8 83.1 85.4 90.0 89.7 87.4 83.3 84.9 86.3 31.9 68.0 InternVL3-78B 87.2 86.6 85.5 86.5 84.6 86.1 89.4 90.3 88.7 86.1 86.6 88.1 32.5 68.9
+Table 7: Comparison of multimodal multilingual performance. We evaluate multilingual capabilities across 3 benchmarks, including MMMB [109], Multilingual MMBench [109] and MTVQA [113]. The languages evaluated are English (en), Chinese (zh), Portuguese (pt), Arabic (ar), Turkish (tr), and Russian (ru).
+3.9 Multimodal Multilingual Understanding
+We assess InternVL’s multimodal multilingual understanding capabilities using benchmarks—MMMB, Multilingual MMBench [109], and MTVQA [113]—as shown in Table 7. The InternVL3 series demonstrates consistent improvements in multilingual performance compared to previous predecessors. For example, the lightweight InternVL3-1B already shows a modest improvement over InternVL2.5-1B, while the larger-scale variants, such as InternVL3-38B and InternVL3-78B, achieve significantly higher average scores across all three benchmarks.
+Comparisons with other leading models further highlight the effectiveness of the InternVL3 series. Notably, the InternVL3 variants achieve performance that is competitive with or superior to models such as Qwen2VL-72B [121] and Qwen2.5-VL-72B [6]. Overall, the enhanced performance of the InternVL3 series across MMMB, Multilingual MMBench, and MTVQA underscores the promise of our approach in advancing global multimodal applications.
+3.10 Video Understanding
+Video understanding is essential for evaluating how well MLLMs capture temporal and multimodal cues in complex video content. In this work, we assess the InternVL3 series on six established benchmarks—VideoMME [38], MVBench [65], MMBench-Video [35], MLVU [154], LongVideoBench [129], and CG-Bench [2], as detailed in Table 8.
+Overall, the InternVL3 models demonstrate clear performance improvements and a strong scalability trend over their predecessors. As the model capacity increases, the performance gains become more pronounced. For instance, InternVL3-2B records higher Video-MME scores (58.9/61.4) and improved MVBench and MLVU performance compared to the earlier 2B variants.
+14
+
+
+Model Name Video-MME
+(wo / w sub) MVBench MMBench-Video
+(val)
+MLVU (M-Avg)
+LongVideoBench (val total)
+CG-Bench
+(long / clue acc.) Overall InternVL2-1B [19] 42.9 / 45.4 57.5 1.14 51.6 43.3 – InternVL2.5-1B [18] 50.3 / 52.3 64.3 1.36 57.3 47.9 – InternVL3-1B 51.0 / 53.0 63.1 1.3 53.0 48.1 24.8 / 39.1 46.9 Qwen2-VL-2B [121] 55.6 / 60.4 63.2 – – – – Qwen2.5-VL-3B [7] 61.5 / 67.6 67.0 1.63 68.2 43.3 – InternVL2-2B [19] 46.2 / 49.1 60.2 1.30 54.3 46.0 – InternVL2.5-2B [18] 51.9 / 54.1 68.8 1.44 61.4 52.0 – InternVL3-2B 58.9 / 61.4 70.4 1.42 64.2 55.4 30.8 / 50.7 54.9 VideoChat2-HD [64] 45.3 / 55.7 62.3 1.22 47.9 – – MiniCPM-V-2.6 [135] 60.9 / 63.6 – 1.70 – 54.9 – LLaVA-OneVision-7B [60] 58.2 / – 56.7 – – – – Qwen2-VL-7B [121] 63.3 / 69.0 67.0 1.44 – 55.6 – Qwen2.5-VL-7B [7] 65.1 / 71.6 69.6 1.79 70.2 45.3 – InternVL2-8B [19] 56.3 / 59.3 65.8 1.57 64.0 54.6 – InternVL2.5-8B [18] 64.2 / 66.9 72.0 1.68 68.9 60.0 – InternVL3-8B 66.3 / 68.9 75.4 1.69 71.4 58.8 38.6 / 55.2 61.4 InternVL3-9B 66.7 / 68.9 74.3 1.69 70.8 62.5 41.1 / 58.0 62.3 InternVL3-14B 70.4 / 73.0 76.6 1.73 73.3 63.9 44.1 / 60.6 64.9 InternVL2-26B [19] 57.0 / 60.2 67.5 1.67 64.2 56.1 – InternVL2.5-26B 66.9 / 69.2 75.2 1.86 72.3 59.9 – Oryx-1.5-32B [78] 67.3 / 74.9 70.1 1.52 72.3 – – Qwen2.5-VL-32B [7] 70.5 / 77.9 – 1.93 – – – VILA-1.5-40B [71] 60.1 / 61.1 – 1.61 56.7 – – InternVL2-40B [19] 66.1 / 68.6 72.0 1.78 71.0 60.6 – InternVL2.5-38B [18] 70.7 / 73.1 74.4 1.82 75.3 63.3 – InternVL3-38B 72.7 / 75.0 76.9 1.81 77.8 67.3 46.9 / 62.8 67.5 GPT-4V/4T [1] 59.9 / 63.3 43.7 1.53 49.2 59.1 – GPT-4o-20240513 [97] 71.9 / 77.2 – 1.63 64.6 66.7 – GPT-4o-20240806 [97] – – 1.87 – – 41.8 / 58.3 Gemini-1.5-Pro [102] 75.0 / 81.3 – 1.30 – 64.0 40.1 / 56.4 VideoLLaMA2-72B [23] 61.4 / 63.1 62.0 – – – – LLaVA-OneVision-72B [60] 66.2 / 69.5 59.4 – 66.4 61.3 – Qwen2-VL-72B [121] 71.2 / 77.8 73.6 1.70 – – 41.3 / 56.2 Qwen2.5-VL-72B [7] 73.3 / 79.1 70.4 2.02 74.6 60.7 – InternVL2-Llama3-76B [19] 64.7 / 67.8 69.6 1.71 69.9 61.1 – InternVL2.5-78B [18] 72.1 / 74.0 76.4 1.97 75.7 63.6 42.2 / 58.5 66.0 InternVL3-78B 72.7 / 75.7 78.7 1.81 79.5 65.7 48.4 / 65.3 68.3
+Table 8: Comparison of video understanding performance. We evaluate InternVL’s video understanding capabilities across 6 benchmarks. For Video-MME [38], MMBench-Video [35], MLVU [154], and LongVideoBench [129], we test with four different settings: 16, 32, 48, and 64 frames, and report the maximum results. For MVBench [65], we conduct testing using 16 frames. For CG-Bench [2], we use 32 frames.
+The scaling behavior of the InternVL3 series is further evident in the larger models. InternVL3-14B attains a Video-MME score of 70.4/73.0, while InternVL3-38B and InternVL3-78B push these metrics even higher, reaching scores of 72.7/75.0 and 72.7/75.7, respectively. Additionally, the inclusion of CG-Bench evaluations for the InternVL3 series provides further insight into long-range video reasoning, with performance steadily improving as model size increases—for example, InternVL3-78B attains 48.4/65.3 on CG-Bench.
+When compared with other open-source models, the InternVL3 series demonstrates competitive advantages. For instance, while Qwen2.5-VL models achieve impressive results (with Qwen2.5-VL-72B scoring 73.3/79.1 on Video-MME), the InternVL3 series tends to outperform them in other metrics, such as MVBench and MLVU. Similarly, while closed-source systems like Gemini-1.5-Pro sometimes yield superior results on select benchmarks (e.g., Video-MME), the overall performance of InternVL3, especially at larger scales, is highly competitive.
+3.11 GUI Grounding
+GUI grounding requires precise localization and understanding of interface elements, which is critical for applications like automated UI testing and assistive technologies. In Table 9, we report the performance on GUI grounding benchmarks, comparing InternVL3 with state-of-the-art multimodal and GUI-specific models. The results demonstrate that InternVL3 achieves competitive performance across different scales. On
+15
+
+
+Method GPT-4o Gemini 2.0 Claude Aguvis-72B Qwen2.5-VL-72B UI-TARS-72B InternVL3-8B -38B -72B
+ScreenSpot 18.1 84.0 83.0 89.2 87.1 88.4 79.5 85.6 88.7 ScreenSpot-V2 − − − − − 90.3 81.4 88.3 90.9
+Table 9: Performance of InternVL3 and other models on GUI grounding benchmarks.
+Model Name Obj.count Abs.Dist. Obj.size Room Size Rel.Dist. Rel.Dir. Route Plan Appr.Order Overall GPT-4o [97] 46.2 5.3 43.8 38.2 37.0 41.3 31.5 28.5 34.0 Gemini-1.5 Pro [102] 56.2 30.9 64.1 43.6 51.3 46.3 36.0 34.6 45.4 VILA-1.5-8B [71] 17.4 21.8 50.3 18.8 32.1 34.8 31.0 24.8 28.9 LongVA-7B [145] 38.0 16.6 38.9 22.2 33.1 43.3 25.4 15.7 29.2 LLaVA-NeXT-Video-7B [150] 48.5 14.0 47.8 24.2 43.5 42.4 34.0 30.6 35.6 LLaVA-OneVision-7B [60] 47.7 20.2 47.4 12.3 42.5 35.2 29.4 24.4 32.4 InternVL3-8B 68.1 39.0 48.4 33.6 48.3 36.4 27.3 35.4 42.1 InternVL3-38B 71.7 50.2 46.1 41.7 53.5 38.6 28.9 60.7 48.9 LLaVA-NeXT-Video-72B [150] 48.9 22.8 57.4 35.3 42.4 36.7 35.0 48.6 40.9 LLaVA-OneVision-72B [60] 43.5 23.9 57.6 37.5 42.5 39.9 32.5 44.6 40.2 InternVL3-78B 71.2 53.7 44.4 39.5 55.9 39.5 28.9 54.5 48.4
+Table 10: Performance of InternVL3 and other models on VSI-Bench.
+ScreenSpot [22], InternVL3-72B achieves 88.7% accuracy, slightly outperforming UI-TARS-72B [100] (88.4%) and Qwen2.5-VL-72B (87.1%), while Aguvis-72B [132] leads with 89.2%. Notably, InternVL3-38B (85.6%) surpasses GPT-4o (18.1%) and Gemini 2.0 (84.0%) by a significant margin.
+For the more challenging ScreenSpot-V2 [130] benchmark, InternVL3 exhibits strong scaling behavior: InternVL3-72B achieves 90.9%, outperforming UI-TARS-72B (90.3%). The 8B variant (81.4%) already surpasses UI-TARS-72B, while the 38B model (88.3%) further closes the gap to the 72B version. These results highlight InternVL3’s robustness in GUI understanding tasks, particularly in handling complex screen layouts and dynamic interfaces. The performance improvements with model scale suggest that larger architectures better capture the fine-grained visual-textual alignments required for precise GUI grounding. The superior performance of the InternVL3 models highlights their robustness in interpreting complex visual layouts. Future work will explore extending these capabilities to more dynamic and interactive GUI environments.
+3.12 Spatial Reasoning
+Spatial reasoning involves constructing a mental representation of a three-dimensional environment from visual inputs—a capability that is vital for applications such as autonomous driving. Table 10 reports the performance results on the Visual-Spatial Intelligence Benchmark (VSI-Bench) [134], where InternVL3 is compared against other state-of-the-art MLLMs. The results clearly indicate that InternVL3 outperforms its competitors in spatial reasoning tasks. In particular, the InternVL3-8B variant achieves a score of 42.1, leading all open-source MLLMs in the benchmark. Moreover, the InternVL3-38B and InternVL3-78B variants score 48.9 and 48.4, respectively—both superior to proprietary models such as GPT-4o, Gemini-1.5 Flash, and Gemini-1.5 Pro.
+Furthermore, InternVL3 exhibits exceptional performance in several sub-category tasks within the benchmark. It attains a score of 71.2 in object counting, 53.7 in absolute distance estimation, 55.9 in relative distance estimation, and 54.5 in appearance order prediction, demonstrating its robust spatial reasoning capabilities. These promising results underscore the potential of InternVL3 for advancing 3D scene understanding, and future work will explore its integration into various downstream applications.
+3.13 Evaluation on Language Capability
+Table 11 presents the performance evaluation of language capabilities across a diverse array of benchmarks. These benchmarks cover comprehensive assessments in general knowledge, linguistic understanding, reasoning, mathematics, and coding tasks, such as MMLU [46], CMMLU [63], C-Eval [48], GAOKAO-Bench [149], TriviaQA [52], NaturalQuestions [58, 110], RACE [59], WinoGrande [103], HellaSwag [142], BigBench Hard [112], GSM8K-Test [25], MATH [47], TheoremQA [17], HumanEval [14], MBPP [4], and MBPP-CN [4].
+In particular, the experiments conducted compare the performance of Qwen2.5 chat models against corresponding InternVL3 variants. Both model series share the same pre-trained Qwen2.5 base model as their initialization. After undergoing native multimodal pre-training followed by additional post-training, the In
+16
+
+
+Dataset Version
+Qwen2.5-0.5B Chat
+InternVL3-1B
+Qwen2.5-1.5B Chat
+InternVL3-2B
+Qwen2.5-7B Chat
+InternVL3-8B
+Qwen2.5-14B Chat
+InternVL3-14B
+Qwen2.5-32B Chat
+InternVL3-38B
+Qwen2.5-72B Chat
+InternVL3-78B
+MMLU 4d595a 46.4 49.8 61.8 64.8 74.2 77.3 79.5 82.1 83.3 85.4 84.4 86.9 CMMLU c13365 47.2 56.7 62.9 72.2 78.8 84.4 82.6 85.8 85.8 88.7 87.4 89.9 C-Eval 2daf24 53.5 59.0 66.2 73.3 77.8 84.5 81.4 85.6 86.5 89.2 88.1 89.5 GAOKAO 4c31db 30.9 46.6 53.7 67.7 81.3 89.5 86.9 91.2 90.8 93.5 91.0 93.1
+TriviaQA 2121ce 24.2 21.5 39.8 41.2 55.8 51.5 65.1 67.4 65.8 70.1 74.0 74.7 NaturalQuestions 3dcea1 8.2 8.5 15.2 15.9 17.9 28.2 19.7 31.4 19.7 31.0 23.8 39.0 C3 8c358f 35.2 66.3 81.2 84.7 90.8 95.1 92.1 96.3 92.3 97.4 96.1 97.6 RACE-High 69ee4f 51.5 68.8 76.0 84.6 86.8 90.8 89.6 93.0 91.5 94.2 91.7 94.2
+WinoGrande b36770 47.2 52.9 56.5 61.9 71.5 78.1 79.1 84.3 83.8 86.7 83.9 87.8 HellaSwag e42710 39.3 47.0 62.0 73.8 85.4 90.2 90.5 93.0 92.1 95.5 92.7 95.6 BBH 5b92b0 21.5 34.5 39.7 52.0 65.7 77.4 73.0 82.5 85.5 87.7 85.4 85.2
+GSM8K 1d7fe4 39.0 47.2 61.6 72.5 80.1 83.1 82.4 88.4 84.7 89.7 88.2 90.5 MATH 393424 27.8 32.7 49.3 57.3 72.6 72.2 73.7 76.3 81.1 72.2 81.4 78.9 TheoremQA 6f0af8 12.3 12.9 14.4 15.6 20.1 25.5 18.5 24.1 21.9 18.9 22.9 30.4
+HumanEval 8e312c 27.4 39.0 51.8 62.8 82.3 78.1 81.1 78.1 89.0 87.8 87.2 82.3 MBPP a447ff 38.5 47.5 51.4 60.7 74.3 69.3 76.7 75.1 83.7 77.4 86.8 76.7 MBPP-CN 9114d5 19.6 30.6 34.4 45.8 64.4 64.4 75.4 67.2 77.8 75.4 76.0 76.0
+Overall - 33.5 42.4 51.6 59.2 69.4 72.9 73.4 76.6 77.4 78.9 78.9 80.5
+Table 11: Comparison of language model performance across multiple benchmarks. These results were obtained using the OpenCompass toolkit. We compare InternVL3 with Qwen2.5 Chat models, whose corresponding pre-trained base models are employed as the initialization of the language component in InternVL3. Please note that the evaluation scores of the Qwen2.5 series may differ from those officially reported, as we have adopted the prompt versions provided in the table across all datasets for OpenCompass evaluation.
+V2PE δ TextVQA VizWiz ChartQA DocVQA AI2D InfoVQA GQA SQA-I POPE Tiny MMMU SEED v1 Overall
+val val test avg val test val test test LVLM val image
+✗ – 78.4 61.7 81.4 89.4 81.1 69.4 60.8 94.4 87.9 348.5 52.6 75.6 75.2
+✓
+1/256 78.0 61.7 81.2 88.5 81.0 67.7 61.0 94.4 88.3 345.3 52.9 75.9 75.0 1/64 78.3 62.0 81.7 89.4 81.3 69.6 60.9 94.7 88.3 345.7 52.3 76.1 75.3 1/16 78.7 62.1 81.7 90.4 81.6 70.4 61.1 95.0 88.2 345.0 53.3 76.1 75.6 1/4 79.0 62.2 82.4 91.0 81.8 71.7 61.2 94.9 88.1 345.8 52.6 76.2 75.9 1/1 78.7 61.7 82.2 90.2 81.7 71.4 61.2 94.6 88.5 347.2 52.4 76.1 75.7
+Table 12: Performance of the pre-trained InternVL3-8B model on multimodal benchmarks with different positional encoding strategies. When employing V2PE, the impact of different positional increment values δ is systematically evaluated.
+ternVL3 series consistently demonstrates superior performance over the Qwen2.5 chat models across most evaluation benchmarks.
+This observed enhancement in language capabilities primarily arises from several factors, including the integration of approximately 25% pure-language data, joint parameter optimization during native multimodal pre-training, and the extensive use of high-quality textual corpora during the subsequent post-training stage. Such an approach not only strengthens multimodal comprehension but also significantly enhances language proficiency. Consequently, even when derived from identical pre-trained base models, the integrated multimodal and pure-text training strategy employed by InternVL3 results in substantially improved performance in language capabilities compared to the specialized training pipeline designed for pure-text tasks used by the Qwen2.5 chat models.
+17
+
+
+TextVQAval
+VizWizval
+ChartQAtest
+DocVQAval
+AI2Dtest
+InfoVQAval
+GQAtest
+SQA-Itest
+POPE
+TinyLVLM
+MMMUval
+MMVet
+MMB-ENtest
+MMB-CNtest
+SEEDv1image
+Tasks
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+1.0
+Task Performance (Normalized)
+InternVL2-8B-pretrained (wo native multimodal pretrain) InternVL2-8B-pretrained (w/ native multimodal pretrain) InternVL2-8B SFT (wo native multimodal pretrain) InternVL2-8B SFT (w/ native multimodal pretrain)
+Figure 3: Performance comparison on multimodal benchmarks under different training strategies. Native multimodal pre-training endows MLLMs with strong multimodal capabilities, even without further post-training.
+Model MPO MMMU MathVista MathVision MathVerse DynaMath WeMath LogicVista Overall InternVL3-1B ✗ 43.4 47.2 13.8 18.1 4.2 14.7 31.1 24.6
+✓ 43.4 45.8 18.8 18.7 5.8 13.4 29.8 25.1 (+0.5) InternVL3-2B ✗ 49.1 59.0 22.0 23.2 13.4 18.1 30.0 30.7
+✓ 48.6 57.0 21.7 25.3 14.6 22.4 36.9 32.4 (+1.7) InternVL3-8B ✗ 61.9 67.4 24.7 36.9 22.8 32.7 43.2 41.4
+✓ 62.7 71.6 29.3 39.8 25.5 37.1 44.1 44.3 (+2.9) InternVL3-9B ✗ 59.0 68.8 28.9 32.2 23.0 32.5 46.5 41.6
+✓ 57.7 71.5 27.6 35.3 26.7 33.8 49.2 43.1 (+1.5) InternVL3-14B ✗ 67.1 70.5 31.2 38.8 27.9 38.1 49.9 46.2
+✓ 67.1 75.1 37.2 44.4 31.3 43.0 51.2 49.9 (+3.7) InternVL3-38B ✗ 69.3 71.2 34.2 45.1 22.2 41.7 54.4 48.3
+✓ 70.1 75.1 34.2 48.2 35.3 48.6 58.4 52.8 (+4.5) InternVL3-78B ✗ 72.2 74.0 35.2 44.2 31.7 42.5 53.5 50.5
+✓ 72.2 79.0 43.1 51.0 35.1 46.1 55.9 54.6 (+4.1)
+Table 13: Comparison of reasoning abilities before and after Mixed Preference Optimization (MPO).
+3.14 Ablation Study
+The Effectiveness of Native Multimodal Pre-Training. To assess the effectiveness of native multimodal pre-training, we conduct experiments on the InternVL2-8B model while keeping its architecture, initialization parameters, and training data entirely unchanged. Traditionally, InternVL2-8B employs a training pipeline that begins with an MLP warmup phase for multimodal alignment, followed by an instruction-tuning stage. In our experiments, we substitute the conventional MLP warmup phase with our native multimodal pre-training process. This modification isolates the contribution of native multimodal pre-training to the overall multimodal capability of the model.
+The evaluation results in Figure 3 show that the model with native multimodal pre-training exhibits performance on most benchmarks that is comparable to the fully multi-stage-trained InternVL2-8B baseline. Furthermore, when followed by instruction tuning on higher-quality data, the model demonstrates further performance gains across evaluated multimodal tasks. These findings underscore the efficiency of native multimodal pre-training in imparting powerful multimodal capabilities to MLLMs.
+The Evaluation of Variable Visual Position Encoding. To promote the multimodal capabilities in long-context scenarios, InternVL3 employs Variable Visual Position Encoding (V2PE) in its visual embedding. However, in the original V2PE [42], this specialized positional encoding for visual tokens did not yield benefits on
+18
+
+
+multimodal tasks with moderate context lengths. To further explore the efficacy of V2PE in a broader setting, we incorporated it during the native multimodal pre-training stage and evaluated the InternVL3-8B pre-trained model on standard multimodal benchmarks.
+As reported in Table 12, the introduction of V2PE leads to significant performance gains across most evaluation metrics. In addition, our ablation studies—by varying the positional increment δ—reveal that even for tasks primarily involving short contexts, relatively small δ values can achieve optimal performance. These findings provide important insights for future efforts aimed at refining position encoding strategies for visual tokens in MLLMs. It is important to note that, to ensure fair comparisons, all results elsewhere in this report maintain a fixed δ = 1, except for the experimental results presented in Table 12.
+Mixed Preference Optimization. Here, we demonstrate the effectiveness of MPO. As shown in Table 13, models fine-tuned with MPO demonstrate superior reasoning performance across seven multimodal reasoning benchmarks compared to their counterparts without MPO. Specifically, InternVL3-78B and InternVL3-38B outperform their counterparts by 4.1 and 4.5 points, respectively. Notably, the training data used for MPO is a subset of that used for SFT, indicating that the performance improvements primarily stem from the training algorithm rather than the training data.
+4 Conclusion
+We have introduced InternVL3, a significant advancement in the InternVL series that implements a native multimodal pre-training paradigm. By jointly learning linguistic and multimodal capabilities during the pretraining phase, InternVL3 avoids the training complexities and optimization challenges typically associated with post-hoc MLLM training pipelines. Through the incorporation of variable visual position encoding (V2PE) for extended multimodal contexts, advanced post-training strategies—such as supervised fine-tuning and mixed preference optimization—and test-time scaling, InternVL3 establishes a new open-source benchmark across a wide range of multimodal tasks, while simultaneously preserving robust linguistic competencies. Notably, InternVL3-78B attains a 72.2-point score on the MMMU benchmark, exceeding previous open-source MLLMs and reducing the performance gap relative to leading proprietary counterparts (e.g., Gemini-2.5 Pro). In line with our commitment to fostering community-driven innovation in multimodal large language models, we will publicly release InternVL3’s training data and model weights, thereby encouraging further research and development in this rapidly evolving field.
+References
+[1] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Florencia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al. Gpt-4 technical report. arXiv preprint arXiv:2303.08774, 2023. 15
+[2] Anonymous. CG-bench: Clue-grounded question answering benchmark for long video understanding. In Submitted to The Thirteenth International Conference on Learning Representations, 2024. under review. 14, 15
+[3] Anthropic. The claude 3 model family: Opus, sonnet, haiku. https://www.anthropic.com, 2024. 2, 8, 9, 10, 11, 12
+[4] Jacob Austin, Augustus Odena, Maxwell Nye, Maarten Bosma, Henryk Michalewski, David Dohan, Ellen Jiang, Carrie Cai, Michael Terry, Quoc Le, et al. Program synthesis with large language models. arXiv preprint arXiv:2108.07732, 2021. 16
+[5] Jinze Bai, Shuai Bai, Shusheng Yang, Shijie Wang, Sinan Tan, Peng Wang, Junyang Lin, Chang Zhou, and Jingren Zhou. Qwen-vl: A frontier large vision-language model with versatile abilities. arXiv preprint arXiv:2308.12966, 2023. 1, 2
+[6] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, et al. Qwen2. 5-vl technical report. arXiv preprint arXiv:2502.13923, 2025. 11, 12, 13, 14
+[7] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, et al. Qwen2.5-vl technical report. arXiv preprint arXiv:2502.13923, 2025. 1, 2, 9, 10, 15
+[8] Loubna Ben Allal, Anton Lozhkov, Guilherme Penedo, Thomas Wolf, and Leandro von Werra. Smollm-corpus, 2024. 5
+19
+
+
+[9] Ali Furkan Biten, Ruben Tito, Andres Mafla, Lluis Gomez, Marçal Rusinol, Ernest Valveny, CV Jawahar, and Dimosthenis Karatzas. Scene text visual question answering. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 4291–4301, 2019. 6
+[10] Jie Cao and Jing Xiao. An augmented benchmark dataset for geometric question answering through dual parallel text encoding. In Proceedings of the 29th International Conference on Computational Linguistics, pages 1511–1520, 2022. 6
+[11] Shuaichen Chang, David Palzer, Jialin Li, Eric Fosler-Lussier, and Ningchuan Xiao. Mapqa: A dataset for question answering on choropleth maps. arXiv preprint arXiv:2211.08545, 2022. 6
+[12] Keqin Chen, Zhao Zhang, Weili Zeng, Richong Zhang, Feng Zhu, and Rui Zhao. Shikra: Unleashing multimodal llm’s referential dialogue magic. arXiv preprint arXiv:2306.15195, 2023. 13
+[13] Lin Chen, Jinsong Li, Xiaoyi Dong, Pan Zhang, Yuhang Zang, Zehui Chen, Haodong Duan, Jiaqi Wang, Yu Qiao, Dahua Lin, et al. Are we on the right way for evaluating large vision-language models? arXiv preprint arXiv:2403.20330, 2024. 12
+[14] Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de Oliveira Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg Brockman, et al. Evaluating large language models trained on code. arXiv preprint arXiv:2107.03374, 2021. 16
+[15] Qiaoling Chen, Diandian Gu, Guoteng Wang, Xun Chen, YingTong Xiong, Ting Huang, Qinghao Hu, Xin Jin, Yonggang Wen, Tianwei Zhang, et al. Internevo: Efficient long-sequence large language model training via hybrid parallelism and redundant sharding. arXiv preprint arXiv:2401.09149, 2024. 2, 7
+[16] Qiguang Chen, Libo Qin, Jin Zhang, Zhi Chen, Xiao Xu, and Wanxiang Che. M3cot: A novel benchmark for multi-domain multi-step multi-modal chain-of-thought. arXiv preprint arXiv:2405.16473, 2024. 6
+[17] Wenhu Chen, Ming Yin, Max Ku, Pan Lu, Yixin Wan, Xueguang Ma, Jianyu Xu, Xinyi Wang, and Tony Xia. Theoremqa: A theorem-driven question answering dataset. In Houda Bouamor, Juan Pino, and Kalika Bali, editors, Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, EMNLP 2023, Singapore, December 6-10, 2023, pages 7889–7901. Association for Computational Linguistics, 2023. 16
+[18] Zhe Chen, Weiyun Wang, Yue Cao, Yangzhou Liu, Zhangwei Gao, Erfei Cui, Jinguo Zhu, Shenglong Ye, Hao Tian, Zhaoyang Liu, et al. Expanding performance boundaries of open-source multimodal models with model, data, and test-time scaling. arXiv preprint arXiv:2412.05271, 2024. 1, 2, 3, 5, 6, 9, 10, 11, 12, 13, 14, 15
+[19] Zhe Chen, Weiyun Wang, Hao Tian, Shenglong Ye, Zhangwei Gao, Erfei Cui, Wenwen Tong, Kongzhi Hu, Jiapeng Luo, Zheng Ma, et al. How far are we to gpt-4v? closing the gap to commercial multimodal models with open-source suites. arXiv preprint arXiv:2404.16821, 2024. 1, 3, 10, 11, 12, 13, 14, 15
+[20] Zhe Chen, Weiyun Wang, Hao Tian, Shenglong Ye, Zhangwei Gao, Erfei Cui, Wenwen Tong, Kongzhi Hu, Jiapeng Luo, Zheng Ma, et al. How far are we to gpt-4v? closing the gap to commercial multimodal models with open-source suites. arXiv preprint arXiv:2404.16821, 2024. 2, 3
+[21] Zhe Chen, Jiannan Wu, Wenhai Wang, Weijie Su, Guo Chen, Sen Xing, Muyan Zhong, Qinglong Zhang, Xizhou Zhu, Lewei Lu, et al. Internvl: Scaling up vision foundation models and aligning for generic visual-linguistic tasks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 24185–24198, 2024. 1, 2, 3
+[22] Kanzhi Cheng, Qiushi Sun, Yougang Chu, Fangzhi Xu, Yantao Li, Jianbing Zhang, and Zhiyong Wu. Seeclick: Harnessing gui grounding for advanced visual gui agents. arXiv preprint arXiv:2401.10935, 2024. 16
+[23] Zesen Cheng, Sicong Leng, Hang Zhang, Yifei Xin, Xin Li, Guanzheng Chen, Yongxin Zhu, Wenqi Zhang, Ziyang Luo, Deli Zhao, et al. Videollama 2: Advancing spatial-temporal modeling and audio understanding in video-llms. arXiv preprint arXiv:2406.07476, 2024. 15
+[24] Christopher Clark and Matt Gardner. Simple and effective multi-paragraph reading comprehension. In Proceedings of the Annual Meeting of the Association for Computational Linguistics, pages 845–855, 2018. 6
+[25] Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, et al. Training verifiers to solve math word problems. arXiv preprint arXiv:2110.14168, 2021. 16
+[26] OpenCompass Contributors. Opencompass: A universal evaluation platform for foundation models. https: //github.com/open-compass/opencompass, 2023. 9, 10, 11, 12
+20
+
+
+[27] X.AI Corp. Grok-1.5 vision preview: Connecting the digital and physical worlds with our first multimodal model. https://x.ai/blog/grok-1.5v, 2024. 11
+[28] Wenliang Dai, Nayeon Lee, Boxin Wang, Zhuolin Yang, Zihan Liu, Jon Barker, Tuomas Rintamaki, Mohammad Shoeybi, Bryan Catanzaro, and Wei Ping. Nvlm: Open frontier-class multimodal llms. arXiv preprint arXiv:2409.11402, 2024. 10
+[29] Google Deepmind. Gemini 2.0 is now available to everyone. https://blog.google/technology/ google-deepmind/gemini-model-updates-february-2025/, 202. 9
+[30] Google Deepmind. Introducing gemini 2.0: our new ai model for the agentic era. https://blog.google/ technology/google-deepmind/google-gemini-ai-update-december-2024/, 2024. 9
+[31] Matt Deitke, Christopher Clark, Sangho Lee, Rohun Tripathi, Yue Yang, Jae Sung Park, Mohammadreza Salehi, Niklas Muennighoff, Kyle Lo, Luca Soldaini, et al. Molmo and pixmo: Open weights and open data for state-of-the-art multimodal models. arXiv preprint arXiv:2409.17146, 2024. 1, 10
+[32] Xiaoyi Dong, Pan Zhang, Yuhang Zang, Yuhang Cao, Bin Wang, Linke Ouyang, Songyang Zhang, Haodong Duan, Wenwei Zhang, Yining Li, et al. Internlm-xcomposer2-4khd: A pioneering large vision-language model handling resolutions from 336 pixels to 4k hd. arXiv preprint arXiv:2404.06512, 2024. 1
+[33] Haodong Duan, Junming Yang, Yuxuan Qiao, Xinyu Fang, Lin Chen, Yuan Liu, Xiaoyi Dong, Yuhang Zang, Pan Zhang, Jiaqi Wang, et al. Vlmevalkit: An open-source toolkit for evaluating large multi-modality models. In Proceedings of the 32nd ACM International Conference on Multimedia, pages 11198–11201, 2024. 7
+[34] Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, et al. The llama 3 herd of models. arXiv preprint arXiv:2407.21783, 2024. 10
+[35] Xinyu Fang, Kangrui Mao, Haodong Duan, Xiangyu Zhao, Yining Li, Dahua Lin, and Kai Chen. Mmbench-video: A long-form multi-shot benchmark for holistic video understanding. arXiv preprint arXiv:2406.14515, 2024. 14, 15
+[36] Li Fei-Fei, Rob Fergus, and Pietro Perona. Learning generative visual models from few training examples: An incremental bayesian approach tested on 101 object categories. In Conference on Computer Vision and Pattern Recognition Workshop, pages 178–178, 2004. 7
+[37] Chaoyou Fu, Peixian Chen, Yunhang Shen, Yulei Qin, Mengdan Zhang, Xu Lin, Zhenyu Qiu, Wei Lin, Jinrui Yang, Xiawu Zheng, et al. Mme: A comprehensive evaluation benchmark for multimodal large language models. arXiv preprint arXiv:2306.13394, 2023. 12
+[38] Chaoyou Fu, Yuhan Dai, Yondong Luo, Lei Li, Shuhuai Ren, Renrui Zhang, Zihan Wang, Chenyu Zhou, Yunhang Shen, Mengdan Zhang, et al. Video-mme: The first-ever comprehensive evaluation benchmark of multi-modal llms in video analysis. arXiv preprint arXiv:2405.21075, 2024. 14, 15
+[39] Xingyu Fu, Yushi Hu, Bangzheng Li, Yu Feng, Haoyu Wang, Xudong Lin, Dan Roth, Noah A Smith, Wei-Chiu Ma, and Ranjay Krishna. Blink: Multimodal large language models can see but not perceive. arXiv preprint arXiv:2404.12390, 2024. 9, 11
+[40] Jiahui Gao, Renjie Pi, Jipeng Zhang, Jiacheng Ye, Wanjun Zhong, Yufei Wang, Lanqing Hong, Jianhua Han, Hang Xu, Zhenguo Li, et al. G-llava: Solving geometric problem with multi-modal large language model. arXiv preprint arXiv:2312.11370, 2023. 6
+[41] Zhangwei Gao, Zhe Chen, Erfei Cui, Yiming Ren, Weiyun Wang, Jinguo Zhu, Hao Tian, Shenglong Ye, Junjun He, Xizhou Zhu, et al. Mini-internvl: A flexible-transfer pocket multimodal model with 5% parameters and 90% performance. arXiv preprint arXiv:2410.16261, 2024. 3
+[42] Junqi Ge, Ziyi Chen, Jintao Lin, Jinguo Zhu, Xihui Liu, Jifeng Dai, and Xizhou Zhu. V2pe: Improving multimodal long-context capability of vision-language models with variable visual position encoding. arXiv preprint arXiv:2412.09616, 2024. 2, 3, 18
+[43] Yash Goyal, Tejas Khot, Douglas Summers-Stay, Dhruv Batra, and Devi Parikh. Making the v in vqa matter: Elevating the role of image understanding in visual question answering. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 6904–6913, 2017. 6
+[44] Shuhao Gu, Jialing Zhang, Siyuan Zhou, Kevin Yu, Zhaohu Xing, Liangdong Wang, Zhou Cao, Jintao Jia, Zhuoyi Zhang, Yixuan Wang, et al. Infinity-mm: Scaling multimodal performance with large-scale and high-quality instruction data. arXiv preprint arXiv:2410.18558, 2024. 9, 10
+21
+
+
+[45] Tianrui Guan, Fuxiao Liu, Xiyang Wu, Ruiqi Xian, Zongxia Li, Xiaoyu Liu, Xijun Wang, Lichang Chen, Furong Huang, Yaser Yacoob, et al. Hallusionbench: An advanced diagnostic suite for entangled language hallucination & visual illusion in large vision-language models. arXiv preprint arXiv:2310.14566, 2023. 8, 12, 13
+[46] Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, and Jacob Steinhardt. Measuring massive multitask language understanding. In The International Conference on Learning Representations, 2020. 16
+[47] Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric Tang, Dawn Song, and Jacob Steinhardt. Measuring mathematical problem solving with the MATH dataset. In Joaquin Vanschoren and Sai-Kit Yeung, editors, Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks 1, NeurIPS Datasets and Benchmarks 2021, December 2021, virtual, 2021. 16
+[48] Yuzhen Huang, Yuzhuo Bai, Zhihao Zhu, Junlei Zhang, Jinghan Zhang, Tangjun Su, Junteng Liu, Chuancheng Lv, Yikai Zhang, Yao Fu, et al. C-eval: A multi-level multi-discipline chinese evaluation suite for foundation models. Advances in Neural Information Processing Systems, 36, 2024. 16
+[49] Zheng Huang, Kai Chen, Jianhua He, Xiang Bai, Dimosthenis Karatzas, Shijian Lu, and CV Jawahar. Icdar2019 competition on scanned receipt ocr and information extraction. In 2019 International Conference on Document Analysis and Recognition (ICDAR), pages 1516–1520. IEEE, 2019. 6
+[50] Drew A Hudson and Christopher D Manning. Gqa: A new dataset for real-world visual reasoning and compositional question answering. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 6700–6709, 2019. 6
+[51] Dongfu Jiang, Xuan He, Huaye Zeng, Cong Wei, Max Ku, Qian Liu, and Wenhu Chen. Mantis: Interleaved multi-image instruction tuning. arXiv preprint arXiv:2405.01483, 2024. 9, 11
+[52] Mandar Joshi, Eunsol Choi, Daniel S Weld, and Luke Zettlemoyer. Triviaqa: A large scale distantly supervised challenge dataset for reading comprehension. arXiv preprint arXiv:1705.03551, 2017. 16
+[53] Seungjae Jung, Gunsoo Han, Daniel Wontae Nam, and Kyoung-Woon On. Binary classifier optimization for large language model alignment. arXiv preprint arXiv:2404.04656, 2024. 6
+[54] Kushal Kafle, Brian Price, Scott Cohen, and Christopher Kanan. Dvqa: Understanding data visualizations via question answering. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 5648–5656, 2018. 6
+[55] Mehran Kazemi, Hamidreza Alvari, Ankit Anand, Jialin Wu, Xi Chen, and Radu Soricut. Geomverse: A systematic evaluation of large models for geometric reasoning. arXiv preprint arXiv:2312.12241, 2023. 6
+[56] Sahar Kazemzadeh, Vicente Ordonez, Mark Matten, and Tamara Berg. Referitgame: Referring to objects in photographs of natural scenes. In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing, pages 787–798, 2014. 13
+[57] Aniruddha Kembhavi, Mike Salvato, Eric Kolve, Minjoon Seo, Hannaneh Hajishirzi, and Ali Farhadi. A diagram is worth a dozen images. In European Conference on Computer Vision, pages 235–251, 2016. 6, 7, 8, 10
+[58] Tom Kwiatkowski, Jennimaria Palomaki, Olivia Redfield, Michael Collins, Ankur Parikh, Chris Alberti, Danielle Epstein, Illia Polosukhin, Jacob Devlin, Kenton Lee, et al. Natural questions: a benchmark for question answering research. Transactions of the Association for Computational Linguistics, 7:453–466, 2019. 16
+[59] Guokun Lai, Qizhe Xie, Hanxiao Liu, Yiming Yang, and Eduard Hovy. Race: Large-scale reading comprehension dataset from examinations. arXiv preprint arXiv:1704.04683, 2017. 16
+[60] Bo Li, Yuanhan Zhang, Dong Guo, Renrui Zhang, Feng Li, Hao Zhang, Kaichen Zhang, Yanwei Li, Ziwei Liu, and Chunyuan Li. Llava-onevision: Easy visual task transfer. arXiv preprint arXiv:2408.03326, 2024. 9, 10, 11, 12, 15, 16
+[61] Bohao Li, Yuying Ge, Yi Chen, Yixiao Ge, Ruimao Zhang, and Ying Shan. Seed-bench-2-plus: Benchmarking multimodal large language models with text-rich visual comprehension. arXiv preprint arXiv:2404.16790, 2024. 8, 10
+[62] Chunyi Li, Jianbo Zhang, Zicheng Zhang, Haoning Wu, Yuan Tian, Wei Sun, Guo Lu, Xiaohong Liu, Xiongkuo Min, Weisi Lin, et al. R-bench: Are your large multimodal model robust to real-world corruptions? arXiv preprint arXiv:2410.05474, 2024. 11
+[63] Haonan Li, Yixuan Zhang, Fajri Koto, Yifei Yang, Hai Zhao, Yeyun Gong, Nan Duan, and Timothy Baldwin. Cmmlu: Measuring massive multitask language understanding in chinese. arXiv preprint arXiv:2306.09212, 2023. 16
+22
+
+
+[64] KunChang Li, Yinan He, Yi Wang, Yizhuo Li, Wenhai Wang, Ping Luo, Yali Wang, Limin Wang, and Yu Qiao. Videochat: Chat-centric video understanding. arXiv preprint arXiv:2305.06355, 2023. 15
+[65] Kunchang Li, Yali Wang, Yinan He, Yizhuo Li, Yi Wang, Yi Liu, Zun Wang, Jilan Xu, Guo Chen, Ping Luo, et al. Mvbench: A comprehensive multi-modal video understanding benchmark. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 22195–22206, 2024. 14, 15
+[66] Yanghao Li, Chao-Yuan Wu, Haoqi Fan, Karttikeya Mangalam, Bo Xiong, Jitendra Malik, and Christoph Feichtenhofer. Mvitv2: Improved multiscale vision transformers for classification and detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 4804–4814, 2022. 1, 3
+[67] Yifan Li, Yifan Du, Kun Zhou, Jinpeng Wang, Wayne Xin Zhao, and Ji-Rong Wen. Evaluating object hallucination in large vision-language models. In The Conference on Empirical Methods in Natural Language Processing, pages 292–305, 2023. 12, 13
+[68] Zhang Li, Biao Yang, Qiang Liu, Zhiyin Ma, Shuo Zhang, Jingxu Yang, Yabo Sun, Yuliang Liu, and Xiang Bai. Monkey: Image resolution and text label are important things for large multi-modal models. arXiv preprint arXiv:2311.06607, 2023. 1
+[69] Zhiqi Li, Guo Chen, Shilong Liu, Shihao Wang, Vibashan VS, Yishen Ji, Shiyi Lan, Hao Zhang, Yilin Zhao, Subhashree Radhakrishnan, et al. Eagle 2: Building post-training data strategies from scratch for frontier visionlanguage models. arXiv preprint arXiv:2501.14818, 2025. 1
+[70] Hunter Lightman, Vineet Kosaraju, Yuri Burda, Harrison Edwards, Bowen Baker, Teddy Lee, Jan Leike, John Schulman, Ilya Sutskever, and Karl Cobbe. Let’s verify step by step. In The Twelfth International Conference on Learning Representations, 2023. 7
+[71] Ji Lin, Hongxu Yin, Wei Ping, Pavlo Molchanov, Mohammad Shoeybi, and Song Han. Vila: On pre-training for visual language models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 26689–26699, 2024. 1, 9, 10, 15, 16
+[72] Adam Dahlgren Lindström and Savitha Sam Abraham. Clevr-math: A dataset for compositional language, visual and mathematical reasoning. arXiv preprint arXiv:2208.05358, 2022. 6
+[73] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. Advances in Neural Information Processing Systems, 36, 2023. 2
+[74] Shilong Liu, Zhaoyang Zeng, Tianhe Ren, Feng Li, Hao Zhang, Jie Yang, Qing Jiang, Chunyuan Li, Jianwei Yang, Hang Su, et al. Grounding dino: Marrying dino with grounded pre-training for open-set object detection. In European Conference on Computer Vision, pages 38–55. Springer, 2025. 13
+[75] Yuan Liu, Haodong Duan, Yuanhan Zhang, Bo Li, Songyang Zhang, Wangbo Zhao, Yike Yuan, Jiaqi Wang, Conghui He, Ziwei Liu, et al. Mmbench: Is your multi-modal model an all-around player? arXiv preprint arXiv:2307.06281, 2023. 12
+[76] Yuliang Liu, Zhang Li, Hongliang Li, Wenwen Yu, Mingxin Huang, Dezhi Peng, Mingyu Liu, Mingrui Chen, Chunyuan Li, Lianwen Jin, et al. On the hidden mystery of ocr in large multimodal models. arXiv preprint arXiv:2305.07895, 2023. 8, 10
+[77] Zihan Liu, Yang Chen, Mohammad Shoeybi, Bryan Catanzaro, and Wei Ping. Acemath: Advancing frontier math reasoning with post-training and reward modeling. arXiv preprint, 2024. 5
+[78] Zuyan Liu, Yuhao Dong, Ziwei Liu, Winston Hu, Jiwen Lu, and Yongming Rao. Oryx mllm: On-demand spatialtemporal understanding at arbitrary resolution. arXiv preprint arXiv:2409.12961, 2024. 15
+[79] Dakuan Lu, Xiaoyu Tan, Rui Xu, Tianchu Yao, Chao Qu, Wei Chu, Yinghui Xu, and Yuan Qi. Scp-116k: A high-quality problem-solution dataset and a generalized pipeline for automated extraction in the higher education science domain, 2025. 5
+[80] Pan Lu, Hritik Bansal, Tony Xia, Jiacheng Liu, Chunyuan Li, Hannaneh Hajishirzi, Hao Cheng, Kai-Wei Chang, Michel Galley, and Jianfeng Gao. Mathvista: Evaluating mathematical reasoning of foundation models in visual contexts. arXiv preprint arXiv:2310.02255, 2023. 7, 8, 9
+[81] Pan Lu, Ran Gong, Shibiao Jiang, Liang Qiu, Siyuan Huang, Xiaodan Liang, and Song-Chun Zhu. Inter-gps: Interpretable geometry problem solving with formal language and symbolic reasoning. arXiv preprint arXiv:2105.04165, 2021. 6
+[82] Pan Lu, Swaroop Mishra, Tanglin Xia, Liang Qiu, Kai-Wei Chang, Song-Chun Zhu, Oyvind Tafjord, Peter Clark, and Ashwin Kalyan. Learn to explain: Multimodal reasoning via thought chains for science question answering. Advances in Neural Information Processing Systems, 35:2507–2521, 2022. 6
+23
+
+
+[83] Pan Lu, Liang Qiu, Jiaqi Chen, Tony Xia, Yizhou Zhao, Wei Zhang, Zhou Yu, Xiaodan Liang, and Song-Chun Zhu. Iconqa: A new benchmark for abstract diagram understanding and visual language reasoning. arXiv preprint arXiv:2110.13214, 2021. 6
+[84] Shiyin Lu, Yang Li, Qing-Guo Chen, Zhao Xu, Weihua Luo, Kaifu Zhang, and Han-Jia Ye. Ovis: Structural embedding alignment for multimodal large language model. arXiv preprint arXiv:2405.20797, 2024. 9, 10
+[85] Xudong Lu, Yinghao Chen, Cheng Chen, Hui Tan, Boheng Chen, Yina Xie, Rui Hu, Guanxin Tan, Renshou Wu, Yan Hu, et al. Bluelm-v-3b: Algorithm and system co-design for multimodal large language models on mobile devices. arXiv preprint arXiv:2411.10640, 2024. 1
+[86] Yujie Lu, Dongfu Jiang, Wenhu Chen, William Yang Wang, Yejin Choi, and Bill Yuchen Lin. Wildvision: Evaluating vision-language models in the wild with human preferences. arXiv preprint arXiv:2406.11069, 2024. 11
+[87] Liangchen Luo, Yinxiao Liu, Rosanne Liu, Samrat Phatale, Harsh Lara, Yunxuan Li, Lei Shu, Yun Zhu, Lei Meng, Jiao Sun, et al. Improve mathematical reasoning in language models by automated process supervision. arXiv preprint arXiv:2406.06592, 2, 2024. 7
+[88] Junhua Mao, Jonathan Huang, Alexander Toshev, Oana Camburu, Alan L Yuille, and Kevin Murphy. Generation and comprehension of unambiguous object descriptions. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 11–20, 2016. 13
+[89] Andrés Marafioti, Orr Zohar, Miquel Farré, Merve Noyan, Elie Bakouch, Pedro Cuenca, Cyril Zakka, Loubna Ben Allal, Anton Lozhkov, Nouamane Tazi, et al. Smolvlm: Redefining small and efficient multimodal models. arXiv preprint arXiv:2504.05299, 2025. 1
+[90] Kenneth Marino, Mohammad Rastegari, Ali Farhadi, and Roozbeh Mottaghi. Ok-vqa: A visual question answering benchmark requiring external knowledge. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 3195–3204, 2019. 6
+[91] Ahmed Masry, Xuan Long Do, Jia Qing Tan, Shafiq Joty, and Enamul Hoque. Chartqa: A benchmark for question answering about charts with visual and logical reasoning. In Proceedings of the Annual Meeting of the Association for Computational Linguistics, pages 2263–2279, 2022. 6, 7, 8, 10
+[92] Minesh Mathew, Viraj Bagal, Rubèn Tito, Dimosthenis Karatzas, Ernest Valveny, and CV Jawahar. Infographicvqa. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision, pages 1697–1706, 2022. 6, 7, 8, 10
+[93] Minesh Mathew, Dimosthenis Karatzas, and CV Jawahar. Docvqa: A dataset for vqa on document images. In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision, pages 2200–2209, 2021. 7, 8, 10
+[94] Nat McAleese, Rai Michael Pokorny, Juan Felipe Ceron Uribe, Evgenia Nitishinskaya, Maja Trebacz, and Jan Leike. Llm critics help catch llm bugs. arXiv preprint arXiv:2407.00215, 2024. 7
+[95] Fanqing Meng, Jin Wang, Chuanhao Li, Quanfeng Lu, Hao Tian, Jiaqi Liao, Xizhou Zhu, Jifeng Dai, Yu Qiao, Ping Luo, et al. Mmiu: Multimodal multi-image understanding for evaluating large vision-language models. arXiv preprint arXiv:2408.02718, 2024. 9, 11
+[96] Anand Mishra, Shashank Shekhar, Ajeet Kumar Singh, and Anirban Chakraborty. Ocr-vqa: Visual question answering by reading text in images. In International Conference on Document Analysis and Recognition, pages 947–952, 2019. 6
+[97] OpenAI. Gpt-4v(ision) system card. https://cdn.openai.com/papers/GPTV_System_Card.pdf, 2023. 1, 8, 9, 10, 11, 12, 14, 15, 16
+[98] OpenAI. Gpt-4o system card. https://openai.com/index/gpt-4o-system-card/, 2025. 2, 8
+[99] Runqi Qiao, Qiuna Tan, Guanting Dong, Minhui Wu, Chong Sun, Xiaoshuai Song, Zhuoma GongQue, Shanglin Lei, Zhe Wei, Miaoxuan Zhang, et al. We-math: Does your large multimodal model achieve human-like mathematical reasoning? arXiv preprint arXiv:2407.01284, 2024. 8, 9
+[100] Yujia Qin, Yining Ye, Junjie Fang, Haoming Wang, Shihao Liang, Shizuo Tian, Junda Zhang, Jiahao Li, Yunxin Li, Shijue Huang, et al. Ui-tars: Pioneering automated gui interaction with native agents. arXiv preprint arXiv:2501.12326, 2025. 16
+[101] Rafael Rafailov, Archit Sharma, Eric Mitchell, Christopher D Manning, Stefano Ermon, and Chelsea Finn. Direct preference optimization: Your language model is secretly a reward model. Advances in Neural Information Processing Systems, 36, 2024. 6
+24
+
+
+[102] Machel Reid, Nikolay Savinov, Denis Teplyashin, Dmitry Lepikhin, Timothy Lillicrap, Jean-baptiste Alayrac, Radu Soricut, Angeliki Lazaridou, Orhan Firat, Julian Schrittwieser, et al. Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context. arXiv preprint arXiv:2403.05530, 2024. 10, 11, 12, 15, 16
+[103] Keisuke Sakaguchi, Ronan Le Bras, Chandra Bhagavatula, and Yejin Choi. Winogrande: An adversarial winograd schema challenge at scale. In Proceedings of the AAAI Conference on Artificial Intelligence, volume 34, pages 8732–8740, 2020. 16
+[104] Minjoon Seo, Hannaneh Hajishirzi, Ali Farhadi, Oren Etzioni, and Clint Malcolm. Solving geometry problems: Combining text and diagram interpretation. In Proceedings of the 2015 conference on empirical methods in natural language processing, pages 1466–1476, 2015. 6
+[105] Min Shi, Fuxiao Liu, Shihao Wang, Shijia Liao, Subhashree Radhakrishnan, De-An Huang, Hongxu Yin, Karan Sapra, Yaser Yacoob, Humphrey Shi, et al. Eagle: Exploring the design space for multimodal llms with mixture of encoders. arXiv preprint arXiv:2408.15998, 2024. 1
+[106] Wenhao Shi, Zhiqiang Hu, Yi Bin, Junhua Liu, Yang Yang, See-Kiong Ng, Lidong Bing, and Roy Ka-Wei Lee. Mathllava: Bootstrapping mathematical reasoning for multimodal large language models. arXiv preprint arXiv:2406.17294, 2024. 6
+[107] Amanpreet Singh, Vivek Natarajan, Meet Shah, Yu Jiang, Xinlei Chen, Dhruv Batra, Devi Parikh, and Marcus Rohrbach. Towards vqa models that can read. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 8317–8326, 2019. 6, 8, 10
+[108] Charlie Snell, Jaehoon Lee, Kelvin Xu, and Aviral Kumar. Scaling llm test-time compute optimally can be more effective than scaling model parameters. arXiv preprint arXiv:2408.03314, 2024. 7
+[109] Hai-Long Sun, Da-Wei Zhou, Yang Li, Shiyin Lu, Chao Yi, Qing-Guo Chen, Zhao Xu, Weihua Luo, Kaifu Zhang, De-Chuan Zhan, et al. Parrot: Multilingual visual instruction tuning. arXiv preprint arXiv:2406.02539, 2024. 14
+[110] Kai Sun, Dian Yu, Dong Yu, and Claire Cardie. Investigating prior knowledge for challenging chinese machine reading comprehension. Transactions of the Association for Computational Linguistics, 8:141–155, 2020. 16
+[111] Zhiqing Sun, Sheng Shen, Shengcao Cao, Haotian Liu, Chunyuan Li, Yikang Shen, Chuang Gan, Liang-Yan Gui, Yu-Xiong Wang, Yiming Yang, et al. Aligning large multimodal models with factually augmented rlhf. arXiv preprint arXiv:2309.14525, 2023. 12, 13
+[112] Mirac Suzgun, Nathan Scales, Nathanael Schärli, Sebastian Gehrmann, Yi Tay, Hyung Won Chung, Aakanksha Chowdhery, Quoc V Le, Ed H Chi, Denny Zhou, et al. Challenging big-bench tasks and whether chain-of-thought can solve them. arXiv preprint arXiv:2210.09261, 2022. 16
+[113] Jingqun Tang, Qi Liu, Yongjie Ye, Jinghui Lu, Shu Wei, Chunhui Lin, Wanqing Li, Mohamad Fitri Faiz Bin Mahmood, Hao Feng, Zhen Zhao, et al. Mtvqa: Benchmarking multilingual text-centric visual question answering. arXiv preprint arXiv:2405.11985, 2024. 14
+[114] Gemini Team, Rohan Anil, Sebastian Borgeaud, Yonghui Wu, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut, Johan Schalkwyk, Andrew M Dai, Anja Hauth, et al. Gemini: a family of highly capable multimodal models. arXiv preprint arXiv:2312.11805, 2023. 1, 14
+[115] Qwen Team. Qvq: To see the world with wisdom, December 2024. 9
+[116] Shengbang Tong, Ellis Brown, Penghao Wu, Sanghyun Woo, Manoj Middepogu, Sai Charitha Akula, Jihan Yang, Shusheng Yang, Adithya Iyer, Xichen Pan, et al. Cambrian-1: A fully open, vision-centric exploration of multimodal llms. arXiv preprint arXiv:2406.16860, 2024. 9, 10, 11, 12
+[117] v DeepMind. Gemini 2.5 pro. https://deepmind.google/technologies/gemini/pro/, 2025. 1, 2, 8
+[118] Fei Wang, Xingyu Fu, James Y Huang, Zekun Li, Qin Liu, Xiaogeng Liu, Mingyu Derek Ma, Nan Xu, Wenxuan Zhou, Kai Zhang, et al. Muirbench: A comprehensive benchmark for robust multi-image understanding. arXiv preprint arXiv:2406.09411, 2024. 9, 11
+[119] Ke Wang, Junting Pan, Weikang Shi, Zimu Lu, Mingjie Zhan, and Hongsheng Li. Measuring multimodal mathematical reasoning with math-vision dataset. arXiv preprint arXiv:2402.14804, 2024. 8, 9
+[120] Peiyi Wang, Lei Li, Zhihong Shao, RX Xu, Damai Dai, Yifei Li, Deli Chen, Yu Wu, and Zhifang Sui. Math-shepherd: Verify and reinforce llms step-by-step without human annotations. arXiv preprint arXiv:2312.08935, 2023. 7
+[121] Peng Wang, Shuai Bai, Sinan Tan, Shijie Wang, Zhihao Fan, Jinze Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, et al. Qwen2-vl: Enhancing vision-language model’s perception of the world at any resolution. arXiv preprint arXiv:2409.12191, 2024. 1, 8, 10, 11, 12, 13, 14, 15
+25
+
+
+[122] Peng Wang, Shijie Wang, Junyang Lin, Shuai Bai, Xiaohuan Zhou, Jingren Zhou, Xinggang Wang, and Chang Zhou. One-peace: Exploring one general representation model toward unlimited modalities. arXiv:2305.11172, 2023. 13
+[123] Weihan Wang, Qingsong Lv, Wenmeng Yu, Wenyi Hong, Ji Qi, Yan Wang, Junhui Ji, Zhuoyi Yang, Lei Zhao, Xixuan Song, et al. Cogvlm: Visual expert for pretrained language models. arXiv preprint arXiv:2311.03079, 2023. 1, 13
+[124] Weiyun Wang, Zhe Chen, Wenhai Wang, Yue Cao, Yangzhou Liu, Zhangwei Gao, Jinguo Zhu, Xizhou Zhu, Lewei Lu, Yu Qiao, and Jifeng Dai. Enhancing the reasoning ability of multimodal large language models via mixed preference optimization. arXiv preprint arXiv:2411.10442, 2024. 2, 6, 7
+[125] Weiyun Wang, Zhangwei Gao, Lianjie Chen, Zhe Chen, Jinguo Zhu, Xiangyu Zhao, Yangzhou Liu, Yue Cao, Shenglong Ye, Xizhou Zhu, et al. Visualprm: An effective process reward model for multimodal reasoning. arXiv preprint arXiv:2503.10291, 2025. 2, 7, 8, 9
+[126] Weiyun Wang, Yiming Ren, Haowen Luo, Tiantong Li, Chenxiang Yan, Zhe Chen, Wenhai Wang, Qingyun Li, Lewei Lu, Xizhou Zhu, et al. The all-seeing project v2: Towards general relation comprehension of the open world. arXiv preprint arXiv:2402.19474, 2024. 6, 12, 13
+[127] Weiyun Wang, Min Shi, Qingyun Li, Wenhai Wang, Zhenhang Huang, Linjie Xing, Zhe Chen, Hao Li, Xizhou Zhu, Zhiguo Cao, et al. The all-seeing project: Towards panoptic visual recognition and understanding of the open world. In The International Conference on Learning Representations, 2024. 6
+[128] Zirui Wang, Mengzhou Xia, Luxi He, Howard Chen, Yitao Liu, Richard Zhu, Kaiqu Liang, Xindi Wu, Haotian Liu, Sadhika Malladi, et al. Charxiv: Charting gaps in realistic chart understanding in multimodal llms. arXiv preprint arXiv:2406.18521, 2024. 8, 10
+[129] Haoning Wu, Dongxu Li, Bei Chen, and Junnan Li. Longvideobench: A benchmark for long-context interleaved video-language understanding. arXiv preprint arXiv:2407.15754, 2024. 8, 14, 15
+[130] Zhiyong Wu, Zhenyu Wu, Fangzhi Xu, Yian Wang, Qiushi Sun, Chengyou Jia, Kanzhi Cheng, Zichen Ding, Liheng Chen, Paul Pu Liang, et al. Os-atlas: A foundation action model for generalist gui agents. arXiv preprint arXiv:2410.23218, 2024. 16
+[131] Yijia Xiao, Edward Sun, Tianyu Liu, and Wei Wang. Logicvista: Multimodal llm logical reasoning benchmark in visual contexts. arXiv preprint arXiv:2407.04973, 2024. 8, 9
+[132] Yiheng Xu, Zekun Wang, Junli Wang, Dunjie Lu, Tianbao Xie, Amrita Saha, Doyen Sahoo, Tao Yu, and Caiming Xiong. Aguvis: Unified pure vision agents for autonomous gui interaction. 2024. 16
+[133] B. Yan, Yi Jiang, Jiannan Wu, D. Wang, Ping Luo, Zehuan Yuan, and Huchuan Lu. Universal instance perception as object discovery and retrieval. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2023. 13
+[134] Jihan Yang, Shusheng Yang, Anjali Gupta, Rilyn Han, Li Fei-Fei, and Saining Xie. Thinking in Space: How Multimodal Large Language Models See, Remember and Recall Spaces. arXiv preprint arXiv:2412.14171, 2024. 16
+[135] Yuan Yao, Tianyu Yu, Ao Zhang, Chongyi Wang, Junbo Cui, Hongji Zhu, Tianchi Cai, Haoyu Li, Weilin Zhao, Zhihui He, et al. Minicpm-v: A gpt-4v level mllm on your phone. arXiv preprint arXiv:2408.01800, 2024. 9, 10, 11, 12, 15
+[136] Qinghao Ye, Haiyang Xu, Jiabo Ye, Ming Yan, Haowei Liu, Qi Qian, Ji Zhang, Fei Huang, and Jingren Zhou. mplug-owl2: Revolutionizing multi-modal large language model with modality collaboration. arXiv preprint arXiv:2311.04257, 2023. 1, 14
+[137] Kaining Ying, Fanqing Meng, Jin Wang, Zhiqian Li, Han Lin, Yue Yang, Hao Zhang, Wenbo Zhang, Yuqi Lin, Shuo Liu, Jiayi Lei, Quanfeng Lu, Runjian Chen, Peng Xu, Renrui Zhang, Haozhe Zhang, Peng Gao, Yali Wang, Yu Qiao, Ping Luo, Kaipeng Zhang, and Wenqi Shao. Mmt-bench: A comprehensive multimodal benchmark for evaluating large vision-language models towards multitask agi. arXiv preprint arXiv:2404.16006, 2024. 9, 11
+[138] Weihao Yu, Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Zicheng Liu, Xinchao Wang, and Lijuan Wang. Mm-vet: Evaluating large multimodal models for integrated capabilities. arXiv preprint arXiv:2308.02490, 2023. 12
+[139] Weihao Yu, Zhengyuan Yang, Linfeng Ren, Linjie Li, Jianfeng Wang, Kevin Lin, Chung-Ching Lin, Zicheng Liu, Lijuan Wang, and Xinchao Wang. Mm-vet v2: A challenging benchmark to evaluate large multimodal models for integrated capabilities. arXiv preprint arXiv:2408.00765, 2024. 12
+[140] Ya-Qi Yu, Minghui Liao, Jiwen Zhang, and Jihao Wu. Texthawk2: A large vision-language model excels in bilingual ocr and grounding with 16x fewer tokens. arXiv preprint arXiv:2410.05261, 2024. 13
+26
+
+
+[141] Xiang Yue, Yuansheng Ni, Kai Zhang, Tianyu Zheng, Ruoqi Liu, Ge Zhang, Samuel Stevens, Dongfu Jiang, Weiming Ren, Yuxuan Sun, et al. Mmmu: A massive multi-discipline multimodal understanding and reasoning benchmark for expert agi. arXiv preprint arXiv:2311.16502, 2023. 2, 7, 8, 9
+[142] Rowan Zellers, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi. Hellaswag: Can a machine really finish your sentence? In Proceedings of the Annual Meeting of the Association for Computational Linguistics, pages 4791–4800, 2019. 16
+[143] Haotian Zhang, Mingfei Gao, Zhe Gan, Philipp Dufter, Nina Wenzel, Forrest Huang, Dhruti Shah, Xianzhi Du, Bowen Zhang, Yanghao Li, et al. Mm1.5: Methods, analysis & insights from multimodal llm fine-tuning. arXiv preprint arXiv:2409.20566, 2024. 13
+[144] Haotian Zhang, Haoxuan You, Philipp Dufter, Bowen Zhang, Chen Chen, Hong-You Chen, Tsu-Jui Fu, William Yang Wang, Shih-Fu Chang, Zhe Gan, et al. Ferret-v2: An improved baseline for referring and grounding with large language models. arXiv preprint arXiv:2404.07973, 2024. 13
+[145] Peiyuan Zhang, Kaichen Zhang, Bo Li, Guangtao Zeng, Jingkang Yang, Yuanhan Zhang, Ziyue Wang, Haoran Tan, Chunyuan Li, and Ziwei Liu. Long context transfer from language to vision. arXiv preprint arXiv:2406.16852, 2024. 16
+[146] Renrui Zhang, Dongzhi Jiang, Yichi Zhang, Haokun Lin, Ziyu Guo, Pengshuo Qiu, Aojun Zhou, Pan Lu, Kai-Wei Chang, Peng Gao, et al. Mathverse: Does your multi-modal llm truly see the diagrams in visual math problems? arXiv preprint arXiv:2403.14624, 2024. 8, 9
+[147] Renrui Zhang, Xinyu Wei, Dongzhi Jiang, Yichi Zhang, Ziyu Guo, Chengzhuo Tong, Jiaming Liu, Aojun Zhou, Bin Wei, Shanghang Zhang, et al. Mavis: Mathematical visual instruction tuning. arXiv preprint arXiv:2407.08739, 2024. 6
+[148] Tianyu Zhang, Suyuchen Wang, Lu Li, Ge Zhang, Perouz Taslakian, Sai Rajeswar, Jie Fu, Bang Liu, and Yoshua Bengio. Vcr: Visual caption restoration. arXiv preprint arXiv:2406.06462, 2024. 8, 10
+[149] Xiaotian Zhang, Chunyang Li, Yi Zong, Zhengyu Ying, Liang He, and Xipeng Qiu. Evaluating the performance of large language models on gaokao benchmark. arXiv preprint arXiv:2305.12474, 2023. 16
+[150] Y Zhang, B Li, H Liu, Y Lee, L Gui, D Fu, J Feng, Z Liu, and C Li. Llava-next: A strong zero-shot video understanding model. 2024. 16
+[151] Yi-Fan Zhang, Huanyu Zhang, Haochen Tian, Chaoyou Fu, Shuangqing Zhang, Junfei Wu, Feng Li, Kun Wang, Qingsong Wen, Zhang Zhang, et al. Mme-realworld: Could your multimodal llm challenge high-resolution real-world scenarios that are difficult for humans? arXiv preprint arXiv:2408.13257, 2024. 11
+[152] Zhenru Zhang, Chujie Zheng, Yangzhen Wu, Beichen Zhang, Runji Lin, Bowen Yu, Dayiheng Liu, Jingren Zhou, and Junyang Lin. The lessons of developing process reward models in mathematical reasoning. arXiv preprint arXiv:2501.07301, 2025. 7
+[153] Bingchen Zhao, Yongshuo Zong, Letian Zhang, and Timothy Hospedales. Benchmarking multi-image understanding in vision and language models: Perception, knowledge, reasoning, and multi-hop reasoning. arXiv preprint arXiv:2406.12742, 2024. 9, 11
+[154] Junjie Zhou, Yan Shu, Bo Zhao, Boya Wu, Shitao Xiao, Xi Yang, Yongping Xiong, Bo Zhang, Tiejun Huang, and Zheng Liu. Mlvu: A comprehensive benchmark for multi-task long video understanding. arXiv preprint arXiv:2406.04264, 2024. 14, 15
+[155] Chengke Zou, Xingang Guo, Rui Yang, Junyu Zhang, Bin Hu, and Huan Zhang. Dynamath: A dynamic visual benchmark for evaluating mathematical reasoning robustness of vision language models. arXiv preprint arXiv:2411.00836, 2024. 8, 9
+27

@@ -1,0 +1,183 @@
+Energy and Buildings 132 (2016) 4–12
+Contents lists available at ScienceDirect
+Energy and Buildings
+journal homepage: www.elsevier.com/locate/enbuild
+TABULA building typologies in 20 European countries—Making energy-related features of residential building stocks comparable
+Tobias Loga ∗, Britta Stein, Nikolaus Diefenbach
+Institut Wohnen und Umwelt, Rheinstraße 65, 64295 Darmstadt, Germany
+article info
+Article history:
+Received 26 November 2015 Received in revised form 29 June 2016 Accepted 30 June 2016 Available online 7 July 2016
+Keywords: TABULA EPISCOPE Building typology Exemplary buildings Synthetical average buildings Nearly zero-energy buildings Calibration to measured consumption Webtool Building stock models
+abstract
+In the framework of the international projects TABULA and EPISCOPE residential building typologies have been created in 20 European countries. Each national typology consists of a classification scheme grouping buildings according to their size, age and further parameters and a set of exemplary buildings representing these building types. U-values of different age bands and energy expenditure factors of heat generators of these buildings are being compared. In addition, synthetical average buildings have been defined which are statistically representative for specific age and size bands and enable projections of the energy performance to the total housing stocks. Based on the common data structure the energy performance of the average buildings is calculated in a standardised way to form simplified housing stock models. In the context of inhomogeneous building stocks of European countries the results allow an understanding of the average and variation of parameters like U-values, supply system performances or final energy. © 2016 Elsevier B.V. All rights reserved.
+1. TABULA residential building typologies
+1.1. The typology concept
+In the past few decades various typological approaches for energy performance assessment have been used in European countries with national, regional, or municipal scopes. During the projects TABULA (2009–2012) and EPISCOPE (2013–2016) these experiences were examined [1] and transferred into a concerted concept for the field of residential buildings, focusing on the energy use for space heating and hot water of existing [2–5] and new buildings [6]. The TABULA typologies now form a pool of energy-related building data from 20 countries [7,8]. The overall objective is to enable an understanding of the structure and of the modernisation processes of the building sector in different countries and – in the long run – to learn from each other about successful energy saving strategies. The national typologies offer different opportunities of application: Single exemplary buildings are used as showcase examples to illustrate the effect of energy saving measures. The set of buildings
+∗ Corresponding author. E-mail addresses: t.loga@iwu.de (T. Loga), b.stein@iwu.de (B. Stein), n.diefenbach@iwu.de (N. Diefenbach).
+– complemented with statistical data about the national building stocks – can be the basis for creating bottom-up models of the countries’ residential building sectors used for projections of the energy consumption. From a European point of view the common TABULA approach provides a framework for cross-country comparisons of building features, measures and energy performance (see graphical abstract).
+1.2. The TABULA data structure and calculation procedure
+The project team developed a common methodical framework with the aim to enable a quantitative comparison of the energyrelated features and the energy performance of the exemplary buildings [10]:
+- A harmonised data structure which is the foundation of a building database; - A standard reference calculation procedure for determining the heat need and the delivered energy demand in accordance to the respective CEN standards; - A scheme for adapting the calculated energy use to the typical level of measured energy consumption.
+The TABULA maxim is to image the relevant parameters determining the energy consumption of a building in a realistic way and
+http://dx.doi.org/10.1016/j.enbuild.2016.06.094 0378-7788/© 2016 Elsevier B.V. All rights reserved.
+
+
+T. Loga et al. / Energy and Buildings 132 (2016) 4–12 5
+to keep at the same time the method as simple as possible. In consequence, averages are used when applicable, which of course can be determined by more detailed methods. The objective of simplification is to ensure transparency of the calculation, so that the procedure can easily be understood by energy consultants and scientists in different countries. It is also the precondition for a traceable online calculation, implemented in form of the TABULA WebTool [9], and for an easy handling of the calculation of large numbers of building datasets in a row-by-row Excel spreadsheet [11,12].
+2. Cross-country comparison of building and system features
+As described above each residential building typology consists of a set of exemplary buildings used as showcase examples for illustrating the effect of different refurbishment measures (Fig. 1). For each of the 20 countries these datasets had to be converted to the common format and compiled in an Excel workbook [11]. An analyses of the more than 600 datasets enabled cross-country comparisons of building and supply system features [13]. In the following the most relevant results are presented.
+2.1. U-values of existing buildings
+An evaluation of the U-values of roofs, walls, windows, and floors of the exemplary buildings provides indications about the development of thermal quality standards in the participating countries during the last century. As an example Fig. 2 shows the U-values of walls. For seven countries the values of specific time bands are above 2.0 W/(m2K)—among these are Southern as well as middle European countries. However, in two Northern European countries none of the U-values are exceeding 1.0 W/(m2K). However, it should be noted that the evaluation is not reflecting the actual but the assumed U-values relying on the respective national assessment methods.
+2.2. U-values of new build
+The most recent construction year classes of the national typologies represent the current national minimum requirements for new build. In the forefront a proof of compliance had been made by each partner for the respective exemplary buildings identifying the maximal applicable U-values – assuming different types of heating systems, if necessary. Fig. 3 displays the results for roofs, walls, floors and windows – differentiated by three climatic zones. The error bars are reflecting the variations, if the maximal applicable U-values depend on the type of building or heat supply system. The chart illustrates that new build requirements differ significantly between countries of cool-temperate and warm or warm-temperate climates. The most ambitious requirements can be found in Norway, Denmark and Ireland—the U-values of windows are 1.0–1.1 W/(m2K), the U-values of roofs below 0.12 W/(m2K), the U-values of walls below 0.19 W/(m2K). The details of the national requirements and calculation schemes as well as information about the prospective levels of Nearly ZeroEnergy Buildings (NZEB) to be introduced in all participating countries can be found in the respective report [6]. A cross-country comparison of exemplary buildings complying with the prospective NZEB levels has been published in [14].
+2.3. Thermal envelope areas
+The analyses of the fabric surfaces of the exemplary buildings revealed a strong dependency on the following four basic geometrical parameters: the number of storeys, the number of directly
+attached neighbour buildings and the location of conditioned space in attics or cellars. The functional dependencies have been used to define a fabric surface estimation procedure which is now being used for quality control of input data in TABULA.xlsm [13]. The achieved match of input data with estimated data for 641 exemplary buildings from all involved countries is shown in Fig. 4: For about 40% of the buildings the fabric surface entered in the database deviates not more than ±10% from the estimated surface. In some cases systematic deviations have been identified which can be explained by national peculiarities of building design. The procedure can also be useful to estimate the size of the thermal envelope of a large number of buildings in the context of housing stock surveys and portfolio assessments when a detailed data acquisition is not possible (see e.g. the ESAM project [15]). Furthermore, an adaptation of the data of an exemplary building to the basic geometrical features of a given real building in the context of initial energy advice activities is easily possible.
+2.4. Heat supply systems
+In order to enable a calculation of heat supply systems the 20 involved national partners converted national efficiency values for heat generation, storage and distribution systems into the common TABULA format. As an example Fig. 5 shows the comparison of energy expenditure factors of boilers and heat pumps. Generally the values turned out to be rather similar for a given component. In some cases larger deviations were found which reflected differences in technologies or in methods for the determination of standard values. The comparisons proved useful for a quality check of the typology input data. On this basis averages of the energy performance values of supply system components of all countries have been determined to provide default values which can be used if national values do not exist [10].
+3. From exemplary to average buildings—toward housing stock models
+An important motive for the set-up of national building typologies is to provide a foundation for the preparation of building stock models that enable a calculation of the energy consumption of the respective building stocks. A step in this direction had already been done by experts involved in the TABULA project [16]. In the EPISCOPE project this focus was addressed more systematically and extended to different countries and different scaling levels. The idea of the methodical development is to extend the discussion on refurbishment strategies and actual achieved savings from the small circle of building stock experts to the large field of key actors and stakeholders involved in decisions on building portfolios—like local and regional policy makers, housing associations, private building owners, craftsmen, utility companies etc. For this purpose simple bottom-up building stock models are needed.
+3.1. Sample buildings
+As systematically described in [17] and [18] there are different possibilities to design bottom-up building stock models, depending on the available data and the scope and detailedness of the analyses. An ad-hoc approach is to directly use the above described set of exemplary real buildings or “sample buildings” [18] as a simple building stock model − as far as statistics or estimations are available of the total reference floor area, and of the share of supply system types. An example is the scenario calculation for the building portfolio of a French housing company which was one of 17 case studies of the EPISCOPE project [19]: For each of the ten building types an example building from the portfolio was selected for
+
+
+6 T. Loga et al. / Energy and Buildings 132 (2016) 4–12
+Fig. 1. National “Building Type Matrix”—a standardised classification scheme for residential buildings; available for 20 European countries; here: Slovenian housing typology (displayed by the TABULA WebTool [9] which provides access to the datasets and calculations of the respective exemplary building).
+Fig. 2. Extract from the “TABULA.xlsm” data analyses—comparison of features of exemplary buildings [13]: U-values (external walls) per country and decade (no refurbishments applied) – country codes according to ISO 3166.
+which different refurbishment strategies were considered. Projections to the entire portfolio were done by use of the frequencies of building types. The share of refurbishments was varied to trace the possible changes until 2050. The exemplary buildings are in this
+case considered as a small sample of the stock. Also the EPISCOPE case studies from Hungary, Slovenia and Serbia [19,20] and studies in different contexts (e.g. [21]) are based on real example buildings representing the types of the respective typology.
+
+
+T. Loga et al. / Energy and Buildings 132 (2016) 4–12 7
+0,0 0,1 0,2 0,3 0,4 0,5 0,6 0,7 0,8 0,9 1,0
+CY
+GR
+ES
+IT
+AT
+BE
+CZ
+DE
+DK
+FR
+GB
+HU
+IE
+NL
+RS
+SI
+NO
+warm &
+cold cool-temperate warm-temperate
+U-value [W/(m2K]
+roof wall floor
+EPL 1
+01234
+CY
+GR
+ES
+IT
+AT
+BE
+CZ
+DE
+DK
+FR
+GB
+HU
+IE
+NL
+RS
+SI
+NO
+U-value [W/(m2K]
+window
+Fig. 3. New build (reference year 2015): U-values of roof, walls, floors and windows reflecting the national minimum requirements for new homes according to the relevant national building code [6].
+A more detailed model would try to include also the variations of geometry found in practice. Such approaches including a larger number of sample buildings were used for example in EPISCOPE case studies in Belgium, Cyprus, Austria, England and Greece [19,20].
+3.2. Average buildings
+To check and compare the more complex building stock models the concept of “synthetical average buildings” [3] has been applied. They are defined by summing up the total values of all relevant input, interim and output quantities (number of dwellings, floor area, envelope area, energy need for heating, final energy consumption, . . .) and by dividing them by the number of buildings counted in the building stock subgroup (see detailed description for an urban district in [22]). These “average buildings” – also known as “archetypal buildings” [18] – are theoretical (synthetical) buildings with geometrical and thermo-physical characteristics equal to the average of the building stock subset which they represent. The annual energy balance for heating and DHW of average buildings are calculated in the same manner as for real buildings. Projections to the building stock can be done by multiplying the single building related figures with the total number of buildings. The general advantages of subsuming a complex model in an “average buildings model” are:
+• The supplemental calculation enables plausibility controls of the complex building stock model.
+• The simplified model helps to improve the communication of results: The statements about the total building stock are more seizable, large numbers can be pictured. • The main input quantities and results can be used as benchmarks to compare features and energy consumptions of distinct real buildings. • The energy balance of “average buildings” can be calculated by use of standard energy rating software. • Projections can easily be done also for smaller subsets of the same building stock (e.g. model of a city district based on average buildings defined at national level).
+3.3. Use for comparison of complex building stock models
+Different paths of future energy demand and carbon dioxide emissions have been identified in the 17 EPISCOPE case studies at national, regional, and local level [19,20]. For each considered building stock the model data representing the existing state were transformed to average buildings by use of the common TABULA data structure. These average buildings provide a rough picture of the starting point of scenario calculations. Fig. 6 displays as an example the TABULA “average buildings” calculation scheme applied for the municipal housing stock of a Czech city. An important indicator of the energy upgrade progress are the average U-values of the original and refurbished states and the respective refurbished area fractions. The TABULA “average buildings ́ı” concept opens the possibility to compare different building stock models. An example of such benchmarking is displayed by Fig. 7. From the detailed housing stock models used to calculate scenarios for 4 countries and 3
+
+
+8 T. Loga et al. / Energy and Buildings 132 (2016) 4–12
+Fig. 4. Comparison of the actual fabric surfaces with estimations based on basic geometrical parameters like number of storeys and number of attached neighbour buildings (occurrences of the ratio of both values) [13].
+regions condensed information was extracted in a uniform way by the responsible scientists. These scenario indicators for a maximum of 10 building types per building stock constitute the input data of the average buildings calculation (Fig. 6). Fig. 7 shows the final energy resulting from the simplified models in contrast to the complex scientific models. Four of the individual complex models provide numbers which are 20–40 percent below the common model, the other three are about 10–20% higher. The deviations can mainly be explained by differently set indoor conditions or by balance calibration factors applied to the more complex models to match the values to the energy consumption statistics of the respective housing sectors.
+4. Conclusions
+In the context of the TABULA and EPISCOPE projects individual building typologies have been created in 20 countries to support the communication about refurbishment measures and achievable energy performance levels. They have been integrated in a comprehensive typology concept consisting of a common methodological framework for segmenting and classifying building stocks
+and supply systems as well as of a procedure for modelling the consumption of single buildings and building stocks. The agreed common approach facilitates an integral understanding of the inhomogeneous building stocks in European countries in the context of the diverse national energy performance legislations, standardisations, and construction traditions. Facing the challenges of national and European climate protection targets it provides a structure for the elaboration of strategies and targets:
+• The exemplary real buildings proved as useful means for supporting national energy advice activities (e.g. default buildings in energy advice software for immediate use in counselling interviews), for illustrating the impact of policy instruments (e.g. in brochures for building owners informing about the effect of legal requirements or about funding of measures), for studies on cost optimality calculations etc. [23–28]. • Also on lower scale levels (e.g. municipalities, districts) the preparation of typologies provides an adequate scheme to involve and align different kinds of stakeholders and key actors with disparate backgrounds and specific, sometimes opposed viewpoints and
+
+
+T. Loga et al. / Energy and Buildings 132 (2016) 4–12 9
+Fig. 5. Extract from the “TABULA.xlsm” data analyses—comparison of system data between different countries [13], here: energy expenditure factors (ratio of delivered energy to generated heat) of heat generators; values of fuels related to gross calorific value. Above: boilers “B NC” = non-condensing, “B C” = condensing, “B WP” = wood pellets. Below: electrical heat pumps “HP Air” = heat source external air, “HP Ground” = heat source ground, “HP ExhAir” = heat source exhaust air.
+interests (housing companies, tenants, home owners, municipal administrations, utility companies, etc.). • Setting up a residential building typology and compiling related statistics paves the way for the making of a housing stock model which is necessary for developing strategies and for tracking and understanding the actual energy performance achievements. A
+simple and transparent model approach is the formation of TABULA “average buildings” which proved useful especially for the assessment of regional and local stocks but also for the comparison and benchmarking of regional and national models.
+
+
+10 T. Loga et al. / Energy and Buildings 132 (2016) 4–12
+Fig. 6. Calculation of “Average buildings” as part of a simplified housing stock model; here: sheet “Energy Need for Heating”; displayed by the TABULA Excel applications [11,12] and by the “Building Stocks” area of the TABULA WebTool [9]; example: 6 building types of the housing stock of Havírˇov (Czech Republic).
+
+
+T. Loga et al. / Energy and Buildings 132 (2016) 4–12 11
+71% 72%
+60%
+109%
+116%
+118%
+78%
+0
+50
+100
+150
+200
+250
+300
+350
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+Individual model
+TABULA standard
+AT Reg
+DE Nat
+ES Reg
+GB Nat
+GR Nat
+IT Reg
+SI Nat
+Comparison of Individual Models and TABULA Simplified Model*
+Gas
+Oil
+Coal
+Biomass
+District Hea ng
+Electricity
+Other energy carriers
+EPISCOPE Building Stock Models - Delivered Energy for Hea ng and DHW
+kWh/(m2a)
+Na onal and Regional Case Studies (Basic Case)
+*) TABULA simplified model: average buildings calculated with TABULA standard procedure (witout calibra on to typical level of measured consumption)
+Fig. 7. Final energy calculated by the TABULA simplified model compared to the results of complex models; results of the national and regional EPISCOPE case studies [7].
+Acknowledgements
+This work is based on the results of the projects TABULA and EPISCOPE (www.episcope.eu) that were supported by the European Commission in the framework of the Intelligent Energy Europe programme under the coordination of the Institut Wohnen und Umwelt GmbH, Germany. The details of these comprehensive tasks have been elaborated by a team of experts whom we very much thank for the intense target-oriented collaboration and the effective promotion of the common concept in their countries.
+References
+[1] T. Loga, C. Balaras, E. Dascalaki, M. ˇSijanec Zavrl, A. Rakuˇsˇcek, V. Corrado, S. Corgnati, H. Despretz, C. Roarty, M. Hanratty, B. Sheldrick, W. Cyx, M. Popiolek, J. Kwiatkowski, M. Groß, C. Spitzbart, Z. Georgiev, S. Iakimova, T. Vimmr, K.B. Wittchen, J. Kragh, T. Loga, N. Diefenbach, Use of Building Typologies for Energy Performance Assessment of National Building Stocks. Existent Experiences in European Countries and Common Approach. First TABULA Synthesis Report (2010). IWU—Institut Wohnen und Umwelt, Darmstadt/Germany http://episcope.eu/fileadmin/tabula/public/docs/report/ TABULA SR1.pdf. [2] E.G. Dascalaki, K.G. Droutsa, C.A. Balaras, S. Kontoyiannidis, Building typologies as a tool for assessing the energy performance of residential buildings—a case study for the Hellenic building stock, Energy Build. 43 (December (12)) (2011) 3400–3409. [3] I. Ballarini, S.P. Corgnati, V. Corrado, Use of reference buildings to assess the energy saving potentials of the residential building stock: the experience of TABULA project, Energy Policy 68 (May) (2014) 273–284. [4] T. Vimmr, T. Loga, N. Diefenbach, B. Stein, L. Bachová, TABULA—residential building typologies in 12 European countries—good practice example from the Czech Republic, in: Proceedings of the Conference Central Europe Towards Sustainable Building 2013 from 26th to 28th June 2013 in Prague, Prague, 2013. [5] N., Diefenbach, B. Stein, E. Dascalaki, C. Balaras, K. Droutsa, S. Kontoyiannidis, M. ˇSijanec Zavrl, A. Rakuˇsˇcek, V. Corrado, S. Corgnati, I. Ballarini, C. Roarty, M. Hanratty, B. Sheldrick, M. Van Holm, N. Renders, M. Popiolek, J. Kwiatkowski, M. Amtmann, T. Vimmr, O. Villatoro, K.B. Wittchen, J. Kragh, H. Despretz, Z. Georgiev, K. Spets, L. Ortega, B.S. Lanzarote, M.J. Popovic, D. Ignjatovic, T. Loga, N. Diefenbach, B. Stein, Typology Approach for Building Stock Energy Assessment—Final Project Report (2012). IWU—Institut Wohnen und Umwelt, Darmstadt/Germany. [6] B., Stein, T. Loga, N. Diefenbach, B. Atanasiu, A. Arcipowska, E. Kontonasiou, G. Stegnar, A. Rakuˇs  ́cek, M. ˇSijanec Zavrl, K.B. Wittchen, J. Kragh, N. Altmann-Mavaddat, M. Amtmann, J. Hulme, C. Summers, E. Dascalaki, C.A. Balaras, P. Droutsa, S. Kontoyannidis, M. Van Holm, D. Cuypers, V. Corrado, I. Ballarini, T. Vimmr, O. Villatoro, M. Badurek, M. Hanratty, B. Sheldrick, T. Csoknyai, S. Hrabovszky-Horváth, L. Ortega, B. Serrano, D. Serghides, M. Markides, M. Katafygiotou, N. Nieboer, F. Filippidou, S. Shanthirabalan, U.
+Rochard, H. Brattebø, I. Sartori, R. O’Born, M.J. Popovic, B. Zivkovic, D. Ignjatovic, B. Stein, T. Loga, N. Diefenbach, Inclusion of New Buildings in Residential Building Typologies. Steps Towards NZEBs Exemplified for Different European Countries—EPISCOPE Synthesis Report No. 1 (2014). IWU—Institut Wohnen und Umwelt, Darmstadt/Germany http://episcope.eu/ fileadmin/episcope/public/docs/reports/EPISCOPE SR1 NewBuildingsInTypologies.pdf. [7] B. Stein, T. Loga, N. Diefenbach, A. Arcipowska, C. Marian, M. ˇSijanec Zavrl, G. Stegnar, A. Rakuˇs  ́cek, K.B. Wittchen, N. Altmann-Mavaddat, C. Summers, J. Hulme, E. Dascalaki, C.A. Balaras, P. Droutsa, S. Kontoyannidis, D. Cuypers, B. Vandevelde, V. Corrado, I. Ballarini, T. Vimmr, O. Villatoro, M. Hanratty, M. Badurek, B. Sheldrick, T. Csoknyai, S. Hrabovszky-Horváth, G., Szendr"o, L.S. Francés, L. Ortega Madrigal, B. Serrano, D. Serghides, S. Dimitriou, M. Katafygiotou, N. Nieboer, F.M. Filippidou, H. Visscher, S. Shanthirabalan, U. Rochard, H. Brattebø, N.H. Sandberg, M.I. Vestrum, I. Sartori, M.J. Popovic, D. Ignjatovic, B. Stein, T. Loga, N. Diefenbach, Monitor Progress Towards Climate Targets in European Housing Stocks. Main Results of the EPISCOPE Project—Final Project Report. IWU—Institut Wohnen und Umwelt, Darmstadt/Germany 2016; http://episcope.eu/fileadmin/episcope/public/ docs/reports/EPISCOPE FinalReport.pdf. [8] Joint website of the TABULA and EPISCOPE projects: www.episcope.eu. [9] TABULA WebTool—online access: www.episcope.eu/building-typology/ webtool. [10] T. Loga, N. Diefenbach, TABULA Calculation Method—Energy Use for Heating and Domestic Hot Water. Reference Calculation and Adaptation to the Typical Level of Measured Consumption; TABULA Documentation, IWU—Institut Wohnen und Umwelt, Darmstadt/Germany, 2013 http://episcope.eu/ fileadmin/tabula/public/docs/report/TABULA CommonCalculationMethod. pdf. [11] MS Excel workbook TABULA.xlsm, TABULA Data and Calculation Workbook, including the example building datasets of countries (row by row calculations scheme); EPISCOPE Project Team 2015; online access: www.episcope.eu/ communication/download. [12] MS Excel tabula-calculator.xlsm: lite version of TABULA.xlsm, for use by third party experts; modifications and variations of refurbishment measures and supply systems, easily applicable—online access: www.episcope.eu/ communication/download. [13] T. Loga, K. Müller, K. Reifschläger, B. Stein, Evaluation of the TABULA Database—Comparison of Typical Buildings and Heat Supply Systems from 20 European Countries, Institut Wohnen und Umwelt, Darmstadt/Germany, 2015 http://episcope.eu/fileadmin/tabula/public/docs/report/TABULA WorkReport EvaluationDatabase.pdf. [14] B. Stein, T. Loga, Member state approaches to nearly zero energy buildings, in: Feist Wolfgang (Ed.), Conference Proceedings: 19th International Passive House Conference, 17–18, April 2015, Leipzig/Germany. Passivhaus Institute, Darmstadt/Innsbruck, 2016, pp. 85–90. [15] ESAM project team: ESAM–Energy Strategic Asset Management–Methods and tools to optimize the energy strategy in social housing entreprises; final report of the ESAM project, partly founded by the Intelligent Energy Europe Programme, 2008–https://ec.europa.eu/energy/intelligent/projects/sites/ieeprojects/files/projects/documents/esam project report.pdf. [16] T. Loga, N. Diefenbach, E. Dascalaki, C. Balaras, M. ˇSijanec Zavrl, A. Rakuˇsˇcek, V. Corrado, S. Corgnati, I. Ballarini, N. Renders, T. Vimmr, K.B. Wittchen, J. Kragh, Application of Building Typologies for Modelling the Energy Balance of the
+
+
+12 T. Loga et al. / Energy and Buildings 132 (2016) 4–12
+Residential Building Stock. TABULA Thematic Report No. 2, Institut Wohnen und Umwelt GmbH, Darmstadt, Germany, 2012. [17] M. Kavgic, A. Mavrogianni, D. Mumovic, A. Summerfield, Z. Stevanovic, M. Djurovic-Petrovic, A review of bottom-up building stock models for energy consumption in the residential sector, Build. Environ. 45 (2010) 1683–1697. [18] E. Mata, A. Kalagasidis, F. Sasic Johnsson, Building-stock aggregation through archetype buildings: France Germany, Spain and the UK, Build. Environ. 81 (2014) 270–282. [19] Scenario Analyses Concerning Energy Efficiency and Climate Protection in Local Residential Building Stocks. Examples from Eight European Countries; EPISCOPE Synthesis Report No. 2, in: B. Stein, T. Loga, N. Diefenbach (Eds.), IWU—Institut Wohnen und Umwelt, Darmstadt/Germany, 2016 http:// episcope.eu/fileadmin/episcope/public/docs/reports/EPISCOPE SR2 LocalScenarios.pdf. [20] Scenario Analyses Concerning Energy Efficiency and Climate Protection in Regional and National Residential Building Stocks. Examples from Nine European Countries— EPISCOPE Synthesis Report No. 3, in: B. Stein, T. Loga, N. Diefenbach (Eds.), IWU—Institut Wohnen und Umwelt, Darmstadt/Germany, 2016 http://episcope.eu/fileadmin/episcope/public/docs/reports/EPISCOPE SR3 RegionalNationalScenarios.pdf. [21] P. Florio, O. Teissier, Estimation of the energy performance certificate of a housing stock characterised via qualitative variables through a typology-based approach model: a fuel poverty evaluation tool, Energy Build. 89 (February (15)) (2015) 39–48.
+[22] B. Stein, M. Grafe, T. Loga, A. Enseling, P. Werner, Energetische Stadtsanierung—Integriertes Quartierskonzept Mainz-Lerchenberg; eine Untersuchung im Auftrag des Umweltamtes der Stadtverwaltung Mainz, IWU—Institut Wohnen und Umwelt, Darmstadt/Germany, 2014 http://www. mainz.de/medien/internet/downloads/20140129 QuartierskonzeptEndbericht.pdf. [23] V. Corrado, I. Ballarini, S. Paduos, Assessment of cost-optimal energy performance requirements for the italian residential building stock, Energy Procedia 45 (2014) 443–452. [24] K.G. Droutsa, S. Kontoyiannidis, E.G. Dascalaki, C.A. Balaras, Ranking cost effective energy conservation measures for heating in Hellenic residential buildings, Energy Build. 70 (February) (2014) 318–332. [25] M. Sijanec-Zavrl, M. Skubic, A. Rakucsek, H. Gjerkes, E. Potocar, Practical implementation of cost-optimal regulation for establishing national minimum requirements of Slovenia. V: World Sustainable Energy Days, Wels, 29 February—2 March, 2012. Proceedings. Wels, O. Ö. Energiesparverband, Linz, 2012. [26] M. Amtmann, T. Barth, M. Mitterndorfer, G. Simader, Kosten-Nutzen-Analyse von energetischen Gebäudesanierungen in Österreich, Österreichische Energieagentur—Austrian Energy Agency, Wien, 2011. [27] J. Kragh, K.B. Wittchen, Development of two Danish building typologies for residential buildings, Energy Build. 68 (January) (2014) 79–86, Part A. [28] Usage tracking of the joint TABULA and EPISCOPE projects; online access: www.episcope.eu/communication/networking/usage-tracking.

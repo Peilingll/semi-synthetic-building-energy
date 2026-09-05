@@ -1,0 +1,734 @@
+Implementation of the EPBD
+The Netherlands
+Status in 2020
+AUTHORS
+Gerelle van Cruchten, Netherlands Enterprise Agency (RVO)
+NATIONAL WEBSITES
+www.rvo.nl, www.energielabelvoorwoningen.nl, www.zoekuwenergielabel.nl, www.energielabel.nl, www.rvo.nl/initiatieven/overzicht, www.rijksoverheid.nl/onderwerpen/energielabel-woningen-en-gebouwen, www.verbeterjehuis.nl, www.iedereendoetwat.nl, www.rvo.nl/BENG, www.rvo.nl/onderwerpen/duurzaam-ondernemen/gebouwen/wetten-enregels/bestaande-bouw/installatiekeuringen, www.gebouwenergieprestatie.nl/, www.klimaatakkoord.nl/, www.ilent.nl, www.cbs.nl, www.bouwendnederland.nl, www.ep-online.nl, www.rvo.nl/onderwerpen/duurzaamondernemen/gebouwen/wetten-en-regels/nieuwbouw/epbd-iii, www.scios.nl, www.energiebespaarlening.nl, www.ser.nl/nl/thema/energie-enduurzaamheid/energieakkoord/publicaties, www.gebouwenergieprestatie.nl/bepalingsmethode, www.nen.nl/NENShop/Bouwnieuwsberichten/NTA-8800-rekenmethode-energieprestatie-gebouwenbeschikbaar.htm, www.installq.nl/brl9500-energieprestatieadvisering-enopnameprotocollen
+1. Introduction
+The EPC system in the Netherlands has been implemented since 2008. At the end of 2019, more than 3.8 million residential buildings (48% of the total residential building stock) and approximately 120,000 nonresidential buildings (11% of the total stock) have a registered and valid EPC.
+In December 2012, the government decided to implement a new system for owners of residences. This new system, called “VEL” (“Vereenvoudigd Energie Label” meaning Simplified Energy Label) was developed in 2013 and 2014, and has been operational since January 2015. Legislation for the new labelling system became effective on 1 January 20151. Changes in the accreditation system for experts for the new EPC for residential buildings were also implemented in January 2015. The original EPC system, called “Energie
+Index”, remained active as well, and is mainly used by social housing associations for their building stock and by a (very) small number of private house owners who wish to get a more profound overview of the energy performance of their home.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+2
+As of 1 January 2021, as a result of the implementation of the new energy performance calculation method Nederlandse Technische Afspraak 8800 (NTA 8800), both previous systems (“VEL” and “Energie Index”) will become invalid. EPC’s may then only be calculated with the new method NTA 8800.
+In September 2013, a national Energy Agreement (“Energie Akkoord”) was signed by more than 40 market participants and other stakeholders. The targets for energy efficiency improvements and the use of RES in buildings in this agreement are still in line with the requirements of the EPBD.
+Building on the Energy Agreement, the Climate Agreement was signed on 28 June 2019 between the Government and over 100 public and private parties, representing all relevant sectors. On 2 July 2019, the Climate Law was adopted by the Parliament. The Climate Law aims to reduce the emission of greenhouse gases in all sectors by 49% in 2030 and by 95% in 2050 (related to 1990). The Climate Agreement describes a wide variety of measures in all sectors (not only buildings and the built environment) that public and private parties agreed upon to reach the goals set in the Climate Law. The calculations of the effects of the draft Climate Agreement by the Netherlands Environmental Assessment Agency (PBL) and the Netherlands Bureau for Economic Policy Analysis (CPB) show that the 49% reduction target for 2030 is feasible (i.e., 3.4 Mton of additional CO2-reduction).
+On 9 March 2020, the Government presented the Long Term Renovation Strategy (LTRS) as part of the implementation of Directive 2018/844/EU (EPBD). The LTRS describes in a coherent way the wide variety of measures that the Netherlands will apply, both on the short and longer term, to reach a low carbon built environment in 2050. In March 2020, measures to implement the above-mentioned directive came into effect, e.g., requirements for charging infrastructure for electrical vehicles, obligation to document the energy performance of technical building systems and changes to the inspection schemes for heating and air-conditioning systems.
+As of 1 January 2021, energy performance requirements at NZEB-level will be applicable for new buildings (both residential and non-residential). The energy performance will be calculated with the newly developed energy performance calculation method NTA 8800, which will be applicable for all new and existing buildings, both residential and non-residential.
+2. Current Status of Implementation of the EPBD
+2.I. Energy performance requirements: NEW BUILDINGS
+Energy performance requirements have been in place for new buildings in the Netherlands since 1995. They are updated on a regular basis, moving towards NZEB targets by 2021 (Figure 1).
+The change towards more demanding requirements took place as a result of so-called “tightening studies”. These studies included an analysis of the market penetration of energy efficiency measures, renewable energy applications and energy-efficient heating and cooling generators. They also took into account the cost-effectiveness of these measures and their impact on indoor climate and occupant satisfaction. The tightening studies were carried out by consulting companies and were supervised by the Netherlands
+Enterprise Agency (RVO) on behalf of the Ministry of the Interior and Kingdom Relations (BZK). During the studies, all stakeholders were informed about the results and could comment on them, to ensure that practical experiences with energy saving measures were taken into account2.
+As of 1 January 2021, energy performance requirements for new buildings will be threefold (levels will depend on the type of building as listed in section 2.I.i):
+
+
+Implementation of the EPBD in The Netherlands
+3
+1. maximum energy need (kWh/m2.year)
+2. maximum primary energy use (kWh/m2.year)
+3. minimum share of renewable energy [%]
+These requirements are often referred to as the NZEB-requirements (BENG-eisen).
+For public buildings, these NZEB- requirements are already effective as of 1 January 2019.
+Figure 1. Change over time of the energy performance coefficient in new buildings as an indication of the improvement of the overall energy quality of buildings. As of 1 January 2021, the energy performance coefficient will no longer be used; it will be replaced by energy performance (EP) indicators expressed in kWh/m2.year).
+2.I.i. Progress and current status on new buildings (regulation overall performance)
+The Energy Performance Standards (EPN), established in 1995, were replaced in July 2012 by a new standard, the Energy Performance Standard for Buildings (NEN 7120, also referred to as EPG, that replaced both the existing residential and non-residential standards.
+The main requirement for the energy performance of new buildings is the energy performance coefficient (in Dutch the ‘energieprestatiecoefficient”), setting minimum energy performance (MEP) for new buildings. This indicator is based on the calculated total primary energy consumption of a building based on a series of indicators, e.g., heating, ventilation and lighting, adjusted to the useful floor area and the renewable energy produced by the building. This indicates the building energy performance in MJ/m2.
+The calculation of the energy performance coefficient is mandatory for all new buildings and for large renovations.
+The energy performance coefficient calculation is part of the building permit application.
+As of 1 January 2021, NZEB-requirements will become effective for all new residential and non-residential buildings.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+4
+Energy Performance Calculation Method in the Netherlands
+The energy calculation method for new and existing buildings is defined in Standard NEN 7120 that is in line with the CEN standards3. This calculation of the primary energy consumption of a building is based on monthly climate data that is adjusted for physical processes with a shorter timeframe, e.g., solar gains and heat accumulation. The calculation of the thermal quality of the building envelope includes thermal bridges, ventilation and air infiltration, hot water use, efficiency of heat and cold generators, renewable energy used both in and near the building, and the contribution of passive energy, lighting and daylighting. Shading caused by the building itself is included in these calculations. Shading by other buildings is not taken into account.
+As of 1 January 2021, the energy performance requirements for new buildings will be calculated with the newly developed energy performance calculation method NTA 88004 (Nederlandse Technische Afspraak), which will be applicable for all buildings, both residential and non-residential. This method will also be used to calculate and determine the energy performance certificate for all existing buildings, both residential and non-residential. NTA8800 is based on the CEN Standards.
+The quotient of a building’s calculated annual primary energy needs to the allowed primary energy performance provides the energy performance coefficient (Table 1).
+Building Typology Required maximum values for the energy performance coefficient (new buildings)
+Day-care centres 1.1
+Prisons 1.0
+Healthcare buildings with bed area (hospitals)
+1.8
+Healthcare buildings (other than with bed area)
+0.8
+Office buildings 0.8
+Accommodation in lodging structure (hotels) 1.0
+Accommodation not in lodging structure (conference facilities)
+1.4
+Educational buildings 0.7
+Sports buildings 0.9
+Retail buildings 1.7
+Residential buildings 0.4
+Mobile homes 1.3
+Table 1. Required maximum energy performance coefficients for new buildings since 1 January 2015 and, after cost-optimal studies, for non-residential buildings since 1 July 2015.
+
+
+Implementation of the EPBD in The Netherlands
+5
+2.I.ii. Format of national transposition and implementation of existing regulations
+Since the oil crisis in the 1970s, the Netherlands apply minimum requirements (also referred to as vangneteisen) for the thermal quality of the building envelope. In 2011 and 2012, a study has been carried out, to establish cost-optimal minimum requirements for existing buildings subject to major renovation. These requirements came into effect in 2013-2014. The minimum requirements for individual building components are listed in Table 2 for major renovations (25% envelope), and in Table 3 for minor
+renovations. These minimum requirements will become slightly more stringent when the new energy performance requirements take effect as of 1 January 2021.
+Minimum requirements for the thermal quality of the building envelope by 1 January 2015 for new buildings and major renovation (> 25% envelope).
+Roofs R-value ≥ 6 m2.K/W
+Floors R-value ≥ 3.5 m2.K/W
+Façades R-value ≥ 4.5 m2.K/W
+On average for all transparent elements in a façade section U-value < 1.65 W/m2.K
+Individual transparent element (window, door) U-value < 2.2 W/m2.K
+Table 2. Minimum requirements for building components for new buildings and major renovations (source: Building Decree 2012).
+Roofs R-value ≥ 2 m2.K/W
+Floors R-value ≥ 2.5 m2.K/W
+Façades R-value ≥ 1.3 m2.K/W
+Individual transparent element (window, door) U-value < 2.2 W/m2.K
+Table 3. Minimum requirements for building components for minor renovations (source: Building Decree 2012).
+2.I.iii. Action plan for progression to NZEB for new buildings
+The energy performance coefficient has been tightened on 1 January 2015, as an intermediate step to reach the NZEB level. The next step was to specify the demands on primary energy consumption and the share of renewable energy up to the NZEB level. In March 2015, a first proposal for these requirements for new buildings was shared with stakeholders and sent for adoption by the Parliament in July 2015.
+In 2018, a study on the cost-optimality, in accordance with Article 5 of the EPBD, has been carried out. On the basis of this study, the proposed requirements have been adjusted according to Table 4. They have been adopted in the amendment to the Building Decree 2012, which was published on 24 December 2019, to become effective as of 1 January 2021.
+The triple NZEB requirements are referred to in the Netherlands as the Trias Energetica and are graphically shown in Figure 2.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+6
+Figure 2. Trias Energetica.
+Building Typology Energyneed[kWh/m2.year]
+Primary energyuse[kWh/m2.year]
+Share of renewable energy[%]
+Residential: singlefamily house
+1) 30 50
+Residential: apartment building
+1) 50 40
+Office 1) 40 30
+Assembly: child care 1) 70 40
+Assembly: other 1) 60 30
+Sport 1) 90 30
+Retail 1) 60 30
+Prison 1) 120 30
+Lodging: in a lodging building
+1) 130 40
+Lodging: other 1) 40 50
+Healthcare with no bed area
+1) 50 40
+Healthcare with bed area
+350 130 30
+School 1) 70 40
+1) dependent of ratio envelope/floor area
+Table 4. Requirements for NZEB (adopted December 2019, source: Staatsblad 24-12-2019)
+
+
+Implementation of the EPBD in The Netherlands
+7
+The Dutch government supports a programme from intermediary organisations, such as “NEPROM” (organisation of project developers) and “Bouwend Nederland” (organisation of builders), aimed at preparing the market players for increased demands to reach the NZEB level for new buildings.
+In 2016, these intermediary organisations started a new programme under the name “ZEN” (i.e., “very energy-efficient new buildings”) to prepare the market players for tightening of the NZEB requirements in 2020.
+RVO maintains a database and a website presenting a range of NZEB (meeting the preliminary NZEBrequirements) that have been constructed up to now5. The number of newly constructed NZEB will gradually increase to 100% after the implementation of the legislation regarding these buildings as of 1 January 2021.
+2.I.iv. Requirements for building components for new buildings
+Until 10 March 2020, there were no requirements in the Netherlands for new buildings for separate energy efficiency measures for technical building systems and products concerning space heating, hot water, airconditioning or large ventilation systems. Instead, the total building had to reach a level of efficiency, indicated by the energy performance coefficient. This way, builders and developers were given the freedom to choose the most cost-efficient solution as regards the envelope and the technical building system of that particular building.
+As of 10 March 2020, system requirements have come into force for systems concerning space heating, space cooling, ventilation, hot tap water and built-in lighting. The system requirements apply if a new system is installed or an existing system is changed.
+The energy performance requirements that apply to technical building systems are expressed in the calculated primary fossil energy in relation to the net need (Table 5). This not only values the efficiency of a technical building system, but also the use of renewable energy. A digital calculation tool has been developed for this6.
+Technical building systems System efficiency
+- residential
+System efficiency
+– non-residential
+Space heating ≤ 1.31 ≤ 1.31
+Space cooling ≤ 1.33 ≤ 1.33
+Ventilation - ≤ 3.8 kWh/(m3/h)
+Hot tap water ≤ 3.45 ≤ 3.45
+Recessed luminaires - ≤ 75 kWhprim/m2
+Table 5. Requirements for the system efficiency of technical building systems (effective as of 10 March 2020, source: RVO)
+The mandatory minimum requirements for building elements in new buildings are presented in Table 2.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+8
+2.i.v. Enforcement systems new buildings
+A project developer has to demonstrate full compliance with the Building Decree (including energy performance requirements) to receive a building permit for a new building or a major renovation. Compliance is checked and permits are issued by local municipalities before construction.
+Systematic monitoring and enforcement are carried out by the same local municipality that issued the permit.
+Municipalities are responsible for compliance checking also during construction. In case of non-compliance, they issue a “cease-work” order that remains valid until the requirements are met. As such, there are no financial penalties. Buildings that do not comply do not get built, and if builders deviate, construction is ceased until it is in line with the permit.
+In 2022, the ’Quality Assurance Act for building’ will enter into force for housing and other small buildings (Class 1)7. Private quality assessors will monitor the building activities. Afterwards, they will produce a commissioning dossier to the local municipality (or the regional environment service), showing that the new building fulfils the requirements of the Building Decree. For more complex buildings (Class 2 and up), the situation remains the same as it was.
+Quality control concerning the energy performance of buildings (according to the new NTA 8800) will be performed under the assessment directive BRL9500 (BeoordelingsRichtLijn 9500).
+2.II. Energy performance requirements: EXISTING BUILDINGS
+Similar to new buildings, major renovations are required to have a building permit that meets minimum requirements for building components, e.g., the R-value of walls, roof and floor, and the U-value of windows and doors. A renovation is considered to be major when more than 25% of the building envelope will be renovated (see section 2.I.ii). The calculation of the energy performance coefficient is also mandatory for major renovations in houses and offices (see also section 2.I.i).
+For minor renovations, there are only minimum requirements for the R-value of walls, roof and floor, and U-value of windows and doors. In such cases, no energy performance calculation or building permit is required. The requirements for the individual building components are listed in section 2.I.ii.
+2.II.i. Progress and current status of existing buildings (regulation overall performance)
+The Dutch strategy for the renovation of buildings is based on the Energy Agreement signed in 2013, endorsed by around 40 parties, public and private, with strong ambitions, goals, intentions and agreements regarding energy saving in many areas in the Netherlands. By the end of 2016, the Cabinet presented the Energy Agenda. Herein, the requirements for the long term are set to 2050.
+Building on the Energy Agreement and the Energy Agenda, on 28 June 2019 the Climate Agreement7 was signed by the Government and over 100 public and private parties, representing all relevant sectors. On 2 July 2019 the Climate Law8 was adopted by the Parliament. The Climate Law aims to reduce the emission of greenhouse gasses in all sectors by 49% in 2030 and by 95% in 2050. The Climate Agreement describes the measures that public and private parties agreed upon to reach the goals set in the Climate Law. The mentioned parties are responsible for the execution of the measures agreed upon under supervision of the relevant Ministers and sectoral implementation councils that have been established to this end. The sectors addressed are the built environment, mobility, industry, agriculture and electricity. On top of that, cross
+
+
+Implementation of the EPBD in The Netherlands
+9
+sectoral integration includes measures that apply to all five sectors, e.g., financing, biomass, Regional Energy Strategies9, public support, labour market, training of employees, etc.
+As of 1 January 2023, all (existing) office buildings in the Netherlands should have an energy label C or better. If an office building does not meet this requirement, as of this date, it may no longer be rented out. This requirement is part of the Building Decree 2012. Some buildings are exempted from the ‘minimumlabel-C-requirement’, e.g., buildings where the useful floor area of the offices is less than 50% of the total floor area of the building, offices < 100 m2, monuments, temporary buildings and buildings for which the measures to reach label C have a payback time of more than 10 years.
+Figure 3 shows that building-related energy consumption of households has decreased over the years until 2015, mainly due to the decreasing demand for natural gas. Since then, building-related consumption has more or less stabilised. Building-related electricity consumption remains virtually unchanged, but selfgeneration of electricity is increasing. The increase in non-building-related consumption is striking. Two causes of this are domestic ICT use and the increasing use of electrical appliances.
+Figure 3. Energy consumption of households (source: RVO (2019) Monitor Energiebesparing Gebouwde Omgeving)
+Legend: Aardgas = natural gas, Warmte = Heat,
+Gebouwgebonden elektriciteit = building-related electricity, PV = PV,
+Niet gebouwgebonden verbruik = energy consumption that is not building-related.
+The share of homes with a favourable energy label (A or B) is highest among owner-occupied homes (36%); it is 29% for housing associations and 27% for private rental housing. Household energy consumption consists of approximately 70% natural gas. Government policy aimed at energy savings differs per type of owner.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+10
+Figure 4 shows that also building-related energy consumption in the services sector decreased until 2016 and more or less stabilised thereafter. Natural gas consumption for space heating has decreased. The decline has leveled off in recent years. The increase of the building stock could be a plausible explanation for this. Electricity consumption in the services sector has been almost constant over the years. Nonbuilding-related consumption has slightly grown. This may have been caused by the increase in economic activities.
+Figure 4. Energy consumption of the services sector (source: RVO (2019) Monitor Energiebesparing Gebouwde Omgeving)
+Legend: Aardgas = natural gas, Warmte = Heat,
+Gebouwgebonden elektriciteit = building-related electricity, PV = PV,
+Niet gebouwgebonden verbruik = energy consumption that is not building-related.
+A very large part of non-residential construction (82%) does not yet have a registered energy label. The number of properties with a favourable energy label (A+ or better, A or B) is highest among shops (69%). This is followed by healthcare buildings (64%), offices (52%) and finally education facilities (44%). About half of the energy consumption of services consists of natural gas. Government policy aimed at saving energy in non-residential construction differs per sector.
+2.II ii. Regulation of individual parts, distinct from whole building performance
+See Tables 2 and 3 in section 2.I.ii.
+2.II.iii. Initiatives/plans to improve the existing building stock
+Dutch policy comprises a wide range of measures, with a mix of thematic and target group-oriented instruments. There are both measures that promote cost-effective energy-saving interventions in buildings in the short term and measures that enable in-depth renovation of buildings (that require larger investments). There are existing measures that continue and new measures from the Climate Agreement that accelerate the approach towards a low-carbon built environment. The policy commitment for this acceleration is a CO2 emission reduction, in which the CO2 target is paramount, and the instruments and measures are adjusted when necessary. All sectors within the built environment must become greener in order to contribute to the desired emissions reduction.
+
+
+Implementation of the EPBD in The Netherlands
+11
+The thematic approaches are:
+A neighbourhood-oriented approach to the built environment
+The built environment is not uniform. Sustainability solutions must match the local situation and, for example, use locally available renewable energy sources. This is best achieved with local management, within a regional and national framework. The Dutch approach therefore consists of:
+• national policy;
+• 30 Regional Energy Strategies that elaborate supply and demand for a sustainable energy supply;
+• municipal energy visions with district-oriented heat plans that elaborate per district what the sustainable energy supply for the built environment will look like.
+These three elements are supported by a statutory amendment, as a result of which, homes and neighbourhoods are no longer connected to natural gas, and testing grounds for natural gas-free neighbourhoods, in which concepts for sustainable heating based on renewable energy sources (without natural gas) are elaborated.
+Tax instruments
+These instruments directly support investments in energy savings. Firstly, there are general tax instruments, such as the energy tax on electricity and gas, the energy investment allowance (EIA), the environmental investment allowance (MIA) and the Random Depreciation of Environmental Investments (Vamil). All these instruments ensure that energy savings become more cost-efficient and investments yield better returns. Secondly, there are specific tax instruments, such as the VAT refund and the netting scheme for solar panels, and the energy tax exemption for renewable energy generated by cooperatives.
+Innovation tools and training
+Two aspects are essential to create a construction industry that can efficiently and effectively renovate the building stock, i.e., innovation and training of professionals. That is why innovation is promoted by a Knowledge and Innovation Platform for Social Real Estate, the digital system for the built environment, the Integrated Knowledge and Innovation Agenda for the Climate Agreement (IKIA) and the multi-year missiondriven innovation programmes. Finally, the Sustainable Heat and Cold Built Environment Programme focuses on tackling a tough subproblem: supplying heat and cold to buildings from sustainable sources.
+Education and training of construction professionals is also a focus point, including targeted training for the construction of decentralised sustainable heating and cooling techniques. The Declaration of Intent on the Labour Market and Training in the Neighbourhood Approach is aimed at preparing future construction professionals for in-depth renovations; the Declaration of Intent ‘People make the transition’ offers a
+similar framework for current professionals. Finally, the Green Deal for the Development of Decentralised Sustainable Heating and Cooling Technologies marks important steps in the training of professionals who can design, build and maintain the climate systems of the future.
+The approaches per sub-sector are:
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+12
+Private homes
+From 1 January 2021, the Building Decree requires newly-built homes (and utility buildings) to meet the requirements for Nearly Zero-Energy Buildings (BENG). The maximum energy requirement and the maximum primary fossil fuel energy consumption are then expressed in kWh/m2.year. A minimum share of renewable energy must also be applied.
+Although these requirements do not have a direct effect on renovation, they do ensure a wider introduction of low-carbon and carbon-free techniques that can subsequently also be applied to existing buildings. Requirements for the energy performance of building parts (such as walls, roofs and windows) and of technical building systems (such as heating installations) improve existing homes at natural moments, such as sales and renovation. Sustainability standards per home type and targets for the degree of insulation help private owners to improve their homes and to achieve the desired CO2 emissions reduction.
+Broadening of the mortgage standard, specifically for home improvement aimed at CO2 emissions reduction, a heat fund, building-related financing and energy-saving and sustainability loans, will help private owners investing in sustainability. Other measures reduce the costs of investments and help private owners to take steps towards a CO2-neutral home. Examples are the Subsidy for Energy Saving Private Home (SEEH), the Investment Subsidy for Sustainable Energy (iSDE), the Regulation on Reduction in Energy Consumption (RRE) and the reduced VAT rate for home improvement.
+‘Verbeter je huis’ (Improve your home)
+The online tool ‘Verbeter je huis’ (www.verbeterjehuis.nl supports house owners (and house owner associations) upon improving the energy efficiency of their house. It offers a user-friendly energy calculation (based on the ‘Energy Saving Explorer’-calculation tool), that can take the user behaviour of the occupants into account, offers tailored advice on energy efficiency measures and a step-by-step approach to make the house ready to disconnect from the natural gas grid. In addition, it provides information about suppliers and companies that can apply the measures and also information on how to finance the measures (with links to subsidies and banks offering attractive ‘green’ mortgages).
+Rental housing
+The rental sector also benefits from a wide range of specific instruments. Building decision requirements promote the improvement of rental properties at specific triggering moments in the life span of a building, just like private homes. The rental sector in the Netherlands is dominated by social rent (via 320 housing associations with approximately 2.2 million housing units, CBS 2019), which comprises approximately 67% of the rental market for housing.
+The social rental sector is playing a pioneering role on the road to natural gas-free and CO2-free homes. In addition to instruments that apply to the entire sector, various instruments focus specifically on the social rental sector. Specific efforts are being made to convert social houses from natural gas connections to district heat connections. Efforts are also being made to partially pass on the cost of energy efficiency investments to tenants, thereby bridging the ‘split incentive’ between investor and user. An umbrella
+covenant with the social housing associations offers the social rental sector a framework for improving the entire stock of social rental housing in the longer term. Various incentives, including the energy performance fee, the iSDE and the Reduction of Landlord Levy Sustainability Scheme, provide additional investments.
+
+
+Implementation of the EPBD in The Netherlands
+13
+The ‘Startmotor’ programme stimulates the large-scale, in-depth sustainable renovation of social housing. The ‘Startmotor’ aims to achieve 20% to 40% integral cost reduction (TCO) compared to the current cost level by 2030 - through joint standardisation, time-spread demand bundling and innovation. The ‘Renovation Accelerator’10 is an important part of the ’Startmotor’ in the Climate Agreement. The ‘Startmotor’ aims to make 100,000 homes natural gas-free or natural gas-free-ready between 2019 and 2023. The ‘Renovation Accelerator’ contributes to these objectives by accelerating upscaling of energy renovations at lower integral costs. In addition, the ‘Renovation Accelerator’ strives to achieve more innovation and higher productivity in the construction sector. Procurement cooperation, chain cooperation, standardisation, predictable distribution of demand over time and industrialisation are key concepts in this. This means that the ‘Renovation Accelerator’ not only occupies a key position within the Climate Agreement, but also serves a broader social and sectoral interest.
+Finally, the mandatory standard for rental homes, which applies to all rental homes, ensures that they
+consume less energy and emit less CO2 as a ‘stick behind the door’. Lower energy consumption also makes an important contribution to preventing energy poverty.
+Non-residential buildings
+Non-residential buildings form a diverse group. This includes offices and schools, but also many commercial buildings with a craft or industrial function. There is also a wide range of instruments for this sub-sector. These are often focused on a sub-segment in order to match the specific needs for a specific type of building. There are, for example, sectoral roadmaps that indicate the road to CO2 neutrality per subsegment. These roadmaps are developed in close connection with those directly involved, in order to match their preferences and possibilities as much as possible.
+From 2023, offices must meet a minimum energy performance (Energy Label C). Many companies and institutions also have to comply with various energy and environmental measures based on the Environmental Management Act. For example, they have an energy-saving obligation, elaborated in lists of Recognised Measures, whereby they must implement all measures with a payback period of up to five years. An obligation to provide information ensures that enforcers can effectively monitor compliance and closely monitor the energy savings of utility buildings. Energy Efficiency Directive (EED) audits and the inspection of heating and air-conditioning systems give building owners insight into available cost-effective investments. The obligation to install an automation and control system ensures that the last buildings will also apply this energy-saving technology. Finally, the iSDE subsidy scheme supports investments in specific sustainable energy technologies, in addition to various generic tax instruments.
+Social real estate (sub-segment)
+The national government has a pioneering role, which is reflected in the roadmap of the Central Government Real Estate Agency. This has been developed to ensure that, by means of planned investments, government buildings become sustainable more quickly, and that they become CO2-free with technical and management measures.
+This concerns buildings with a public function such as education, sports, culture, welfare, social care and / or medical care. These sectors are committed to drawing up a roadmap in which they describe their own contribution to an energy-neutral built environment in 2050. There will be roadmaps for the Central Government Real Estate Agency (Rijksvastgoedbedrijf RVB), the Association of Dutch Municipalities, the Interprovincial Consultation, the Police, for primary, secondary, higher professional and scientific education, for sports and care facilities, and for monuments. The national government plays a pioneering
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+14
+role in order to be a driver and example for others. In this way, the Netherlands also fulfils the obligation to renovate 3% of the building stock of the central government every year.
+2.II.iv. Long Term Renovation Strategies, status
+The updated Dutch Long-Term Renovation Strategy, that was submitted on 10 March 2020, describes how the Netherlands implements the climate transition in the built environment. This strategy complies with the requirement of the Energy Performance of Buildings Regulation (REPG: this is the national regulation through which the EPBD has been implemented). It provides a coherent picture of the broad range of measures that the Netherlands is deploying to achieve a low-carbon built environment by 2050.
+The strategy provides an in-depth overview of the Dutch approach to the built environment and highlights some key points. It also reflects the relationship between existing instruments (that will continue in the next years) for making the built environment more sustainable, and includes new instruments that arise from the acceleration of the approach agreed in the Dutch Climate Agreement.
+The LTRS supports the Dutch policy comprising of a wide range of measures, with a mix of thematic and target group-oriented instruments (described above in section 2.II.iii).
+Figure 5. Integral overview of strategies, policies and measures (Source: LTRS, RVO, 6 March 2020)
+2.II.v. Financial instruments and incentives for existing buildings
+Schemes currently running (or soon to start) at the beginning of 2020 are:
+Adjustment of energy tax on gas and electricity (all building owners)
+In order to promote sustainability (and a shift from the use of natural gas to the use of electricity) with a financial incentive, there will be changes in the energy tax (by means of a ‘Tax Slide’) and in the ‘Surtax
+
+
+Implementation of the EPBD in The Netherlands
+15
+Sustainable Energy’ (ODE = Opslag Duurzame Energy), which will have an effect on the energy bill. The ‘Tax Slide’ comes down to a higher tax on gas and a lower tax on electricity. On balance, the energy bill of a household with an average energy consumption remains the same. In addition, a reduction in the ‘Surtax Renewable Energy’ and an extra discount on the energy bill will result in a total discount of 100 euros on the energy bill in 2020.
+Energy Investment Tax Deduction (EIA) (companies)
+This is a financial scheme (tax deduction for investments in energy saving measures) for companies to facilitate sustainable / energy-efficient investments and thereby accelerate the energy transition. This concerns investments in sustainable construction, insulation and heat, energy-efficient lighting, generation of sustainable energy and improvement of the energy label.
+Environmental Investment Tax Deduction (MIA) & Depreciation of Environmental Investments (VAMIL) (companies)
+The government wants to stimulate investments in new or renovated buildings. The Ministry of Infrastructure and Water Management and the Ministry of Finance have made this even more attractive with two investment schemes. The Depreciation of Environmental Investments Scheme (VAMIL) allows entrepreneurs to determine the manner of depreciation of the investment themselves (up to 75% of the investment costs). By choosing a favourable time, they can achieve liquidity and interest benefits. The Environmental Investment Allowance (MIA) scheme offers tax deductions of up to 36% of the investment amount. This deduction is in addition to the usual investment deduction for entrepreneurs.
+Investment subsidy Renewable Energy (ISDE) (companies and individuals)
+This scheme is currently aimed at sustainable installations such as heat pumps. The ISDE is broadened so that subsidy for insulation is also possible. Until 2030, 100 M€ per year is available for the ISDE.
+Subsidy for Energy Saving Own Home (SEEH) (individuals)
+In order to facilitate owner-occupiers in the short term in making their homes more sustainable, a total of 90 M€ is available for 2019 and 2020 via the Subsidy for Energy Saving Own Home (SEEH) scheme. As of 2021 the SEEH merges into the broader Sustainable Energy Investment Subsidy (ISDE).
+VAT refund and offsetting scheme for PV (companies and individuals)
+The Netherlands encourages solar panels among small users by returning the VAT on the purchase of solar panels and by enabling the redelivery of electricity at an attractive rate with a netting regulation.
+Reduced VAT rate (companies and individuals)
+A reduced VAT rate applies for the installation of insulation material and (insulating) glass. The VAT rate has been reduced from 21% to 6%.
+Energy-saving measures programme (private individuals)
+With small measures and little money, such as better adjustment of the heat installation and the application of radiator foil, large savings can be made on the energy bill and direct reduction of CO2 emissions. This is why the Energy Saving Measures Programme (PRE) has been started in collaboration with municipalities and market players. 93 M€ is available for this.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+16
+Exemption from energy tax for self-generated energy for energy cooperatives (private individuals)
+Members of energy cooperatives (groups of private individuals) no longer have to pay tax in the first level of the energy tax for the part of the jointly generated renewable electricity allocated to them. It is also being investigated whether a development facility can be set up, for energy cooperatives to finance development costs.
+Extension of mortgage norm (individuals)
+In the Netherlands, a mortgage is not allowed to be higher than a certain percentage of one’s income. This percentage is the ‘mortgage norm’. However, people who implement energy-saving measures in their own home through a mortgage can get a higher loan for that investment (so, in these cases the mortgage norm is extended). A certain amount of the loan can also be disregarded if, before 1 January 2015, the house has an A++ energy label or higher, or an energy index or energy performance coefficient of no more than 0.6. A certain amount of the loan can also be disregarded if a mortgage is provided to finance a zero-energyhome. The scheme is updated annually.
+Heat fund (homeowners)
+There will be a heat fund that provides attractive loans for all homeowners to make their home more sustainable. This heat fund will be accessible to everyone, including those who currently do not have access to financing. In February 2020, the heat fund has started to provide financing with terms of up to 20 years for individual homeowners, and up to 30 years for Associations of Homeowners (HOA) of eight apartments or more (matching the lifespan of the sustainability measures)11. An interest rate comparable to that for mortgages with a National Mortgage Warranty (NHG) with the same loan term applies. In combination with the available subsidies for insulation and sustainable heating options, the financing costs for sustainability will decrease. Owners can thus increasingly recoup the costs for sustainability measures through a lower energy bill (housing costs neutrality).
+Regulation Reduction Landlord levy (RVV) for sustainable investments (landlords)
+Housing associations and other landlords receive, among other things, a discount from the landlord levy of 100 M€ per year from the government for the social houses of which the energy class is improved with at least 3 energy class levels. This discount can be used to finance energy saving investments.
+Stimulation Scheme for Natural Gas-Free Rental Homes (SAH) (landlords)
+This scheme supports the connection of rental homes to a heating network. In total, this concerns 200 M€ from the money available for the Energy Investment Allowance (EIA). This compensation scheme is currently being designed in consultation with the landlords.
+Renovation accelerator
+The renovation accelerator (see also section 2.II.iii) bundles the demand from housing associations for (hybrid) heat pumps, insulation materials and other energy saving measures. The Ministry of the Interior and Kingdom Relations organises the renovation accelerator in collaboration with various parties such as Techniek NL (trade association of installation companies), Bouwend Nederland (trade association of construction companies), the Construction Agenda (cooperation between various construction-related parties), RVO and the umbrella organisation of social housing associations (Aedes). When making (rental) homes natural gas-free, improving the building envelope (insulation) is of great importance, in addition to the energy source. After all, heat demand can be greatly reduced with insulation, better insulating glass
+
+
+Implementation of the EPBD in The Netherlands
+17
+and greater airtightness. By aggregation of investments of several housing associations, it becomes more attractive for heat providers and construction companies to develop a more affordable (joint) offer. This leads to innovation, higher quality, cost reduction and thus a lower price. The renovation accelerator aims to match supply and demand. The renovation accelerator will also take over part of the tendering process and work from housing associations. Naturally, the individual housing association continues to decide on its own assignments. The renovation accelerator supports housing associations by bundling part of the demand in the ‘Startmotor’ (starter motor) and bringing it to the market in a multi-year, predictable manner. Until 2024, 130 M€ will be made available for the renovation accelerator.
+2.II.vi. Information campaigns / complementary policies
+Climate campaign ‘Iedereen doet wat’ (Everyone does something)
+In September 2019, the national government launched a long-term campaign on the climate transition together with companies and social organisations. Under the title ‘Everyone does something’, the
+campaign helps people make sustainable choices in and around their house. The campaign makes it clear that everyone can contribute something: big or small, cheap or more expensive. The question is not whether people can do something for the climate, but what they can do.
+The campaign offers targeted tools for people who want to make their lives more sustainable. On the website www.iedereendoetwat.nl, there are more than 20 options of what people can do to make their lives more sustainable. The options vary; where one may consider installing solar panels, someone else may want to waste less food. The website will be further enriched in the coming years and will be adapted as the climate transition progresses.
+The campaign is a joint initiative of the Ministry of Economic Affairs and Climate Policy, the Ministry of the Interior and Kingdom Relations, the Ministry of Infrastructure and Water Management and the Ministry of Agriculture, Nature and Food Quality. The campaign also cooperates with companies and social
+organisations that, under the title ‘Everyone does something’ support people, for example with a concrete product action or additional information.
+Figure 6. National climate campaign ‘Iedereen doet wat’.
+2.III. Energy Performance Certificate requirements
+The EPC system in the Netherlands has been implemented since 2008. At the end of 2019, more than 3.8 million residential buildings (48% of the total residential building stock) and approximately 120.000 nonresidential buildings (11% of the total stock) have a valid EPC registered.
+2.III.i. Progress and current status on EPCs at sale or rental of buildings
+Table 6 shows that for 2,804,418 residential buildings an energy performance label has been registered in the period between 1 January 2015 and 31 December 2019. Note: double registrations for the same residential building are not taken into account in these numbers.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+18
+Residential buildings with a label registered since 1 January 2015
+EPC (VEL method)
+EPC (Energy Index method)
+Total
+Total by the end of 2015 280,914 205,898 486,812
+Total by the end of 2016 520,401 480,751 1,001,152
+Total by the end of 2017 764,045 816,371 1,580,416
+Total by the end of 2018 976,036 1,198,958 2,174,994
+Total by the end of 2019 1,193,232 1,611,186 2,804,418
+Table 6. Labels issued over the period between 1 January 2015 and 31 December 2019 (source: RVO).
+Table 7 shows the transaction rates of residential buildings (houses), with or without EPC, from 2015 to 2019. These include the EPCs resulting from the VEL method as well as the Energy Index method (EI), see chapter 1. Introduction for a short explanation of both methods.
+Labels residential buildings
+Transactions sales (with or without* requirement of EPC)
+Transactions sales with requirement of EPC
+Transactions sales with requirement of EPC, without EPC
+% Transactions sales with requirement of EPC, with EPC
+%
+Total transactions 2015
+248,899 237,245 54,791 23% 182,454 77%
+Total transactions 2016
+296,125 267,487 35,864 13% 231,623 87%
+Total transactions 2017
+306.727 268.344 32.848 12% 235.496 88%
+Total transactions 2018
+226.073 193.736 20.512 11% 173.224 89%
+Total transactions 2019
+289.821 248.345 22.221 9% 226.124 91%
+* Some transactions do not have an EPC requirement, for instance monumental buildings or the transaction of a piece of land.
+Table 7. Transaction rates of residential buildings (houses), with or without EPC, from 1 January 2015 to 31 December 2019.
+According to data collected by the Land Registry and Mapping Agency (‘Kadaster’)12, in 2015, 77% of houses with an EPC requirement had an EPC at the moment of sale. This had risen to 91% in 2019. Each year there has been an increase so far.
+
+
+Implementation of the EPBD in The Netherlands
+19
+The presence of the label is checked by the ‘Inspectie voor de Leefomgeving en Transport’ (ILT, the National Governmental Inspection Authority13) of the Ministry of Infrastructure and Water Management. If the label is missing at the moment a building is passed on to a new owner, then the seller can be fined by ILT.
+2.III.ii. Quality Assurance of EPCs
+For the ‘VEL’-system, running from 1 January 2015 to 1 January 2021, ’Recognised experts for energy labels in residential construction’ (‘Erkend Deskundige Energielabel Woningbouw’) must meet the requirements of the ‘Energy Index’-system or pass a new, simplified exam. The simplified exam is organised by ‘SVMNIVO’14, the exam centre for the real estate industry. In addition, experts must follow a training course from RVO to learn how to operate the web tool on the RVO website15.
+Checks and sanctioning are part of the system that is operational since 1 January 2015 and carried out by the ILT.
+In 2016, 1,571 EPCs were checked by the ILT. In 77 EPCs, the ILT found errors in the input data. More than 95% of the EPCs were correct. Recognised experts in whose EPCs errors have been detected have been checked again in early 2017.
+Up to the end of 2019, over 6,000 EPCs have been checked. In 8% of these EPCs one or more mistakes were found. The experts in whose EPC(s) a mistake was encountered received a fine.
+2.III.iii. Progress and current status of EPCs on public and large buildings visited by the public
+The obligation to display the energy performance label has been mandatory since 2008. In 2015, 1,183 public buildings (municipality, province and government buildings) were identified, and 584 of them were checked by the ILT. Of these buildings, 245 had not yet displayed their energy label. Another 380 public buildings were inspected in 2016.
+The ILT can give owners of such buildings a financial penalty in case of non-compliance. To date, several owners of public buildings have received a warning of non-compliance with the requirement for public display of the EPC. They are given a 6 month period to become compliant and will be checked again after this period.
+2.III.iv. Implementation of mandatory advertising requirement – status
+The presence of the label in advertising is checked by the ILT.
+Of all houses sold in the Netherlands, 80% are advertised on the website of the real estate chain, ‘Funda’. The remaining 20% are sold through other agencies or means, in most cases without an advertisement. On the ‘Funda’ website, the final EPC or otherwise the preliminary EPC is shown, along with the characteristics of the property. The obligation to publish the final label is only mandatory if an EPC already exists. In many cases, house owners have not registered their final EPC when the advertisement is published.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+20
+2.IV. Smart buildings and building systems
+2.IV.i. Status and plans on smart buildings
+Owners and, above all, building users need reliable information to reduce their building's energy consumption. The utility sector is therefore focusing on building automation systems, including an obligation to have an extensive energy management and building management system in larger buildings from 2026 onwards. With such a system, the user can better control a lower energy consumption while maintaining comfort and a healthy indoor climate, by automatically adjusting the settings of installations to the demand. Homes and smaller utility buildings are or will be equipped with a smart meter (by the end of 2020 all households and small enterprises will be offered a smart meter; they are free to accept or reject the smart meter). This allows users to gain better insight into current energy consumption; then they can work more effectively with energy savings.
+2.IV.ii. Regulation of system performance
+As of 10 March 2020, Dutch legislation and regulations prescribe system requirements for improving the energy performance of technical building systems. These requirements focus on the energy performance, adequate dimensioning, installation and adjustment, and the adjustability of technical building systems.
+The new requirements apply to technical building systems in existing and new buildings. The system requirements apply to systems for space heating, space cooling, ventilation, hot tap water and built-in lighting.
+The energy performance requirements that apply to technical building systems are expressed in the calculated primary fossil energy in relation to the net requirement. This not only values the efficiency of a technical building system, but also the use of renewable energy. A digital calculation tool has been developed for this, and is available at https://www.rvo.nl/onderwerpen/duurzaamondernemen/gebouwen/wetten-en-regels/nieuwbouw/epbd-iii/systeemeisen-technische-bouwsystemen.
+2.IV.iii. Building Automation and Controls (BACs)
+Commercial buildings with heating or air-conditioning systems with a capacity of more than 290 kW must have a building automation and control system (BACS) from 2026 onwards. These systems must be able to:
+• monitor, keep up to date, analyse and enable energy consumption to be continuously monitored;
+• test the energy efficiency of the building, detect the loss of efficiency of technical building systems and inform the manager of the facilities or technical installations on the possibilities for improving this;
+• enable communication with connected technical building systems and other devices in the building. The systems should also be interoperable with technical building systems of different types of proprietary technologies, devices and manufacturers.
+2.IV.iv. Status and encouragement of intelligent metering
+In recent years, the use of energy consumption management systems that can be linked to the smart meter has risen significantly. In addition, it is estimated that 75% of households now have a smart meter.
+Table 8 shows a strong growth in applications (P1 real time data and P4 day after data) from the energy companies. Sales numbers are available from the independent service providers (mostly P1 applications).
+
+
+Implementation of the EPBD in The Netherlands
+21
+2017 2018 2019
+P1- insight services 0.2 0.3 0.4
+P4-insight services 1.3 1.8 2.0
+Total 1.6 2.1 2.4
+Table 8. Realisation of use of energy consumption management systems (broken down to P1 or P4 service) (in million users) (Source: Energie-Nederland).
+Figure 7 shows a strong growth in energy use data requests, which means people use the application and look at the data.
+Figure 7. Number of energy use data requests on a monthly basis (Source: NEDU P4-rapportage 2019)
+In 2019, the grid managers realised 1,197,000 smart meter placements. Up to and including 2019, a total of 6.4 million (more than 76% of the target of 8.6 million) of offers were realised.
+2.IV.v. Progress and current status on heating systems (Inspection / Equivalence)
+Until 9 March 2020, the Netherlands only had an inspection obligation for buildings with a heating system of more than 100 kW. The Netherlands used an alternative approach (‘OK-CV’ quality label) for buildings with a heating system with an effective rated output between 20-100 kW. The ‘OK-CV’ quality label was launched in 2015 and was presented at the time as a voluntary periodic inspection for the central heating boiler. The aim of ‘OK-CV’ was to improve the energy performance of the boiler and to increase safety. ‘OKCV’ was a system performance inspection, in which, among other things, CO emissions from the central heating installation were measured, which was recorded in a national database together with the maintenance condition of the installation. In 2020 ‘OK-CV’ came to an end.
+From 10 March 2020, all buildings with a heating system equal to or above 70 kW must be inspected regularly. The inspection frequency is once every 4 years.
+The Netherlands has approximately 330,000 gas-fired heating systems with a power of more than 70 kW. The current inspection frequency for gas-fired systems is once every 4 years, resulting in 330,000 installations / 4 years = 82,500 inspections per year.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+22
+2.IV.vi. Progress and current status on AC systems (Inspection / Equivalence)
+There has been a mandatory inspections regime for AC systems in place since 1 December 2013.
+Since 10 March 2020, the EPBD inspection for both heating and air-conditioning systems is mandatory from a nominal power of 70 kW. If one of the two systems is linked to a ventilation system, this ventilation system must also be inspected. Inspection frequency is once every 5 years.
+2.IV.vii. Enforcement and impact assessment of inspections
+As of 10 March 2020, inspections have to be registered in an inspection register. As of the same date, municipalities and Environmental Services are responsible for enforcement of inspections. Enforcement of heating inspections was already carried out by municipalities, whereas enforcement of air conditioning inspections previously lay with the ILT. Municipalities and Environmental Services have access to the inspection register.
+3. A success story in EPBD implementation
+System Energy Performance of Buildings
+As of 1 January 2021, the new energy performance requirements (maximum kWh/m2.year and minimum percentage of renewable energy) for new buildings will be calculated with the newly developed energy performance calculation method NTA8800 (Nederlandse Technische Afspraak), which will be applicable for all buildings, both residential and non-residential. In addition, the method calculates the overheating indicator for residential buildings. This method will also be used to calculate and determine the energy performance certificate for all existing buildings, both residential and non-residential. NTA8800 is based on the CEN Standards.
+It has been a major challenge to develop the calculation method, software and inspection protocols for all new and existing buildings. In addition, all training-, quality- and enforcement systems have been brought in line with the new method as shown in Figure 8; a true change of the whole system affecting all new and existing buildings.
+Figure 8. System Energy Performance of Buildings (Source: http://www.gebouwenergieprestatie.nl/stelselenergieprestatie-van-gebouwen/)
+
+
+Implementation of the EPBD in The Netherlands
+23
+4. Conclusions, future plans
+The Climate Law and Climate Agreement show the large ambition the Netherlands has with respect to moving to a decarbonised economy and built environment until 2050. A wide range of measures has been defined and agreed upon by over 100 public and private parties. All partners are willing to contribute. The implementation of the EPBD perfectly fits into these measures.
+For the built environment, the focus will be on preparing all buildings to be ready to disconnect from the natural gas grid and creating regional energy strategies optimised for local conditions in such a way that, by 2050, the emission of greenhouse gasses in the Netherlands is reduced by 95% compared to 1990.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+24
+Endnotes
+1. http://wetten.overheid.nl/BWBR0020921/2017-01-01
+2. http://www.rvo.nl/onderwerpen/duurzaam-ondernemen/gebouwen/wetten-en-regelsgebouwen/energieprestatie-beng
+3. https://www.rvo.nl/onderwerpen/duurzaam-ondernemen/gebouwen/wetten-en-regels/bestaandebouw/energielabel-woningen/nen-7120-en-nta-8800-voor-woningen
+4. https://www.gebouwenergieprestatie.nl/bepalingsmethode/ and https://www.nen.nl/NENShop/Bouwnieuwsberichten/NTA-8800-rekenmethode-energieprestatie-gebouwen-beschikbaar.htm
+5. https://ez.maps.arcgis.com/apps/MapSeries/index.html?appid=6b991a9506804f138139b4938163b1d3 &entry
+6. https://www.rvo.nl/onderwerpen/duurzaam-ondernemen/gebouwen/wetten-enregels/nieuwbouw/epbd-iii/systeemeisen-technische-bouwsystemen
+7. https://www.rijksoverheid.nl/onderwerpen/bouwregelgeving/meer-toezicht-in-de-bouw-via-de-wetkwaliteitsborging-voor-het-bouwen-wkb
+8. https://www.rijksoverheid.nl/onderwerpen/klimaatverandering/klimaatbeleid
+9. https://vimeo.com/476309798
+10. https://derenovatieversneller.nl
+11. Homes that cost no more than 325,000 € can be bought with the National Mortgage Warranty (NHG) of the Home Ownership Warranty Fund (guaranteed by Dutch government). The NHG limits the financial risks of a home. The fund guarantees the repayment of the mortgage to the bank if for some reason one can no longer pay the monthly charges. Also, mortgage rates are lower when buying a home with NHG.
+12. http://www.kadaster.nl/
+13. http://www.ilent.nl
+14. http://www.svmnivo.nl
+15. http://www.energielabelvoorwoningen.nl/?cookieCheck=true
+
+
+Implementation of the EPBD in The Netherlands
+25
+Annexes – Key Implementation Decisions
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+26
+Key Implementation Decisions – General Background
+no Key Implementation Decisions – General Background
+Description / value / response Comments
+01.01 Definition of public buildings (according to article 9 b)
+In the application of the guidelines relating to nearly zero-energy new buildings, a public building is defined as a building owned by the state, province, municipality, or water management board and that is used by the state, province, municipality, water management board, or independent administrative authority or advisory council established by law.
+The amendment to the Building Decree 2012, Government Gazette 2015, 425 states that new buildings owned by the government and which house government agencies shall be nearly zero-energy after 31 December 2018. A building is a public building in the sense of nearly zero-energy new buildings if it meets the following two requirements:
+1. Ownership: The building is owned by the government, e.g., owned by the state, a province, a municipality or a water management board
+2. Purpose: The building is used by a public authority or government agency.
+This is self-evident in the case of the state, a municipality or water management board. This shall extend to public administrative authorities; these organisations typically have been established by law and the bulk of their budget typically is dependent on tax revenue.
+01.02 Definition of public buildings used by the public (according to article 13)
+Definition:
+a) A building of which a floor area of more than 250 m2 is used by a public authority or government agency and that is frequently visited by the general public, or
+b) A building that has a floor area of more than 250 m2 and that is frequently visited by the general public.
+Regulations: Article 4 of the Regulation on Energy Performance of Buildings (visible energy labelling) and Article 2.4 of the Energy Performance of Buildings Decree (definition of public buildings to which the requirement applies.)
+01.03 Number of residential buildings
+7,891,561 (as of January 2020) Statistics Netherlands (http://www.cbs.nl)
+
+
+Implementation of the EPBD in The Netherlands
+27
+no Key Implementation Decisions – General Background
+Description / value / response Comments
+01.04 Number of nonresidential buildings
+1,147,500 (as of January 2020) Statistics Netherlands (http://www.cbs.nl)
+01.05 If possible, share of public buildings included in the number given in 01.04
+Approximately 35,000 non-residential municipal buildings (including schools).
+(sources: RVO, Kadaster)
+01.06 If possible, share of commercial buildings included in the number given in 01.04
+Non-residential building, function meetings: 62,111
+Non-residential building, function cell (detention): 58
+Non-residential building, function health care: 22,816
+Non-residential building, function industry: 198,951
+Non-residential building, function office: 96,258
+Non-residential building, function accommodation: 125,117
+Non-residential building, function education: 13,870
+Non-residential building, function sports: 9,708
+Non-residential building, function commercial: 129,198
+Non-residential building with other function: 439,881
+Non-residential building with multiple functions: 49,532
+(Total) Statistics Netherlands (http://www.cbs.nlm)
+01.07 Number of buildings constructed per year (estimate)
+70,700 residential buildings in 2019; approximately 61,000 residential buildings per year over the last five years.
+10,400 non-residential buildings in 2019; approximately 8,000 non-residential buildings per year over the last five years.
+Statistics Netherlands (http://www.cbs.nl)
+01.08 If possible, share of residential buildings constructed per year
+87% Statistics Netherlands (http://www.cbs.nl)
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+28
+no Key Implementation Decisions – General Background
+Description / value / response Comments
+(estimate, included in the number given in 01.07)
+In 2015, there were 55,600 applications for permits for new residential buildings; approximately 48,400 were completed.
+In 2016, there were 53,600 applications for permits and 54,800 residential buildings completed.
+In 2017: 69,700 applications, 63,000 completed.
+In 2018: 70,000 applications, 66,600 completed.
+In 2019, there were 57,400 applications for permits and 70,700 residential buildings completed.
+01.09 If possible, share of non-residential buildings constructed per year (estimate, included in the number given in 01.07)
+13%
+In 2015, there were 2,700 applications for permits for new non-residential buildings, approximately 6,300 were completed. A permit may apply to multiple buildings.
+In 2016, there were 2,700 applications for permits and 6,900 non-residential buildings completed.
+In 2017: 3,200 applications, 7,400 completed.
+In 2018: 3,400 applications, 9,500 completed.
+In 2019, there were 3,100 applications for permits and 10,400 non-residential buildings completed.
+Statistics Netherlands (http://www.cbs.nl)
+01.10 Useful floor area of buildings constructed per year in million square meters (estimate)
+Residential buildings: 8.2 million m2
+Non-residential buildings: not available
+
+
+Implementation of the EPBD in The Netherlands
+29
+Key Implementation Decision – New Buildings
+no Key Implementatio n Decision New Buildings
+Description / value / response Comments
+02.01 Are building codes set as overall value, primary energy, environment (CO2), reference building or other
+Other: energy performance coefficient Included in the Building Decree as of 1 January 2015
+02.02 Requirements for energy performance of residential buildings in current building code
+energy performance coefficient requirement
+2015 2020
+Homes and residential buildings
+0.4 0.4
+Included in the Buildings Decree as of 1 January 2015
+As of 1 January 2021, the following three requirements will be applicable:
+1. maximum energy need (kWh/m2.year)
+2. maximum primary energy use (kWh/m2.year)
+3. minimum share of renewable energy [%]
+Values for primary energy & share of renewables can be found in Table 4.
+02.03 Requirements for energy performance of non-residential commercial buildings in current building code
+Certain components of the Buildings Decree 2012 (Bb) were amended on 24 November 2015. The following amendments were made to the Building Decree.
+The following definition was added to Article 1.1:
+“Nearly zero energy building: building with a very high energy performance, where the very low or near zero energy consumption required is delivered from renewable sources to a very significant extent and which is produced on site or close by”
+The following new paragraphs were added to Article 5.2:
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+30
+no Key Implementatio n Decision New Buildings
+Description / value / response Comments
+“Article 5.2, paragraph five stipulates that new buildings owned by the government and which house government agencies shall be nearly zero energy. This paragraph shall enter into force on 1 January 2019.”
+“Article 5.2, paragraph six stipulates that new buildings different from the buildings referred to in paragraph five shall be nearly zero energy. This paragraph shall enter into force on 31 December 2020.”
+Values for primary energy & share of renewables can be found in Table 4.
+02.04 Requirements for energy performance of non-residential public buildings in current building code
+Requirements in the intermediate period 1 January 2019 until 1 January 2021:
+For public buildings of the following 3 types: Office buildings > 100 m2, Prison buildings, Meeting buildings, Levels see under ‘comments’
+Requirements as of 1 January 2021: See Table 4
+Function of building
+1Energy needs kWh/m2. year
+2Primary fossil energy use kWh/m2. year
+3Share of renewa ble energy %
+Office buildings < 100 m2
+50 25 50
+Prison buildings
+60 60 50
+Meeting buildings
+60 25 50
+02.05 Is the performance level of nearly zero energy (NZEB) for new buildings defined in national legislation?
+Yes (as of 1 January 2021) Amendment to the Building Decree 2012, which was published on 24 December 2019 and will become effective as of 1 January 2021.
+See 2.I.iii
+02.06 Nearly zero energy (NZEB) level for
+See Table 4
+
+
+Implementation of the EPBD in The Netherlands
+31
+no Key Implementatio n Decision New Buildings
+Description / value / response Comments
+residential buildings (level for building code)
+02.07 Year / date for nearly zero energy (NZEB) as level for residential buildings (as indicated in 02.04)
+1 January 2021
+02.08 Nearly zero energy (NZEB) level for all non-residential buildings (level for building code)
+See Table 4
+02.09 Year / date for nearly zero energy (NZEB) as level for non-residential buildings (as indicated in 02.06)
+1 January 2021 for commercial buildings (2019 for public buildings)
+02.10 Are nearly zero energy buildings (NZEB) defined using a carbon or environment indicator?
+There is and will be no carbon or environment indicator.
+02.11 Is renewable energy a part of the overall or an additional requirement?
+As of 1 January 2021, renewable energy is an additional requirement. Renewables are also included in the requirement for primary fossil energy use.
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+32
+no Key Implementatio n Decision New Buildings
+Description / value / response Comments
+02.12 If renewable energy is an additional requirement to NZEB, please indicate level
+Levels depend on the type of building, see Table 4.
+02.13 Specific comfort criteria for new buildings, provide specific parameters for instance for airtightness, minimum ventilation rates
+As of 1 January 2021, there will be an overheating indicator (TOjuli) for newly built residential buildings.
+There will be no overheating indicator for newly built non-residential buildings as it is assumed that most of these buildings will have a climate control system.
+
+
+Implementation of the EPBD in The Netherlands
+33
+Key Implementation Decision – Existing Buildings
+no Key Implementation Decision – Existing Buildings
+Description / value / response
+Comment
+03.01 Is the level of nearly zero energy (NZEB) for existing buildings set in national legislation?
+No
+03.02 Is the level of nearly zero energy (NZEB) for existing buildings similar to the level for new buildings?
+No requirement
+03.03 Definition of nearly zero energy (NZEB) for existing residential buildings (if different from new buildings)
+03.04 Definition of nearly zero energy (NZEB) for existing non-residential buildings (if different from new buildings)
+Study ongoing, see 3.2 and 3.3
+03.05 Overall minimum requirements in case of major-renovation
+Yes Four categories/situations can be differentiated in regard to renovation:
+1. Renovation: this shall refer to the partial renovation, renewal, or alteration, or expansion of a building. Article 5.6 Building Code, paragraph 1: The legally obtained level shall apply to thermal insulation with Rc = 1.3 m2K/W as the lower bound. The legally obtained level also applies to the airflow rate.
+2. Renovation by renewing or replacing insulation layers. Article 5.6 Building code, paragraph 2: Thermal insulation Rc at least 2.5 m2K/W for floor / 1.3 m2K/W for façade / 2,0 m2K/W for roof. Umax. = 2.2 W/m2K on average regarding windows, doors, etc., or the legally obtained level if this provides better energy performance.
+3. Major renovation and/or the total construction or entire renovation of a dormer or of a corresponding construction as referred to in Annex II of the Environmental Law Decree. Article 5.6, paragraph 3 Thermal insulation (see table 5.1 of the Building Code: Rc at least 3.5 m2K/W for floor / 4.5 m2K/W for façade)
+4. Renovation with modifications to the technical building system: a (partial) renovation, modification or expansion of the technical building system (read: the technical
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+34
+no Key Implementation Decision – Existing Buildings
+Description / value / response
+Comment
+equipment). Article 6.55 Building code, table 6.55, system efficiencies (as of 10 March 2020)
+03.06 Minimum requirements for individual building parts in case of renovation
+Yes See 03.05
+03.07 National targets for renovation in connection to Long Term Renovation Strategy (number or percentage of buildings)
+The built environment accounts for more than 30% of total energy consumption in the Netherlands. In order to achieve the long-term goals for energy and climate, it is therefore essential to make the national building stock more sustainable in the run-up to 2050. In line with the broader energy and climate policy of the Netherlands, the government will focus primarily on CO2 reduction in making the built environment more sustainable. This means that CO2 emission ceilings have been chosen and that progress will be measured in Mton CO2.
+For the built environment, this is 3.4 Mton of additional CO2 reduction in 2030 compared to existing and planned policy. According to this indicative allocation, the maximum CO2 emissions for the built environment in 2030 will be 15.3 Mton.
+The Netherlands has no indicative allocation of CO2 targets to sectors by 2050. That is why the indicative milestone was used for the built environment for 2050 as a direct translation of the general 95% CO2 reduction target. A CO2 reduction of 95% in the built environment in 2050 compared to 1990 is equivalent to a maximum emission of 1.5 Mton CO2 equivalents. This is the indicative milestone that the Netherlands will use for 2050.
+To determine the indicative milestone for the built environment for 2040, a linear decrease in greenhouse gas emissions is assumed between the indicative milestones for 2030 and 2050. The indicative milestone then amounts to a maximum emission of 8.4 Mton CO2 equivalents.
+The Netherlands emphasises that these are indicative objectives. In a next version of the National Energy and Climate Plan (NECP), these objectives can be adjusted downwards or upwards if developments (for example around
+
+
+Implementation of the EPBD in The Netherlands
+35
+no Key Implementation Decision – Existing Buildings
+Description / value / response
+Comment
+the cost-effectiveness of the energy transition or innovation) give cause to do so.
+03.08 National targets for renovation in connection to Long Term Renovation Strategy (expected reductions and relevant years)
+See 03.07
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+36
+Key Implementation Decision – Energy Performance Certificates
+no Key Implementation Decision Energy Performance Certificates
+Description / value / response Comment
+04.01 Number of energy performance certificates per year (for instance average or values for of 3-5 years)
+560,000 on average per year. Total number of residential buildings with a valid, registered ‘VEL’-label (Simplified energy label) since 1 January 2015: 1,193,232 (as of 31-122019).
+Total number of residential buildings with a valid, registered ‘Energy Index’-label since 1 January 2015: 1,611,186 (as of 31-12-2019).
+Note: double registrations for the same residential building are not taken into account in these numbers.
+04.02 Number of EPCs since start of scheme
+2,804,418 Total number of registered energy labels for residential buildings since 1 January 2015, as of the end of 2019: 2,804,418.
+04.03 Number of EPCs for different building types
+Meetings: 13,214
+Cell (detention): 2
+Health care: 7,510
+Industry: 0
+Office: 43,220
+Accommodation: 4,178
+Education: 2,396
+Sports: 2,807
+Commercial: 36,156
+Other function: 0.
+Total number of registered energy labels for non-residential buildings since 1 January 2015, as of the end of 2019: 109,483.
+Note 1: double registrations for the same building are not taken into account in this number.
+Note 2: for multiple functions, the label is counted in the primary function.
+04.04 Number of assessors
+669 Recognised Experts for the VELsystem active as of 31 December 2019.
+In order to qualify as a Recognised Expert, applicants must take an exam (if they are not already a certified ‘EPA advisor’ or ‘EPA assessor’, EPA = Energie Prestatie Advies = Energy Performance Advice) and attend an instruction course at the Netherlands Enterprise Agency (RVO). If an applicant does not have an EPA diploma, he or she may take the ‘Recognised expert for energy labels in residential construction’ exam at SVM-NIVO.
+
+
+Implementation of the EPBD in The Netherlands
+37
+no Key Implementation Decision Energy Performance Certificates
+Description / value / response Comment
+This is a simpler exam than the EPA advisor (or EPA assessor) exam.
+There are no differences regarding the simplified energy label. Only certified EPA advisors are permitted to conduct ‘Energy Index’ recordings and registrations. Should the specific EPA advisor also have attended the foregoing instruction course and have access to the VELapplication, then he or she may also assess and register simplified energy labels.
+04.05 Basic education requirements for assessors
+There are no basic education requirements for candidates to take part in the SVM-NIVO exam
+‘Recognised expert for energy labels in residential construction’. Any
+preparation is based on independent study. In addition, it has been shown that a large majority of people active as recognised experts have an EPA advisor/EPA assessor background. As such, they are in possession of an EPA diploma, for which they have been educated. The basic requirements to be admitted to the EPA advisor course are: ‘good professional and intellectual abilities and education or experience in the field of construction or building systems’.
+04.06 Additional training demands for assessors
+Experts must attend an instruction course at RVO before they are recognised as Recognised Experts.
+04.07 Quality assurance system
+The ‘National Governmental Inspection Authority’ (‘ILT’) is
+charged with verifying the quality of the recognised experts (based on samples of registered labels).
+Penalties: The ILT may impose a fine; RVO may block the account on the VEL-application if a Recognised Expert is shown not to comply with the rules warranting his or her activity on the VEL application, e.g., if the
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+38
+no Key Implementation Decision Energy Performance Certificates
+Description / value / response Comment
+Recognised Expert is in contravention of the Unfair Trade Practices Act (as part of the Civil Code).
+04.08 National database for EPCs
+EPCs are registered. In the Netherlands, EPC labelling is registered and publicly retrievable per address on www.eponline.nl. The EPCs themselves, including the underlying information and the recommendations of energy-saving measures, in principle, are only available to building owners.
+04.09 Link to national information on EPCs / Database
+www.ep-online.nl especially for homeowners:
+https://www.energielabel.nl/woningen/zoek-jeenergielabel/
+
+
+Implementation of the EPBD in The Netherlands
+39
+Key Implementation Decision – Smart Buildings and Building Systems
+no Key Implementation Decision – Smart Buildings and Building Systems
+Description / value / response
+Comment
+05.01 Is there a national definition of smart buildings?
+No
+05.02 Are there current support systems for smart buildings?
+No
+05.03 Are there currently specific requirements for technical building systems (for instance in building codes)?
+Yes The energy performance requirements that apply to technical building systems are expressed in the calculated primary fossil fuel energy in relation to the net requirement. This not only values the efficiency of a technical building system, but also the use of renewable energy. A digital calculation tool has been developed for this.
+Required indicators for system efficiency
+05.04 Are there current requirements for automatics (for instance in building codes)?
+No
+05.05 Chosen option A or B for heating systems (inspection or other measures)
+Option A + B Inspections and other measures (energy saving advice), thus A + B.
+05.06 Number of heating inspections; reports per year (if option A)
+Estimated maximum 54,500 inspections
+05.07 Chosen option A or B for cooling
+Option A Estimated maximum 7,200 inspections
+
+
+Implementing the Energy Performance of Buildings Directive 2020
+40
+no Key Implementation Decision – Smart Buildings and Building Systems
+Description / value / response
+Comment
+systems (inspection or other measures)
+05.08 Number of airconditioning / cooling system inspections; reports per year (if option A)
+Not available See 05.07
+05.09 Is there a national database for heating inspections?
+Yes Inspections carried out are registered by the inspection companies in the “SCIOS” registration system. The supervising authority (i.e., municipalities or regional environmental services) has access to the inspection register for the area under its jurisdiction. Thus, the supervising authority can check whether the companies, that are subject to the requirement of having a certified inspection of their heating system, do meet this requirement. For non-gas-fired heating systems and gas-fired heating systems above 100 kW there is a mandatory inspection according to the Environmental law. Here the SCIOS is the executor / administrator who maintains a database. http://www.scios.nl/
+05.10 Is there a national database for cooling / airconditioning inspections?
+No The industry associations collect the data of the inspections they have carried out themselves. http://www.rvo.nl/onderwerpen/duurzaamondernemen/gebouwen/wetten-en-regelsgebouwen/installatiekeuringen
+A new version of the inspection register is being developed by SCIOS.
+05.11 Are inspection databases combined with EPC databases for registration of EPCs and inspection reports?
+No The databases that are maintained by the market parties are not linked to the EPC database.
+05.12 Link to national information on Inspection / Database
+https://www.scios.nl/Certificeren
+https://www.rvo.nl/onderwerpen/duurzaamondernemen/gebouwen/wetten-en-regels/bestaandebouw/installatiekeuringen/installateur-kiezen
+
+
+Implementation of the EPBD in The Netherlands
+41
+The sole responsibility for the content of this publication lies with the authors. It does not necessarily reflect the views of the European Commission. Neither the EASME nor the European Commission are responsible for any use that may be made of the information contained therein.
+This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 820497. under grant agreement No 692447.
