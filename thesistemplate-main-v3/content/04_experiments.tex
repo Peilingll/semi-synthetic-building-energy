@@ -1,12 +1,12 @@
 \chapter{Experiments and Evaluation}
 \label{ch:experiments}
 
-This chapter evaluates the four method stages through one evaluation setup and three experiments. Stage 1 establishes the building sample, reference records, and data partitions used in the evaluation. Experiment I evaluates the three building attributes predicted in Stage 2. Experiment II evaluates the archetype cells and thermal parameters produced in Stage 3. Experiment III compares the energy class prediction procedures implemented in Stage 4. The Experimental Design and Results sections follow the same experiment order, creating a direct link between every comparison, metric, and reported result. The chapter closes with a discussion of the findings, their relation to prior work, and the limits of the evidence.
+This chapter evaluates the four method stages through one evaluation setup and three experiments. Stage 1 establishes the experimental dataset, reference records, and data partitions used in the evaluation. Experiment I evaluates the three building attributes predicted in Stage 2. Experiment II evaluates the archetype cells and thermal parameters produced in Stage 3. Experiment III compares the energy class prediction procedures implemented in Stage 4. The Experimental Design and Results sections follow the same experiment order, creating a direct link between every comparison, metric, and reported result. The chapter closes with a discussion of the findings, their relation to prior work, and the limits of the evidence.
 
 \section{Experimental Design}
 \label{sec:strategy_metrics}
 
-The experimental design first defines the evaluation setup and then presents the three experiments aligned with the research objectives. Table~\ref{tab:experiment_correspondence} defines the role of each component and its matching Results subsection. The dataset checks establish the sample and target conditions under which all results are interpreted. Experiments I, II, and III then follow the information flow from attributes predicted from images to archetype assignment and energy class prediction.
+The experimental design first defines the evaluation setup and then presents the three experiments aligned with the research objectives. Table~\ref{tab:experiment_correspondence} defines the role of each component and its matching Results subsection. The dataset checks establish the data composition and target conditions under which all results are interpreted. Experiments I, II, and III then follow the information flow from building attributes predicted from images to archetype assignment and energy class prediction.
 
 \begin{table}[htbp]
 	\centering
@@ -23,10 +23,10 @@ The experimental design first defines the evaluation setup and then presents the
 		\toprule
 		Component & Method stage & Evaluation question & Principal evidence & Results subsection \\
 		\midrule
-		Evaluation setup & Stage 1 & Which buildings and reference targets support the three experiments? & Building and image counts, sample composition, and certificate consistency & Dataset Composition and Target Consistency \\
-		Experiment I & Stage 2 & How accurately can the three vision configurations predict building type, construction year, and floor count? & Classification and regression metrics on the fixed holdout & Building Attribute Prediction \\
+		Evaluation setup & Stage 1 & Which buildings and reference targets support the three experiments? & Building and image counts, dataset composition, and certificate consistency & Dataset Composition and Target Consistency \\
+		Experiment I & Stage 2 & How accurately can the three vision configurations predict building type, construction year, and floor count? & Classification and regression metrics on the holdout set & Building Attribute Prediction \\
 		Experiment II & Stage 3 & How do errors in predicted type and year affect the assigned archetype cell and thermal parameters? & Joint cell metrics and $h_{tr}$ differences & Archetype Assignment and Thermal Consequences \\
-		Experiment III & Stage 4 & How does the source of building information affect energy class prediction? & Binary and seven class comparisons and feature ablation & Energy Class Prediction \\
+		Experiment III & Stage 4 & How does the source of building information affect energy class prediction? & Binary and seven-class comparisons and feature ablation & Energy Class Prediction \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -34,32 +34,32 @@ The experimental design first defines the evaluation setup and then presents the
 \subsection{Evaluation Setup}
 \label{sec:dataset_statistics}
 
-The evaluation setup fixes the building partitions before any metrics are calculated. This prevents differences among experiments from reflecting different data partitions. The curated \ac{SVI} delivery contains 10,104 buildings and 47,238 images. Linking these records to the quality controlled reference table and requiring valid 3DBAG geometry and TABULA-NL inputs yields 10,086 buildings and 47,150 images. The building level split defined in Stage 1 assigns 8,068 buildings to model development and 2,018 to the fixed holdout. All images of one building remain in the same subset.
+The evaluation setup fixes the building partitions before any metrics are calculated. This prevents differences among experiments from reflecting different data partitions. Unless stated otherwise, building counts refer to unique \texttt{pand\_id} values. The \ac{SVI} manifest contains 10,104 buildings and 47,238 images. Restricting the manifest to the eligible reference set and requiring valid 3DBAG geometry and TABULA-NL inputs yields an experimental dataset of 10,086 buildings and 47,150 images. The building-level split defined in Stage 1 assigns 8,068 buildings to the development set and 2,018 to the fixed holdout set. All images of one building remain in the same set.
 
-The denominator is fixed separately for each comparison before metrics are calculated. The supervised configurations return predictions for all 2,018 holdout buildings, while InternVL3-2B returns valid attributes for 2,016. Experiment I therefore reports the available denominator for each configuration. Experiment III uses the strict intersection of 2,016 buildings for which every reference, predicted attribute, and direct image condition is available. The thermal comparison in Experiment II additionally requires valid reconstructed areas, leaving 2,016 buildings for the two supervised configurations and 2,014 for InternVL3-2B. These exclusions are applied before condition comparison and are not selected from the observed prediction errors.
+The denominator is defined separately for each comparison before metrics are calculated. The two supervised configurations return predictions for all 2,018 holdout buildings, while InternVL3-2B returns valid predicted building attributes for 2,016. Experiment I therefore reports the available denominator for each configuration. Experiment III uses the comparison subset of 2,016 buildings for which every reference attribute, predicted attribute, and direct image condition is available. The thermal comparison in Experiment II additionally requires valid reconstructed areas, leaving 2,016 buildings for the two supervised configurations and 2,014 for InternVL3-2B. These exclusions are applied before condition comparison and are not selected from the observed prediction errors.
 
-Two data checks define the validity boundary of the experiments. First, sample composition is described by study area, building type, construction period, floor count, and registered energy class, and is compared with the 124,784 eligible reference buildings from the same four study areas. Second, the consistency of a building level energy class is evaluated for buildings linked to multiple EP-Online certificates. The certificate check reports the prevalence of multiple records, disagreement among their classes, the modal class share, agreement between the latest and modal classes, and variation in the continuous energy indicator. These checks describe the evaluation target and do not alter the reference class used for model assessment.
+Two data checks define the validity boundary of the experiments. First, the experimental dataset is described by study area, building type, construction period, floor count, and registered energy class, and is compared with the eligible reference set of 124,784 buildings from the same four study areas. Second, the consistency of a building-level energy class is evaluated for buildings linked to multiple EP-Online certificates. The certificate check reports the prevalence of multiple records, disagreement among their classes, the modal class share, agreement between the latest and modal classes, and variation in the continuous energy indicator. These checks describe the evaluation target and do not alter the reference class used for model assessment.
 
 \subsection{Experiment I: Building Attribute Prediction}
 \label{sec:prediction_tasks_metrics}
 
-Experiment I is needed to establish the accuracy of the explicit attributes before they enter later stages. ResNet-50 with full fine tuning, DINOv2 with a frozen backbone and trained prediction heads, and InternVL3-2B without parameter updating are evaluated on the fixed holdout defined above. Each configuration predicts building type, construction year, and floor count for the same building record. The comparison concerns the complete configurations because their architecture, adaptation procedure, image limit, and image aggregation differ.
+Experiment I is needed to establish the accuracy of the predicted building attributes before they enter later stages. ResNet-50 with full fine tuning, DINOv2 with a frozen backbone and trained prediction heads, and InternVL3-2B without parameter updating are evaluated using the holdout set. Each configuration predicts building type, construction year, and floor count. The comparison concerns the complete vision configurations because their architecture, adaptation procedure, image limit, and image aggregation differ. Configuration-specific denominators are reported when valid outputs are unavailable.
 
 \paragraph{E1a: Building type.}
-Building type is a four class prediction task covering Single Family House (SFH), Terraced House (TH), Multi Family House (MFH), and Apartment Block (AB). Macro F1 is the principal metric because it gives equal weight to each class. Accuracy is reported as a complementary metric, while class recall and the confusion matrix reveal whether a high aggregate value is concentrated in the dominant AB class.
+Building type is a four-class prediction task covering Single Family House (SFH), Terraced House (TH), Multi Family House (MFH), and Apartment Block (AB). Macro F1 is the principal metric because it gives equal weight to each class. Accuracy is reported as a complementary metric, while class recall and the confusion matrix reveal whether a high aggregate value is concentrated in the dominant AB class.
 
 \paragraph{E1b: Construction year and TABULA period.}
 Construction year is evaluated using mean absolute error (MAE) and the coefficient of determination, $R^2$. MAE reports the average error in years, while $R^2$ measures the captured variation relative to prediction of the evaluation mean. Each predicted and reference year is also mapped through the same TABULA-NL period function. Period accuracy then reports the proportion of buildings assigned to the reference construction period, because a year error affects Stage 3 only when it changes the period.
 
 \paragraph{E1c: Floor count.}
-Floor count is evaluated using MAE and $R^2$. The two metrics distinguish a small average deviation from genuine recovery of building level variation in a sample with a restricted floor count range. The generated reports also provide rounded exact agreement and agreement within one floor as supplementary checks.
+Floor count is evaluated using MAE and $R^2$. The two metrics distinguish a small average deviation from genuine recovery of building-level variation in a holdout set with a restricted floor count range. The generated reports also provide rounded exact agreement and agreement within one floor as supplementary checks.
 
 For the four primary attribute metrics computed directly from predictions, uncertainty is estimated using 1,000 bootstrap resamples of buildings with random seed 42. Resampling at building level prevents several images of one building from entering a bootstrap sample as independent observations.
 
 \subsection{Experiment II: Archetype Assignment and Thermal Consequences}
 \label{sec:weighted_archetype_metric}
 
-Experiment II is needed because separate attribute scores do not show whether type and year are correct for the same building or how a cell error changes the assigned thermal properties. It therefore contains two connected evaluations. E2a measures agreement with the reference TABULA-NL cell. E2b converts the reference and predicted cells to representative U-values and compares their implications for transmission heat transfer. A local window to wall ratio sensitivity check tests whether the assumed facade split changes the model ranking.
+Experiment II is needed because separate attribute scores do not show whether type and year are correct for the same building or how a cell error changes the assigned thermal properties. It therefore contains two connected evaluations. E2a measures agreement with the reference TABULA-NL cell. E2b converts the reference and predicted cells to representative U-values and compares their implications for transmission heat transfer. A local window-to-wall ratio sensitivity check tests whether the assumed facade split changes the model ranking.
 
 \paragraph{E2a: Joint archetype cell assignment.}
 The TABULA-NL cell depends jointly on residential size class $s$ and construction period $p(y)$. Joint accuracy is therefore defined as
@@ -67,14 +67,14 @@ The TABULA-NL cell depends jointly on residential size class $s$ and constructio
 \begin{equation}
 	\label{eq:joint_acc}
 	\mathrm{JointAcc}
-	= \frac{1}{N}\sum_{i=1}^{N}
+	= \frac{1}{n}\sum_{i=1}^{n}
 	\mathbf{1}\!\left[\hat{s}_i = s_i \;\land\; p(\hat{y}_i) = p(y_i)\right].
 \end{equation}
 
 Uniform assignment across the 24 cells has an expected accuracy of $1/24 \approx 0.042$. A second baseline assigns every building to the most frequent reference cell. Macro cell recall is also reported as the unweighted mean recall across occupied cells. Joint accuracy measures overall agreement, while macro cell recall reveals performance outside the dominant cells.
 
 \paragraph{E2b: Thermal consequences of cell assignment.}
-Categorical cell agreement gives equal weight to errors between thermally similar and thermally different cells. The second evaluation therefore compares the floor area normalised transmission heat transfer coefficient $h_{tr}$ obtained from the reference and predicted cells. The notation follows the distinction between an overall transmission heat transfer coefficient and its value per square metre of reference floor area in the TABULA calculation method \parencite{loga2013calculation}. The comparison uses the U-values assigned by the relevant TABULA-NL cell, reconstructed 3DBAG areas, and the same window to wall ratio (WWR) in both calculations. Shared walls are treated as adiabatic.
+Categorical cell agreement gives equal weight to errors between thermally similar and thermally different cells. The second evaluation therefore compares the floor-area-normalised transmission heat transfer coefficient $h_{tr}$ obtained from the reference and predicted cells. The notation follows the distinction between an overall transmission heat transfer coefficient and its value per square metre of reference floor area in the TABULA calculation method \parencite{loga2013calculation}. The comparison uses the U-values assigned by the relevant TABULA-NL cell, reconstructed 3DBAG areas, and the same window-to-wall ratio (WWR) in both calculations. Shared walls are treated as adiabatic.
 
 For building $i$, the comparison quantity is
 
@@ -97,16 +97,16 @@ The equation is evaluated twice for every building. One calculation uses U-value
 	{\sum_i\left(h_{tr,\mathrm{ref},i} - \overline{h_{tr,\mathrm{ref}}}\right)^2}.
 \end{equation}
 
-Floor area weighted bias reports the direction and relative magnitude of the aggregate difference:
+This study defines the floor-area-weighted relative difference as the aggregate transmission heat transfer coefficient calculated from predicted cells relative to that calculated from reference cells:
 
 \begin{equation}
-	\label{eq:bias_stock}
-	\mathrm{Bias}_{stock}
+	\label{eq:area_weighted_difference}
+	\Delta_{A,h_{tr}}
 	= \frac{\sum_i h_{tr,\mathrm{pred},i}A_{floor,i} - \sum_i h_{tr,\mathrm{ref},i}A_{floor,i}}
 	{\sum_i h_{tr,\mathrm{ref},i}A_{floor,i}} .
 \end{equation}
 
-A positive value means that cells assigned from image predictions produce a larger aggregate transmission coefficient than cells assigned from reference attributes. The metric compares two archetype assignments and is not a validation against measured heat loss or energy use. Table~\ref{tab:htr_inputs} summarises the quantities that vary between the reference and predicted cell calculations and those held constant.
+A positive value means that cells assigned from image predictions produce a larger aggregate transmission heat transfer coefficient than cells assigned from reference attributes. The metric compares two archetype assignments and is not a validation against measured heat loss or energy use. Table~\ref{tab:htr_inputs} summarises the quantities that vary between the reference and predicted cell calculations and those held constant.
 
 \begin{table}[htbp]
 	\centering
@@ -127,7 +127,7 @@ A positive value means that cells assigned from image predictions produce a larg
 		$A_{wall}$ & External facade area excluding shared walls & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Fixed for both calculations \\
 		$A_{roof}$ & Roof area & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Fixed for both calculations \\
 		$A_{ground}$ & Area in contact with the ground & Reconstructed 3DBAG \acs{LoD}2.2 geometry & Fixed for both calculations \\
-		$A_{floor}$ & Estimated floor area & Reconstructed 3DBAG geometry & Denominator and stock level weight \\
+		$A_{floor}$ & Estimated floor area & Reconstructed 3DBAG geometry & Denominator and aggregation weight \\
 		WWR & Fraction of facade area assigned to windows & Assumed value & Fixed for both calculations at each tested value \\
 		\bottomrule
 	\end{tblr}
@@ -139,11 +139,11 @@ The primary calculation uses $\mathrm{WWR}=0.25$. Because reconstructed 3DBAG fa
 \subsection{Experiment III: Energy Class Prediction}
 \label{sec:information_source_conditions}
 
-Experiment III is needed to determine whether the registered energy class changes when building information comes from administrative records, predicted attributes, or imagery alone. Table~\ref{tab:evaluation_conditions} defines the three information source conditions and the analytic baseline. The reference and predicted attribute conditions use the same fitted \acs{LightGBM} classifier. Their difference therefore isolates the change from reference to predicted type, year, floor count, and the U-values selected by type and year. The direct image condition uses a separate image classifier and represents an alternative prediction procedure rather than an isolated input substitution.
+Experiment III is needed to determine whether the registered energy class changes when the input consists of reference building attributes, predicted building attributes, or imagery alone. Table~\ref{tab:evaluation_conditions} defines the three energy class prediction conditions and the analytic baseline. The reference and predicted attribute conditions use the same fitted \acs{LightGBM} classifier. Their difference therefore isolates the change from reference to predicted building type, construction year, floor count, and the U-values selected by type and year. The direct image condition uses a separate image classifier and represents an alternative prediction procedure rather than an isolated input substitution.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Information source conditions used in Experiment III.}
+	\caption{Energy class prediction conditions used in Experiment III.}
 	\label{tab:evaluation_conditions}
 	\footnotesize
 	\begin{tblr}{
@@ -157,21 +157,21 @@ Experiment III is needed to determine whether the registered energy class change
 		Condition & Input & Prediction procedure \\
 		\midrule
 		Uniform random baseline & No building information & Equal prediction probability for every target class; expected metrics calculated analytically \\
-		Reference attributes & Reference type, year, floor count, four TABULA-NL U-values, and city & Fixed LightGBM classifier fitted on reference inputs from the development set \\
-		Predicted attributes & Image predicted type, year, floor count, four U-values selected by predicted type and year, and city & Same fitted LightGBM classifier as the reference attribute condition \\
-		Direct image prediction & \ac{SVI} & Energy class head or fixed InternVL3-2B prompt applied without intermediate attributes \\
+		Reference attribute condition & Reference building type, construction year, floor count, four TABULA-NL U-values, and study area & Fixed LightGBM classifier fitted on reference inputs from the development set \\
+		Predicted attribute condition & Predicted building type, construction year, floor count, four U-values selected by predicted type and year, and study area & Same fitted LightGBM classifier as the reference attribute condition \\
+		Direct image condition & \ac{SVI} & Energy class head or fixed InternVL3-2B prompt applied without intermediate attributes \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
 \paragraph{E3a: Binary energy class prediction.}
-The primary target distinguishes classes A to C from classes D to G. Separate classifiers are trained for this target rather than collapsing predictions from the seven class task. The principal metric is macro F1 at a probability threshold of 0.5. Macro precision, macro recall, and recall for classes D to G describe performance across the two class groups.
+The primary target distinguishes classes A to C from classes D to G. Separate classifiers are trained for this target rather than collapsing predictions from the seven-class task. The principal metric is macro F1 at a probability threshold of 0.5. Macro precision, macro recall, and recall for classes D to G describe performance across the two class groups.
 
-\paragraph{E3b: Seven class energy prediction.}
-The secondary task predicts classes A to G after ratings above A are combined with class A. Macro F1 is the principal class balanced metric. Exact accuracy is reported for comparability with previous work, and $\pm1$ accuracy reports the proportion of predictions within one adjacent class of the registered value. Because the majority class alone attains a $\pm1$ accuracy of 0.612 on the comparison subset, this metric is interpreted only with macro F1 and both random and majority baselines.
+\paragraph{E3b: Seven-class energy class prediction.}
+The secondary task predicts classes A to G after ratings above A are combined with class A. Macro F1 is the principal class-balanced metric. Exact accuracy is reported for comparability with previous work, and $\pm1$ accuracy reports the proportion of predictions within one adjacent class of the registered value. Because the majority class alone attains a $\pm1$ accuracy of 0.612 on the comparison subset, this metric is interpreted only with macro F1 and both random and majority baselines.
 
 \paragraph{E3c: Feature contribution analysis.}
-A feature contribution analysis is needed to identify which structured inputs support energy class prediction. Leave one out ablation on the development set measures the change in macro F1 when construction year, building type, floor count, the four TABULA U-values, or city is removed from the reference feature set. Clean reconstructed geometry features are added separately to test whether information absent from the main eight inputs changes prediction performance. All ablation models use the same five development folds, fixed LightGBM settings, and no class weighting.
+A feature contribution analysis is needed to identify which structured inputs support energy class prediction. Leave-one-out ablation on the development set measures the change in macro F1 when construction year, building type, floor count, the four TABULA U-values, or study area is removed from the reference input set. Clean reconstructed geometry features are added separately to test whether information absent from the main eight inputs changes prediction performance. All ablation models use the same five development folds, fixed LightGBM settings, and no class weighting.
 
 \section{Results}
 \label{sec:quantitative_results}
@@ -181,11 +181,11 @@ The Results follow the order established in Table~\ref{tab:experiment_correspond
 \subsection{Dataset Composition and Target Consistency}
 \label{sec:building_level_consistency}
 
-The final evaluation sample contains 10,086 buildings and 47,150 images. Table~\ref{tab:city_composition} reports the fixed development and holdout partitions by study area. Amsterdam accounts for 8,011 buildings, or 79.4\% of the complete evaluation sample.
+The experimental dataset contains 10,086 buildings and 47,150 images. Table~\ref{tab:city_composition} reports the predefined development and holdout sets by study area. Amsterdam accounts for 8,011 buildings, or 79.4\% of the experimental dataset.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Study area composition and fixed partition of the experimental dataset.}
+	\caption{Study area composition and predefined partition of the experimental dataset.}
 	\label{tab:city_composition}
 	\footnotesize
 	\begin{tblr}{
@@ -209,7 +209,7 @@ The final evaluation sample contains 10,086 buildings and 47,150 images. Table~\
 	\end{tblr}
 \end{table}
 
-Figure~\ref{fig:svi_examples} provides one representative crop for each available combination of study area and residential building type. The missing MFH example in Delft reflects the absence of that combination from the selected sample.
+Figure~\ref{fig:svi_examples} provides one representative crop for each available combination of study area and residential building type. The missing MFH example in Delft reflects the absence of that combination from the experimental dataset.
 
 \begin{figure}[htbp]
 	\centering
@@ -218,20 +218,20 @@ Figure~\ref{fig:svi_examples} provides one representative crop for each availabl
 	\label{fig:svi_examples}
 \end{figure}
 
-Figure~\ref{fig:distributions} shows the corresponding distributions of type, floor count, construction period, and registered energy class. AB accounts for approximately 88\% of the experimental sample, compared with approximately 54\% of the 124,784 eligible reference buildings. Under the binary target, classes A to C account for 70.3\% of the experimental sample and 76.5\% of the eligible reference dataset. The experimental results therefore describe the SVI covered sample rather than the complete residential stock of the four study areas.
+Figure~\ref{fig:distributions} shows the corresponding distributions of building type, floor count, construction period, and registered energy class. AB accounts for approximately 88\% of the experimental dataset, compared with approximately 54\% of the 124,784 buildings in the eligible reference set. Under the binary target, classes A to C account for 70.3\% of the experimental dataset and 76.5\% of the eligible reference set. The experimental results therefore describe buildings with eligible \ac{SVI} rather than the complete residential building stock of the four study areas.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_4_1_distributions}
-	\caption[Composition of the experimental sample across the four study areas.]{Composition of the 10,086 buildings in the experimental sample across Amsterdam, Rotterdam, Utrecht, and Delft. Stacked bars report residential building type, floor count, TABULA-NL construction period, and registered energy class after ratings above A were combined with class A. Values above the bars report the number of buildings in each study area.}
+	\caption[Composition of the experimental dataset across the four study areas.]{Composition of the 10,086 buildings in the experimental dataset across Amsterdam, Rotterdam, Utrecht, and Delft. Stacked bars report residential building type, floor count, TABULA-NL construction period, and registered energy class after ratings above A were combined with class A. Values above the bars report the number of buildings in each study area.}
 	\label{fig:distributions}
 \end{figure}
 
-The certificate consistency analysis found that 5,895 of 10,093 SVI manifest buildings linked to the raw register had at least two certificates. Of these buildings, 77.0\% contained more than one registered energy class. Table~\ref{tab:class_consistency} reports the remaining checks. Across all linked buildings, the modal class had a mean share of 0.792, and the latest class agreed with the modal class for 88.0\% of buildings. Among buildings with multiple certificates, the median within building standard deviation of the continuous energy indicator was 35.8\,kWh/(m$^2\cdot$year).
+Of the 10,086 buildings in the experimental dataset, 10,075 were linked back to at least one residential certificate in the raw register. Among these buildings, 5,883 had at least two certificates, and 77.0\% of this group had more than one registered energy class. Table~\ref{tab:class_consistency} reports the remaining checks. Across the 10,075 linked buildings, the modal class had a mean share of 0.792, and the latest class agreed with the modal class for 88.0\% of buildings. Among buildings with multiple certificates, the median within-building standard deviation of the continuous energy indicator was 35.9\,kWh/(m$^2\cdot$year).
 
 \begin{table}[htbp]
 	\centering
-	\caption{Consistency of energy classes across certificate records linked to the same building.}
+	\caption{Consistency of energy classes across certificate records for buildings in the experimental dataset.}
 	\label{tab:class_consistency}
 	\small
 	\begin{tblr}{
@@ -244,16 +244,17 @@ The certificate consistency analysis found that 5,895 of 10,093 SVI manifest bui
 		\toprule
 		Measure & Value \\
 		\midrule
-		Buildings linked to multiple certificates & 58.4\% \\
-		Multiple certificate buildings with inconsistent energy classes & 77.0\% \\
+		Experimental buildings linked to at least one raw certificate & 10,075 of 10,086 \\
+		Buildings linked to multiple certificates & 5,883 (58.4\%) \\
+		Multiple certificate buildings with inconsistent energy classes & 4,532 (77.0\%) \\
 		Mean modal class share across buildings & 0.792 \\
 		Latest class equal to modal class & 88.0\% \\
-		Median energy indicator standard deviation within multiple certificate buildings & 35.8\,kWh/(m$^2\cdot$year) \\
+		Median energy indicator standard deviation within multiple certificate buildings & 35.9\,kWh/(m$^2\cdot$year) \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-These data checks establish two limits for interpreting all three experiments: the sample is concentrated in Amsterdam and AB buildings, and the latest certificate represents only one of the energy classes that may be linked to a multiunit building.
+These data checks establish two limits for interpreting all three experiments: the experimental dataset is concentrated in Amsterdam and AB buildings, and the latest certificate represents only one of the energy classes that may be linked to a multiunit building.
 
 \subsection{Experiment I Results: Building Attribute Prediction}
 \label{sec:upstream_attribute_extraction}
@@ -262,7 +263,7 @@ Experiment I compares the three vision configurations for all three attributes. 
 
 \begin{table}[htbp]
 	\centering
-	\caption{Building attribute prediction on the fixed holdout.}
+	\caption{Building attribute prediction on the holdout set.}
 	\label{tab:upstream_attributes}
 	\footnotesize
 	\begin{tblr}{
@@ -282,7 +283,7 @@ Experiment I compares the three vision configurations for all three attributes. 
 	\end{tblr}
 	\par\vspace{0.4em}
 	\begin{minipage}{\linewidth}
-		\footnotesize\textit{Note.} The fixed holdout contains 2,018 buildings. DINOv2 and ResNet-50 metrics use all 2,018 buildings. InternVL3-2B metrics use 2,016 buildings because the model did not return a valid building level record for two buildings. Year MAE is reported in years and floor MAE in floors.
+		\footnotesize\textit{Note.} The holdout set contains 2,018 buildings. DINOv2 and ResNet-50 metrics use all 2,018 buildings. InternVL3-2B metrics use 2,016 buildings because the model did not return a valid building-level record for two buildings. Year MAE is reported in years and floor MAE in floors.
 	\end{minipage}
 \end{table}
 
@@ -292,7 +293,7 @@ ResNet-50 and DINOv2 differed by 0.014 in accuracy but their ordering reversed f
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figures/fig/fig_4_2_type_confusion}
-	\caption[Building type confusion matrices for the three vision configurations.]{Row normalised building type confusion matrices for the three vision configurations on the holdout. Each cell also reports the number of buildings.}
+	\caption[Building type confusion matrices for the three vision configurations.]{Row-normalised building type confusion matrices for the three vision configurations on the holdout set. Each cell also reports the number of buildings.}
 	\label{fig:type_confusion}
 \end{figure}
 
@@ -309,7 +310,7 @@ Floor count MAE was 0.377 for DINOv2, 0.428 for ResNet-50, and 0.708 for InternV
 	\label{fig:year_floor_scatter}
 \end{figure}
 
-Figure~\ref{fig:attribute_examples} supplements the aggregate metrics with six holdout examples. All configurations matched the reference TABULA period for the two clearer early period facades. Errors occurred for the low quality and oblique images, and the two trained configurations matched the reference type but not the reference period in those examples. These cases illustrate observed prediction patterns and are not a separate performance sample.
+Figure~\ref{fig:attribute_examples} supplements the aggregate metrics with six holdout examples. All configurations matched the reference TABULA period for the two clearer early-period facades. Errors occurred for the low-quality and oblique images, and the two trained configurations matched the reference type but not the reference period in those examples. These cases illustrate observed prediction patterns and do not constitute a separate quantitative evaluation.
 
 \begin{figure}[p]
 	\centering
@@ -328,7 +329,7 @@ Table~\ref{tab:joint_cell} reports the joint cell results. DINOv2 and ResNet-50 
 
 \begin{table}[htbp]
 	\centering
-	\caption{Joint TABULA-NL cell assignment on the fixed holdout.}
+	\caption{Joint TABULA-NL cell assignment on the holdout set.}
 	\label{tab:joint_cell}
 	\small
 	\begin{tblr}{
@@ -348,7 +349,7 @@ Table~\ref{tab:joint_cell} reports the joint cell results. DINOv2 and ResNet-50 
 	\end{tblr}
 	\par\vspace{0.4em}
 	\begin{minipage}{\linewidth}
-		\footnotesize\textit{Note.} The fixed holdout contains 2,018 buildings. DINOv2 and ResNet-50 use all buildings, while InternVL3-2B uses 2,016 valid predictions. Expected uniform accuracy is 0.042. Majority cell accuracy is 0.790 for the full holdout and 0.791 for the InternVL3-2B subset.
+		\footnotesize\textit{Note.} The holdout set contains 2,018 buildings. DINOv2 and ResNet-50 use all buildings, while InternVL3-2B uses 2,016 valid predictions. Expected uniform accuracy is 0.042. Majority cell accuracy is 0.790 for the holdout set and 0.791 for the InternVL3-2B subset.
 	\end{minipage}
 \end{table}
 
@@ -377,7 +378,7 @@ Table~\ref{tab:htr_metrics} reports the difference between $h_{tr}$ values calcu
 		rowsep = 2pt,
 	}
 		\toprule
-		Vision configuration & $h_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) & $h_{tr}$ $R^2$ & Stock level bias \\
+		Vision configuration & $h_{tr}$ MAE ($\mathrm{W/(K\,m^2)}$) & $h_{tr}$ $R^2$ & Floor-area-weighted relative difference \\
 		\midrule
 		DINOv2, frozen backbone & \textbf{0.150} & \textbf{0.806} & $+10.0$\% \\
 		ResNet-50, full fine tuning & 0.157 & 0.771 & $+10.5$\% \\
@@ -386,18 +387,18 @@ Table~\ref{tab:htr_metrics} reports the difference between $h_{tr}$ values calcu
 	\end{tblr}
 	\par\vspace{0.4em}
 	\begin{minipage}{\linewidth}
-		\footnotesize\textit{Note.} The fixed holdout contains 2,018 buildings. Valid reconstructed areas were available for 2,016 DINOv2 and ResNet-50 records and 2,014 InternVL3-2B records.
+		\footnotesize\textit{Note.} The holdout set contains 2,018 buildings. Valid reconstructed areas were available for 2,016 DINOv2 and ResNet-50 records and 2,014 InternVL3-2B records.
 	\end{minipage}
 \end{table}
 
-All three configurations produced positive stock level bias relative to the reference cell calculations. The values ranged from $+10.0$\% for DINOv2 to $+16.6$\% for InternVL3-2B. Repeating the calculation at WWR values of 0.15, 0.25, and 0.35 left the ranking unchanged. The DINOv2 and ResNet-50 MAEs were 0.150 and 0.157 at all three WWR values at the reported precision, while the InternVL3-2B MAE changed from 0.495 to 0.453. Table~\ref{tab:wwr_sensitivity} reports the complete sensitivity results.
+All three configurations produced a positive floor-area-weighted relative difference from the reference cell calculations. The values ranged from $+10.0$\% for DINOv2 to $+16.6$\% for InternVL3-2B. Repeating the calculation at WWR values of 0.15, 0.25, and 0.35 left the ranking unchanged. The DINOv2 and ResNet-50 MAEs were 0.150 and 0.157 at all three WWR values at the reported precision, while the InternVL3-2B MAE changed from 0.495 to 0.453. Table~\ref{tab:wwr_sensitivity} reports the complete sensitivity results.
 
 Experiment II therefore shows that similar overall joint accuracy for the two trained configurations corresponded to similar thermal differences, while the lower InternVL3-2B joint accuracy coincided with a substantially larger $h_{tr}$ difference.
 
 \subsection{Experiment III Results: Energy Class Prediction}
 \label{sec:energy_class_condition_comparison}
 
-Experiment III compares all information source conditions on the comparison subset of 2,016 holdout buildings. Results for the primary binary target are presented first, followed by the seven class target and feature contribution analysis.
+Experiment III compares all energy class prediction conditions on the 2,016-building comparison subset. Results for the primary binary target are presented first, followed by the seven-class target and feature contribution analysis.
 
 \paragraph{E3a: Binary energy class prediction.}
 Table~\ref{tab:binary_conditions} reports the default threshold results. Direct image prediction with DINOv2 attained the highest macro F1 at 0.597 and the highest macro recall at 0.600. Direct image prediction with ResNet-50 followed with a macro F1 of 0.566. The reference attribute condition reached 0.492, while predicted attributes from DINOv2 and ResNet-50 reached 0.490 and 0.488.
@@ -415,28 +416,28 @@ Table~\ref{tab:binary_conditions} reports the default threshold results. Direct 
 		rowsep = 2pt,
 	}
 		\toprule
-		Information source & Vision configuration & Macro precision & Macro recall & Macro F1 \\
+		Condition & Vision configuration & Macro precision & Macro recall & Macro F1 \\
 		\midrule
 		Uniform random & Analytic expectation & 0.500 & 0.500 & 0.479 \\
-		Reference attributes & LightGBM & \textbf{0.612} & 0.529 & 0.492 \\
-		Direct image & DINOv2 & 0.595 & \textbf{0.600} & \textbf{0.597} \\
-		Direct image & ResNet-50 & 0.566 & 0.566 & 0.566 \\
-		Direct image & InternVL3-2B & 0.149 & 0.500 & 0.230 \\
-		Predicted attributes & DINOv2 & 0.566 & 0.522 & 0.490 \\
-		Predicted attributes & ResNet-50 & 0.550 & 0.519 & 0.488 \\
-		Predicted attributes & InternVL3-2B & 0.527 & 0.528 & 0.528 \\
+		Reference attribute condition & LightGBM & \textbf{0.612} & 0.529 & 0.492 \\
+		Direct image condition & DINOv2 & 0.595 & \textbf{0.600} & \textbf{0.597} \\
+		Direct image condition & ResNet-50 & 0.566 & 0.566 & 0.566 \\
+		Direct image condition & InternVL3-2B & 0.149 & 0.500 & 0.230 \\
+		Predicted attribute condition & DINOv2 & 0.566 & 0.522 & 0.490 \\
+		Predicted attribute condition & ResNet-50 & 0.550 & 0.519 & 0.488 \\
+		Predicted attribute condition & InternVL3-2B & 0.527 & 0.528 & 0.528 \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
 The reference attribute condition recalled 96.0\% of classes A to C but 9.8\% of classes D to G. Predicted attributes from DINOv2 and ResNet-50 produced similar recalls of 10.8\% and 11.0\% for classes D to G. Direct DINOv2 increased recall for this group to 46.9\%. Direct InternVL3-2B assigned every building to classes D to G, so its macro F1 of 0.230 reflected a constant prediction rather than discrimination among buildings. Table~\ref{tab:binary_perclass} reports precision, recall, and F1 for both class groups.
 
-\paragraph{E3b: Seven class energy prediction.}
+\paragraph{E3b: Seven-class energy prediction.}
 Table~\ref{tab:sevenclass_conditions} reports results for classes A to G. Direct DINOv2 attained the highest macro F1 at 0.213, followed by direct ResNet-50 at 0.201. The reference attribute condition reached 0.172 and the three predicted attribute conditions ranged from 0.137 to 0.150. The metric ranking differed for exact and $\pm1$ accuracy, for which the reference attribute condition attained the highest values of 0.356 and 0.655.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Seven class energy prediction on the comparison subset ($n=2{,}016$).}
+	\caption{Seven-class energy class prediction on the comparison subset ($n=2{,}016$).}
 	\label{tab:sevenclass_conditions}
 	\small
 	\begin{tblr}{
@@ -447,24 +448,24 @@ Table~\ref{tab:sevenclass_conditions} reports results for classes A to G. Direct
 		rowsep = 2pt,
 	}
 		\toprule
-		Information source & Vision configuration & Macro F1 & Exact accuracy & $\pm1$ accuracy \\
+		Condition & Vision configuration & Macro F1 & Exact accuracy & $\pm1$ accuracy \\
 		\midrule
 		Uniform random & Analytic expectation & 0.127 & 0.143 & 0.390 \\
-		Reference attributes & LightGBM & 0.172 & \textbf{0.356} & \textbf{0.655} \\
-		Direct image & DINOv2 & \textbf{0.213} & 0.266 & 0.544 \\
-		Direct image & ResNet-50 & 0.201 & 0.263 & 0.570 \\
-		Direct image & InternVL3-2B & 0.015 & 0.046 & 0.167 \\
-		Predicted attributes & DINOv2 & 0.150 & 0.292 & 0.589 \\
-		Predicted attributes & ResNet-50 & 0.149 & 0.282 & 0.587 \\
-		Predicted attributes & InternVL3-2B & 0.137 & 0.278 & 0.591 \\
+		Reference attribute condition & LightGBM & 0.172 & \textbf{0.356} & \textbf{0.655} \\
+		Direct image condition & DINOv2 & \textbf{0.213} & 0.266 & 0.544 \\
+		Direct image condition & ResNet-50 & 0.201 & 0.263 & 0.570 \\
+		Direct image condition & InternVL3-2B & 0.015 & 0.046 & 0.167 \\
+		Predicted attribute condition & DINOv2 & 0.150 & 0.292 & 0.589 \\
+		Predicted attribute condition & ResNet-50 & 0.149 & 0.282 & 0.587 \\
+		Predicted attribute condition & InternVL3-2B & 0.137 & 0.278 & 0.591 \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-Only the reference attribute condition exceeded the majority baseline of 0.612 for $\pm1$ accuracy. Direct InternVL3-2B predicted class F for approximately 99\% of the comparison subset and consequently remained below the uniform expectation for all three seven class metrics. These results close the main comparison by showing that condition ranking depends on both target resolution and evaluation metric.
+Only the reference attribute condition exceeded the majority baseline of 0.612 for $\pm1$ accuracy. Direct InternVL3-2B predicted class F for approximately 99\% of the comparison subset and consequently remained below the uniform expectation for all three seven-class metrics. These results close the main comparison by showing that condition ranking depends on both target resolution and evaluation metric.
 
 \paragraph{E3c: Feature contribution analysis.}
-The leave one out results in Table~\ref{tab:feature_ablation} identify construction year as the largest contributor among the eight inputs of the reference attribute classifier. Removing year reduced macro F1 by 0.032 for the seven class target and 0.030 for the binary target. Removing the four TABULA U-values changed macro F1 by less than 0.003 in either target. Adding all four clean reconstructed geometry features increased macro F1 by 0.039 for the seven class target and 0.104 for the binary target.
+The leave-one-out results in Table~\ref{tab:feature_ablation} identify construction year as the largest contributor among the eight inputs of the reference attribute classifier. Removing year reduced macro F1 by 0.032 for the seven-class target and 0.030 for the binary target. Removing the four TABULA U-values changed macro F1 by less than 0.003 in either target. Adding all four clean reconstructed geometry features increased macro F1 by 0.039 for the seven-class target and 0.104 for the binary target.
 
 \begin{table}[htbp]
 	\centering
@@ -479,13 +480,13 @@ The leave one out results in Table~\ref{tab:feature_ablation} identify construct
 		rowsep = 2pt,
 	}
 		\toprule
-		Feature change & Seven class $\Delta$ macro F1 & Binary $\Delta$ macro F1 \\
+		Feature change & Seven-class $\Delta$ macro F1 & Binary $\Delta$ macro F1 \\
 		\midrule
 		Remove construction year & $\mathbf{-0.032}$ & $\mathbf{-0.030}$ \\
 		Remove floor count & $-0.012$ & $-0.011$ \\
 		Remove building type & $-0.003$ & $+0.003$ \\
 		Remove four TABULA U-values & $-0.000$ & $+0.002$ \\
-		Remove city & $-0.009$ & $-0.006$ \\
+		Remove study area & $-0.009$ & $-0.006$ \\
 		Add reconstructed shape factor & $+0.025$ & $+0.063$ \\
 		Add reconstructed floor area & $+0.025$ & $+0.071$ \\
 		Add all four clean 3DBAG geometry features & $+0.039$ & $+0.104$ \\
@@ -493,48 +494,48 @@ The leave one out results in Table~\ref{tab:feature_ablation} identify construct
 	\end{tblr}
 	\par\vspace{0.4em}
 	\begin{minipage}{\linewidth}
-		\footnotesize\textit{Note.} The full feature baselines were 0.181 for the seven class target and 0.478 for the binary target. Geometry additions use only reconstructed 3DBAG fields; certificate geometry fields identified by the provenance audit are excluded.
+		\footnotesize\textit{Note.} The full feature baselines were 0.181 for the seven-class target and 0.478 for the binary target. Geometry additions use only reconstructed 3DBAG fields; certificate geometry fields identified by the provenance audit are excluded.
 	\end{minipage}
 \end{table}
 
-Experiment III therefore yields three principal findings. Direct DINOv2 produced the highest macro F1 for both energy class targets. Replacing reference attributes with trained image predictions changed binary macro F1 by less than 0.005 but reduced seven class macro F1 by approximately 0.022. The feature analysis identifies construction year as the strongest contributor among the structured inputs and shows that clean reconstructed geometry adds information not captured by the main feature set.
+Experiment III therefore yields three principal findings. Direct DINOv2 produced the highest macro F1 for both energy class targets. Replacing reference attributes with predicted building attributes changed binary macro F1 by less than 0.005 but reduced seven-class macro F1 by approximately 0.022. The feature analysis identifies construction year as the strongest contributor among the structured inputs and shows that clean reconstructed geometry adds information not captured by the main input set.
 
 \section{Discussion}
 \label{sec:discussion}
 
-The three experiments answer different points in the same information chain. Experiment I shows that SVI can support building type, construction year, and floor count prediction, but performance depends on the model configuration and class representation. Experiment II shows that errors in type and year affect both joint archetype assignment and the representative thermal properties assigned to a building. Experiment III shows that direct image prediction and prediction through explicit attributes produce different intermediate outputs and energy class results. The following discussion interprets these findings in experiment order.
+The three experiments answer different points in the same information chain. Experiment I shows that SVI can support building type, construction year, and floor count prediction, but performance depends on the vision configuration and class representation. Experiment II shows that errors in type and year affect both joint archetype assignment and the representative thermal properties assigned to a building. Experiment III shows that direct image prediction and prediction from building attributes produce different intermediate outputs and energy class results. The following discussion interprets these findings in experiment order.
 
 \subsection{Building Attribute Prediction}
 
-DINOv2 with a frozen backbone provided the most consistent attribute results, despite updating fewer parameters than the fully fine tuned ResNet-50. ResNet-50 attained higher type accuracy because it performed strongly on the dominant AB class, but DINOv2 attained higher macro F1 and higher recall for SFH and TH. This difference confirms that accuracy alone is not an adequate summary for the present type distribution. The result supports use of a frozen self supervised representation when labelled development data are limited, but it does not isolate the effect of pretraining from architecture or aggregation because the experiment compares complete configurations.
+DINOv2 with a frozen backbone provided the most consistent attribute results, despite updating fewer parameters than the fully fine-tuned ResNet-50. ResNet-50 attained higher type accuracy because it performed strongly on the dominant AB class, but DINOv2 attained higher macro F1 and higher recall for SFH and TH. This difference confirms that accuracy alone is not an adequate summary for the present type distribution. The result supports use of a frozen self-supervised representation when labelled development data are limited, but it does not isolate the effect of pretraining from architecture or aggregation because the experiment compares complete configurations.
 
-Construction year was the strongest continuous prediction target for DINOv2, with an $R^2$ of 0.679. This value is close to the 0.710 reported by \textcite{liang2025} for a fully fine tuned InternVL3-2B model, but the datasets, label sources, and training procedures differ, so the values are not a direct benchmark. The negative $R^2$ of the InternVL3-2B configuration in this study instead shows that prompting without parameter updates did not recover building level year variation in this Dutch sample. The selected examples further suggest that visibility, occlusion, and viewpoint are relevant failure conditions, although a systematic image quality experiment would be required to quantify their effects.
+Construction year was the strongest continuous prediction target for DINOv2, with an $R^2$ of 0.679. This value is close to the 0.710 reported by \textcite{liang2025} for a fully fine-tuned InternVL3-2B model, but the datasets, label sources, and training procedures differ, so the values are not a direct benchmark. The negative $R^2$ of the InternVL3-2B configuration in this study instead shows that prompting without parameter updates did not recover building-level year variation among the evaluated Dutch buildings. The selected examples further suggest that visibility, occlusion, and viewpoint are relevant failure conditions, although a systematic image quality experiment would be required to quantify their effects.
 
 \subsection{Archetype Assignment and Thermal Consequences}
 
-The joint cell result requires interpretation against both baselines. Joint accuracies above 0.82 appear high relative to uniform assignment, but the majority cell alone reaches 0.790 because the holdout is dominated by old apartment blocks. Macro cell recall below 0.18 shows that the trained configurations had low recall for less frequent combinations of building type and construction period. This finding is consistent with earlier studies that identified building type and construction period as important sources of error in energy models based on archetypes \parencite{dochev2020,bass2022}. The present experiment adds a comparison in which predicted and administrative attributes refer to the same building records.
+The joint cell result requires interpretation against both baselines. Joint accuracies above 0.82 appear high relative to uniform assignment, but the majority cell alone reaches 0.790 because the holdout is dominated by old apartment blocks. Macro cell recall below 0.18 shows that the trained configurations had low recall for less frequent combinations of building type and construction period. This finding is consistent with earlier studies that identified building type and construction period as important sources of error in energy models based on archetypes \parencite{dochev2020,bass2022}. The present experiment adds a comparison in which predicted and reference building attributes refer to the same building records.
 
-The $h_{tr}$ comparison distinguishes cell errors by their thermal consequence. It separated DINOv2 from InternVL3-2B more clearly than joint accuracy. All three predicted cell sets produced higher aggregate transmission coefficients than the reference assignments, which establishes the positive direction of the stock level difference. The construction year scatter provides a plausible explanation: several newer buildings were assigned to earlier periods with higher representative U-values. This explanation is consistent with the observed prediction pattern, but the analysis does not establish that the reference archetype values equal the measured envelope properties of those buildings.
+The $h_{tr}$ comparison distinguishes cell errors by their thermal consequence. It separated DINOv2 from InternVL3-2B more clearly than joint accuracy. All three predicted cell sets produced higher aggregate transmission heat transfer coefficients than the reference assignments. The construction year scatter provides a plausible explanation: several newer buildings were assigned to earlier periods with higher representative U-values. This explanation is consistent with the observed prediction pattern, but the analysis does not establish that the reference archetype values equal the measured envelope properties of those buildings.
 
 The stable ranking across the three tested WWR values shows that the comparative result is not determined by the selected local facade split. It does not remove other physical uncertainties. The calculation excludes thermal bridge surcharges, uses reconstructed rather than measured areas, treats shared walls as adiabatic, and assigns the unrenovated TABULA-NL variant to every building. The $h_{tr}$ result should therefore be read as a physically weighted difference between two cell assignments, not as a validated estimate of actual heat demand.
 
 \subsection{Energy Class Prediction}
 
-Direct DINOv2 achieved the highest macro F1 for both energy class targets. This pattern is compatible with earlier evidence that street view images contain information associated with registered energy performance \parencite{mayer2023uk,mayer2023dk}. The present comparison does not show which additional visual cues produced the advantage, because the direct condition does not output explicit attributes. Possible cues include facade condition, window appearance, and surrounding context, but testing these explanations would require targeted labels or ablations.
+Direct DINOv2 achieved the highest macro F1 for both energy class targets. This pattern is compatible with earlier evidence that street view images contain information associated with registered energy performance \parencite{mayer2023uk,mayer2023dk}. The present comparison does not show which additional visual cues produced the advantage, because the direct image condition does not produce building attributes. Possible cues include facade condition, window appearance, and surrounding context, but testing these explanations would require targeted labels or ablations.
 
-The reference and trained predicted attribute conditions produced nearly equal binary macro F1. This small difference does not mean that attribute errors were physically negligible. Experiment II shows measurable cell and $h_{tr}$ differences, while Experiment III shows that the structured classifier had limited discrimination for classes D to G even when reference attributes were supplied. The feature ablation provides the same distinction. Construction year contributed the largest marginal change among the eight structured inputs and should therefore be prioritised when improving visual attribute extraction. The TABULA U-values added almost no independent information once type and period were already present because the lookup is deterministic. Clean reconstructed geometry produced a larger improvement, indicating that the restricted structured feature set omits information relevant to the registered class.
+The reference and trained predicted attribute conditions produced nearly equal binary macro F1. This small difference does not mean that attribute errors were physically negligible. Experiment II shows measurable cell and $h_{tr}$ differences, while Experiment III shows that the structured classifier had limited discrimination for classes D to G even when reference attributes were supplied. The feature ablation provides the same distinction. Construction year contributed the largest marginal change among the eight structured inputs and should therefore be prioritised when improving building attribute prediction from \ac{SVI}. The TABULA U-values added almost no independent information once building type and construction period were already present because the lookup is deterministic. Clean reconstructed geometry produced a larger improvement, indicating that the restricted structured input set omits information relevant to the registered class.
 
-The seven class results were low for all information sources when measured by macro F1. The reference attribute condition attained higher exact and $\pm1$ accuracy because its predictions were concentrated around frequent classes, whereas direct DINOv2 distributed more correct predictions across the class set. The concentration of the evaluation sample in frequent classes and archetype cells limits the interpretation of these aggregate results. The low macro F1 and class specific recalls show that performance was not uniform across the registered energy classes.
+The seven-class results were low for all information sources when measured by macro F1. The reference attribute condition attained higher exact and $\pm1$ accuracy because its predictions were concentrated around frequent classes, whereas direct DINOv2 distributed more correct predictions across the class set. The concentration of the experimental dataset in frequent classes and archetype cells limits the interpretation of these aggregate results. The low macro F1 and class-specific recalls show that performance was not uniform across the registered energy classes.
 
 \subsection{Validity, Limitations, and Future Evaluation}
 \label{sec:validity_limitations}
 
-The first limitation concerns the composition and geographic scope of the evaluation sample. Mapillary availability and image filtering produced a sample dominated by Amsterdam and AB buildings, with few observations for several residential types, construction periods, archetype cells, and energy classes. The results therefore apply to the evaluated buildings with eligible \ac{SVI} and do not establish performance for a city excluded from model development. Future geographic evaluation should exclude each study area from model development in turn and report the composition and class specific performance of every target sample. Application outside the Netherlands additionally requires explicit mappings among national registries, energy class definitions, and archetype taxonomies before model transfer can be assessed.
+The first limitation concerns the composition and geographic scope of the experimental dataset. Mapillary availability and image filtering produced a dataset dominated by Amsterdam and AB buildings, with few observations for several residential types, construction periods, archetype cells, and energy classes. The results therefore apply to the evaluated buildings with eligible \ac{SVI} and do not establish performance for a study area excluded from model development. Future geographic evaluation should exclude each study area from model development in turn and report the composition and class-specific performance of every target set. Application outside the Netherlands additionally requires explicit mappings among national registries, energy class definitions, and archetype taxonomies before model transfer can be assessed.
 
-The second limitation arises from the difference between the certificate unit and the unit of analysis. EP-Online certificates are registered for dwellings, whereas this study evaluates BAG buildings. Stage 1 reduces the linked records to one registered energy class per BAG building, which gives every building one target label in the modelling dataset. However, 58.4\% of the linked buildings had multiple certificates in the raw records, and 77.0\% of that group contained more than one class. Selecting the latest certificate provides one reproducible target but does not remove variation among dwelling units or registration dates. The target may therefore describe one unit or one recorded state rather than the facade and geometry observed for the complete building. Mapillary acquisition dates were also not systematically aligned with certificate registration dates, which can add temporal disagreement between an image and its target. Future evaluation should distinguish single unit and multiunit buildings, compare latest, modal, and unit level targets where linkage permits, and align image and certificate dates where possible.
+The second limitation arises from the difference between the certificate unit and the unit of analysis. EP-Online certificates are registered for dwellings, whereas this study evaluates BAG buildings. Stage 1 reduces the linked records to one registered energy class per BAG building, which gives every building one target label in the experimental dataset. However, 58.4\% of the 10,075 buildings linked back to the raw certificate records had multiple certificates, and 77.0\% of that group contained more than one class. Selecting the latest certificate provides one reproducible target but does not remove variation among dwelling units or registration dates. The target may therefore describe one unit or one recorded state rather than the facade and geometry observed for the complete building. Mapillary acquisition dates were also not systematically aligned with certificate registration dates, which can add temporal disagreement between an image and its target. Future evaluation should distinguish single unit and multiunit buildings, compare latest, modal, and unit level targets where linkage permits, and align image and certificate dates where possible.
 
-The third limitation concerns model comparison. The three vision configurations differ in architecture, pretraining, parameter updates, image count, and aggregation, so their performance cannot be attributed to one design choice. Hyperparameters were not exhaustively optimised for every target, and InternVL3-2B was evaluated without parameter updating. In addition, the direct image and attribute based procedures use different model families. Their results therefore compare complete prediction procedures rather than isolating the effect of the information source. Future experiments should include an open source \ac{VLM} fine tuned on the experimental data, repeated training with several random seeds, matched image aggregation, class imbalance treatments, ordinal construction period prediction, calibration analysis, and systematic hyperparameter optimisation.
+The third limitation concerns model comparison. The three vision configurations differ in architecture, pretraining, parameter updates, image count, and aggregation, so their performance cannot be attributed to one design choice. Hyperparameters were not exhaustively optimised for every target, and InternVL3-2B was evaluated without parameter updating. In addition, the direct image and building attribute prediction procedures use different model families. Their results therefore compare complete prediction procedures rather than isolating the effect of information source alone. Future experiments should include an open-source \ac{VLM} fine-tuned on the experimental data, repeated training with several random seeds, matched image aggregation, class imbalance treatments, ordinal construction period prediction, calibration analysis, and systematic hyperparameter optimisation.
 
 The fourth limitation concerns archetype mapping and physical interpretation. The operational mapping converts six EP-Online residential categories into four TABULA-NL size classes, including semi-detached houses within SFH and apartments within AB, but alternative mappings were not examined. TABULA-NL then assigns representative as built properties by size class and construction period, while refurbishment state is unavailable consistently for individual buildings. \Ac{SVI} may show visible facade or window changes but cannot verify concealed insulation, heating system upgrades, or renovations within individual units. The thermal comparison also relies on reconstructed 3DBAG geometry, a fixed WWR range, and archetype U-values rather than measured envelope properties. Future physical evaluation should incorporate verified renovation records, measured envelope properties, and independent heat demand observations. Any comparison with measured consumption must also control for weather, occupancy, floor area, and heating systems before differences are interpreted as evidence of renovation or archetype error.
 
-These limitations define a bounded practical implication. \Ac{SVI} can provide useful building attributes when administrative fields are missing, and those attributes can be connected to a transparent archetype workflow. For the evaluated energy class task, however, building type, construction year, floor count, and their TABULA-NL U-values do not contain all information required for class balanced prediction. A practical workflow should use administrative records and reconstructed geometry where they are available, use \ac{SVI} to supplement missing visible or semantic attributes, and report uncertainty for sparsely represented building groups.
+These limitations define a bounded practical implication. \Ac{SVI} can provide useful building attributes when reference building attributes are missing, and those attributes can be connected to a transparent archetype workflow. For the evaluated energy class task, however, building type, construction year, floor count, and their TABULA-NL U-values do not contain all information required for class-balanced prediction. A practical workflow should use administrative records and reconstructed geometry where they are available, use \ac{SVI} to supplement building attributes that can be inferred from visible facades, and report uncertainty for sparsely represented building groups.

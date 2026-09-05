@@ -2,7 +2,7 @@
 \label{ch:appendix_d}
 
 This appendix reproduces the prompts and output processing rules used with InternVL3-2B.
-Section~\ref{sec:appendix_d_inference} reports the inference settings, Sections~\ref{sec:appendix_d_attribute_prompt} to~\ref{sec:appendix_d_binary_prompt} provide the three prompts verbatim, and Section~\ref{sec:appendix_d_parsing_rules} defines response parsing and building level aggregation.
+Section~\ref{sec:appendix_d_inference} reports the inference settings, Sections~\ref{sec:appendix_d_attribute_prompt} to~\ref{sec:appendix_d_binary_prompt} provide the three prompts verbatim, and Section~\ref{sec:appendix_d_parsing_rules} defines response parsing and building-level aggregation.
 The prompts are preserved verbatim because changes in their wording would define a different experimental condition.
 
 \section{Inference Settings}
@@ -52,10 +52,10 @@ give your best single estimate - never omit a key.
 Example: {"building_type": "TH", "construction_year": 1932, "num_floors": 3}
 \end{lstlisting}
 
-\section{Direct Seven Class Prediction Prompt}
+\section{Direct Seven-Class Prediction Prompt}
 \label{sec:appendix_d_sevenclass_prompt}
 
-The seven class and binary prompts use the same description of visual evidence and differ only in the permitted answer space.
+The seven-class and binary prompts use the same description of visual evidence and differ only in the permitted answer space.
 This keeps the visual assessment instructions consistent across the two target definitions.
 
 \begin{lstlisting}[keywords={},mathescape=false,basicstyle=\ttfamily\footnotesize,breaklines=true]
@@ -102,7 +102,7 @@ Required key:
 Example: {"energy_band": "A-C"}
 \end{lstlisting}
 
-\section{Response Parsing and Building Level Aggregation}
+\section{Response Parsing and Building-Level Aggregation}
 \label{sec:appendix_d_parsing_rules}
 
 Each image response is parsed before predictions are aggregated by building.
@@ -111,7 +111,7 @@ If all responses for a building are invalid, no building prediction is produced.
 
 \begin{enumerate}
 	\item The first JavaScript Object Notation object is extracted from the response. Markdown code fences and additional text before or after the object are tolerated. Common trailing comma errors are repaired before parsing.
-	\item For attribute prediction, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}, \texttt{construction\_year} must be an integer from 1800 to 2025, and \texttt{num\_floors} must be an integer from 1 to 30. All three values must be valid for the response to enter building level aggregation.
+	\item For attribute prediction, \texttt{building\_type} must be one of \{SFH, TH, MFH, AB\}, \texttt{construction\_year} must be an integer from 1800 to 2025, and \texttt{num\_floors} must be an integer from 1 to 30. All three values must be valid for the response to enter building-level aggregation.
 	\item For direct energy class prediction, \texttt{energy\_label} must be one of \{A, B, C, D, E, F, G\}, and \texttt{energy\_band} must be one of \{A-C, D-G\}.
 	\item Attribute predictions are aggregated by the modal building type, the median construction year, and the rounded median floor count. The implementation applies no additional rule when building type categories have equal modal counts.
 	\item Direct energy class predictions are aggregated by majority vote. A tie is resolved in favour of the more energy efficient class or class group.

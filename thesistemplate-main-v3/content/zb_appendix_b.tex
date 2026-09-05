@@ -11,7 +11,7 @@ All model training and \ac{VLM} inference used one NVIDIA GeForce RTX 4060 Lapto
 
 The ResNet-50 and DINOv2 attribute models share the same prediction heads, image transformations, training duration, and checkpoint selection rule, but differ in the parameters updated and in optimiser grouping.
 Both models use AdamW with a nominal weight decay of 0.01 and cosine annealing with \(T_{\max}=30\).
-For ResNet-50, parameter grouping excludes biases and one dimensional normalisation parameters from weight decay.
+For ResNet-50, parameter grouping excludes biases and one-dimensional normalisation parameters from weight decay.
 For DINOv2, weight decay is applied to all trainable parameters in the multilayer perceptron and output heads.
 Training stops after a maximum of 30 epochs or after validation building type macro F1 fails to improve for 10 epochs.
 Both models use fp16 automatic mixed precision.
@@ -75,7 +75,7 @@ These descriptions define three complete direct image configurations rather than
 \section{LightGBM Energy Class Models}
 \label{sec:appendix_b_lightgbm}
 
-Table~\ref{tab:lightgbm_hyperparams} reports the fixed \acs{LightGBM} configuration used with structured building attributes.
+Table~\ref{tab:lightgbm_hyperparams} reports the fixed \acs{LightGBM} configuration used with structured inputs.
 The same settings are applied to all attribute input conditions, which limits their comparison to changes in the supplied building information.
 
 \begin{table}[htbp]
@@ -109,5 +109,5 @@ The same settings are applied to all attribute input conditions, which limits th
 	\end{tblr}
 \end{table}
 
-Only the objective changes between the binary and seven class tasks.
+Only the objective changes between the binary and seven-class tasks.
 No separate hyperparameter search is performed for individual input conditions.

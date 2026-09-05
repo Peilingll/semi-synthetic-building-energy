@@ -2,14 +2,14 @@
 \label{ch:conclusions}
 
 This thesis examined whether \ac{SVI} can provide building attributes that are useful for building energy assessment when administrative records are incomplete.
-The question was investigated through a Dutch case in which building type, construction year, and floor count inferred from \ac{SVI} were compared with administrative reference attributes, used for TABULA-NL archetype assignment, and evaluated as inputs to registered energy class prediction.
-TABULA-NL therefore provides the archetype framework used to assess the usefulness and consequences of image based attribute enrichment rather than the overarching goal of the thesis.
+The question was investigated through a Dutch case in which building type, construction year, and floor count predicted from \ac{SVI} were compared with reference building attributes, used for TABULA-NL archetype assignment, and evaluated as inputs to registered energy class prediction.
+TABULA-NL therefore provides the archetype framework used to assess the usefulness and consequences of image-based attribute enrichment rather than the overarching goal of the thesis.
 
 \section{Conclusions}
 \label{sec:conclusions}
 
 Objective~1 assessed the predictive performance of \ac{SVI} for building type, construction year, and floor count.
-The three vision configurations produced estimates for all three attributes, but prediction quality differed by attribute, class, and model configuration.
+The three vision configurations produced predictions for all three attributes, but prediction quality differed by attribute, class, and vision configuration.
 DINOv2 with a frozen backbone produced the most consistent overall results, achieving the best value in six of the seven principal attribute metrics.
 ResNet-50 attained the highest building type accuracy, but this result was influenced by strong performance for the dominant Apartment Block class, while DINOv2 achieved higher macro F1 and stronger recall for less frequent classes.
 InternVL3-2B without parameter updating did not provide sufficient accuracy for the three attribute tasks in the evaluated setup.
@@ -22,35 +22,35 @@ Relative to calculations based on reference cells, the cells assigned from DINOv
 These comparisons quantify the effect of attribute errors on archetype assignment, but they do not validate the assigned parameters against measured envelope properties or heat demand.
 
 Objective~3 determined how the source of building information affects registered energy class prediction.
-Changing from reference attributes to DINOv2 predicted attributes reduced binary macro F1 by only 0.002, but reduced seven class macro F1 by 0.022.
+Changing from reference attributes to DINOv2 predicted attributes reduced binary macro F1 by only 0.002, but reduced seven-class macro F1 by 0.022.
 The small binary difference does not indicate reliable classification because both attribute conditions had low recall for classes D to G.
-Direct image prediction with DINOv2 achieved the highest macro F1 for both targets, reaching 0.597 for the binary task and 0.213 for the seven class task.
+Direct image prediction with DINOv2 achieved the highest macro F1 for both targets, reaching 0.597 for the binary task and 0.213 for the seven-class task.
 This result indicates that the images contain information relevant to the registered energy class that is not represented by building type, construction year, floor count, and the corresponding TABULA-NL U-values alone.
-Among the structured inputs, construction year made the largest marginal contribution to energy class prediction and should therefore be prioritised when improving visual attribute extraction.
+Among the structured inputs, construction year made the largest marginal contribution to energy class prediction and should therefore be prioritised when improving building attribute prediction from \ac{SVI}.
 
 Overall, the findings support \ac{SVI} as a supplementary source of building information rather than a universal replacement for administrative records.
-When administrative attributes are incomplete, predictions of building type, construction year, and floor count can support preliminary building stock assessment and targeted data collection because the attributes remain available for inspection before archetype assignment.
-Administrative records and reconstructed geometry should remain the preferred sources where they are available, while \ac{SVI} can supplement missing visible or semantic attributes.
-When the registered energy class is the only required output, direct image prediction provided stronger class balanced performance than prediction based on the evaluated structured attributes.
+When reference building attributes are incomplete, predictions of building type, construction year, and floor count can support preliminary building stock assessment and targeted data collection because the attributes remain available for inspection before archetype assignment.
+Administrative records and reconstructed geometry should remain the preferred sources where they are available, while \ac{SVI} can supplement building attributes that can be inferred from visible facades.
+When the registered energy class is the only required output, direct image prediction provided stronger class-balanced performance than prediction based on the evaluated structured inputs.
 However, neither procedure should replace an \ac{EPC}, a physical survey, or measured performance assessment.
-The appropriate use of \ac{SVI} therefore depends on whether the application requires explicit building attributes, archetype parameters, or an energy class prediction.
+The appropriate use of \ac{SVI} therefore depends on whether the application requires building attributes, archetype parameters, or an energy class prediction.
 
 \section{Contributions}
 \label{sec:contributions}
 
-This thesis makes three contributions to the evaluation of \ac{SVI}-derived attributes for building stock enrichment.
+This thesis makes three contributions to the evaluation of building attributes predicted from \ac{SVI} for building stock enrichment.
 These contributions concern the controlled assessment of attribute sources and their consequences for archetype assignment and energy class prediction rather than the development of a new predictive architecture.
 
 \textbf{The first contribution is a controlled evaluation of building attribute prediction from SVI.}
-The comparison evaluates a fully fine tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction layers, and InternVL3-2B without parameter updating using the same holdout buildings and attribute definitions.
-Evaluating all three configurations on the same buildings distinguishes their performance for construction year, building type, and floor count and identifies the strengths and limitations of each configuration.
+The comparison evaluates a fully fine-tuned ResNet-50, a frozen DINOv2 backbone with supervised prediction layers, and InternVL3-2B without parameter updating using one predefined holdout set and the same attribute definitions.
+The two supervised configurations produced predictions for all 2,018 holdout buildings, while two invalid InternVL3-2B records were excluded from its metrics. This design identifies the strengths and limitations of each complete configuration without implying that every metric has the same denominator.
 
 \textbf{The second contribution connects attribute errors to archetype assignment and thermal parameters.}
-The building level dataset links Mapillary imagery, administrative reference attributes, reconstructed 3DBAG geometry, \ac{EPC} records, and TABULA-NL archetypes while preserving the data source of each value.
-Predicted building type and construction year are used to assign the joint archetype cell and its U-values, which are then included in the calculation of the floor area normalised transmission heat transfer coefficient $h_{tr}$.
+The building-level dataset links Mapillary imagery, reference building attributes, reconstructed 3DBAG geometry, \ac{EPC} records, and TABULA-NL archetypes while preserving the data source of each value.
+Predicted building type and construction year are used to assign the joint archetype cell and its U-values, which are then included in the calculation of the floor-area-normalised transmission heat transfer coefficient $h_{tr}$.
 This structure separates attribute prediction errors from their effects on cell agreement, assigned thermal parameters, and aggregate transmission heat transfer.
 
 \textbf{The third contribution is a controlled comparison of information sources for energy class prediction.}
-Reference attributes and \ac{SVI}-derived attributes are compared on the same buildings and data partitions using the same fitted classifier.
+Reference and predicted building attributes are compared on the 2,016-building comparison subset using the same fitted classifier.
 Direct image prediction is evaluated as a separate procedure that does not produce intermediate building attributes.
 The comparison therefore shows how energy class results change with the source and representation of building information, while feature ablation identifies the contribution of the structured inputs.

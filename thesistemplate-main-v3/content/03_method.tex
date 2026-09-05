@@ -4,17 +4,18 @@
 \section{Method Overview}
 \label{sec:method_overview}
 
-This chapter defines a four-stage method for evaluating building information obtained from street view imagery against administrative and reconstructed reference data for the same buildings.
-The BAG building identifier is the unit of linkage throughout the method.
-It connects building attributes, reconstructed geometry, registered energy classes, and images, and the integrated dataset records the source of each field.
+This chapter defines a four-stage method for predicting building attributes from street view imagery and evaluating their effects on archetype assignment and registered energy class prediction.
+One BAG building is the unit of analysis and linkage throughout the method, and its identifier is stored as \texttt{pand\_id}.
+Building attributes refer to building type, construction year, and floor count.
+Reference building attributes are obtained from EP-Online, BAG, and reconstructed 3DBAG data, while predicted building attributes are produced by the vision configurations.
 The Dutch national building typology developed within the \acs{TABULA} project is referred to as TABULA-NL \parencite{loga2016,tabulawebtool}.
 
 The stages follow the information flow shown in Figure~\ref{fig:pipeline_overview}.
-Stage 1 constructs the linked dataset from reference records and eligible street view images.
+Stage 1 constructs the experimental dataset from reference records and eligible street view images.
 Stage 2 predicts building type, construction year, and floor count from the images.
 Stage 3 combines building type and construction year to assign a TABULA-NL archetype cell and its representative U-values.
 Stage 4 predicts the registered energy class either from building attributes and assigned U-values or directly from imagery.
-This sequence separates prediction by a model from deterministic archetype assignment and keeps every comparison at the level of the same BAG building.
+This sequence separates model prediction from deterministic archetype assignment and preserves the BAG building as the unit of comparison.
 
 \begin{figure}[htbp]
 	\centering
@@ -26,10 +27,10 @@ This sequence separates prediction by a model from deterministic archetype assig
 \subsection{Data Provenance}
 \label{sec:three_layer_structure}
 
-Throughout the four stages, the integrated dataset records the provenance of three field groups: reference data, model outputs, and archetype properties.
-Reference data comprise administrative \acf{BAG} and EP-Online records and reconstructed 3DBAG geometry \parencite{kadasterbag,rvoeponline,threedbagdocs,peters2022,dukai2021}.
+Throughout the four stages, the integrated dataset records the provenance of three field groups: source data, model outputs, and archetype properties.
+Source data comprise administrative \acf{BAG} and EP-Online records and reconstructed 3DBAG geometry \parencite{kadasterbag,rvoeponline,threedbagdocs,peters2022,dukai2021}.
 The administrative fields come from registry records. The 3DBAG fields describe geometry reconstructed from BAG and national elevation data.
-Model outputs comprise predicted building type, construction year, and floor count together with the corresponding model configuration.
+Model outputs comprise the predicted building attributes and the corresponding vision configuration.
 Archetype properties comprise the construction period, TABULA-NL cell, and representative U-values assigned from either reference or predicted building type and construction year.
 Every building assigned to the same archetype cell receives the same representative properties \parencite{loga2016,tabulawebtool}.
 The registered EP-Online energy class remains the prediction target and is not an output of the archetype lookup.
@@ -37,8 +38,8 @@ The registered EP-Online energy class remains the prediction target and is not a
 \section{Stage 1: Dataset Construction}
 \label{sec:dataset_construction}
 
-Stage 1 constructs the linked dataset required for all subsequent operations.
-The reference data branch produces one record per eligible BAG building, while the image branch produces one record per selected image.
+Stage 1 constructs the experimental dataset required for all subsequent operations.
+The reference branch produces one record per eligible BAG building, while the image branch produces one record per selected image.
 The branches are linked by the BAG building identifier, stored as \texttt{pand\_id}, so one building reference record may correspond to several street view image records.
 Figure~\ref{fig:data_linkage_units} defines this record structure, and Table~\ref{tab:data_sources} identifies the contribution of each source.
 
@@ -46,7 +47,7 @@ Figure~\ref{fig:data_linkage_units} defines this record structure, and Table~\re
 \label{sec:data_sources}
 
 The \acf{BAG} is the Dutch national register of addresses and buildings and provides the building identifier, construction year, status, use, and two-dimensional footprint \parencite{kadasterbag}.
-EP-Online is the Dutch national database of registered energy performance records and provides residential building category, energy class, and certificate registration date \parencite{rvoeponline}.
+EP-Online is the Dutch national database of registered energy performance records and provides residential building category, registered energy class, and certificate registration date \parencite{rvoeponline}.
 3DBAG is an open three-dimensional building dataset reconstructed from BAG and national elevation data.
 This study uses its geometric attributes rather than treating them as surveyed measurements \parencite{threedbagdocs,peters2022,dukai2021}.
 Table~\ref{tab:3dbag_fields} defines the source fields and derived 3DBAG variables used in the analysis.
@@ -77,9 +78,9 @@ All spatial operations use the Dutch national coordinate reference system, EPSG:
 		\toprule
 		Source & Principal data elements & Role in this study \\
 		\midrule
-		BAG & Building identifier, construction year, two-dimensional footprint, status, and use & Linkage key, construction year reference, and residential building filter \\
-		3DBAG & Reconstructed floor count, height, volume, and envelope areas at \acf{LoD} 2.2 & Floor count reference and geometric inputs for the transmission heat transfer calculation \\
-		EP-Online & Residential building category, registered energy class, and registration date & Building type reference, prediction target, and certificate selection \\
+		BAG & Building identifier, construction year, two-dimensional footprint, status, and use & Linkage key, reference construction year, and residential building filter \\
+		3DBAG & Reconstructed floor count, height, volume, and envelope areas at \acf{LoD} 2.2 & Reference floor count and geometric inputs for the transmission heat transfer calculation \\
+		EP-Online & Residential building category, registered energy class, and registration date & Reference building type, prediction target, and certificate selection \\
 		OpenStreetMap and Overture Maps & Building footprints and source identifiers & Candidate building locations and footprint linkage \\
 		Mapillary & Panoramic street view images and image metadata & Visual input, image selection, and provenance \\
 		TABULA-NL & Six construction periods and four residential size classes & Archetype cell assignment and representative as-built U-values \\
@@ -99,10 +100,10 @@ Entries that list several BAG identifiers are then expanded to produce one linke
 The reference floor count is taken from the reconstructed 3DBAG floor attribute when available.
 If this field is missing, floor count is estimated by dividing the median reconstructed building height by an assumed floor height of 3.0\,m and rounding to the nearest integer.
 Reference records are eligible when construction year is between 1800 and 2025, floor count is between 1 and 30, and the EP-Online residential category can be mapped to one of the four TABULA-NL size classes.
-The output is one record per building containing the reference attributes, reconstructed geometry, and original registered energy class.
+Records satisfying these criteria form the eligible reference set, with one record per building containing the reference building attributes, reconstructed geometry, and original registered energy class.
 
 Certificates are not filtered by calculation method.
-The registration date is included to assess whether a record falls within the period governed by NTA 8800 \parencite{NTA8800}, but a date alone does not verify the calculation method used for an individual certificate.
+The registration date is included to assess whether a record falls within the period governed by NTA 8800, the Dutch method for determining building energy performance \parencite{NTA8800}, but a date alone does not verify the calculation method used for an individual certificate.
 The original EP-Online class is stored without modification during dataset construction.
 The class groupings used as prediction targets are defined in Stage 4.
 
@@ -112,7 +113,7 @@ The class groupings used as prediction targets are defined in Stage 4.
 The image branch adapts the acquisition and image processing workflow introduced by \textcite{liang2025} for OpenFACADES.
 The workflow uses OpenStreetMap as its primary footprint source and Overture Maps to supplement missing footprints.
 Mapillary supplies the 360\textdegree{} panoramas, and visibility analysis identifies candidate views of each building.
-This study adds a BAG residential filter and stores the BAG building identifier with every accepted crop, allowing the image records to be joined to the reference table.
+This study adds a BAG residential filter and stores the BAG building identifier with every accepted crop, allowing the image records to be joined to the eligible reference set.
 
 Mapillary was selected because its licence permits an open and reproducible image acquisition workflow \parencite{mapillary}.
 Its contributor-based coverage is not assumed to represent a random sample of the Dutch residential building stock.
@@ -147,9 +148,10 @@ The remaining crops are ranked by decreasing \ac{AoV} and increasing camera dist
 \label{sec:svi_acquisition_filtering}
 \label{sec:reference_data_integration}
 
-Final integration joins the eligible reference table to the image manifest by \texttt{pand\_id}.
-The linked dataset is restricted to buildings with at least one eligible image, processable 3DBAG geometry, and attributes that permit TABULA-NL assignment.
-All images linked to one building inherit the same reference attributes and registered energy class.
+Final integration joins the eligible reference set to the \ac{SVI} manifest by \texttt{pand\_id}.
+The linked data product used in the experiments is termed the experimental dataset.
+It is restricted to buildings with at least one eligible image, processable 3DBAG geometry, and reference building attributes that permit TABULA-NL assignment.
+All images linked to one building inherit the same reference building attributes and registered energy class.
 Table~\ref{tab:data_criteria} provides the authoritative summary of the selection thresholds and outputs used throughout Stage 1.
 
 The dates of the Mapillary images are not matched to the registration dates of the energy certificates.
@@ -178,7 +180,7 @@ This temporal difference is reported as a limitation because the available recor
 		Image & View selection & $10^\circ < \acs{AoV} < 130^\circ$, with at most three panoramas per source footprint ranked by decreasing \acs{AoV} \\
 		Image & Crop quality & Building pixel share at least 15\%, wall pixel share no more than 30\%, Laplacian variance above 30, file size at least 20\,kB, and classification as outdoor by the Places365 scene classifier \\
 		Image & Building image limit & Valid BAG assignment and at most eight images per building, ranked by decreasing \acs{AoV} and increasing camera distance \\
-		Integration & Linked dataset & Reference record and at least one eligible image available, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
+		Integration & Experimental dataset & Reference record and at least one eligible image available, processable 3DBAG geometry, and valid TABULA-NL input attributes \\
 		\bottomrule
 	\end{tblr}
 \end{table}
@@ -186,37 +188,39 @@ This temporal difference is reported as a limitation because the available recor
 \subsection{Data Partitioning and Cross-Validation}
 \label{sec:data_partitioning}
 
-Partitioning is performed on the final building-level dataset before model fitting.
+Partitioning is performed on the experimental dataset before model fitting.
 A two-step partitioning procedure separates model development from final evaluation.
 
 First, the scikit-learn \texttt{StratifiedGroupKFold} splitter generates five shuffled subsets with random seed 42 while attempting to balance the distribution of a composite stratification label \parencite{pedregosa2011}.
 One subset is designated as the fixed holdout set, and the remaining four subsets form the development set.
+The development set is used for model fitting, validation, and model selection.
+The fixed holdout set is the predefined partition reserved for final evaluation and is not used for model fitting, hyperparameter selection, or checkpoint selection.
 The composite stratification label combines study area, original EP-Online residential category, registered energy class, and TABULA-NL construction period.
 The split is generated from one record per building, using \texttt{pand\_id} as the grouping variable, and all images linked to that building inherit its assignment.
 Images of the same building therefore cannot occur in different subsets.
 This grouping prevents repeated images of one building from crossing subsets, but it does not remove spatial dependence between neighbouring buildings, which can make random-split performance optimistic \parencite{garbasevschi2021}.
 
-Second, the same splitter divides the development set into five folds using the same stratification variables, grouping key, and random seed. Each trainable model is fitted five times, with four folds used for training and the remaining fold used for validation in each run. This procedure provides validation results for model and checkpoint selection without using the fixed holdout.
-The fixed holdout set is excluded from model fitting and hyperparameter selection.
-Using the same partitions for building attribute prediction, archetype assignment, and energy class prediction prevents differences between methods from reflecting different building samples.
+Second, the same splitter divides the development set into five folds using the same stratification variables, grouping key, and random seed. Each trainable model is fitted five times, with four folds used for training and the remaining fold used for validation in each run. This procedure provides validation results for model and checkpoint selection without using the holdout set.
+The same predefined partitions are used for building attribute prediction, archetype assignment, and energy class prediction.
 
 \section{Stage 2: Building Attribute Prediction}
 \label{sec:vision_inference_strategies}
 
-Stage 2 estimates building type, construction year, and floor count from the street view images linked to each BAG building.
-Building type is represented by the four TABULA-NL size classes, while construction year and floor count are treated as continuous targets during supervised training.
-The Stage 2 output records the model configuration and predicted attributes for each building.
+Stage 2 predicts building type, construction year, and floor count from the street view images linked to each BAG building.
+Building type is predicted using four classes, whose labels supply the corresponding TABULA-NL residential size class during Stage 3.
+Construction year and floor count are treated as continuous prediction targets during supervised training.
+The Stage 2 output records the vision configuration and predicted building attributes for each building.
 ResNet-50 and DINOv2 produce one set of three attributes for every building.
-InternVL3-2B produces a building-level estimate only when at least one image response can be parsed and all three values fall within the permitted ranges.
+InternVL3-2B produces a building-level prediction only when at least one image response can be parsed and all three values fall within the permitted ranges.
 Reporting the three predicted attributes separately permits their evaluation before building type and construction year enter the deterministic TABULA-NL lookup.
 
-\subsection{Vision Model Configurations}
+\subsection{Vision Configurations}
 \label{sec:vision_model_configurations}
 
-Three model configurations represent different degrees of adaptation to the development data.
+Three vision configurations represent different degrees of adaptation to the development data.
 ResNet-50 provides a convolutional neural network whose residual architecture supports full supervised fine tuning \parencite{he2016}.
 DINOv2 provides self-supervised visual representations through a \acf{ViT} backbone that can remain frozen while new prediction layers are trained \parencite{oquab2023}.
-InternVL3-2B provides a pretrained vision language model that can return structured attribute estimates from images and a text prompt without updating its parameters \parencite{zhu2025}.
+InternVL3-2B provides a pretrained vision language model that can return building attribute predictions from images and a text prompt without updating its parameters \parencite{zhu2025}.
 
 Table~\ref{tab:vision_configs} defines the three complete configurations.
 They differ in architecture, pretraining, parameter updates, number of images, and aggregation procedure.
@@ -226,7 +230,7 @@ In the two supervised configurations, one \acf{MLP} transforms the aggregated im
 
 \begin{table}[htbp]
 	\centering
-	\caption{Model configurations used for building attribute prediction.}
+	\caption{Vision configurations used for building attribute prediction.}
 	\label{tab:vision_configs}
 	\footnotesize
 	\begin{tblr}{
@@ -237,7 +241,7 @@ In the two supervised configurations, one \acf{MLP} transforms the aggregated im
 		rowsep = 2pt,
 	}
 		\toprule
-		Configuration & Parameters updated on the development set & Development labels used & Image limit & Building level aggregation \\
+		Configuration & Parameters updated on the development set & Development labels used & Image limit & Building-level aggregation \\
 		\midrule
 		ResNet-50 full fine tuning & Backbone, \acs{MLP}, and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
 		DINOv2 \acs{ViT}-B/14 with frozen backbone & \acs{MLP} and three attribute heads & All training fold labels & 8 & Mean of image feature vectors before prediction \\
@@ -249,7 +253,7 @@ In the two supervised configurations, one \acf{MLP} transforms the aggregated im
 \subsection{Supervised Attribute Prediction}
 \label{sec:supervised_attribute_prediction}
 
-ResNet-50 and DINOv2 use the same building level prediction structure.
+ResNet-50 and DINOv2 use the same building-level prediction structure.
 Each available image is transformed to $224 \times 224$ pixels and converted by the relevant backbone into a feature vector.
 Feature vectors from at most eight images are averaged to produce one representation per building.
 The representation passes through the \acs{MLP} with a hidden dimension of 256 and then through separate heads for building type, construction year, and floor count.
@@ -270,12 +274,12 @@ The three losses receive equal weight.
 ResNet-50 updates its backbone, \ac{MLP}, and output heads, while DINOv2 keeps the backbone frozen and updates only the \ac{MLP} and output heads.
 The optimiser, learning rate, augmentation, and early stopping settings are reported in Table~\ref{tab:vision_hyperparams}.
 
-Both supervised model configurations are fitted separately in each development fold.
+Both supervised vision configurations are fitted separately in each development fold.
 Validation macro F1 for building type controls early stopping and selects one checkpoint within each fold.
-The checkpoint used on the fixed holdout set is selected only from validation performance in the development data.
+The checkpoint used on the holdout set is selected only from validation performance in the development data.
 No holdout labels are used to fit parameters, choose hyperparameters, or select checkpoints.
 
-\subsection{Vision Language Model Attribute Inference}
+\subsection{Building Attribute Prediction with InternVL3-2B}
 \label{sec:vlm_attribute_inference}
 
 InternVL3-2B uses the pretrained \texttt{OpenGVLab/\allowbreak InternVL3-2B} checkpoint without parameter updates on the study data \parencite{zhu2025}.
@@ -291,7 +295,7 @@ InternVL3-2B processes the three highest-ranked images available for a building 
 A response is valid only when all three required values can be parsed and fall within the permitted ranges.
 Building type is aggregated by the mode.
 Construction year is aggregated by the median, and floor count by the rounded median.
-No building level prediction is created when all image responses are invalid.
+No building-level prediction is created when all image responses are invalid.
 
 \section{Stage 3: Archetype Assignment and Thermal Parameters}
 \label{sec:tabula_archetype_matching}
@@ -330,8 +334,8 @@ The archetype cell is
 	c_i = \bigl(s_i,\, p(y_i)\bigr).
 \end{equation}
 
-For assignment from reference attributes, the BAG construction year supplies $y_i$ and the EP-Online category is converted to $s_i$ using Table~\ref{tab:type_mapping}.
-For assignment from predicted attributes, the predicted construction year supplies $y_i$ and the predicted four-class building type supplies $s_i$ directly.
+For assignment from reference building attributes, the BAG construction year supplies $y_i$ and the EP-Online building type is converted to $s_i$ using Table~\ref{tab:type_mapping}.
+For assignment from predicted building attributes, the predicted construction year supplies $y_i$ and the predicted building type supplies $s_i$ directly.
 Both input sets use the same construction period boundaries and lookup table.
 Floor count is included in energy class prediction but does not enter Equation~\ref{eq:archetype_cell}.
 
@@ -399,7 +403,7 @@ Single-Family House, Multi-Family House, and Apartment Block share the same valu
 
 Renovation status is not available consistently for individual buildings, so every assignment uses the unrenovated, as-built variant of its TABULA-NL cell.
 Buildings with the same size class and construction period consequently receive the same four U-values \parencite{loga2016}. The lookup does not account for renovations or measured envelope properties of individual buildings.
-They are used directly as predictors in the attribute based energy class model and are combined with reconstructed 3DBAG envelope areas for the transmission heat transfer comparison.
+They are used as inputs to the energy class classifier and are combined with reconstructed 3DBAG envelope areas for the transmission heat transfer comparison.
 The U-values describe thermal transmittance of individual envelope elements.
 When combined with reconstructed element areas and divided by estimated floor area, they yield the floor-area-normalised transmission heat transfer coefficient $h_{tr}$ used in this study \parencite{loga2013calculation}.
 
@@ -409,9 +413,10 @@ When combined with reconstructed element areas and divided by estimated floor ar
 Stage 4 implements two procedures for predicting the registered energy class.
 The first uses building attributes, assigned TABULA-NL U-values, and study area as structured inputs.
 The second maps street view images directly to the energy class without producing intermediate attributes or an archetype cell.
-Both procedures use the same building partitions and target definitions, which allows their predictions to be compared without changing the evaluation sample.
+Both procedures use the same predefined building partitions and target definitions.
+Comparisons among energy class conditions are restricted to holdout buildings with valid outputs for every condition; this intersection is termed the comparison subset.
 
-EP-Online records the registered energy label of each dwelling.
+EP-Online records the registered energy class of each dwelling.
 The residential scale runs from G, the lowest-performing class, to A++++, the highest-performing class, with additional plus signs distinguishing performance beyond class A \parencite{rvoenergielabel}.
 The primary prediction target groups classes A to C and D to G.
 For labels determined under NTA 8800, this division corresponds to 250\,kWh/(m$^2\cdot$year), the upper limit of class C \parencite{rvoenergielabel2024}.
@@ -424,13 +429,13 @@ Separate models are fitted for the binary and seven-class targets.
 \label{sec:attribute_based_energy_class_prediction}
 
 The structured prediction procedure uses \acf{LightGBM}, a tree-based gradient boosting framework configured for classification \parencite{ke2017}.
-Its eight inputs are building type, construction year, floor count, four envelope U-values, and city.
-Building type and city are categorical, while the remaining inputs are numerical.
+Its eight inputs are building type, construction year, floor count, four envelope U-values, and study area.
+Building type and study area are categorical, while the remaining inputs are numerical.
 Other certificate fields are excluded because they would not be available for a building whose energy class is to be estimated.
 
 For each target, one \acs{LightGBM} classifier is fitted on the complete development set using reference attributes and their assigned U-values.
 The fitted classifier is applied first to equivalent reference inputs in the holdout set and then to predicted attributes with U-values assigned from the predicted type and year.
-City remains unchanged.
+Study area remains unchanged.
 This design holds the classifier constant and limits the input difference to the three building attributes and the U-values affected by type and year.
 
 Both target definitions use 400 boosting iterations, a learning rate of 0.05, 31 leaves, and no class weighting.
@@ -452,4 +457,4 @@ Section~\ref{sec:appendix_b_direct_energy} reports the corresponding optimisatio
 InternVL3-2B uses a separate fixed prompt for each target without parameter updates.
 The building class is selected by majority vote over valid responses from the three highest-ranked images.
 Ties are resolved in favour of the more energy efficient class or class group.
-Stage 4 returns one energy class prediction per building, target, and model configuration.
+Stage 4 returns one energy class prediction per building, target, and vision configuration.

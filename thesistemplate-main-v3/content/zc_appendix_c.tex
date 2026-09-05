@@ -2,19 +2,19 @@
 \label{ch:appendix_c}
 
 This appendix reports two supporting analyses referenced in Chapter~\ref{ch:experiments}.
-Section~\ref{sec:appendix_c_wwr} examines whether the assumed window to wall ratio changes the comparison of archetype assignments.
-Section~\ref{sec:appendix_c_binary} reports class level precision, recall, and F1 for the binary energy class task.
+Section~\ref{sec:appendix_c_wwr} examines whether the assumed window-to-wall ratio changes the comparison of archetype assignments.
+Section~\ref{sec:appendix_c_binary} reports class-level precision, recall, and F1 for the binary energy class task.
 These tables provide the detailed evidence for patterns summarised in the main results.
 
-\section{Window to Wall Ratio Sensitivity}
+\section{Window-to-Wall Ratio Sensitivity}
 \label{sec:appendix_c_wwr}
 
-Table~\ref{tab:wwr_sensitivity} reports the transmission heat transfer MAE after repeating the calculation with window to wall ratios of 0.15, 0.25, and 0.35.
+Table~\ref{tab:wwr_sensitivity} reports the transmission heat transfer MAE after repeating the calculation with window-to-wall ratios of 0.15, 0.25, and 0.35.
 The same reference and predicted archetype assignments are used at each ratio, allowing the calculation to isolate sensitivity to the assumed division between opaque wall and window area.
 
 \begin{table}[htbp]
 	\centering
-	\caption[Sensitivity of the \(h_{tr}\) MAE to the assumed window to wall ratio.]{Sensitivity of the \(h_{tr}\) MAE (\(\mathrm{W/(K\,m^2)}\)) to the assumed window to wall ratio.}
+	\caption[Sensitivity of the \(h_{tr}\) MAE to the assumed window-to-wall ratio.]{Sensitivity of the \(h_{tr}\) MAE (\(\mathrm{W/(K\,m^2)}\)) to the assumed window-to-wall ratio.}
 	\label{tab:wwr_sensitivity}
 	\small
 	\begin{tblr}{
@@ -44,12 +44,12 @@ Source: \texttt{reports/tables/stage3/\allowbreak T7\_htr\_instrument.md}, gener
 \label{sec:appendix_c_binary}
 
 Table~\ref{tab:binary_perclass} separates the macro results in Table~\ref{tab:binary_conditions} into the two target groups.
-The comparison uses the 2,016 holdout buildings for which all evaluated information sources produced a prediction.
+The comparison uses the 2,016-building comparison subset for which all evaluated information sources produced a prediction.
 
 \clearpage
 \begin{table}[htbp]
 	\centering
-	\caption[Class level results for the binary energy class task.]{Class level precision, recall, and F1 for the binary energy class task. The comparison includes 2,016 buildings, with 1,415 in classes A to C and 601 in classes D to G.}
+	\caption[Class-level results for the binary energy class task.]{Class-level precision, recall, and F1 for the binary energy class task. The comparison includes 2,016 buildings, with 1,415 in classes A to C and 601 in classes D to G.}
 	\label{tab:binary_perclass}
 	\footnotesize
 	\begin{tblr}{
@@ -60,16 +60,16 @@ The comparison uses the 2,016 holdout buildings for which all evaluated informat
 			rowsep = 2pt,
 		}
 		\toprule
-		Information source and configuration & A to C P & A to C R & A to C F1 & D to G P & D to G R & D to G F1 \\
+		Condition and vision configuration & A to C P & A to C R & A to C F1 & D to G P & D to G R & D to G F1 \\
 		\midrule
 		Uniform random & 0.702 & 0.500 & 0.584 & 0.298 & 0.500 & 0.373 \\
-		Reference attributes & 0.715 & \textbf{0.960} & \textbf{0.819} & \textbf{0.509} & 0.098 & 0.165 \\
-		Direct image, DINOv2 & \textbf{0.764} & 0.731 & 0.748 & 0.426 & 0.469 & \textbf{0.447} \\
-		Direct image, ResNet-50 & 0.741 & 0.741 & 0.741 & 0.390 & 0.391 & 0.391 \\
-		Direct image, InternVL3-2B & 0.000 & 0.000 & 0.000 & 0.298 & \textbf{1.000} & 0.459 \\
-		Predicted attributes, DINOv2 & 0.712 & 0.936 & 0.809 & 0.419 & 0.108 & 0.172 \\
-		Predicted attributes, ResNet-50 & 0.710 & 0.927 & 0.804 & 0.391 & 0.110 & 0.171 \\
-		Predicted attributes, InternVL3-2B & 0.719 & 0.698 & 0.708 & 0.335 & 0.359 & 0.347 \\
+		Reference attribute condition & 0.715 & \textbf{0.960} & \textbf{0.819} & \textbf{0.509} & 0.098 & 0.165 \\
+		Direct image condition, DINOv2 & \textbf{0.764} & 0.731 & 0.748 & 0.426 & 0.469 & \textbf{0.447} \\
+		Direct image condition, ResNet-50 & 0.741 & 0.741 & 0.741 & 0.390 & 0.391 & 0.391 \\
+		Direct image condition, InternVL3-2B & 0.000 & 0.000 & 0.000 & 0.298 & \textbf{1.000} & 0.459 \\
+		Predicted attribute condition, DINOv2 & 0.712 & 0.936 & 0.809 & 0.419 & 0.108 & 0.172 \\
+		Predicted attribute condition, ResNet-50 & 0.710 & 0.927 & 0.804 & 0.391 & 0.110 & 0.171 \\
+		Predicted attribute condition, InternVL3-2B & 0.719 & 0.698 & 0.708 & 0.335 & 0.359 & 0.347 \\
 		\bottomrule
 	\end{tblr}
 \end{table}
