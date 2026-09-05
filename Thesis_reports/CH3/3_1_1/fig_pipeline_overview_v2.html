@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Four-stage method overview</title>
+<style>
+  html, body { margin: 0; background: #ffffff; }
+  svg { display: block; width: 1400px; height: 720px; font-family: "Segoe UI", Arial, sans-serif; }
+  .stage { fill: #075a96; }
+  .stage-title { fill: #ffffff; font-size: 26px; font-weight: 600; }
+  .box { fill: #ffffff; stroke: #6f7b86; stroke-width: 1.5; }
+  .box-title { fill: #17212b; font-size: 20px; font-weight: 600; }
+  .body { fill: #273746; font-size: 18px; }
+  .label { fill: #075a96; font-size: 16px; font-weight: 700; }
+  .output { fill: #eef5fa; stroke: #b8cad8; stroke-width: 1; }
+  .objective { fill: #e36f2d; }
+  .objective-text { fill: #ffffff; font-size: 16px; font-weight: 700; }
+  .arrow { fill: none; stroke: #075a96; stroke-width: 3; marker-end: url(#arrowhead); }
+  .arrow-light { fill: none; stroke: #7a8c99; stroke-width: 2; marker-end: url(#arrowheadLight); }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Four-stage method overview">
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#075a96"/>
+    </marker>
+    <marker id="arrowheadLight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7a8c99"/>
+    </marker>
+  </defs>
+
+  <path class="stage" d="M20 20 H650 L680 52 L650 84 H20 Z"/>
+  <text class="stage-title" x="350" y="61" text-anchor="middle">Stage 1: Dataset construction</text>
+
+  <rect class="box" x="20" y="100" width="310" height="150"/>
+  <text class="box-title" x="42" y="132">Reference dataset</text>
+  <text class="label" x="42" y="165">INPUT</text>
+  <text class="body" x="105" y="165">BAG, EP-Online, and 3DBAG</text>
+  <rect class="output" x="42" y="188" width="266" height="42"/>
+  <text class="label" x="54" y="215">OUTPUT</text>
+  <text class="body" x="126" y="215">Reference table</text>
+
+  <rect class="box" x="370" y="100" width="310" height="150"/>
+  <text class="box-title" x="392" y="132">Image acquisition</text>
+  <text class="label" x="392" y="165">INPUT</text>
+  <text class="body" x="455" y="165">Footprints and Mapillary</text>
+  <rect class="output" x="392" y="188" width="266" height="42"/>
+  <text class="label" x="404" y="215">OUTPUT</text>
+  <text class="body" x="476" y="215">SVI manifest</text>
+
+  <path class="arrow-light" d="M175 250 V280 H310"/>
+  <path class="arrow-light" d="M525 250 V280 H390"/>
+  <rect class="box" x="220" y="280" width="260" height="80"/>
+  <text class="box-title" x="350" y="312" text-anchor="middle">Dataset integration</text>
+  <text class="body" x="350" y="340" text-anchor="middle">Linked by BAG building ID</text>
+
+  <path class="stage" d="M720 20 H1350 L1380 52 L1350 84 H720 Z"/>
+  <text class="stage-title" x="1000" y="61" text-anchor="middle" style="font-size:24px">Stage 2: Building attribute prediction</text>
+  <rect class="objective" x="1260" y="36" width="96" height="30" rx="15"/>
+  <text class="objective-text" x="1308" y="57" text-anchor="middle">Objective 1</text>
+  <rect class="box" x="720" y="100" width="660" height="260"/>
+  <text class="box-title" x="750" y="142">Street view images</text>
+  <path class="arrow-light" d="M915 137 H995"/>
+  <text class="box-title" x="1020" y="142">Vision model</text>
+  <text class="body" x="750" y="190">ResNet-50 full fine-tuning</text>
+  <text class="body" x="750" y="224">Frozen DINOv2 representation</text>
+  <text class="body" x="750" y="258">InternVL3-2B without parameter updating</text>
+  <rect class="output" x="750" y="288" width="600" height="48"/>
+  <text class="label" x="770" y="319">OUTPUT</text>
+  <text class="body" x="850" y="319">Building type, construction year, and floor count</text>
+
+  <path class="arrow" d="M680 320 H710"/>
+  <path class="arrow" d="M1050 360 V392 H350 V420"/>
+
+  <path class="stage" d="M20 420 H650 L680 452 L650 484 H20 Z"/>
+  <text class="stage-title" x="350" y="461" text-anchor="middle">Stage 3: Archetype assignment</text>
+  <rect class="objective" x="560" y="436" width="96" height="30" rx="15"/>
+  <text class="objective-text" x="608" y="457" text-anchor="middle">Objective 2</text>
+  <rect class="box" x="20" y="500" width="660" height="190"/>
+  <text class="label" x="50" y="545">INPUT</text>
+  <text class="body" x="115" y="545">Reference or predicted building type and construction year</text>
+  <text class="body" x="50" y="590">Deterministic TABULA-NL lookup</text>
+  <rect class="output" x="50" y="620" width="600" height="48"/>
+  <text class="label" x="70" y="651">OUTPUT</text>
+  <text class="body" x="150" y="651">Archetype cell and representative U-values</text>
+
+  <path class="stage" d="M720 420 H1350 L1380 452 L1350 484 H720 Z"/>
+  <text class="stage-title" x="1050" y="461" text-anchor="middle">Stage 4: Energy class prediction</text>
+  <rect class="objective" x="1260" y="436" width="96" height="30" rx="15"/>
+  <text class="objective-text" x="1308" y="457" text-anchor="middle">Objective 3</text>
+  <rect class="box" x="720" y="500" width="660" height="190"/>
+  <text class="label" x="750" y="545">ROUTES</text>
+  <text class="body" x="835" y="545">Reference attributes, predicted attributes, and imagery alone</text>
+  <text class="body" x="750" y="590">Common building population and evaluation conditions</text>
+  <rect class="output" x="750" y="620" width="600" height="48"/>
+  <text class="label" x="770" y="651">OUTPUT</text>
+  <text class="body" x="850" y="651">Registered energy class predictions</text>
+
+  <path class="arrow" d="M680 595 H710"/>
+</svg>
+</body>
+</html>

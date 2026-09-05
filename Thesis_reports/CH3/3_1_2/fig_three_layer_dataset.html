@@ -5,192 +5,193 @@
 <title>Fig 3.2 - Three-layer structure of the semi-synthetic dataset</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 24px; }
-  .figwrap { max-width: 1002px; margin: 0 auto; }
+  .figwrap { max-width: 2505px; margin: 0 auto; }
   svg { width: 100%; height: auto; }
   .caption { max-width: 950px; margin: 16px auto 0; font-size: 12px; color: #333; line-height: 1.55; }
   .mono { font-family: Consolas, "Courier New", monospace; }
 
-  .t-band { font: 600 10.6px "Segoe UI", Arial, sans-serif; letter-spacing: .35px; }
-  .t-fh   { font: 600 9.8px "Segoe UI", Arial, sans-serif; fill: #111; }
-  .t-val  { font: 9.6px "Segoe UI", Arial, sans-serif; fill: #222; }
-  .t-key  { font: 9px Consolas, "Courier New", monospace; fill: #222; }
-  .t-cell { font: 9px Consolas, "Courier New", monospace; fill: #111; }
-  .t-u    { font: 8.4px Consolas, "Courier New", monospace; fill: #444; }
-  .t-m2   { font: 9.6px "Segoe UI", Arial, sans-serif; fill: #333; }
+  /* TUM palette: #0065BD #005293 #98C6EA #64A0C8 #DAD7CB #A2AD00 #E37222 */
+  .t-band { font: 600 26px "Segoe UI", Arial, sans-serif; letter-spacing: .3px; }
+  .t-fh   { font: 600 24px "Segoe UI", Arial, sans-serif; fill: #111; }
+  .t-val  { font: 24px "Segoe UI", Arial, sans-serif; fill: #222; }
+  .t-key  { font: 22px Consolas, "Courier New", monospace; fill: #222; }
+  .t-cell { font: 22px Consolas, "Courier New", monospace; fill: #111; }
+  .t-u    { font: 21px Consolas, "Courier New", monospace; fill: #444; }
+  .t-m2   { font: 24px "Segoe UI", Arial, sans-serif; fill: #333; }
 
-  .hd-k { fill: #e8e8e8; } .cell-k { fill: #fff; }
-  .hd-a { fill: #D6E2F0; } .cell-a { fill: #F2F7FC; }
-  .hd-b { fill: #DCEDEA; } .cell-b { fill: #F4FBF9; }
-  .hd-c { fill: #E5E1F2; } .cell-c { fill: #F7F5FC; }
+  .hd-k { fill: #DAD7CB; } .fh-k { fill: #ECEAE3; } .cell-k { fill: #fff; }
+  .hd-a { fill: #0065BD; } .fh-a { fill: #98C6EA; } .cell-a { fill: #EAF3FB; }
+  .hd-b { fill: #E37222; } .fh-b { fill: #F6D3BC; } .cell-b { fill: #FCF1E9; }
+  .hd-c { fill: #A2AD00; } .fh-c { fill: #DDE2A8; } .cell-c { fill: #F5F6E6; }
 
-  .blk-k { fill: none; stroke: #888;    stroke-width: 1.3; }
-  .blk-a { fill: none; stroke: #3070B3; stroke-width: 1.5; }
-  .blk-b { fill: none; stroke: #2F7D6E; stroke-width: 1.5; }
-  .blk-c { fill: none; stroke: #5F5596; stroke-width: 1.5; }
+  .blk-k { fill: none; stroke: #9C9A90; stroke-width: 3.2; }
+  .blk-a { fill: none; stroke: #0065BD; stroke-width: 3.8; }
+  .blk-b { fill: none; stroke: #E37222; stroke-width: 3.8; }
+  .blk-c { fill: none; stroke: #A2AD00; stroke-width: 3.8; }
 
-  .sep-k { stroke: #c4c4c4; stroke-width: .9; }
-  .sep-a { stroke: #9EBBD8; stroke-width: .9; }
-  .sep-b { stroke: #97C1B8; stroke-width: .9; }
-  .sep-c { stroke: #B0A8CD; stroke-width: .9; }
-  .sep-grp { stroke: #8a8a8a; stroke-width: 1.1; }
-  .t-dots { font: 600 11px "Segoe UI", Arial, sans-serif; fill: #666; }
+  .sep-k { stroke: #C9C6BA; stroke-width: 2.2; }
+  .sep-a { stroke: #64A0C8; stroke-width: 2.2; }
+  .sep-b { stroke: #EFA97A; stroke-width: 2.2; }
+  .sep-c { stroke: #C6CD66; stroke-width: 2.2; }
+  .sep-grp { stroke: #8a8a8a; stroke-width: 2.8; }
+  .t-dots { font: 600 28px "Segoe UI", Arial, sans-serif; fill: #666; }
 
-  .m2box { fill: #fafafa; stroke: #999; stroke-width: 1.1; stroke-dasharray: 5 3; }
+  .m2box { fill: #F7F6F2; stroke: #9C9A90; stroke-width: 2.8; stroke-dasharray: 12 8; }
 </style>
 </head>
 <body>
 <div class="figwrap">
 
-<svg viewBox="0 0 1002 420" xmlns="http://www.w3.org/2000/svg" role="img"
+<svg viewBox="0 0 2505 1050" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Three-layer structure of the semi-synthetic dataset, one row per building and vision model">
 
   <!-- ================= layer bands ================= -->
-  <rect class="hd-k" x="30"  y="40" width="118" height="26"/>
-  <text class="t-band" x="89"  y="57" text-anchor="middle" fill="#444">KEY</text>
+  <rect class="hd-k" x="75"  y="100" width="295" height="65"/>
+  <text class="t-band" x="222.5"  y="142.5" text-anchor="middle" fill="#333">Key</text>
 
-  <rect class="hd-a" x="148" y="40" width="204" height="26"/>
-  <text class="t-band" x="250" y="57" text-anchor="middle" fill="#1F4E7A">REFERENCE LAYER</text>
+  <rect class="hd-a" x="370" y="100" width="510" height="65"/>
+  <text class="t-band" x="625" y="142.5" text-anchor="middle" fill="#fff">Reference layer</text>
 
-  <rect class="hd-b" x="352" y="40" width="244" height="26"/>
-  <text class="t-band" x="474" y="57" text-anchor="middle" fill="#1D5A4F">VISION-INFERENCE LAYER</text>
+  <rect class="hd-b" x="880" y="100" width="610" height="65"/>
+  <text class="t-band" x="1185" y="142.5" text-anchor="middle" fill="#fff">Vision-inference layer</text>
 
-  <rect class="hd-c" x="596" y="40" width="376" height="26"/>
-  <text class="t-band" x="784" y="57" text-anchor="middle" fill="#3F3670">SYNTHETIC ARCHETYPE LAYER</text>
+  <rect class="hd-c" x="1490" y="100" width="940" height="65"/>
+  <text class="t-band" x="1960" y="142.5" text-anchor="middle" fill="#fff">Synthetic archetype layer</text>
 
   <!-- ================= field headers ================= -->
-  <rect class="hd-k" x="30"  y="66" width="118" height="26"/>
-  <rect class="hd-a" x="148" y="66" width="204" height="26"/>
-  <rect class="hd-b" x="352" y="66" width="244" height="26"/>
-  <rect class="hd-c" x="596" y="66" width="376" height="26"/>
+  <rect class="fh-k" x="75"  y="165" width="295" height="65"/>
+  <rect class="fh-a" x="370" y="165" width="510" height="65"/>
+  <rect class="fh-b" x="880" y="165" width="610" height="65"/>
+  <rect class="fh-c" x="1490" y="165" width="940" height="65"/>
 
-  <text class="t-fh" x="89"  y="83" text-anchor="middle">pand_id</text>
-  <text class="t-fh" x="216" y="83" text-anchor="middle">Reference attributes</text>
-  <text class="t-fh" x="318" y="83" text-anchor="middle">EPC label</text>
-  <text class="t-fh" x="398" y="83" text-anchor="middle">Vision model</text>
-  <text class="t-fh" x="520" y="83" text-anchor="middle">Vision-inferred attributes</text>
-  <text class="t-fh" x="690" y="83" text-anchor="middle">M1: reference-derived TABULA</text>
-  <text class="t-fh" x="878" y="83" text-anchor="middle">M3: vision-derived TABULA</text>
+  <text class="t-fh" x="222.5"  y="207.5" text-anchor="middle">pand_id</text>
+  <text class="t-fh" x="540" y="207.5" text-anchor="middle">Reference attributes</text>
+  <text class="t-fh" x="795" y="207.5" text-anchor="middle">EPC label</text>
+  <text class="t-fh" x="995" y="207.5" text-anchor="middle">Vision model</text>
+  <text class="t-fh" x="1300" y="207.5" text-anchor="middle">Vision-inferred attributes</text>
+  <text class="t-fh" x="1725" y="207.5" text-anchor="middle">Reference-derived TABULA</text>
+  <text class="t-fh" x="2195" y="207.5" text-anchor="middle">Vision-derived TABULA</text>
 
   <!-- ================= cell backgrounds ================= -->
-  <rect class="cell-k" x="30"  y="92" width="118" height="250"/>
-  <rect class="cell-a" x="148" y="92" width="204" height="250"/>
-  <rect class="cell-b" x="352" y="92" width="244" height="250"/>
-  <rect class="cell-c" x="596" y="92" width="376" height="250"/>
+  <rect class="cell-k" x="75"  y="230" width="295" height="625"/>
+  <rect class="cell-a" x="370" y="230" width="510" height="625"/>
+  <rect class="cell-b" x="880" y="230" width="610" height="625"/>
+  <rect class="cell-c" x="1490" y="230" width="940" height="625"/>
 
   <!-- ================= row 1 : Amsterdam ================= -->
-  <text class="t-key"  x="89"  y="115" text-anchor="middle">0363100012162533</text>
-  <text class="t-val"  x="216" y="115" text-anchor="middle">AB, 1883, 3 floors</text>
-  <text class="t-val"  x="318" y="115" text-anchor="middle">C</text>
-  <text class="t-val"  x="398" y="115" text-anchor="middle">DINOv2</text>
-  <text class="t-val"  x="520" y="115" text-anchor="middle">AB, 1903, 4.5 floors</text>
-  <text class="t-cell" x="690" y="108" text-anchor="middle">AB &#183; NL.01</text>
-  <text class="t-u"    x="690" y="122" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
-  <text class="t-cell" x="878" y="108" text-anchor="middle">AB &#183; NL.01</text>
-  <text class="t-u"    x="878" y="122" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
+  <text class="t-key"  x="222.5"  y="287.5" text-anchor="middle">0363100012162533</text>
+  <text class="t-val"  x="540" y="287.5" text-anchor="middle">AB, 1883, 3 floors</text>
+  <text class="t-val"  x="795" y="287.5" text-anchor="middle">C</text>
+  <text class="t-val"  x="995" y="287.5" text-anchor="middle">DINOv2</text>
+  <text class="t-val"  x="1300" y="287.5" text-anchor="middle">AB, 1903, 4.5 floors</text>
+  <text class="t-cell" x="1725" y="270" text-anchor="middle">AB &#183; NL.01</text>
+  <text class="t-u"    x="1725" y="305" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
+  <text class="t-cell" x="2195" y="270" text-anchor="middle">AB &#183; NL.01</text>
+  <text class="t-u"    x="2195" y="305" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
 
   <!-- ================= row 2 : Rotterdam ================= -->
-  <text class="t-key"  x="89"  y="153" text-anchor="middle">0599100000752878</text>
-  <text class="t-val"  x="216" y="153" text-anchor="middle">TH, 2009, 3 floors</text>
-  <text class="t-val"  x="318" y="153" text-anchor="middle">A</text>
-  <text class="t-val"  x="398" y="153" text-anchor="middle">DINOv2</text>
-  <text class="t-val"  x="520" y="153" text-anchor="middle">TH, 2004, 3.6 floors</text>
-  <text class="t-cell" x="690" y="146" text-anchor="middle">TH &#183; NL.05</text>
-  <text class="t-u"    x="690" y="160" text-anchor="middle">(0.266, 0.2347, 0.266, 1.8)</text>
-  <text class="t-cell" x="878" y="146" text-anchor="middle">TH &#183; NL.04</text>
-  <text class="t-u"    x="878" y="160" text-anchor="middle">(0.3584, 0.3584, 0.3584, 2.9)</text>
+  <text class="t-key"  x="222.5"  y="382.5" text-anchor="middle">0599100000752878</text>
+  <text class="t-val"  x="540" y="382.5" text-anchor="middle">TH, 2009, 3 floors</text>
+  <text class="t-val"  x="795" y="382.5" text-anchor="middle">A</text>
+  <text class="t-val"  x="995" y="382.5" text-anchor="middle">DINOv2</text>
+  <text class="t-val"  x="1300" y="382.5" text-anchor="middle">TH, 2004, 3.6 floors</text>
+  <text class="t-cell" x="1725" y="365" text-anchor="middle">TH &#183; NL.05</text>
+  <text class="t-u"    x="1725" y="400" text-anchor="middle">(0.266, 0.2347, 0.266, 1.8)</text>
+  <text class="t-cell" x="2195" y="365" text-anchor="middle">TH &#183; NL.04</text>
+  <text class="t-u"    x="2195" y="400" text-anchor="middle">(0.3584, 0.3584, 0.3584, 2.9)</text>
 
   <!-- ================= row 3 : Delft, ResNet-50 ================= -->
-  <text class="t-key"  x="89"  y="191" text-anchor="middle">0503100000004054</text>
-  <text class="t-val"  x="216" y="191" text-anchor="middle">TH, 1916, 3 floors</text>
-  <text class="t-val"  x="318" y="191" text-anchor="middle">C</text>
-  <text class="t-val"  x="398" y="191" text-anchor="middle">ResNet-50</text>
-  <text class="t-val"  x="520" y="191" text-anchor="middle">TH, 1913, 3.7 floors</text>
-  <text class="t-cell" x="690" y="184" text-anchor="middle">TH &#183; NL.01</text>
-  <text class="t-u"    x="690" y="198" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
-  <text class="t-cell" x="878" y="184" text-anchor="middle">TH &#183; NL.01</text>
-  <text class="t-u"    x="878" y="198" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
+  <text class="t-key"  x="222.5"  y="477.5" text-anchor="middle">0503100000004054</text>
+  <text class="t-val"  x="540" y="477.5" text-anchor="middle">TH, 1916, 3 floors</text>
+  <text class="t-val"  x="795" y="477.5" text-anchor="middle">C</text>
+  <text class="t-val"  x="995" y="477.5" text-anchor="middle">ResNet-50</text>
+  <text class="t-val"  x="1300" y="477.5" text-anchor="middle">TH, 1913, 3.7 floors</text>
+  <text class="t-cell" x="1725" y="460" text-anchor="middle">TH &#183; NL.01</text>
+  <text class="t-u"    x="1725" y="495" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
+  <text class="t-cell" x="2195" y="460" text-anchor="middle">TH &#183; NL.01</text>
+  <text class="t-u"    x="2195" y="495" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
 
   <!-- ================= row 4 : Rotterdam, ResNet-50 ================= -->
-  <text class="t-key"  x="89"  y="229" text-anchor="middle">0599100000661031</text>
-  <text class="t-val"  x="216" y="229" text-anchor="middle">AB, 1928, 3 floors</text>
-  <text class="t-val"  x="318" y="229" text-anchor="middle">B</text>
-  <text class="t-val"  x="398" y="229" text-anchor="middle">ResNet-50</text>
-  <text class="t-val"  x="520" y="229" text-anchor="middle">TH, 1935, 2.7 floors</text>
-  <text class="t-cell" x="690" y="222" text-anchor="middle">AB &#183; NL.01</text>
-  <text class="t-u"    x="690" y="236" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
-  <text class="t-cell" x="878" y="222" text-anchor="middle">TH &#183; NL.01</text>
-  <text class="t-u"    x="878" y="236" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
+  <text class="t-key"  x="222.5"  y="572.5" text-anchor="middle">0599100000661031</text>
+  <text class="t-val"  x="540" y="572.5" text-anchor="middle">AB, 1928, 3 floors</text>
+  <text class="t-val"  x="795" y="572.5" text-anchor="middle">B</text>
+  <text class="t-val"  x="995" y="572.5" text-anchor="middle">ResNet-50</text>
+  <text class="t-val"  x="1300" y="572.5" text-anchor="middle">TH, 1935, 2.7 floors</text>
+  <text class="t-cell" x="1725" y="555" text-anchor="middle">AB &#183; NL.01</text>
+  <text class="t-u"    x="1725" y="590" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
+  <text class="t-cell" x="2195" y="555" text-anchor="middle">TH &#183; NL.01</text>
+  <text class="t-u"    x="2195" y="590" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
 
   <!-- ================= row 5 : Delft, InternVL3-2B ================= -->
-  <text class="t-key"  x="89"  y="267" text-anchor="middle">0503100000005280</text>
-  <text class="t-val"  x="216" y="267" text-anchor="middle">AB, 1980, 4 floors</text>
-  <text class="t-val"  x="318" y="267" text-anchor="middle">E</text>
-  <text class="t-val"  x="398" y="267" text-anchor="middle">InternVL3-2B</text>
-  <text class="t-val"  x="520" y="267" text-anchor="middle">AB, 1980, 3 floors</text>
-  <text class="t-cell" x="690" y="260" text-anchor="middle">AB &#183; NL.03</text>
-  <text class="t-u"    x="690" y="274" text-anchor="middle">(0.641, 0.641, 1.2821, 5.2)</text>
-  <text class="t-cell" x="878" y="260" text-anchor="middle">AB &#183; NL.03</text>
-  <text class="t-u"    x="878" y="274" text-anchor="middle">(0.641, 0.641, 1.2821, 5.2)</text>
+  <text class="t-key"  x="222.5"  y="667.5" text-anchor="middle">0503100000005280</text>
+  <text class="t-val"  x="540" y="667.5" text-anchor="middle">AB, 1980, 4 floors</text>
+  <text class="t-val"  x="795" y="667.5" text-anchor="middle">E</text>
+  <text class="t-val"  x="995" y="667.5" text-anchor="middle">InternVL3-2B</text>
+  <text class="t-val"  x="1300" y="667.5" text-anchor="middle">AB, 1980, 3 floors</text>
+  <text class="t-cell" x="1725" y="650" text-anchor="middle">AB &#183; NL.03</text>
+  <text class="t-u"    x="1725" y="685" text-anchor="middle">(0.641, 0.641, 1.2821, 5.2)</text>
+  <text class="t-cell" x="2195" y="650" text-anchor="middle">AB &#183; NL.03</text>
+  <text class="t-u"    x="2195" y="685" text-anchor="middle">(0.641, 0.641, 1.2821, 5.2)</text>
 
   <!-- ================= row 6 : Utrecht, InternVL3-2B ================= -->
-  <text class="t-key"  x="89"  y="305" text-anchor="middle">0344100000003833</text>
-  <text class="t-val"  x="216" y="305" text-anchor="middle">AB, 1926, 3 floors</text>
-  <text class="t-val"  x="318" y="305" text-anchor="middle">D</text>
-  <text class="t-val"  x="398" y="305" text-anchor="middle">InternVL3-2B</text>
-  <text class="t-val"  x="520" y="305" text-anchor="middle">TH, 1950, 3 floors</text>
-  <text class="t-cell" x="690" y="298" text-anchor="middle">AB &#183; NL.01</text>
-  <text class="t-u"    x="690" y="312" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
-  <text class="t-cell" x="878" y="298" text-anchor="middle">TH &#183; NL.01</text>
-  <text class="t-u"    x="878" y="312" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
+  <text class="t-key"  x="222.5"  y="762.5" text-anchor="middle">0344100000003833</text>
+  <text class="t-val"  x="540" y="762.5" text-anchor="middle">AB, 1926, 3 floors</text>
+  <text class="t-val"  x="795" y="762.5" text-anchor="middle">D</text>
+  <text class="t-val"  x="995" y="762.5" text-anchor="middle">InternVL3-2B</text>
+  <text class="t-val"  x="1300" y="762.5" text-anchor="middle">TH, 1950, 3 floors</text>
+  <text class="t-cell" x="1725" y="745" text-anchor="middle">AB &#183; NL.01</text>
+  <text class="t-u"    x="1725" y="780" text-anchor="middle">(1.6129, 1.5385, 1.7241, 5.2)</text>
+  <text class="t-cell" x="2195" y="745" text-anchor="middle">TH &#183; NL.01</text>
+  <text class="t-u"    x="2195" y="780" text-anchor="middle">(2.2222, 2.0833, 2.439, 5.2)</text>
 
   <!-- ================= continuation row ================= -->
-  <text class="t-dots" x="89"  y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="216" y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="318" y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="398" y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="520" y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="690" y="334" text-anchor="middle">&#8943;</text>
-  <text class="t-dots" x="878" y="334" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="222.5"  y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="540" y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="795" y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="995" y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="1300" y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="1725" y="835" text-anchor="middle">&#8943;</text>
+  <text class="t-dots" x="2195" y="835" text-anchor="middle">&#8943;</text>
 
   <!-- ================= grid ================= -->
   <g class="sep-k">
-    <line x1="30" y1="130" x2="148" y2="130"/>
-    <line x1="30" y1="206" x2="148" y2="206"/>
-    <line x1="30" y1="282" x2="148" y2="282"/>
+    <line x1="75" y1="325" x2="370" y2="325"/>
+    <line x1="75" y1="515" x2="370" y2="515"/>
+    <line x1="75" y1="705" x2="370" y2="705"/>
   </g>
   <g class="sep-a">
-    <line x1="284" y1="66" x2="284" y2="342"/>
-    <line x1="148" y1="130" x2="352" y2="130"/>
-    <line x1="148" y1="206" x2="352" y2="206"/>
-    <line x1="148" y1="282" x2="352" y2="282"/>
+    <line x1="710" y1="165" x2="710" y2="855"/>
+    <line x1="370" y1="325" x2="880" y2="325"/>
+    <line x1="370" y1="515" x2="880" y2="515"/>
+    <line x1="370" y1="705" x2="880" y2="705"/>
   </g>
   <g class="sep-b">
-    <line x1="444" y1="66" x2="444" y2="342"/>
-    <line x1="352" y1="130" x2="596" y2="130"/>
-    <line x1="352" y1="206" x2="596" y2="206"/>
-    <line x1="352" y1="282" x2="596" y2="282"/>
+    <line x1="1110" y1="165" x2="1110" y2="855"/>
+    <line x1="880" y1="325" x2="1490" y2="325"/>
+    <line x1="880" y1="515" x2="1490" y2="515"/>
+    <line x1="880" y1="705" x2="1490" y2="705"/>
   </g>
   <g class="sep-c">
-    <line x1="784" y1="66" x2="784" y2="342"/>
-    <line x1="596" y1="130" x2="972" y2="130"/>
-    <line x1="596" y1="206" x2="972" y2="206"/>
-    <line x1="596" y1="282" x2="972" y2="282"/>
+    <line x1="1960" y1="165" x2="1960" y2="855"/>
+    <line x1="1490" y1="325" x2="2430" y2="325"/>
+    <line x1="1490" y1="515" x2="2430" y2="515"/>
+    <line x1="1490" y1="705" x2="2430" y2="705"/>
   </g>
   <g class="sep-grp">
-    <line x1="30" y1="168" x2="972" y2="168"/>
-    <line x1="30" y1="244" x2="972" y2="244"/>
-    <line x1="30" y1="320" x2="972" y2="320"/>
+    <line x1="75" y1="420" x2="2430" y2="420"/>
+    <line x1="75" y1="610" x2="2430" y2="610"/>
+    <line x1="75" y1="800" x2="2430" y2="800"/>
   </g>
 
   <!-- ================= block outlines ================= -->
-  <rect class="blk-k" x="30"  y="40" width="118" height="302"/>
-  <rect class="blk-a" x="148" y="40" width="204" height="302"/>
-  <rect class="blk-b" x="352" y="40" width="244" height="302"/>
-  <rect class="blk-c" x="596" y="40" width="376" height="302"/>
+  <rect class="blk-k" x="75"  y="100" width="295" height="755"/>
+  <rect class="blk-a" x="370" y="100" width="510" height="755"/>
+  <rect class="blk-b" x="880" y="100" width="610" height="755"/>
+  <rect class="blk-c" x="1490" y="100" width="940" height="755"/>
 
   <!-- ================= M2, outside the three layers ================= -->
-  <rect class="m2box" x="30" y="366" width="942" height="34" rx="4"/>
-  <text class="t-m2" x="46" y="387">M2 (end-to-end) predicts the EPC label directly from the images and writes no field in any of the three layers.</text>
+  <rect class="m2box" x="75" y="915" width="2355" height="85" rx="10"/>
+  <text class="t-m2" x="115" y="967.5">M2 (end-to-end) predicts the EPC label directly from the images and writes no field in any of the three layers.</text>
 </svg>
 
 <p class="caption">
@@ -201,8 +202,8 @@ layer holds the registry attributes and the EP-Online EPC label; the vision-infe
 attributes predicted from the street-view crops together with the model that produced them; the
 synthetic archetype layer holds the TABULA-NL cell and its four as-built envelope U-values in the
 order wall, roof, floor, window. Because the same deterministic lookup is applied once per route, the
-archetype layer is stored twice per building: once derived from the reference attributes (M1) and
-once from the inferred attributes (M3). Reading the two archetype columns against each other shows
+archetype layer is stored twice per building: once derived from the reference attributes and
+once from the inferred attributes. Reading the two archetype columns against each other shows
 how an attribute error does or does not reach the parameters. Each vision configuration is shown on
 two hold-out buildings: one where the prediction errors stay inside the reference cell, and one where
 they do not. In the first DINOv2 row a twenty-year error in the estimated year stays inside the same
