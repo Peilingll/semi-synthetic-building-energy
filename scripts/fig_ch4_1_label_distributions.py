@@ -26,6 +26,7 @@ from _stage1_plot import (  # noqa: E402
 )
 
 OUT_DIR = REPO / "reports" / "figures" / "ch4"
+FONT = 30  # uniform font size; canvas is enlarged instead of shrinking text
 
 CITY_DISPLAY = {"amsterdam": "Amsterdam", "rotterdam": "Rotterdam",
                 "utrecht": "Utrecht", "delft": "Delft"}
@@ -55,7 +56,7 @@ def _merge_epc(label: str) -> str:
 
 
 def _panel(ax, df, col, order, title, colors=None, cmap=None, legend_labels=None,
-           legend_title="", ncol=1):
+           legend_title="", ncol=1, headroom=1.12):
     counts = (
         df.groupby(["city", col]).size()
         .unstack(fill_value=0)
@@ -72,35 +73,39 @@ def _panel(ax, df, col, order, title, colors=None, cmap=None, legend_labels=None
     totals = counts.sum(axis=1)
     for i, total in enumerate(totals):
         ax.text(i, total + totals.max() * 0.015, f"{int(total):,}",
-                ha="center", va="bottom", fontsize=9)
-    ax.set_ylim(0, totals.max() * 1.12)
+                ha="center", va="bottom", fontsize=FONT)
+    ax.set_ylim(0, totals.max() * headroom)
 
     ax.set_title(title)
     ax.set_xlabel("")
     ax.set_ylabel("buildings")
     ax.tick_params(axis="x", rotation=0)
     ax.legend(title=legend_title, loc="upper right", frameon=False, ncol=ncol,
-              fontsize=8 if ncol > 1 else 9)
+              fontsize=FONT, title_fontsize=FONT)
     return counts
 
 
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     setup_mpl()
+    plt.rcParams.update({k: FONT for k in (
+        "font.size", "axes.titlesize", "axes.labelsize",
+        "xtick.labelsize", "ytick.labelsize", "legend.fontsize",
+        "legend.title_fontsize")})
     df = load_sample()
     print(f"experimental sample = {len(df):,} buildings")
 
-    fig, axes = plt.subplots(2, 2, figsize=(12, 9))
+    fig, axes = plt.subplots(2, 2, figsize=(30, 22))
 
     tables = [
         _panel(axes[0, 0], df, "building_type", TYPE_LABELS, "(a) Building type",
                colors=[TYPE_PALETTE[t] for t in TYPE_LABELS], legend_title="type"),
-        _panel(axes[0, 1], df, "floor_bucket", FLOOR_BUCKETS, "(b) Number of floors",
-               cmap="plasma", legend_title="floors", ncol=2),
-        _panel(axes[1, 0], df, "tabula_period", PERIOD_LABELS, "(c) Construction period",
+        _panel(axes[0, 1], df, "tabula_period", PERIOD_LABELS, "(b) Construction period",
                cmap="viridis",
                legend_labels=[f"{p}  ({PERIOD_RANGES[p]})" for p in PERIOD_LABELS],
-               legend_title="period", ncol=2),
+               legend_title="period", ncol=1),
+        _panel(axes[1, 0], df, "floor_bucket", FLOOR_BUCKETS, "(c) Number of floors",
+               cmap="plasma", legend_title="floors", ncol=2),
         _panel(axes[1, 1], df, "epc", EPC_LABELS, "(d) Energy class",
                cmap="RdYlGn_r", legend_title="label", ncol=2),
     ]
@@ -108,8 +113,7 @@ def main() -> None:
         print()
         print(t.to_string())
 
-    fig.suptitle(f"Experimental sample: {len(df):,} buildings", fontsize=11, y=0.995)
-    fig.tight_layout(rect=(0, 0, 1, 0.985))
+    fig.tight_layout()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for ext in ("png", "pdf"):

@@ -7,6 +7,8 @@ One panel per vision configuration, fixed order DINOv2 -> ResNet-50 ->
 InternVL3-2B. Cells with no hold-out buildings are shown hatched grey.
 
 Run:  .venv/Scripts/python.exe scripts/fig_ch4_3_cell_recall_heatmap.py
+      add --vertical for F4_3_cell_recall_heatmap_vertical.{png,pdf}
+      (y = construction period, x = size class)
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ OUT_DIR = REPO / "reports" / "figures" / "ch4"
 TYPES = ["SFH", "TH", "MFH", "AB"]
 PERIODS = ["NL.01", "NL.02", "NL.03", "NL.04", "NL.05", "NL.06"]
 PERIOD_RANGES = ["≤1964", "65–74", "75–91", "92–05", "06–14", "≥2015"]
+PERIOD_RANGES_FULL = ["≤1964", "1965–1974", "1975–1991", "1992–2005", "2006–2014", "≥2015"]
 
 MODELS = {
     "DINOv2 (frozen)": "reports/stage1/dinov2_frozen/holdout_preds.parquet",
@@ -36,9 +39,12 @@ MODELS = {
 }
 
 
-def main() -> None:
+def main(vertical: bool = False) -> None:
     setup_mpl()
-    fig, axes = plt.subplots(1, 3, figsize=(12.5, 4.2))
+    if vertical:
+        fig, axes = plt.subplots(1, 3, figsize=(10.5, 5.6))
+    else:
+        fig, axes = plt.subplots(1, 3, figsize=(12.5, 4.2))
 
     for ax, (name, path) in zip(axes, MODELS.items()):
         df = pd.read_parquet(REPO / path)
@@ -56,12 +62,16 @@ def main() -> None:
                 if count[i, j]:
                     recall[i, j] = float(hit[mask].mean())
 
+        if vertical:  # rows = periods, cols = size classes
+            recall, count = recall.T, count.T
+
         masked = np.ma.masked_invalid(recall)
         cmap = plt.get_cmap("Blues").copy()
         cmap.set_bad("#EBEBEB")
         ax.imshow(masked, cmap=cmap, vmin=0, vmax=1)
-        for i in range(4):
-            for j in range(6):
+        n_row, n_col = recall.shape
+        for i in range(n_row):
+            for j in range(n_col):
                 if count[i, j]:
                     color = "white" if recall[i, j] > 0.6 else "#1F3B57"
                     ax.text(j, i, f"{recall[i, j]:.2f}\n(n={count[i, j]})",
@@ -69,21 +79,29 @@ def main() -> None:
                 else:
                     ax.text(j, i, "—", ha="center", va="center", fontsize=8,
                             color="#999999")
-        ax.set_xticks(range(6), PERIOD_RANGES, fontsize=8)
-        ax.set_yticks(range(4), TYPES)
-        ax.set_xlabel("Construction period")
-        if ax is axes[0]:
-            ax.set_ylabel("Size class")
+        if vertical:
+            ax.set_xticks(range(4), TYPES)
+            ax.set_yticks(range(6), PERIOD_RANGES_FULL, fontsize=8)
+            ax.set_xlabel("Size class")
+            if ax is axes[0]:
+                ax.set_ylabel("Construction period")
+        else:
+            ax.set_xticks(range(6), PERIOD_RANGES, fontsize=8)
+            ax.set_yticks(range(4), TYPES)
+            ax.set_xlabel("Construction period")
+            if ax is axes[0]:
+                ax.set_ylabel("Size class")
         ax.set_title(name)
         ax.spines[:].set_visible(False)
 
     fig.tight_layout()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    stem = "F4_3_cell_recall_heatmap" + ("_vertical" if vertical else "")
     for ext in ("png", "pdf"):
-        out = OUT_DIR / f"F4_3_cell_recall_heatmap.{ext}"
+        out = OUT_DIR / f"{stem}.{ext}"
         fig.savefig(out)
         print(f"[fig] {out.relative_to(REPO)}")
 
 
 if __name__ == "__main__":
-    main()
+    main(vertical="--vertical" in sys.argv)
