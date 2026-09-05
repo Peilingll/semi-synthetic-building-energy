@@ -390,7 +390,7 @@ Table~\ref{tab:htr_metrics} reports the difference between $h_{tr}$ values calcu
 	\end{minipage}
 \end{table}
 
-All three configurations produced positive stock level bias relative to the reference cell calculations. The values ranged from $+10.0$\% for DINOv2 to $+16.6$\% for InternVL3-2B. Repeating the calculation at WWR values of 0.15, 0.25, and 0.35 left the ranking unchanged. The DINOv2 and ResNet-50 MAEs were 0.150 and 0.157 at all three WWR values at the reported precision, while the InternVL3-2B MAE changed from 0.495 to 0.453. The complete sensitivity table is reported in Appendix~\ref{ch:appendix_a}.
+All three configurations produced positive stock level bias relative to the reference cell calculations. The values ranged from $+10.0$\% for DINOv2 to $+16.6$\% for InternVL3-2B. Repeating the calculation at WWR values of 0.15, 0.25, and 0.35 left the ranking unchanged. The DINOv2 and ResNet-50 MAEs were 0.150 and 0.157 at all three WWR values at the reported precision, while the InternVL3-2B MAE changed from 0.495 to 0.453. Table~\ref{tab:wwr_sensitivity} reports the complete sensitivity results.
 
 Experiment II therefore shows that similar overall joint accuracy for the two trained configurations corresponded to similar thermal differences, while the lower InternVL3-2B joint accuracy coincided with a substantially larger $h_{tr}$ difference.
 
@@ -429,7 +429,7 @@ Table~\ref{tab:binary_conditions} reports the default threshold results. Direct 
 	\end{tblr}
 \end{table}
 
-The reference attribute condition recalled 96.0\% of classes A to C but 9.8\% of classes D to G. Predicted attributes from DINOv2 and ResNet-50 produced similar recalls of 10.8\% and 11.0\% for classes D to G. Direct DINOv2 increased recall for this group to 46.9\%. Direct InternVL3-2B assigned every building to classes D to G, so its macro F1 of 0.230 reflected a constant prediction rather than discrimination among buildings.
+The reference attribute condition recalled 96.0\% of classes A to C but 9.8\% of classes D to G. Predicted attributes from DINOv2 and ResNet-50 produced similar recalls of 10.8\% and 11.0\% for classes D to G. Direct DINOv2 increased recall for this group to 46.9\%. Direct InternVL3-2B assigned every building to classes D to G, so its macro F1 of 0.230 reflected a constant prediction rather than discrimination among buildings. Table~\ref{tab:binary_perclass} reports precision, recall, and F1 for both class groups.
 
 \paragraph{E3b: Seven class energy prediction.}
 Table~\ref{tab:sevenclass_conditions} reports results for classes A to G. Direct DINOv2 attained the highest macro F1 at 0.213, followed by direct ResNet-50 at 0.201. The reference attribute condition reached 0.172 and the three predicted attribute conditions ranged from 0.137 to 0.150. The metric ranking differed for exact and $\pm1$ accuracy, for which the reference attribute condition attained the highest values of 0.356 and 0.655.

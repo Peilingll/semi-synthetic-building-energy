@@ -1,24 +1,30 @@
-\chapter{Training Configurations and Hyperparameters}
+\chapter{Model Training and Inference Settings}
 \label{ch:appendix_b}
 
-This appendix reports the complete training configurations for the two supervised vision models in \cref{sec:vision_inference_strategies} and the \acs{LightGBM} classifiers in \cref{sec:downstream_model}.
-All values were obtained from the training records, including the history JSON file for each fold and the run arguments stored in the checkpoints, rather than inferred from software defaults.
-All model training and \ac{VLM} inference used one NVIDIA GeForce RTX 4060 Laptop graphics processing unit (GPU) with 8\,GB of video memory (VRAM).
+This appendix reports the settings needed to reproduce the attribute and energy class models.
+Section~\ref{sec:appendix_b_vision_configs} describes the two trained attribute models, Section~\ref{sec:appendix_b_direct_energy} specifies the direct image energy class models, and Section~\ref{sec:appendix_b_lightgbm} reports the \acs{LightGBM} configuration used with structured inputs.
+The sections distinguish settings shared across configurations from decisions that apply to one model only.
+All model training and \ac{VLM} inference used one NVIDIA GeForce RTX 4060 Laptop graphics processing unit with 8\,GB of video memory.
 
-\section{Supervised Vision Configurations}
+\section{Attribute Prediction Models}
 \label{sec:appendix_b_vision_configs}
 
-The two supervised configurations use the same training procedure: the AdamW optimiser; weight decay of 0.01, excluding normalisation parameters and biases; a cosine-annealing learning-rate schedule with $T_{\max} = 30$; a maximum of 30 epochs; early stopping based on validation building type macro F1 with a patience of 10 epochs; and fp16 automatic mixed precision (AMP).
-The attribute \acs{MLP} in each supervised model uses Gaussian error linear unit (GELU) activation.
-Input images are resized to 224 $\times$ 224 pixels and normalised using ImageNet statistics (mean = (0.485, 0.456, 0.406); standard deviation = (0.229, 0.224, 0.225)).
-Training augmentation comprises \texttt{RandomResizedCrop} with a scale range of 0.7--1.0, horizontal flipping with $p = 0.5$, and \texttt{ColorJitter} with brightness, contrast, and saturation set to 0.2.
-Validation and holdout inference use deterministic resizing to a short side of 256 pixels followed by a 224-pixel centre crop.
-Building type cross-entropy is weighted inversely to the frequencies of SFH, TH, MFH, and AB within each training fold.
+The ResNet-50 and DINOv2 attribute models share the same prediction heads, image transformations, training duration, and checkpoint selection rule, but differ in the parameters updated and in optimiser grouping.
+Both models use AdamW with a nominal weight decay of 0.01 and cosine annealing with \(T_{\max}=30\).
+For ResNet-50, parameter grouping excludes biases and one dimensional normalisation parameters from weight decay.
+For DINOv2, weight decay is applied to all trainable parameters in the multilayer perceptron and output heads.
+Training stops after a maximum of 30 epochs or after validation building type macro F1 fails to improve for 10 epochs.
+Both models use fp16 automatic mixed precision.
+
+Input images are resized to \(224 \times 224\) pixels and normalised using ImageNet statistics, with a mean of (0.485, 0.456, 0.406) and a standard deviation of (0.229, 0.224, 0.225).
+Training augmentation comprises \texttt{RandomResizedCrop} with a scale range from 0.7 to 1.0, horizontal flipping with \(p=0.5\), and \texttt{ColorJitter} with brightness, contrast, and saturation set to 0.2.
+Validation and holdout inference resize the short side to 256 pixels before applying a 224 pixel centre crop.
+Building type cross entropy is weighted inversely to the frequencies of SFH, TH, MFH, and AB within each training fold.
 Construction year and floor count are standardised using the mean and standard deviation of the training fold before mean squared error is calculated.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Training hyperparameters of the two supervised vision configurations.}
+	\caption{Training settings of the two attribute prediction models.}
 	\label{tab:vision_hyperparams}
 	\footnotesize
 	\begin{tblr}{
@@ -29,37 +35,52 @@ Construction year and floor count are standardised using the mean and standard d
 			rowsep = 2pt,
 		}
 		\toprule
-		Setting                          & ResNet-50 full fine-tuning                                            & Frozen DINOv2 \acs{ViT}-B/14                                                     \\
+		Setting & ResNet-50 full fine tuning & Frozen DINOv2 \acs{ViT}-B/14 \\
 		\midrule
-		Pre-trained weights (\texttt{timm}) & \texttt{resnet50} (ImageNet)                                       & \texttt{vit\_base\_\allowbreak patch14\_\allowbreak dinov2.\allowbreak lvd142m}   \\
-		Backbone feature dimension       & 2048                                                                  & 768                                                                              \\
-		Attribute \acs{MLP}              & Linear (2048 $\rightarrow$ 256) + GELU + Dropout 0.3                  & Linear (768 $\rightarrow$ 256) + GELU + Dropout 0.3                              \\
-		Parameters updated               & Backbone, attribute \acs{MLP}, and output heads                       & Attribute \acs{MLP} and output heads only                                       \\
-		Total parameters                 & 24.03\,M                                                              & 85.92\,M                                                                         \\
-		Trainable parameters             & 24.03\,M (100\%)                                                      & 0.20\,M (approximately 0.2\%)                                                    \\
-		Learning rate                    & Backbone $1\times10^{-4}$; trunk/heads $5\times10^{-4}$ (grouped)     & $5\times10^{-4}$                                                                 \\
-		Batch size (buildings)           & 8                                                                     & 32                                                                               \\
-		Optimizer / weight decay         & AdamW / 0.01                                                          & AdamW / 0.01                                                                     \\
-		Learning-rate schedule           & Cosine annealing ($T_{\max} = 30$)                                    & Cosine annealing ($T_{\max} = 30$)                                               \\
-		Max epochs / early-stop patience & 30 / 10                                                               & 30 / 10                                                                          \\
-		Mixed precision                  & fp16 AMP                                                              & fp16 AMP                                                                         \\
-		Padding handling                 & Valid images only enter the backbone to preserve BatchNorm statistics & Zero-padding with masked pooling                                                 \\
+		Pretrained weights (\texttt{timm}) & \texttt{resnet50} (ImageNet) & \texttt{vit\_base\_\allowbreak patch14\_\allowbreak dinov2.\allowbreak lvd142m} \\
+		Backbone feature dimension & 2048 & 768 \\
+		Attribute \acs{MLP} & Linear (2048 \(\rightarrow\) 256) + GELU + Dropout 0.3 & Linear (768 \(\rightarrow\) 256) + GELU + Dropout 0.3 \\
+		Parameters updated & Backbone, attribute \acs{MLP}, and output heads & Attribute \acs{MLP} and output heads only \\
+		Total parameters & 24.03\,M & 85.92\,M \\
+		Trainable parameters & 24.03\,M (100\%) & 0.20\,M (approximately 0.2\%) \\
+		Learning rate & Backbone \(1\times10^{-4}\); \acs{MLP} and heads \(5\times10^{-4}\) & \(5\times10^{-4}\) \\
+		Batch size in buildings & 8 & 32 \\
+		Optimiser and weight decay & AdamW; 0.01 with parameter grouping & AdamW; 0.01 on all trainable parameters \\
+		Learning rate schedule & Cosine annealing (\(T_{\max}=30\)) & Cosine annealing (\(T_{\max}=30\)) \\
+		Maximum epochs and patience & 30; 10 & 30; 10 \\
+		Mixed precision & fp16 & fp16 \\
+		Padding treatment & Only valid images enter the backbone & Zero padding with masked feature pooling \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-The direct energy class models follow the same training procedure as \cref{tab:vision_hyperparams}, except that the three attribute heads are replaced by one energy class classification head and early stopping uses validation energy class macro F1.
-The direct ResNet-50 model is fine-tuned end to end using the learning rates and batch size reported above.
-The direct DINOv2 model first extracts and caches building level mean features because its backbone parameters are fixed. Image processing uses deterministic resizing and centre cropping without augmentation.
-The same classification-network structure is then trained on the cached features using AdamW, a learning rate of $5\times10^{-4}$, weight decay of 0.01, cosine annealing, early-stopping patience of 10 epochs, and a minibatch size of 256.
-Unlike the supervised attribute prediction procedure in \cref{tab:vision_hyperparams}, this cached feature procedure does not use image augmentation during training.
+Table~\ref{tab:vision_hyperparams} therefore reports the settings that differ between the two attribute models, while the preceding text defines their shared image processing and training rules.
 
-\section{LightGBM Configuration}
+\section{Direct Image Energy Class Models}
+\label{sec:appendix_b_direct_energy}
+
+The direct ResNet-50 classifier uses the ResNet-50 optimisation and image processing settings reported in Table~\ref{tab:vision_hyperparams}.
+Its three attribute heads are replaced by one energy class classification head, and validation energy class macro F1 determines checkpoint selection.
+Class weighted cross entropy is calculated from the energy class frequencies in each training fold.
+
+The direct DINOv2 classifier uses the same frozen backbone but first caches one mean feature vector for each building.
+A separate network with a 768 dimensional input, a 256 dimensional hidden layer, GELU activation, Dropout 0.3, and one energy class output head is trained on the cached features.
+Training uses class weighted cross entropy, AdamW, a learning rate of \(5\times10^{-4}\), weight decay of 0.01, cosine annealing, a minibatch size of 256, and early stopping with a patience of 10 epochs.
+Because the image features are computed before classifier training, image augmentation is not applied during this stage.
+
+InternVL3-2B predicts the energy class from each of the three selected images without parameter updates.
+Its output is aggregated at building level according to the rules in Appendix~\ref{ch:appendix_d}.
+These descriptions define three complete direct image configurations rather than attributing their differences to one isolated model component.
+
+\section{LightGBM Energy Class Models}
 \label{sec:appendix_b_lightgbm}
+
+Table~\ref{tab:lightgbm_hyperparams} reports the fixed \acs{LightGBM} configuration used with structured building attributes.
+The same settings are applied to all attribute input conditions, which limits their comparison to changes in the supplied building information.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Fixed LightGBM hyperparameters used for both energy class tasks and all attribute input conditions.}
+	\caption{Fixed LightGBM settings used for both energy class tasks and all attribute input conditions.}
 	\label{tab:lightgbm_hyperparams}
 	\small
 	\begin{tblr}{
@@ -70,22 +91,23 @@ Unlike the supervised attribute prediction procedure in \cref{tab:vision_hyperpa
 			rowsep = 2pt,
 		}
 		\toprule
-		Hyperparameter              & Value                                            \\
+		Hyperparameter & Value \\
 		\midrule
-		objective                   & \texttt{multiclass} (seven-class) or \texttt{binary} \\
-		\texttt{n\_estimators}      & 400                                              \\
-		\texttt{learning\_rate}     & 0.05                                             \\
-		\texttt{num\_leaves}        & 31                                               \\
-		\texttt{max\_depth}         & $-1$ (unlimited)                                 \\
-		\texttt{min\_child\_samples} & 20                                              \\
-		\texttt{subsample}          & 0.8 per iteration                                \\
-		\texttt{colsample\_bytree}  & 0.8                                              \\
-		\texttt{reg\_lambda} (L2)   & 1.0                                              \\
-		\texttt{class\_weight}      & None                                             \\
-		\texttt{random\_state}      & 42                                               \\
+		\texttt{objective} & \texttt{multiclass} for seven classes or \texttt{binary} for two class groups \\
+		\texttt{n\_estimators} & 400 \\
+		\texttt{learning\_rate} & 0.05 \\
+		\texttt{num\_leaves} & 31 \\
+		\texttt{max\_depth} & \(-1\), without a fixed maximum depth \\
+		\texttt{min\_child\_samples} & 20 \\
+		\texttt{subsample} & 0.8 \\
+		\texttt{subsample\_freq} & 1 \\
+		\texttt{colsample\_bytree} & 0.8 \\
+		\texttt{reg\_lambda} & 1.0 \\
+		\texttt{class\_weight} & None \\
+		\texttt{random\_state} & 42 \\
 		\bottomrule
 	\end{tblr}
 \end{table}
 
-The same hyperparameters are used for all attribute based conditions and both energy class tasks.
-Only the objective changes with the task; no separate tuning is performed for individual input conditions.
+Only the objective changes between the binary and seven class tasks.
+No separate hyperparameter search is performed for individual input conditions.

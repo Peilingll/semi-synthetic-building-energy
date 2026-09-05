@@ -49,6 +49,7 @@ The \acf{BAG} is the Dutch national register of addresses and buildings and prov
 EP-Online is the Dutch national database of registered energy performance records and provides residential building category, energy class, and certificate registration date \parencite{rvoeponline}.
 3DBAG is an open three-dimensional building dataset reconstructed from BAG and national elevation data.
 This study uses its geometric attributes rather than treating them as surveyed measurements \parencite{threedbagdocs,peters2022,dukai2021}.
+Table~\ref{tab:3dbag_fields} defines the source fields and derived 3DBAG variables used in the analysis.
 
 The image branch uses building footprints from \acf{OSM} and Overture Maps to locate candidate buildings, and Mapillary provides the associated panoramic imagery \parencite{openstreetmap,overturemaps,mapillary}.
 TABULA-NL provides the archetype definitions and representative thermal properties used after attribute prediction \parencite{loga2016,tabulawebtool}.
@@ -267,7 +268,7 @@ Building type uses cross entropy loss with weights inversely proportional to cla
 Construction year and floor count are standardised using the mean and standard deviation of that fold and use mean squared error loss.
 The three losses receive equal weight.
 ResNet-50 updates its backbone, \ac{MLP}, and output heads, while DINOv2 keeps the backbone frozen and updates only the \ac{MLP} and output heads.
-The complete optimiser, learning rate, augmentation, and early stopping settings are reported in Appendix~\ref{ch:appendix_b}.
+The optimiser, learning rate, augmentation, and early stopping settings are reported in Table~\ref{tab:vision_hyperparams}.
 
 Both supervised model configurations are fitted separately in each development fold.
 Validation macro F1 for building type controls early stopping and selects one checkpoint within each fold.
@@ -284,11 +285,11 @@ Greedy decoding is used so repeated inference with the same input and environmen
 Prompt wording and response constraints are developed with a fixed subset of 200 development buildings.
 The subset is stratified by reference building type, with minority types deliberately oversampled to prevent prompt assessment from being dominated by the most frequent building type.
 Because reference labels inform prompt design and parsing rules, this configuration is described as inference without parameter updating, not as a strictly label-free zero-shot evaluation.
-The final prompt, valid ranges, and parsing rules are fixed before the holdout set is processed and are reported in Appendix~\ref{ch:appendix_c}.
+The final prompts, valid ranges, and parsing rules are fixed before the holdout set is processed and are reported in Appendix~\ref{ch:appendix_d}.
 
 InternVL3-2B processes the three highest-ranked images available for a building independently.
 A response is valid only when all three required values can be parsed and fall within the permitted ranges.
-Building type is aggregated by the mode, with a tie resolved by the prediction from the highest-ranked valid image.
+Building type is aggregated by the mode.
 Construction year is aggregated by the median, and floor count by the rounded median.
 No building level prediction is created when all image responses are invalid.
 
@@ -305,7 +306,7 @@ Applying the same lookup to reference and predicted attributes ensures that any 
 
 The operational TABULA-NL lookup contains six construction periods and four residential size classes, forming 24 archetype cells as shown in Figure~\ref{fig:tabula_matrix}.
 The period codes and thermal properties are generated programmatically from the TABULA values workbook and compared with the TABULA WebTool \parencite{tabulawebtool}.
-The value level provenance and any differences between the workbook and WebTool are recorded in Appendix~\ref{ch:appendix_a}.
+The generation rules and the identified difference between the workbook and WebTool are documented in Section~\ref{sec:appendix_a_tabula}.
 
 \begin{figure}[htbp]
 	\centering
@@ -434,7 +435,7 @@ This design holds the classifier constant and limits the input difference to the
 
 Both target definitions use 400 boosting iterations, a learning rate of 0.05, 31 leaves, and no class weighting.
 No separate hyperparameter search is performed for the two holdout input sets.
-The complete \acs{LightGBM} configuration is reported in Appendix~\ref{ch:appendix_b}.
+The complete \acs{LightGBM} configuration is reported in Table~\ref{tab:lightgbm_hyperparams}.
 
 \subsection{Direct Prediction of Energy Class from Images}
 \label{sec:direct_energy_class_prediction}
@@ -442,10 +443,13 @@ The complete \acs{LightGBM} configuration is reported in Appendix~\ref{ch:append
 The direct image procedure predicts the registered energy class without first estimating building attributes.
 It follows earlier work that mapped building imagery directly to registered energy performance classes \parencite{mayer2023uk,mayer2023dk}.
 
-ResNet-50 and DINOv2 use the same image processing, feature aggregation, and parameter update settings as attribute prediction, but replace the three attribute heads with one energy class head.
+The direct ResNet-50 configuration uses the same image processing, feature aggregation, and parameter update settings as its attribute prediction configuration, but replaces the three attribute heads with one energy class head.
+The direct DINOv2 configuration uses the same frozen backbone to create one cached mean feature vector per building and trains a separate energy class head on these features.
 Separate configurations are fitted for the two targets using cross entropy loss and class weights from the training fold.
 Validation macro F1 controls early stopping and checkpoint selection.
+Section~\ref{sec:appendix_b_direct_energy} reports the corresponding optimisation settings.
 
 InternVL3-2B uses a separate fixed prompt for each target without parameter updates.
 The building class is selected by majority vote over valid responses from the three highest-ranked images.
+Ties are resolved in favour of the more energy efficient class or class group.
 Stage 4 returns one energy class prediction per building, target, and model configuration.
