@@ -77,3 +77,6 @@ Thesis_reports/reviewer_comments_AD_JQ.md
 
 # biber save-error leftovers
 **/thesistemplate-main*/**/*.bcf-SAVE-ERROR
+
+# Retired scripts and the v1 thesis template; kept locally only
+archive/
