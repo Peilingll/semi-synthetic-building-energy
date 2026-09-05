@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fig 3.3 - SVI image transformation in five steps (worked example)</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111; margin: 0; }
+  .figwrap { width: 2400px; margin: 0 auto; }
+  svg { width: 2400px; height: 1380px; display: block; }
+  .caption { max-width: 1400px; margin: 16px auto 24px; font-size: 22px; color: #333; line-height: 1.5; }
+  .panel { fill: #fff; stroke: #9a9a9a; stroke-width: 2; }
+  .imgframe { fill: none; stroke: #555; stroke-width: 1.5; }
+  .arr { stroke: #333; stroke-width: 4; fill: none; marker-end: url(#arrK); }
+  .t-step  { font: 700 26px "Segoe UI", Arial, sans-serif; fill: #fff; }
+  .t-title { font: 700 30px "Segoe UI", Arial, sans-serif; fill: #111; }
+  .t-sub   { font: 24px "Segoe UI", Arial, sans-serif; fill: #444; }
+  .t-note  { font: 22px "Segoe UI", Arial, sans-serif; fill: #444; }
+  .t-map   { font: 600 22px "Segoe UI", Arial, sans-serif; fill: #333; }
+  .mono    { font-family: Consolas, "Courier New", monospace; }
+</style>
+</head>
+<body>
+<div class="figwrap">
+<svg viewBox="0 0 2400 1380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Five-step transformation from a Mapillary panorama to building-level SVI crops">
+  <defs>
+    <marker id="arrK" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+  </defs>
+  <text x="40" y="66" class="t-title">From a Mapillary panorama to building-level SVI crops &#183; one worked example (Rotterdam)</text>
+<rect x="40" y="110" width="880" height="600" rx="10" class="panel"/><circle cx="78" cy="150" r="24" fill="#0065BD"/><text x="78" y="159" class="t-step" text-anchor="middle">1</text><text x="116" y="150" class="t-title">Mapillary 360&#176; panorama</text><text x="116" y="184" class="t-sub">raw equirectangular download, 2,048 &#215; 1,024 px &#183; panorama 686679844161937</text>
+<image href="flow_steps/step1_panorama.jpg" x="60" y="206" width="840" height="420"/>
+<rect x="60" y="206" width="840" height="420" class="imgframe"/>
+<rect x="565.7" y="256.0" width="298.6" height="205.9" fill="none" stroke="#0065BD" stroke-width="3" stroke-dasharray="10 6"/>
+<text x="566" y="246" class="t-note" fill="#005293">window shown in step 3</text>
+<text x="60" y="660" class="t-note">Imagery &#169; Mapillary contributors, CC BY-SA 4.0 &#183; Rotterdam</text>
+<rect x="980" y="110" width="600" height="600" rx="10" class="panel"/><circle cx="1018" cy="150" r="24" fill="#0065BD"/><text x="1018" y="159" class="t-step" text-anchor="middle">2</text><text x="1056" y="150" class="t-title">Candidate building and view selection</text><text x="1056" y="184" class="t-sub">isovist pairing (30 m) and AoV ranking</text>
+<clipPath id="mapclip"><rect x="1000" y="206" width="560" height="444"/></clipPath>
+<rect x="1000" y="206" width="560" height="444" fill="#f7f6f2"/>
+<g clip-path="url(#mapclip)">
+<path d="M1415.3,571.8 L1584.8,583.1 L1580.9,642.9 L1577.1,642.5 L1573.8,693.0 L1577.5,693.3 L1573.6,753.2 L1514.0,749.1 L1515.0,736.2 L1464.3,732.6 L1463.6,745.7 L1404.2,741.5 L1408.0,682.7 L1415.0,683.2 L1418.4,632.2 L1411.3,631.6 L1415.3,571.8 Z" fill="#DAD7CB" stroke="#8a8677" stroke-width="1.5"/>
+<path d="M996.5,622.2 L1063.5,631.0 L1096.5,634.9 L1094.7,645.9 L1114.7,647.5 L1115.4,636.8 L1180.9,640.9 L1177.7,687.1 L1111.5,682.5 L1111.8,677.3 L1090.7,674.4 L1087.5,698.8 L933.2,678.5 L941.5,615.1 L996.5,622.2 Z" fill="#DAD7CB" stroke="#8a8677" stroke-width="1.5"/>
+<path d="M1133.2,365.7 L1199.2,370.4 L1193.0,462.3 L1127.2,457.6 L1133.2,365.7 Z" fill="#98C6EA" stroke="#0065BD" stroke-width="3"/>
+<circle cx="1276.0" cy="428.0" r="180.0" fill="none" stroke="#64A0C8" stroke-width="2" stroke-dasharray="8 6"/>
+<path d="M1276.0,428.0 L1160.1,441.7 L1159.7,437.7 L1159.5,433.7 L1159.3,429.7 L1159.3,425.7 L1159.5,421.7 L1159.8,417.7 L1160.2,413.7 L1160.8,409.7 L1161.5,405.7 L1162.3,401.8 L1163.3,397.9 L1164.4,394.0 L1165.6,390.2 L1167.0,386.4 L1168.5,382.7 L1170.1,379.0 L1171.8,375.4 L1173.7,371.9 L1175.7,368.4 L1177.8,365.0 Z" fill="#E37222" fill-opacity="0.28" stroke="#E37222" stroke-width="2.5"/>
+<circle cx="1285.5" cy="253.0" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1278.1" cy="387.5" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1279.0" cy="368.3" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1270.7" cy="548.0" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1273.9" cy="467.6" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1274.9" cy="448.5" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1283.6" cy="287.5" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1281.4" cy="326.1" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1269.2" cy="587.3" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1267.3" cy="605.1" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1280.2" cy="346.3" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1264.3" cy="622.6" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1271.4" cy="528.4" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1286.4" cy="232.8" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1282.5" cy="306.7" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1270.2" cy="568.9" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1272.0" cy="509.5" r="7" fill="#E37222" stroke="#fff" stroke-width="2"/>
+<circle cx="1284.6" cy="268.2" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/>
+<circle cx="1277.1" cy="407.3" r="7" fill="#E37222" stroke="#fff" stroke-width="2"/>
+<circle cx="1272.8" cy="489.6" r="7" fill="#E37222" stroke="#fff" stroke-width="2"/>
+<circle cx="1276.0" cy="428.0" r="10" fill="#E37222" stroke="#fff" stroke-width="3"/>
+</g>
+<line x1="1020" y1="628" x2="1080.0" y2="628" stroke="#333" stroke-width="4"/>
+<text x="1020" y="620" class="t-map">10 m</text>
+<path d="M1530,232 L1520,266 L1530,258 L1540,266 Z" fill="#333"/>
+<text x="1530" y="288" class="t-map" text-anchor="middle">N</text>
+<rect x="1000" y="206" width="560" height="444" fill="none" stroke="#777" stroke-width="1.5"/>
+<circle cx="1008" cy="676" r="7" fill="#E37222" stroke="#fff" stroke-width="2"/><text x="1024" y="684" class="t-note">retained (4)</text><circle cx="1190" cy="676" r="6" fill="#fff" stroke="#6b6b6b" stroke-width="2"/><text x="1206" y="684" class="t-note">other candidate cameras (17)</text>
+<rect x="1640" y="110" width="720" height="600" rx="10" class="panel"/><circle cx="1678" cy="150" r="24" fill="#0065BD"/><text x="1678" y="159" class="t-step" text-anchor="middle">3</text><text x="1716" y="150" class="t-title">GroundingDINO building detection</text><text x="1716" y="184" class="t-sub">box for building_id 276637663, confidence 0.82</text>
+<image href="flow_steps/step3_detection_zoom.jpg" x="1660" y="206" width="644" height="444"/>
+<rect x="1660" y="206" width="644" height="444" class="imgframe"/>
+<text x="1660" y="684" class="t-note">box and label drawn by OpenFACADES; zoomed window</text>
+<rect x="40" y="810" width="1000" height="530" rx="10" class="panel"/><circle cx="78" cy="850" r="24" fill="#0065BD"/><text x="78" y="859" class="t-step" text-anchor="middle">4</text><text x="116" y="850" class="t-title">Perspective reprojection</text><text x="116" y="884" class="t-sub">the detected region is re-projected from the sphere to a rectilinear view and cropped</text>
+<image href="flow_steps/step4_equirect_slice.jpg" x="80" y="906" width="420" height="336"/>
+<rect x="80" y="906" width="420" height="336" class="imgframe"/>
+<text x="290" y="1276" class="t-note" text-anchor="middle">equirectangular region, 428 &#215; 342 px</text>
+<path d="M530.0,1074 L580.0,1074" class="arr"/>
+<image href="flow_steps/step4_rectified_crop.jpg" x="610" y="906" width="420" height="341"/>
+<rect x="610" y="906" width="420" height="341" class="imgframe" style="stroke:#A2AD00;stroke-width:5"/>
+<text x="820" y="1281" class="t-note" text-anchor="middle">rectified facade crop, 428 &#215; 347 px</text>
+<rect x="1100" y="810" width="1260" height="530" rx="10" class="panel"/><circle cx="1138" cy="850" r="24" fill="#0065BD"/><text x="1138" y="859" class="t-step" text-anchor="middle">5</text><text x="1176" y="850" class="t-title">Building-level SVI crops</text><text x="1176" y="884" class="t-sub">BAG pand_id 0599100000611463 &#8592; building_id 276637663 &#183; 4 of 21 candidates retained, AoV rank, cap 8</text>
+<image href="flow_steps/step5_9882625101862382.jpg" x="1124" y="916" width="297" height="226"/>
+<rect x="1124" y="916" width="297" height="226" class="imgframe"/>
+<text x="1272" y="1172" class="t-note" text-anchor="middle">AoV 44.0&#176; &#183; 15.6 m</text>
+<text x="1272" y="1198" class="t-note mono" text-anchor="middle">9882625101862382</text>
+<image href="flow_steps/step5_1342698897592729.jpg" x="1443" y="916" width="284" height="226"/>
+<rect x="1443" y="916" width="284" height="226" class="imgframe"/>
+<text x="1585" y="1172" class="t-note" text-anchor="middle">AoV 40.9&#176; &#183; 13.4 m</text>
+<text x="1585" y="1198" class="t-note mono" text-anchor="middle">1342698897592729</text>
+<image href="flow_steps/step5_4444259202464595.jpg" x="1749" y="916" width="286" height="226"/>
+<rect x="1749" y="916" width="286" height="226" class="imgframe"/>
+<text x="1892" y="1172" class="t-note" text-anchor="middle">AoV 40.6&#176; &#183; 16.8 m</text>
+<text x="1892" y="1198" class="t-note mono" text-anchor="middle">4444259202464595</text>
+<image href="flow_steps/step5_686679844161937.jpg" x="2057" y="916" width="279" height="226"/>
+<rect x="2057" y="916" width="279" height="226" class="imgframe" style="stroke:#A2AD00;stroke-width:5"/>
+<text x="2196" y="1172" class="t-note" text-anchor="middle">AoV 39.5&#176; &#183; 13.4 m</text>
+<text x="2196" y="1198" class="t-note mono" text-anchor="middle">686679844161937</text>
+<text x="1124" y="1314" class="t-note">green frame = the panorama followed in steps 1&#8211;4; source: data/processed/svi_manifest.parquet</text>
+<path d="M928,410.0 L972,410.0" class="arr"/>
+<path d="M1588,410.0 L1632,410.0" class="arr"/>
+<path d="M2000.0,714 L2000.0,760 L540.0,760 L540.0,802" class="arr"/>
+<path d="M1048,1075.0 L1092,1075.0" class="arr"/>
+</svg>
+<p class="caption">
+<b>Fig. 3.3 &mdash; Image transformation from a retained 360&deg; panorama to building-level facade crops.</b>
+Every panel shows real pipeline output for one panorama&ndash;building pair (panorama <span class="mono">686679844161937</span>,
+OpenFACADES <span class="mono">building_id 276637663</span>, BAG <span class="mono">pand_id 0599100000611463</span>; Rotterdam, grid cell 0252).
+(1) Raw equirectangular panorama. (2) Map drawn from <span class="mono">01_data/footprint.geojson</span> and
+<span class="mono">01_data/aov.csv</span>: the target footprint, the 21 candidate cameras that see it within the 30 m isovist
+radius, the AoV wedge of the followed panorama and the 4 cameras retained after AoV ranking.
+(3) GroundingDINO detection as annotated by OpenFACADES (<span class="mono">02_img/annotated_img</span>, box from
+<span class="mono">02_img/building_bbox.csv</span>). (4) The detected region as it appears in the equirectangular image and
+after perspective reprojection (<span class="mono">02_img/individual_building</span>). (5) All crops of the same BAG building
+in the per-building SVI manifest, ranked by AoV. Imagery &copy; Mapillary contributors (CC BY-SA 4.0).
+</p>
+</div>
+</body>
+</html>
